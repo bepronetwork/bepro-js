@@ -1,0 +1,705 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Introduction · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter active" data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Introduction</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="classes">Classes</h2>
+<dl>
+<dt><a href="#FixedSwapContract">FixedSwapContract</a> : <code>Object</code></dt>
+<dd></dd>
+</dl>
+
+<h2 id="functions">Functions</h2>
+<dl>
+<dt><a href="#setNewOwner">setNewOwner(address)</a></dt>
+<dd><p>Set New Owner of the Contract</p>
+</dd>
+<dt><a href="#owner">owner()</a> &#x21D2; <code>string</code></dt>
+<dd><p>Get Owner of the Contract</p>
+</dd>
+<dt><a href="#isPaused">isPaused()</a> &#x21D2; <code>boolean</code></dt>
+<dd><p>Get Owner of the Contract</p>
+</dd>
+<dt><a href="#pauseContract">pauseContract()</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Pause Contract</p>
+</dd>
+<dt><a href="#unpauseContract">unpauseContract()</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Unpause Contract</p>
+</dd>
+<dt><a href="#tradeValue">tradeValue()</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get swapratio for the pool</p>
+</dd>
+<dt><a href="#startDate">startDate()</a> &#x21D2; <code>Date</code></dt>
+<dd><p>Get Start Date of Pool</p>
+</dd>
+<dt><a href="#endDate">endDate()</a> &#x21D2; <code>Date</code></dt>
+<dd><p>Get End Date of Pool</p>
+</dd>
+<dt><a href="#individualMinimumAmount">individualMinimumAmount()</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get Individual Minimum Amount for each address</p>
+</dd>
+<dt><a href="#individualMaximumAmount">individualMaximumAmount()</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get Individual Maximum Amount for each address</p>
+</dd>
+<dt><a href="#minimumRaise">minimumRaise()</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get Minimum Raise amount for Token Sale</p>
+</dd>
+<dt><a href="#tokensAllocated">tokensAllocated()</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get Total tokens Allocated already, therefore the tokens bought until now</p>
+</dd>
+<dt><a href="#tokensForSale">tokensForSale()</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get Total tokens Allocated/In Sale for the Pool</p>
+</dd>
+<dt><a href="#tokensAvailable">tokensAvailable()</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get Total tokens owned by the Pool</p>
+</dd>
+<dt><a href="#tokensLeft">tokensLeft()</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get Total tokens available to be sold in the pool</p>
+</dd>
+<dt><a href="#isTokenSwapAtomic">isTokenSwapAtomic()</a> &#x21D2; <code>Boolean</code></dt>
+<dd><p>Verify if the Token Swap is atomic on this pool</p>
+</dd>
+<dt><a href="#isFunded">isFunded()</a> &#x21D2; <code>Boolean</code></dt>
+<dd><p>Verify if the Token Sale is Funded with all Tokens proposed in tokensForSale</p>
+</dd>
+<dt><a href="#isOpen">isOpen()</a> &#x21D2; <code>Boolean</code></dt>
+<dd><p>Verify if the Token Sale is Open for Swap</p>
+</dd>
+<dt><a href="#hasStarted">hasStarted()</a> &#x21D2; <code>Boolean</code></dt>
+<dd><p>Verify if the Token Sale has started the Swap</p>
+</dd>
+<dt><a href="#hasFinalized">hasFinalized()</a> &#x21D2; <code>Boolean</code></dt>
+<dd><p>Verify if the Token Sale has finalized, if the current date is after endDate</p>
+</dd>
+<dt><a href="#isPreStart">isPreStart()</a> &#x21D2; <code>Boolean</code></dt>
+<dd><p>Verify if the Token Sale in not open yet, where the admin can fund the pool</p>
+</dd>
+<dt><a href="#getPurchase">getPurchase(purchase_id)</a> &#x21D2; <code>Integer</code> | <code>Integer</code> | <code>Address</code> | <code>Integer</code> | <code>Date</code> | <code>Boolean</code> | <code>Boolean</code></dt>
+<dd><p>Get Purchase based on ID</p>
+</dd>
+<dt><a href="#getBuyers">getBuyers()</a> &#x21D2; <code>Array</code> | <code>Integer</code></dt>
+<dd><p>Get Buyers</p>
+</dd>
+<dt><a href="#getPurchaseIds">getPurchaseIds()</a> &#x21D2; <code>Array</code> | <code>Integer</code></dt>
+<dd><p>Get All Purchase Ids</p>
+</dd>
+<dt><a href="#getPurchaseIds">getPurchaseIds(address)</a> &#x21D2; <code>Array</code> | <code>Integer</code></dt>
+<dd><p>Get All Purchase Ids filter by Address/Purchaser</p>
+</dd>
+<dt><a href="#getETHCostFromTokens">getETHCostFromTokens(tokenAmount)</a> &#x21D2; <code>Integer</code></dt>
+<dd><p>Get ETH Cost from Tokens Amount</p>
+</dd>
+<dt><a href="#swap">swap(tokenAmount)</a></dt>
+<dd><p>Swap tokens by Ethereum</p>
+</dd>
+<dt><a href="#redeemTokens(isStandard)">redeemTokens(purchase_id)</a></dt>
+<dd><p>Reedem tokens bought</p>
+</dd>
+<dt><a href="#redeemGivenMinimumGoalNotAchieved(isStandard)">redeemGivenMinimumGoalNotAchieved(purchase_id)</a></dt>
+<dd><p>Reedem Ethereum from sale that did not achieve minimum goal</p>
+</dd>
+<dt><a href="#withdrawUnsoldTokens">withdrawUnsoldTokens()</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Withdraw unsold tokens of sale</p>
+</dd>
+<dt><a href="#withdrawFunds">withdrawFunds()</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Withdraw all funds from tokens sold</p>
+</dd>
+<dt><a href="#approveFundERC20">approveFundERC20()</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Approve the pool to use approved tokens for sale</p>
+</dd>
+<dt><a href="#isApproved">isApproved(tokenAmount, address)</a> &#x21D2; <code>admin</code> | <code>Boolean</code></dt>
+<dd><p>Verify if the Admin has approved the pool to use receive the tokens for sale</p>
+</dd>
+<dt><a href="#fund">fund(tokenAmount)</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Send tokens to pool for sale, fund the sale</p>
+</dd>
+<dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
+</dd>
+<dt><a href="#deploy">deploy(tradeValue, tokensForSale, startDate, endDate, individualMinimumAmount, individualMaximumAmount, isTokenSwapAtomic, minimumRaise, feeAmount)</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Deploy the Pool Contract</p>
+</dd>
+<dt><a href="#getOwner">getOwner(Address)</a> &#x21D2; <code>admin</code></dt>
+<dd><p>Get owner address of contract</p>
+</dd>
+</dl>
+
+<p><a name="FixedSwapContract"></a></p>
+<h2 id="fixedswapcontract--object">FixedSwapContract : <code>Object</code></h2>
+<p><strong>Kind</strong>: global class<br><a name="new_FixedSwapContract_new"></a></p>
+<h3 id="new-fixedswapcontractweb3-tokenaddress-decimals-contractaddress">new FixedSwapContract(web3, tokenAddress, decimals, contractAddress)</h3>
+<p>Fixed Swap Object</p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>web3</td>
+<td><code>Web3</code></td>
+<td></td>
+</tr>
+<tr>
+<td>tokenAddress</td>
+<td><code>Address</code></td>
+<td></td>
+</tr>
+<tr>
+<td>decimals</td>
+<td><code>Integer</code></td>
+<td></td>
+</tr>
+<tr>
+<td>contractAddress</td>
+<td><code>Address</code></td>
+<td>? (opt)</td>
+</tr>
+</tbody>
+</table>
+<p><a name="setNewOwner"></a></p>
+<h2 id="setnewowneraddress">setNewOwner(address)</h2>
+<p>Set New Owner of the Contract</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>address</td>
+<td><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="owner"></a></p>
+<h2 id="owner-&#x21D2;-string">owner() &#x21D2; <code>string</code></h2>
+<p>Get Owner of the Contract</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>string</code> - address<br><a name="isPaused"></a></p>
+<h2 id="ispaused-&#x21D2;-boolean">isPaused() &#x21D2; <code>boolean</code></h2>
+<p>Get Owner of the Contract</p>
+<p><strong>Kind</strong>: global function<br><a name="pauseContract"></a></p>
+<h2 id="pausecontract-&#x21D2;-admin">pauseContract() &#x21D2; <code>admin</code></h2>
+<p>Pause Contract</p>
+<p><strong>Kind</strong>: global function<br><a name="unpauseContract"></a></p>
+<h2 id="unpausecontract-&#x21D2;-admin">unpauseContract() &#x21D2; <code>admin</code></h2>
+<p>Unpause Contract</p>
+<p><strong>Kind</strong>: global function<br><a name="tradeValue"></a></p>
+<h2 id="tradevalue-&#x21D2;-integer">tradeValue() &#x21D2; <code>Integer</code></h2>
+<p>Get swapratio for the pool</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Integer</code> - trade value against ETH<br><a name="startDate"></a></p>
+<h2 id="startdate-&#x21D2;-date">startDate() &#x21D2; <code>Date</code></h2>
+<p>Get Start Date of Pool</p>
+<p><strong>Kind</strong>: global function<br><a name="endDate"></a></p>
+<h2 id="enddate-&#x21D2;-date">endDate() &#x21D2; <code>Date</code></h2>
+<p>Get End Date of Pool</p>
+<p><strong>Kind</strong>: global function<br><a name="individualMinimumAmount"></a></p>
+<h2 id="individualminimumamount-&#x21D2;-integer">individualMinimumAmount() &#x21D2; <code>Integer</code></h2>
+<p>Get Individual Minimum Amount for each address</p>
+<p><strong>Kind</strong>: global function<br><a name="individualMaximumAmount"></a></p>
+<h2 id="individualmaximumamount-&#x21D2;-integer">individualMaximumAmount() &#x21D2; <code>Integer</code></h2>
+<p>Get Individual Maximum Amount for each address</p>
+<p><strong>Kind</strong>: global function<br><a name="minimumRaise"></a></p>
+<h2 id="minimumraise-&#x21D2;-integer">minimumRaise() &#x21D2; <code>Integer</code></h2>
+<p>Get Minimum Raise amount for Token Sale</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Integer</code> - Amount in Tokens<br><a name="tokensAllocated"></a></p>
+<h2 id="tokensallocated-&#x21D2;-integer">tokensAllocated() &#x21D2; <code>Integer</code></h2>
+<p>Get Total tokens Allocated already, therefore the tokens bought until now</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Integer</code> - Amount in Tokens<br><a name="tokensForSale"></a></p>
+<h2 id="tokensforsale-&#x21D2;-integer">tokensForSale() &#x21D2; <code>Integer</code></h2>
+<p>Get Total tokens Allocated/In Sale for the Pool</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Integer</code> - Amount in Tokens<br><a name="tokensAvailable"></a></p>
+<h2 id="tokensavailable-&#x21D2;-integer">tokensAvailable() &#x21D2; <code>Integer</code></h2>
+<p>Get Total tokens owned by the Pool</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Integer</code> - Amount in Tokens<br><a name="tokensLeft"></a></p>
+<h2 id="tokensleft-&#x21D2;-integer">tokensLeft() &#x21D2; <code>Integer</code></h2>
+<p>Get Total tokens available to be sold in the pool</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Integer</code> - Amount in Tokens<br><a name="isTokenSwapAtomic"></a></p>
+<h2 id="istokenswapatomic-&#x21D2;-boolean">isTokenSwapAtomic() &#x21D2; <code>Boolean</code></h2>
+<p>Verify if the Token Swap is atomic on this pool</p>
+<p><strong>Kind</strong>: global function<br><a name="isFunded"></a></p>
+<h2 id="isfunded-&#x21D2;-boolean">isFunded() &#x21D2; <code>Boolean</code></h2>
+<p>Verify if the Token Sale is Funded with all Tokens proposed in tokensForSale</p>
+<p><strong>Kind</strong>: global function<br><a name="isOpen"></a></p>
+<h2 id="isopen-&#x21D2;-boolean">isOpen() &#x21D2; <code>Boolean</code></h2>
+<p>Verify if the Token Sale is Open for Swap</p>
+<p><strong>Kind</strong>: global function<br><a name="hasStarted"></a></p>
+<h2 id="hasstarted-&#x21D2;-boolean">hasStarted() &#x21D2; <code>Boolean</code></h2>
+<p>Verify if the Token Sale has started the Swap</p>
+<p><strong>Kind</strong>: global function<br><a name="hasFinalized"></a></p>
+<h2 id="hasfinalized-&#x21D2;-boolean">hasFinalized() &#x21D2; <code>Boolean</code></h2>
+<p>Verify if the Token Sale has finalized, if the current date is after endDate</p>
+<p><strong>Kind</strong>: global function<br><a name="isPreStart"></a></p>
+<h2 id="isprestart-&#x21D2;-boolean">isPreStart() &#x21D2; <code>Boolean</code></h2>
+<p>Verify if the Token Sale in not open yet, where the admin can fund the pool</p>
+<p><strong>Kind</strong>: global function<br><a name="getPurchase"></a></p>
+<h2 id="getpurchasepurchaseid-&#x21D2;-integer--integer--address--integer--date--boolean--boolean">getPurchase(purchase_id) &#x21D2; <code>Integer</code> | <code>Integer</code> | <code>Address</code> | <code>Integer</code> | <code>Date</code> | <code>Boolean</code> | <code>Boolean</code></h2>
+<p>Get Purchase based on ID</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Integer</code> - _id<code>Integer</code> - amount<code>Address</code> - purchaser<code>Integer</code> - ethAmount<code>Date</code> - timestamp<code>Boolean</code> - wasFinalized<code>Boolean</code> - reverted  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>purchase_id</td>
+<td><code>Integer</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="getBuyers"></a></p>
+<h2 id="getbuyers-&#x21D2;-array--integer">getBuyers() &#x21D2; <code>Array</code> | <code>Integer</code></h2>
+<p>Get Buyers</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Array</code> | <code>Integer</code> - _ids<br><a name="getPurchaseIds"></a></p>
+<h2 id="getpurchaseids-&#x21D2;-array--integer">getPurchaseIds() &#x21D2; <code>Array</code> | <code>Integer</code></h2>
+<p>Get All Purchase Ids</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Array</code> | <code>Integer</code> - _ids<br><a name="getPurchaseIds"></a></p>
+<h2 id="getpurchaseidsaddress-&#x21D2;-array--integer">getPurchaseIds(address) &#x21D2; <code>Array</code> | <code>Integer</code></h2>
+<p>Get All Purchase Ids filter by Address/Purchaser</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Array</code> | <code>Integer</code> - _ids  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>address</td>
+<td><code>Address</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="getETHCostFromTokens"></a></p>
+<h2 id="getethcostfromtokenstokenamount-&#x21D2;-integer">getETHCostFromTokens(tokenAmount) &#x21D2; <code>Integer</code></h2>
+<p>Get ETH Cost from Tokens Amount</p>
+<p><strong>Kind</strong>: global function<br><strong>Returns</strong>: <code>Integer</code> - ethAmount  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tokenAmount</td>
+<td><code>Integer</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="swap"></a></p>
+<h2 id="swaptokenamount">swap(tokenAmount)</h2>
+<p>Swap tokens by Ethereum</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tokenAmount</td>
+<td><code>Integer</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="redeemTokens(isStandard)"></a></p>
+<h2 id="redeemtokenspurchaseid">redeemTokens(purchase_id)</h2>
+<p>Reedem tokens bought</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>purchase_id</td>
+<td><code>Integer</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="redeemGivenMinimumGoalNotAchieved(isStandard)"></a></p>
+<h2 id="redeemgivenminimumgoalnotachievedpurchaseid">redeemGivenMinimumGoalNotAchieved(purchase_id)</h2>
+<p>Reedem Ethereum from sale that did not achieve minimum goal</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>purchase_id</td>
+<td><code>Integer</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="withdrawUnsoldTokens"></a></p>
+<h2 id="withdrawunsoldtokens-&#x21D2;-admin">withdrawUnsoldTokens() &#x21D2; <code>admin</code></h2>
+<p>Withdraw unsold tokens of sale</p>
+<p><strong>Kind</strong>: global function<br><a name="withdrawFunds"></a></p>
+<h2 id="withdrawfunds-&#x21D2;-admin">withdrawFunds() &#x21D2; <code>admin</code></h2>
+<p>Withdraw all funds from tokens sold</p>
+<p><strong>Kind</strong>: global function<br><a name="approveFundERC20"></a></p>
+<h2 id="approvefunderc20-&#x21D2;-admin">approveFundERC20() &#x21D2; <code>admin</code></h2>
+<p>Approve the pool to use approved tokens for sale</p>
+<p><strong>Kind</strong>: global function<br><a name="isApproved"></a></p>
+<h2 id="isapprovedtokenamount-address-&#x21D2;-admin--boolean">isApproved(tokenAmount, address) &#x21D2; <code>admin</code> | <code>Boolean</code></h2>
+<p>Verify if the Admin has approved the pool to use receive the tokens for sale</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tokenAmount</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>address</td>
+<td><code>Address</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="fund"></a></p>
+<h2 id="fundtokenamount-&#x21D2;-admin">fund(tokenAmount) &#x21D2; <code>admin</code></h2>
+<p>Send tokens to pool for sale, fund the sale</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tokenAmount</td>
+<td><code>Integer</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="removeOtherERC20Tokens"></a></p>
+<h2 id="removeothererc20tokenstokenaddress-toaddress-&#x21D2;-admin">removeOtherERC20Tokens(tokenAddress, toAddress) &#x21D2; <code>admin</code></h2>
+<p>Remove Tokens from other ERC20 Address (in case of accident)</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tokenAddress</td>
+<td><code>Address</code></td>
+</tr>
+<tr>
+<td>toAddress</td>
+<td><code>Address</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="deploy"></a></p>
+<h2 id="deploytradevalue-tokensforsale-startdate-enddate-individualminimumamount-individualmaximumamount-istokenswapatomic-minimumraise-feeamount-&#x21D2;-admin">deploy(tradeValue, tokensForSale, startDate, endDate, individualMinimumAmount, individualMaximumAmount, isTokenSwapAtomic, minimumRaise, feeAmount) &#x21D2; <code>admin</code></h2>
+<p>Deploy the Pool Contract</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tradeValue</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>tokensForSale</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>startDate</td>
+<td><code>Date</code></td>
+</tr>
+<tr>
+<td>endDate</td>
+<td><code>Date</code></td>
+</tr>
+<tr>
+<td>individualMinimumAmount</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>individualMaximumAmount</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>isTokenSwapAtomic</td>
+<td><code>Boolean</code></td>
+</tr>
+<tr>
+<td>minimumRaise</td>
+<td><code>Integer</code></td>
+</tr>
+<tr>
+<td>feeAmount</td>
+<td><code>Integer</code></td>
+</tr>
+</tbody>
+</table>
+<p><a name="getOwner"></a></p>
+<h2 id="getowneraddress-&#x21D2;-admin">getOwner(Address) &#x21D2; <code>admin</code></h2>
+<p>Get owner address of contract</p>
+<p><strong>Kind</strong>: global function  </p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Address</td>
+<td><code>Address</code></td>
+</tr>
+</tbody>
+</table>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"api.md","glossary":"GLOSSARY.md","summary":"toc.md"},"variables":{},"gitbook":"3.2.2"},"file":{"path":"api.md","mtime":"2020-12-03T00:18:53.031Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2020-12-16T10:25:24.316Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

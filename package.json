@@ -1,0 +1,74 @@
+{
+    "name": "bepro-js",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/betprotocol/bepro-js.git"
+    },
+    "dependencies": {
+        "@openzeppelin/contracts": "^3.2.0",
+        "abi-decoder": "^1.2.0",
+        "accounting": "^0.4.1",
+        "babel-cli": "^6.26.0",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-es2017": "^6.24.1",
+        "babel-preset-stage-2": "^6.24.1",
+        "big-number": "^2.0.0",
+        "bn.js": "^5.1.3",
+        "chai": "^4.2.0",
+        "crypto-js": "^3.1.9-1",
+        "dayjs": "^1.9.4",
+        "delay": "^4.4.0",
+        "dotenv": "^8.2.0",
+        "execution-time": "^1.4.1",
+        "express": "^4.17.1",
+        "left-pad": "^1.3.0",
+        "lodash": "^4.17.10",
+        "mocha": "^5.1.1",
+        "moment": "^2.21.0",
+        "mongoose": "^5.9.5",
+        "randomhex": "^0.1.5",
+        "web3": "1.0.0-beta.53"
+    },
+    "scripts": {
+        "test": "./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
+        "index": "babel-node ./index.js --presets es2015,stage-2",
+        "docs:api": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/**/*.js > docs/README.md",
+        "docs:prepare": "gitbook install",
+        "docs:build": "npm run docs:prepare && npm run docs:api && gitbook build",
+        "docs:serve": "npm run docs:prepare && npm run docs:api && gitbook serve",
+        "docs:clean": "rimraf _book"
+    },
+    "devDependencies": {
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-es2015": "^6.24.1",
+        "babel-register": "^6.26.0",
+        "gitbook-cli": "^2.3.2",
+        "jsdoc-babel": "^0.5.0",
+        "jsdoc-md": "^8.0.0",
+        "jsdoc-to-markdown": "^6.0.1",
+        "should": "^7.1.0",
+        "supertest": "^1.0.0"
+    },
+    "babel": {
+        "presets": [
+            "env",
+            "es2015",
+            "stage-2"
+        ],
+        "plugins": [
+            "transform-runtime"
+        ],
+        "sourceMaps": true,
+        "retainLines": true
+    },
+    "author": "",
+    "license": "ISC"
+}

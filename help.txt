@@ -1,0 +1,8 @@
+// Update Github
+``git push origin master``
+
+// Create a new version 
+``npm version VERSION```
+
+// Publish new version
+``npm publish``
