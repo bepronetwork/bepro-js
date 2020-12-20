@@ -1,6 +1,6 @@
 # bepro-js
 
-bepro-js is package to integrate Polkastarter Ethereum Integrations
+bepro-js is package to integrate Bepro Ethereum Integrations
 
 ## Installation
 
