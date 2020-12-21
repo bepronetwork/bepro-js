@@ -1,6 +1,30 @@
 pragma solidity ^0.5.8;
 
 /**
+ * @title ERC20Basic
+ * @dev Simpler version of ERC20 interface
+ * @dev see https://github.com/ethereum/EIPs/issues/179
+ */
+contract ERC20Basic {
+    function decimals() public view returns (uint8);
+    function totalSupply() public view returns (uint256);
+    function balanceOf(address who) public view returns (uint256);
+    function transfer(address to, uint256 value) public returns (bool);
+    event Transfer(address indexed from, address indexed to, uint256 value);
+}
+
+/**
+ * @title ERC20 interface
+ * @dev see https://github.com/ethereum/EIPs/issues/20
+ */
+contract ERC20 is ERC20Basic {
+  function allowance(address owner, address spender) public view returns (uint256);
+  function transferFrom(address from, address to, uint256 value) public returns (bool);
+  function approve(address spender, uint256 value) public returns (bool);
+  event Approval(address indexed owner, address indexed spender, uint256 value);
+}
+
+/**
  * @dev Wrappers over Solidity's arithmetic operations with added overflow
  * checks.
  *
@@ -250,6 +274,8 @@ contract Exchange is Pausable {
     using SafeMath for uint256;
 
     uint256 public eventId = 0;
+    uint256 public ODD_DECIMALS = 10**4; // 1*10**4 = 10000 => 1.000
+    uint256 public CURRENCY_DECIMALS = 10**18; 
     uint256[] public eventIds;
     mapping(uint256 => Event) public events;
     mapping(address => uint256[]) public myEvents;
@@ -258,7 +284,7 @@ contract Exchange is Pausable {
     struct Fraction {
         uint256 pool;           /* (Pool) Total pool amount (ETH in WEI) */
         uint256 cost;           /* (VF) Fraction Cost (ETH in WEI) */
-        uint256 odd;            /* (Odd) Odd of Fraction (in 10**18) (ex : 2.41 = 2.41*10**18) */
+        uint256 odd;            /* (Odd) Odd of Fraction (in 10**4) (ex : 2.410 = 2410) */
         /* IN + OUT */
         uint256 amount;         /* (#F) Total amount of fractions (in 10**18)  */
         /* IN */
@@ -295,16 +321,7 @@ contract Exchange is Pausable {
     event BuyEvent(uint256 indexed id, uint256 indexed resultSpaceId, uint256 fractionAmount, uint256 fractionCost, address indexed buyer);
     event CloseEvent(uint256 indexed id, uint256 indexed resultSpaceId);
     event WithdrawEvent(uint256 indexed id, uint256 winAmount, address indexed buyer);
-    event SellEvent(uint256 indexed id, uint256 liquidateAmount, address indexed sellet);
-
-
-    /**
-    * @dev Modifier to make a function callable only when the contract is not paused.
-    */
-    modifier whenFinalized() {
-        require(!paused, "Has to be unpaused");
-        _;
-    }
+    event SellEvent(uint256 indexed id, uint256 liquidateAmount, address indexed seller);
 
     constructor() public {
        
@@ -321,7 +338,7 @@ contract Exchange is Pausable {
     function createEvent(uint256[] memory _resultSpaceIds /* Descriptions */, string memory _urlOracle, string memory _eventName) payable public onlyOwner returns (bool success) {
         require(_resultSpaceIds.length == 2, "Result Spaces need to be 2 "); 
         uint256 resultId = 1;
-        uint256 fractionAmount = 100; /* Per result Space */
+        uint256 fractionAmount = 100*CURRENCY_DECIMALS;
         uint256 initialFractionCost = msg.value.div(_resultSpaceIds.length).div(fractionAmount); /* Initial Amount */
         require(initialFractionCost > 0, "Initial Fraction Cost has to be > 0"); /* Initial Fraction Cost has to be > 0 */
 
@@ -342,7 +359,7 @@ contract Exchange is Pausable {
             Fraction storage fraction = resultSpace.fraction;
             fraction.pool = msg.value.div(_resultSpaceIds.length);
             fraction.cost = initialFractionCost;
-            fraction.odd = _resultSpaceIds.length;
+            fraction.odd = _resultSpaceIds.length*ODD_DECIMALS;
             fraction.amount = fractionAmount;
             fraction.inPool = fractionAmount;
             fraction.relIn = fractionAmount;
@@ -463,8 +480,8 @@ contract Exchange is Pausable {
         ResultSpace storage resultSpace_opp = events[_eventId].resultSpaces[_oppResSpaceId];
         ResultSpace storage resultSpace = events[_eventId].resultSpaces[_resultSpaceId];
 
-        uint256 marketValue = _fractionsAmount.mul(resultSpace.fraction.cost);
-        uint256 fractionCost = resultSpace.fraction.cost;
+        uint256 marketValue =  getFractionsCost(_eventId, _resultSpaceId, _fractionsAmount);
+        uint256 previousFractionCost = resultSpace.fraction.cost;
 
         uint256 slipage = getSlipageOnBuy(_eventId, _resultSpaceId, _fractionsAmount);
         require(slipage < 3, "Slipage has to be less than 3");
@@ -474,9 +491,9 @@ contract Exchange is Pausable {
         /* Pool A2 */
         resultSpace.fraction.pool = resultSpace.fraction.pool.add(marketValue);
         /* Odd A2 */
-        resultSpace.fraction.odd = 1 + (resultSpace_opp.fraction.pool.div(resultSpace.fraction.pool));
+        resultSpace.fraction.odd = 1*ODD_DECIMALS + (resultSpace_opp.fraction.pool.mul(ODD_DECIMALS).div(resultSpace.fraction.pool));
         /* Odd B2 */
-        resultSpace_opp.fraction.odd = 1 + (resultSpace.fraction.pool.div(resultSpace_opp.fraction.pool));
+        resultSpace_opp.fraction.odd = 1*ODD_DECIMALS + (resultSpace.fraction.pool.mul(ODD_DECIMALS).div(resultSpace_opp.fraction.pool));
         /* VF A2 */
         resultSpace.fraction.cost = resultSpace.fraction.pool.div(resultSpace.fraction.amount);
         /* VF B2 */
@@ -484,46 +501,47 @@ contract Exchange is Pausable {
         /* #In A2 */
         uint256 relIn2 = _fractionsAmount;
         if(resultSpace.fraction.relIn > 0){
-            relIn2 = resultSpace.fraction.relIn.div(1 - (fractionCost.div(resultSpace.fraction.relIn)));
+            relIn2 = resultSpace.fraction.relIn.div(1 - (previousFractionCost.div(resultSpace.fraction.relIn)));
         }
         /* #In[] A2 */
         resultSpace.fraction.inPoolBalances[msg.sender] = relIn2.sub(resultSpace.fraction.relIn);
         resultSpace.fraction.relIn = relIn2;
         myEvents[msg.sender].push(_eventId);
-        emit BuyEvent(_eventId, _resultSpaceId, _fractionsAmount, fractionCost, msg.sender);
+        emit BuyEvent(_eventId, _resultSpaceId, _fractionsAmount, previousFractionCost, msg.sender);
         return true;
     }
 
-    function sell(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmountRelative /* #FT */) public returns (bool success) {
+    function sell(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmount) public returns (bool success) {
         require(isEventOpen(_eventId));
-        require(_fractionsAmountRelative > 0, "Amount has to be > 0");
+        require(_fractionsAmount > 0, "Amount has to be > 0");
         
         ResultSpace storage resultSpace = events[_eventId].resultSpaces[_resultSpaceId];
-        require(resultSpace.fraction.outPoolBalances[msg.sender] > 0, "No Balance to Liquidate");
         uint256 _oppResSpaceId = 1;
         if(_resultSpaceId == 1){_oppResSpaceId = 2;}
         ResultSpace storage resultSpace_opp = events[_eventId].resultSpaces[_oppResSpaceId];
 
-        uint256 fractionsAmount = (_fractionsAmountRelative.mul(resultSpace.fraction.outPool)).div(resultSpace.fraction.relOut);
-        uint256 slipage = getSlipageOnSell(_eventId, _resultSpaceId, fractionsAmount);
+        uint256 fractionsAmountRelative = (_fractionsAmount.mul(resultSpace.fraction.relOut)).div(resultSpace.fraction.outPool);
+        require(resultSpace.fraction.outPoolBalances[msg.sender] > fractionsAmountRelative, "No Balance to Liquidate");
+
+        uint256 slipage = getSlipageOnSell(_eventId, _resultSpaceId, _fractionsAmount);
         require(slipage < 3, "Slipage has to be less than 3");
 
-        uint256 marketValue = fractionsAmount.mul(resultSpace.fraction.cost);
+        uint256 marketValue = _fractionsAmount.mul(resultSpace.fraction.cost);
 
         /* #Out[] A2 */
-        resultSpace.fraction.outPoolBalances[msg.sender] = resultSpace.fraction.outPoolBalances[msg.sender].sub(_fractionsAmountRelative);
+        resultSpace.fraction.outPoolBalances[msg.sender] = resultSpace.fraction.outPoolBalances[msg.sender].sub(fractionsAmountRelative);
         /* Out A2 */
-        resultSpace.fraction.outPool = resultSpace.fraction.outPool.sub(fractionsAmount);
+        resultSpace.fraction.outPool = resultSpace.fraction.outPool.sub(_fractionsAmount);
         /* #Out A2 */
-        resultSpace.fraction.relOut = resultSpace.fraction.relOut.sub(_fractionsAmountRelative);
+        resultSpace.fraction.relOut = resultSpace.fraction.relOut.sub(fractionsAmountRelative);
         /* In A2 */
-        resultSpace.fraction.inPool = resultSpace.fraction.inPool.add(fractionsAmount);
+        resultSpace.fraction.inPool = resultSpace.fraction.inPool.add(_fractionsAmount);
         /* Pool A2 */
         resultSpace.fraction.pool = resultSpace.fraction.pool.sub(marketValue);
         /* Odd A2 */
-        resultSpace.fraction.odd = 1 + (resultSpace_opp.fraction.pool.div(resultSpace.fraction.pool));
+        resultSpace.fraction.odd = 1*ODD_DECIMALS + (resultSpace_opp.fraction.pool.mul(ODD_DECIMALS).div(resultSpace.fraction.pool));
         /* Odd B2 */
-        resultSpace_opp.fraction.odd = 1 + (resultSpace.fraction.pool.div(resultSpace_opp.fraction.pool));
+        resultSpace_opp.fraction.odd = 1*ODD_DECIMALS + (resultSpace.fraction.pool.mul(ODD_DECIMALS).div(resultSpace_opp.fraction.pool));
         /* VF A2 */
         resultSpace.fraction.cost = resultSpace.fraction.pool.div(resultSpace.fraction.amount);
         /* VF B2 */
@@ -539,36 +557,40 @@ contract Exchange is Pausable {
 
     function getSlipageOnSell(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmount) view public returns (uint256 slipage) {
         ResultSpace memory resultSpace = events[_eventId].resultSpaces[_resultSpaceId];
-        uint256 marketValue = _fractionsAmount.mul(resultSpace.fraction.cost);
+        uint256 marketValue = getFractionsCost(_eventId, _resultSpaceId, _fractionsAmount);
         uint256 newValue = (resultSpace.fraction.pool.sub(marketValue)).div(resultSpace.fraction.amount);
         return newValue.mul(100).div(marketValue);
     }
 
     function getSlipageOnBuy(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmount) view public returns (uint256 slipage) {
         ResultSpace memory resultSpace = events[_eventId].resultSpaces[_resultSpaceId];
-        uint256 marketValue = _fractionsAmount.mul(resultSpace.fraction.cost);
+        uint256 marketValue = getFractionsCost(_eventId, _resultSpaceId, _fractionsAmount);
         uint256 newValue = (resultSpace.fraction.pool.sub(marketValue)).div(resultSpace.fraction.amount);
         return marketValue.mul(100).div(newValue);
     }
 
-    function pullFractions(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmountRelative /* #FT */) public returns (bool success) {
+    function getFractionsCost(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmount) view public returns (uint256) {
+        ResultSpace memory resultSpace = events[_eventId].resultSpaces[_resultSpaceId];
+        return _fractionsAmount.mul(resultSpace.fraction.cost);
+    }
+
+    function pullFractions(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmount) public returns (bool success) {
         require(isEventOpen(_eventId));
-        require(_fractionsAmountRelative > 0, "Amount has to be > 0");
+        require(_fractionsAmount > 0, "Amount has to be > 0");
 
-        ResultSpace storage resultSpace = events[_eventId].resultSpaces[_resultSpaceId];
-        require(_fractionsAmountRelative <= resultSpace.fraction.inPoolBalances[msg.sender], "Fractions Amount Relative has to be > current balance");
+        ResultSpace storage resultSpace = events[_eventId].resultSpaces[_resultSpaceId];        
+        /* #FT */
+        uint256 fractionsAmountRelative = (_fractionsAmount.mul(resultSpace.fraction.relIn)).div(resultSpace.fraction.inPool);
+        require(resultSpace.fraction.inPoolBalances[msg.sender] > fractionsAmountRelative, "No Balance to Pull Fractions");
 
-        /* FT */
-        uint256 fractionsAmount = (_fractionsAmountRelative.mul(resultSpace.fraction.inPool)).div(resultSpace.fraction.relIn);
-        require(fractionsAmount > 0, "Fractions Amount has to be bigger than 0");
         /* #In[] A2 */
-        resultSpace.fraction.inPoolBalances[msg.sender] = resultSpace.fraction.inPoolBalances[msg.sender].sub(_fractionsAmountRelative);
+        resultSpace.fraction.inPoolBalances[msg.sender] = resultSpace.fraction.inPoolBalances[msg.sender].sub(fractionsAmountRelative);
         /* In A2 */
-        resultSpace.fraction.inPool = resultSpace.fraction.inPool.sub(fractionsAmount);
+        resultSpace.fraction.inPool = resultSpace.fraction.inPool.sub(_fractionsAmount);
         /* #In A2 */
-        resultSpace.fraction.relIn = resultSpace.fraction.relIn.sub(_fractionsAmountRelative);
+        resultSpace.fraction.relIn = resultSpace.fraction.relIn.sub(fractionsAmountRelative);
 
-        uint256 out2 = resultSpace.fraction.outPool.add(fractionsAmount);
+        uint256 out2 = resultSpace.fraction.outPool.add(_fractionsAmount);
         uint256 relOut2 = (resultSpace.fraction.relOut.mul(out2)).div(resultSpace.fraction.outPool);
 
         /* #Out[] A2 */
@@ -581,24 +603,24 @@ contract Exchange is Pausable {
         return true;
     }
 
-    function pushFractions(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmountRelative /* #FT */) public returns (bool success) {
+    function pushFractions(uint256 _eventId, uint256 _resultSpaceId, uint256 _fractionsAmount) public returns (bool success) {
         require(isEventOpen(_eventId));
-        require(_fractionsAmountRelative > 0, "Amount has to be > 0");
+        require(_fractionsAmount > 0, "Amount has to be > 0");
 
         ResultSpace storage resultSpace = events[_eventId].resultSpaces[_resultSpaceId];
-        require(_fractionsAmountRelative <= resultSpace.fraction.outPoolBalances[msg.sender], "Fractions Amount Relative has to be > current balance");
 
-        /* FT */
-        uint256 fractionsAmount = (_fractionsAmountRelative.mul(resultSpace.fraction.outPool)).div(resultSpace.fraction.relOut);
-        require(fractionsAmount > 0, "Fractions Amount has to be bigger than 0");
+        /* #FT */
+        uint256 fractionsAmountRelative = (_fractionsAmount.mul(resultSpace.fraction.relOut)).div(resultSpace.fraction.outPool);
+        require(resultSpace.fraction.outPoolBalances[msg.sender] > fractionsAmountRelative, "No Balance to Pull Fractions");
+ 
         /* #Out[] A2 */
-        resultSpace.fraction.outPoolBalances[msg.sender] = resultSpace.fraction.outPoolBalances[msg.sender].sub(_fractionsAmountRelative);
+        resultSpace.fraction.outPoolBalances[msg.sender] = resultSpace.fraction.outPoolBalances[msg.sender].sub(fractionsAmountRelative);
         /* Out A2 */
-        resultSpace.fraction.outPool = resultSpace.fraction.outPool.sub(fractionsAmount);
+        resultSpace.fraction.outPool = resultSpace.fraction.outPool.sub(_fractionsAmount);
         /* #Out A2 */
-        resultSpace.fraction.relOut = resultSpace.fraction.relOut.sub(_fractionsAmountRelative);
+        resultSpace.fraction.relOut = resultSpace.fraction.relOut.sub(fractionsAmountRelative);
 
-        uint256 in2 = resultSpace.fraction.inPool.add(fractionsAmount);
+        uint256 in2 = resultSpace.fraction.inPool.add(_fractionsAmount);
         uint256 relIn2 = (resultSpace.fraction.relIn.mul(in2)).div(resultSpace.fraction.inPool);
 
         /* #Int[] A2 */
@@ -623,7 +645,7 @@ contract Exchange is Pausable {
         emit CloseEvent(_eventId, _resultId);
     }
 
-    function withdrawWins(uint256 _eventId, uint256 _resultSpaceId) public whenFinalized returns (bool success) {
+    function withdrawWins(uint256 _eventId, uint256 _resultSpaceId) public returns (bool success) {
 
         require(isEventClosed(_eventId), "Event has to be closed");
         ResultSpace storage resultSpace = events[_eventId].resultSpaces[_resultSpaceId];
@@ -633,7 +655,7 @@ contract Exchange is Pausable {
         /* Get Win Amount */
         uint256 absoluteFractionsIn = (resultSpace.fraction.inPoolBalances[msg.sender].mul(resultSpace.fraction.inPool)).div(resultSpace.fraction.relIn);
         uint256 absoluteFractionsOut = (resultSpace.fraction.outPoolBalances[msg.sender].mul(resultSpace.fraction.outPool)).div(resultSpace.fraction.relOut);
-        uint256 winningAmount = (absoluteFractionsOut.add(absoluteFractionsIn)).mul(resultSpace.fraction.cost).mul(resultSpace.fraction.odd);
+        uint256 winningAmount = ((absoluteFractionsOut.add(absoluteFractionsIn)).mul(resultSpace.fraction.cost).mul(resultSpace.fraction.odd)).div(ODD_DECIMALS.mul(CURRENCY_DECIMALS));
 
         /* Send Winnings */
         msg.sender.transfer(winningAmount);
@@ -684,4 +706,8 @@ contract Exchange is Pausable {
             );
     }
 
+   function removeOtherERC20Tokens(address _tokenAddress, address _to) external onlyOwner {
+        ERC20 erc20Token = ERC20(_tokenAddress);
+        erc20Token.transfer(_to, erc20Token.balanceOf(address(this)));
+    } 
 }
