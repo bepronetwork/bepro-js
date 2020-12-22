@@ -407,15 +407,38 @@ contract Exchange is Pausable {
         uint256 fractionsToAddA = FA2.sub(resultSpace.fraction.amount);
         uint256 fractionsToAddB = FB2.sub(resultSpace_opp.fraction.amount);
 
+        uint256 inPoolA2 = resultSpace.fraction.inPool.add(fractionsToAddA);
+        uint256 inPoolB2 = resultSpace_opp.fraction.inPool.add(fractionsToAddB);
+
+        uint256 relIn2 = fractionsToAddA;
+        uint256 relIn2_opp = fractionsToAddB;
+
+        if(resultSpace.fraction.relIn > 0){
+            relIn2 = inPoolA2.mul(resultSpace.fraction.relIn).div(resultSpace.fraction.inPool);
+        }
+        if(resultSpace_opp.fraction.relIn > 0){
+            relIn2_opp = inPoolB2.mul(resultSpace_opp.fraction.relIn).div(resultSpace_opp.fraction.inPool);
+        }        
+
         /* INA2 */
-        resultSpace.fraction.inPool = resultSpace.fraction.inPool.add(fractionsToAddA);
+        resultSpace.fraction.inPool = inPoolA2;
         /* INB2 */
-        resultSpace_opp.fraction.inPool = resultSpace_opp.fraction.inPool.add(fractionsToAddB);
+        resultSpace_opp.fraction.inPool = inPoolB2;
+
+        /* INA[]2 */
+        resultSpace.fraction.inPoolBalances[msg.sender] = resultSpace.fraction.inPoolBalances[msg.sender].add(relIn2.sub(resultSpace.fraction.relIn));
+        /* INB[]2 */
+        resultSpace_opp.fraction.inPoolBalances[msg.sender] = resultSpace_opp.fraction.inPoolBalances[msg.sender].add(relIn2_opp.sub(resultSpace_opp.fraction.relIn));
 
         /* LiqA[]2 */
         resultSpace.fraction.liquidity[msg.sender] = resultSpace.fraction.liquidity[msg.sender].add(fractionsToAddA);
         /* LiqB[]2 */
         resultSpace_opp.fraction.liquidity[msg.sender] = resultSpace_opp.fraction.liquidity[msg.sender].add(fractionsToAddB);
+
+        /* #INA2 */
+        resultSpace.fraction.relIn = relIn2;
+        /* #INB2 */
+        resultSpace_opp.fraction.relIn = relIn2_opp;
 
         resultSpace.fraction.amount = FA2;
         resultSpace_opp.fraction.amount = FB2;
@@ -452,18 +475,38 @@ contract Exchange is Pausable {
         resultSpace_opp.fraction.amount = resultSpace_opp.fraction.amount.sub(resultSpace_opp.fraction.liquidity[msg.sender]);
 
         /* INA2 */
-        resultSpace.fraction.inPool = resultSpace.fraction.inPool.sub(resultSpace.fraction.liquidity[msg.sender]);
+        uint256 inPoolA2 = resultSpace.fraction.inPool.sub(resultSpace.fraction.liquidity[msg.sender]);
         /* INB2 */
-        resultSpace_opp.fraction.inPool = resultSpace_opp.fraction.inPool.sub(resultSpace_opp.fraction.liquidity[msg.sender]);
+        uint256 inPoolB2 = resultSpace_opp.fraction.inPool.sub(resultSpace_opp.fraction.liquidity[msg.sender]);
+
+        /* #INA2 */
+        uint256 relAIn = resultSpace.fraction.relIn.mul(inPoolA2).div(resultSpace.fraction.inPool);
+        /* #INB2 */
+        uint256 relBIn = resultSpace_opp.fraction.relIn.mul(inPoolB2).div(resultSpace_opp.fraction.inPool);
+
+        /* Initial Fractions Amount */
+        uint256 initialFractionsA = resultSpace.fraction.inPoolBalances[msg.sender].mul(resultSpace.fraction.inPool).div(resultSpace.fraction.relIn);
+        uint256 initialFractionsB = resultSpace_opp.fraction.inPoolBalances[msg.sender].mul(resultSpace_opp.fraction.inPool).div(resultSpace_opp.fraction.relIn);
+
+        /* INA[]2 */
+        resultSpace.fraction.inPoolBalances[msg.sender] = relAIn.mul(initialFractionsA.sub(resultSpace.fraction.liquidity[msg.sender])).div(inPoolA2);
+        /* INB[]2 */
+        resultSpace_opp.fraction.inPoolBalances[msg.sender] = relBIn.mul(initialFractionsB.sub(resultSpace_opp.fraction.liquidity[msg.sender])).div(inPoolB2);
+
+        resultSpace.fraction.inPool = inPoolA2;
+        resultSpace_opp.fraction.inPool = inPoolB2;
+
+        resultSpace.fraction.relIn = relAIn;
+        resultSpace_opp.fraction.relIn = relBIn;
+
+        /* Remove Liquidity Amount */
+        resultSpace.fraction.liqAmount = resultSpace.fraction.liqAmount.sub(resultSpace.fraction.liquidity[msg.sender]);
+        resultSpace_opp.fraction.liqAmount = resultSpace_opp.fraction.liqAmount.sub(resultSpace_opp.fraction.liquidity[msg.sender]);
 
         /* LiqA[]2 */
         resultSpace.fraction.liquidity[msg.sender] = 0;
         /* LiqB[]2 */
         resultSpace_opp.fraction.liquidity[msg.sender] = 0;
-
-        /* Remove Liquidity Amount */
-        resultSpace.fraction.liqAmount = resultSpace.fraction.liqAmount.sub(resultSpace.fraction.liquidity[msg.sender]);
-        resultSpace_opp.fraction.liqAmount = resultSpace_opp.fraction.liqAmount.sub(resultSpace_opp.fraction.liquidity[msg.sender]);
 
         uint256 totalLiquidity = liqPoolAfromUser.mul(resultSpace.fraction.cost).add(liqPoolBfromUser.mul(resultSpace_opp.fraction.cost));
         /* Remove Liquidity */
@@ -582,6 +625,9 @@ contract Exchange is Pausable {
         /* #FT */
         uint256 fractionsAmountRelative = (_fractionsAmount.mul(resultSpace.fraction.relIn)).div(resultSpace.fraction.inPool);
         require(resultSpace.fraction.inPoolBalances[msg.sender] > fractionsAmountRelative, "No Balance to Pull Fractions");
+
+        uint256 fractionsOutsideOfLiquidity = resultSpace.fraction.relIn.mul(resultSpace.fraction.inPoolBalances[msg.sender]).div(resultSpace.fraction.inPool);
+        require(_fractionsAmount < fractionsOutsideOfLiquidity, "Amount of Fractions outside of liquidity have to be bigger than proposed"); 
 
         /* #In[] A2 */
         resultSpace.fraction.inPoolBalances[msg.sender] = resultSpace.fraction.inPoolBalances[msg.sender].sub(fractionsAmountRelative);
