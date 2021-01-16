@@ -5,40 +5,70 @@ import { mochaAsync } from './utils';
 import moment from 'moment';
 import Application from '../src/models';
 import delay from 'delay';
-var contractAddress = '';
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
 const expect = chai.expect;
-const tokenPurchaseAmount = 0.0000000000021455460;
-const tokenFundAmount = 0.000000000003455460;
-const tradeValue = 0.0000000000012342;
+const ethAmount = 0.1;
+var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
 
 context('Tests', async () => {
-    var swapContract;
+    var exchangeContract;
     var app;
+    var eventId;
    
     before( async () =>  {
         app = new Application({test : true, mainnet : false});
     });
 
-    it('should deploy Fixed Swap Contract', mochaAsync(async () => {
-
+    it('should deploy Exchange Contract', mochaAsync(async () => {
         app = new Application({test : true, mainnet : false});
         /* Create Contract */
-        swapContract = app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        exchangeContract = app.getExchangeContract({contractAddress : contractAddress});
         /* Deploy */
-        let res = await swapContract.deploy({
-            tradeValue : tradeValue, 
-            tokensForSale : tokenFundAmount, 
-            isTokenSwapAtomic : true,
-            individualMaximumAmount : tokenFundAmount,
-            startDate : moment().add(6, 'minutes'),
-            endDate : moment().add(8, 'minutes'),
-            hasWhitelisting : true
-        });
-        contractAddress = swapContract.getAddress();
+        let res = await exchangeContract.deploy({});
+        contractAddress = exchangeContract.getAddress();
         expect(res).to.not.equal(false);
     }));
+    
 
+    it('should create an Event', mochaAsync(async () => {
+        /* Create Event */
+        let res = await exchangeContract.createEvent({
+            resultSpaceIds : [2, 3], 
+            urlOracle : 'asd', 
+            eventName : 'Porto vs Benfica', 
+            ethAmount
+        });
+        expect(res).to.not.equal(false);
+        /* Get If Event was created */
+        res = await exchangeContract.getEvents();
+        expect(res.length).to.equal(1);
+        eventId = res[0];
+    }));
+
+    it('should get event data', mochaAsync(async () => {
+        /* Get If Event was created */
+        let res = await exchangeContract.getEventData({event_id : eventId});
+        console.log("res", res);
+    }));
+
+    it('should get result space data', mochaAsync(async () => {
+        /* Get If Event was created */
+        let res = await exchangeContract.getResultSpaceData({event_id : eventId, resultSpace_id : 1});
+        console.log("res", res);
+    }));
+
+    it('should be able to add liquidity', mochaAsync(async () => {
+        /* Get If Event was created */
+        let res = await exchangeContract.addLiquidity({event_id : eventId, ethAmount});
+        console.log("res", res);
+    }));
+
+    it('should be able to buy fractions', mochaAsync(async () => {
+        /* Get If Event was created */
+        let res = await exchangeContract.buy({event_id : eventId, fractions_amount : 0.0001, resultSpace_id : 1});
+        console.log("res", res);
+    }));
+    
 
 });

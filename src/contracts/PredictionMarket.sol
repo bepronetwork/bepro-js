@@ -275,7 +275,7 @@ contract Exchange is Pausable {
 
     uint256 public eventId = 0;
     uint256 public ODD_DECIMALS = 10**4; // 1*10**4 = 10000 => 1.000
-    uint256 public CURRENCY_DECIMALS = 10**18; 
+    uint256 public CURRENCY_DECIMALS = 10**7; 
     uint256[] public eventIds;
     mapping(uint256 => Event) public events;
     mapping(address => uint256[]) public myEvents;

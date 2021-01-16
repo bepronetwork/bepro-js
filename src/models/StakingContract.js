@@ -1,22 +1,23 @@
-import { exchange } from "../interfaces";
+import { staking } from "../interfaces";
 import Contract from "./Contract";
 import Numbers from "../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
 
 /**
- * Exchange Contract Object
- * @constructor ExchangeContract
+ * Staking Contract Object
+ * @constructor StakingContract
  * @param {Web3} web3
  * @param {Address} tokenAddress
  * @param {Integer} decimals
  * @param {Address} contractAddress ? (opt)
  */
 
-class ExchangeContract {
+class StakingContract {
 	constructor({
 		web3,
-		contractAddress = null /* If not deployed */,
+        contractAddress = null /* If not deployed */,
+        tokenAddress, /* Token Address */
 		acc,
 	}) {
 		try {
@@ -30,7 +31,11 @@ class ExchangeContract {
 
 			this.params = {
 				web3: web3,
-				contractAddress: contractAddress,
+                contractAddress: contractAddress,
+                erc20TokenAddress :  new ERC20TokenContract({
+                    web3: params.web3,
+                    contractAddress: params.tokenAddress
+                }),
 				contract: new Contract(web3, exchange, contractAddress),
 			};
 
@@ -38,6 +43,25 @@ class ExchangeContract {
 			throw err;
 		}
 	}
+
+    /**
+        * @constructor Deploy 
+    */
+    async deploy() {
+        try {
+            const contractDeployed = await this.deploy({
+                erc20Address: this.params.tokenAddress
+            })
+            this.__assert();
+
+            return {
+                address: contractDeployed.address,
+                transactionHash: contractDeployed.transactionHash
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
 	__init__() {
 		try {
@@ -487,7 +511,7 @@ class ExchangeContract {
 	};
 
 	__assert() {
-		this.params.contract.use(exchange, this.getAddress());
+		this.params.contract.use(staking, this.getAddress());
 	}
 
 
@@ -531,4 +555,4 @@ class ExchangeContract {
 	};
 }
 
-export default ExchangeContract;
+export default StakingContract;
