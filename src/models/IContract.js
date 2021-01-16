@@ -1,4 +1,4 @@
-import Contract from "./Contract";
+import Contract from "../utils/Contract";
 import _ from "lodash";
 
 /**

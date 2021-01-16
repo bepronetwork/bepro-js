@@ -1,6 +1,5 @@
 let index = {
-    ExchangeContract : require("./src/models/ExchangeContract"),
-    Application : require("./src/models/index")
+    Application : require("./src/Application")
 };
 
 module.exports = index;

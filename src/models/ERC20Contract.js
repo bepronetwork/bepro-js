@@ -2,7 +2,7 @@ import { ierc20 } from "../interfaces";
 import Numbers from "../utils/Numbers";
 import IContract from './IContract';
 
-class ERC20TokenContract extends IContract {
+class ERC20Contract extends IContract {
 	constructor(params) {
 		super({...params, interface : ierc20});
 	}
@@ -87,4 +87,4 @@ class ERC20TokenContract extends IContract {
 	}
 }
 
-export default ERC20TokenContract;
+export default ERC20Contract;

@@ -14,7 +14,7 @@ npm i bepro-js
 
 ```javascript
 import moment from 'moment';
-import Application from 'bepro-js/models';
+import Application from 'bepro-js';
 
 /* Test Version */
 let app = new Application({test : true});

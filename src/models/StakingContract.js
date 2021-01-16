@@ -1,5 +1,5 @@
 import { staking } from "../interfaces";
-import ERC20TokenContract from './ERC20TokenContract';
+import ERC20Contract from './ERC20Contract';
 import IContract from './IContract';
 import _ from "lodash";
 import Numbers from "../utils/Numbers";
@@ -15,11 +15,11 @@ import dayjs from 'dayjs'
  */
 
 class StakingContract extends IContract {
-	constructor({...params, tokenAddress, /* Token Address */}) {
+	constructor({...params, tokenAddress /* Token Address */}) {
 		try {
             super({...params, interface : staking});
             if(tokenAddress){
-                this.params.erc20TokenAddress = new ERC20TokenContract({
+                this.params.erc20TokenAddress = new ERC20Contract({
                     web3: params.web3,
                     contractAddress: tokenAddress
                 });
@@ -187,8 +187,8 @@ class StakingContract extends IContract {
 	 * @description Approve ERC20 Allowance for Transfer for Subscribe Product
     */
     approveERC20Transfer = async () => {
-        let totalMaxAmount = await this.params.erc20TokenContract.totalSupply();
-        await this.params.erc20TokenContract.approve({
+        let totalMaxAmount = await this.getERC20Contract().totalSupply();
+        await this.getERC20Contract().approve({
             address: this.getAddress(),
             amount: Numbers.toSmartContractDecimals(
                 totalMaxAmount,
@@ -211,7 +211,7 @@ class StakingContract extends IContract {
             this.getERC20Contract().getDecimals()
         )
         /* Verify if transfer is approved for this amount */
-        let isApproved = await this.params.erc20TokenContract.isApproved({
+        let isApproved = await this.getERC20Contract().isApproved({
             address : address, amount, spenderAddress : this.getAddress()
         })
         if(!isApproved){
@@ -370,13 +370,13 @@ class StakingContract extends IContract {
         this.params.contract.use(staking, this.getAddress());
         
         /* Set Token Address Contract for easy access */
-        this.params.erc20TokenAddress = new ERC20TokenContract({
+        this.params.ERC20Contract = new ERC20TokenContract({
             web3: this.web3,
             contractAddress: await this.erc20()
         });
 
         /* Assert Token Contract */
-        await this.params.erc20TokenAddress.__assert();
+        await this.getERC20Contract().__assert();
 	}
 
 
@@ -399,7 +399,7 @@ class StakingContract extends IContract {
 		return res;
     };
 
-    getERC20Contract = () => this.params.erc20TokenContract;
+    getERC20Contract = () => this.params.ERC20Contract;
 }
 
 export default StakingContract;
