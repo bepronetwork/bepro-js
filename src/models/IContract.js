@@ -6,7 +6,7 @@ import _ from "lodash";
  * @constructor IContract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
- * @param {Interface} Interface 
+ * @param {ABI} abi 
  * @param {Account} acc ? (opt)
  */
 
@@ -14,11 +14,11 @@ class IContract {
 	constructor({
 		web3,
         contractAddress = null /* If not deployed */,
-        interface,
+        abi,
         acc
 	}) {
 		try {
-            if(!interface){
+            if(!abi){
                 throw new Error("No ABI Interface provided");
             }
 			if(!web3){
@@ -33,9 +33,9 @@ class IContract {
 
 			this.params = {
                 web3: web3,
-                inteface : interface,
+                abi : abi,
                 contractAddress: contractAddress,
-				contract: new Contract(web3, interface, contractAddress),
+				contract: new Contract(web3, abi, contractAddress),
             };
 		} catch (err) {
 			throw err;
@@ -111,7 +111,7 @@ class IContract {
             throw new Error("Contract is not deployed, first deploy it and provide a contract address");
         }  
         /* Use ABI */
-        this.params.contract.use(this.params.interface, this.getAddress());
+        this.params.contract.use(this.params.abi, this.getAddress());
 	}
 
 	/**
@@ -199,6 +199,31 @@ class IContract {
 		);
 	};
 
+	/**
+	 * @function safeGuardAllTokens
+	 * @description Remove all tokens for the sake of bug or problem in the smart contract, contract has to be paused first, only Admin
+	 * @param {Address} toAddress
+	 */
+	async safeGuardAllTokens({ toAddress }){
+		return await this.__sendTx(
+			this.params.contract
+				.getContract()
+				.methods.safeGuardAllTokens(toAddress)
+		);
+	};
+
+	/**
+	 * @function changeTokenAddress
+	 * @description Change Token Address of Application
+	 * @param {Address} newTokenAddress
+	 */
+	async changeTokenAddress({ newTokenAddress }){
+		return await this.__sendTx(
+			this.params.contract
+				.getContract()
+				.methods.changeTokenAddress(newTokenAddress)
+		);
+	};
 
     /**
 	 * @function getAddress

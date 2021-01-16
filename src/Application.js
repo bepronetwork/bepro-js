@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import { ExchangeContract, ERC20Contract, StakingContract } from "./models/index";
-import Account from './Account';
+import Account from './utils/Account';
 
 const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
@@ -17,7 +17,7 @@ const networksEnum = Object.freeze({
 	42: "Kovan",
 });
 
-class Application {
+export default class Application {
 	constructor({test=false, mainnet=true}) {
 		this.test = test;
 		this.mainnet = mainnet;
@@ -163,4 +163,3 @@ class Application {
 	};
 }
 
-export default Application;

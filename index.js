@@ -1,5 +1,5 @@
-let index = {
-    Application : require("./src/Application")
-};
+import Application from './src/Application';
 
-module.exports = index;
+export {
+    Application
+}

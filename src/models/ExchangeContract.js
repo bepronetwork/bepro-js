@@ -14,7 +14,7 @@ import IContract from './IContract';
 
 class ExchangeContract extends IContract{
 	constructor(params) {
-		super({...params, interface : exchange});
+		super({abi : exchange, ...params});
 	}
 
 	/* Get Functions */

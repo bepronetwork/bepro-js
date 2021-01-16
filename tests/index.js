@@ -3,8 +3,9 @@
 import chai from 'chai';
 import { mochaAsync } from './utils';
 import moment from 'moment';
-import Application from '../src/models';
+Application
 import delay from 'delay';
+import { Application } from '..';
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
 const expect = chai.expect;
@@ -20,8 +21,12 @@ context('Tests', async () => {
         app = new Application({test : true, mainnet : false});
     });
 
-    it('should deploy Exchange Contract', mochaAsync(async () => {
+    it('should start the Application', mochaAsync(async () => {
         app = new Application({test : true, mainnet : false});
+        expect(app).to.not.equal(null);
+    }));
+
+    it('should deploy Exchange Contract', mochaAsync(async () => {
         /* Create Contract */
         exchangeContract = app.getExchangeContract({contractAddress : contractAddress});
         /* Deploy */

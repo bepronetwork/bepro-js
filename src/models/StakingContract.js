@@ -15,9 +15,9 @@ import dayjs from 'dayjs'
  */
 
 class StakingContract extends IContract {
-	constructor({...params, tokenAddress /* Token Address */}) {
+	constructor({tokenAddress /* Token Address */, ...params}) {
 		try {
-            super({...params, interface : staking});
+            super({...params, abi : staking});
             if(tokenAddress){
                 this.params.erc20TokenAddress = new ERC20Contract({
                     web3: params.web3,

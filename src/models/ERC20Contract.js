@@ -4,7 +4,7 @@ import IContract from './IContract';
 
 class ERC20Contract extends IContract {
 	constructor(params) {
-		super({...params, interface : ierc20});
+		super({abi : ierc20, ...params});
 	}
 
 	async __assert() {
