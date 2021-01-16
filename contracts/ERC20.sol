@@ -509,12 +509,13 @@ contract Token is PausableToken, CappedToken {
     string public symbol; // = symbol
     uint8 public decimals;
     // 100 Million <---------|   |-----------------> 10^18
-    uint256 constant TOTAL_CAP = 100000000 * 1 ether;
+    uint256 public TOTAL_CAP; // = total cap;
 
     constructor(
-        string _name, 
-        string _symbol,
+        string memory _name, 
+        string memory _symbol,
         uint8 _decimals,
+        uint256 cap, 
         address _distributionContract1,
         address _distributionContract2,
         address _distributionContract3,
@@ -524,5 +525,7 @@ contract Token is PausableToken, CappedToken {
             name = _name;
             symbol = _symbol;
             decimals = _decimals;
+            TOTAL_CAP = cap * 1 ether; // ex : 10000000 = 10M
+            // cap <---------|   |-----------------> 10^18
     }
 }

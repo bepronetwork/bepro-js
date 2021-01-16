@@ -28,7 +28,6 @@ class Application {
 		}
 	}
 
-	
 	start = () => {
 		this.web3 = new Web3(
 			new Web3.providers.HttpProvider(
@@ -43,8 +42,6 @@ class Application {
 			}
 		}
 	}
-
-	
 
 	login = async () => {
 		try{
