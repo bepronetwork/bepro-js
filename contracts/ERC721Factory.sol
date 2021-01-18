@@ -1181,12 +1181,50 @@ interface IERC721Metadata {
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
+
+/**
+ * @title Ownable
+ * @dev The Ownable contract has an owner address, and provides basic authorization control
+ * functions, this simplifies the implementation of "user permissions".
+ */
+contract Ownable {
+    address public owner;
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+
+    /**
+    * @dev The Ownable constructor sets the original `owner` of the contract to the sender
+    * account.
+    */
+    constructor() public {
+        owner = msg.sender;
+    }
+
+    /**
+    * @dev Throws if called by any account other than the owner.
+    */
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    /**
+    * @dev Allows the current owner to transfer control of the contract to a newOwner.
+    * @param newOwner The address to transfer ownership to.
+    */
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0));
+        emit OwnershipTransferred(owner, newOwner);
+        owner = newOwner;
+    }
+}
+
 /**
  * @title ERC721 Non-Fungible Token Standard basic implementation
  * @dev see https://eips.ethereum.org/EIPS/eip-721
  */
 
-contract ERC721 is Context, IERC165, IERC721, IERC721Metadata, IERC721Enumerable, ERC165InterfacesSupported {
+contract ERC721 is Ownable, Context, IERC165, IERC721, IERC721Metadata, IERC721Enumerable, ERC165InterfacesSupported {
     using SafeMath for uint256;
     using Address for address;
     using EnumerableSet for EnumerableSet.UintSet;
@@ -1396,7 +1434,6 @@ contract ERC721 is Context, IERC165, IERC721, IERC721Metadata, IERC721Enumerable
     function transferFrom(address from, address to, uint256 tokenId) public {
         //solhint-disable-next-line max-line-length
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
-
         _transfer(from, to, tokenId);
     }
 
@@ -1638,4 +1675,28 @@ contract ERC721 is Context, IERC165, IERC721, IERC721Metadata, IERC721Enumerable
      * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
      */
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal { }
+}
+
+contract ERC721Wrapper is ERC721 {
+    constructor (string memory name, string memory symbol) public ERC721(name, symbol) { }
+
+    function exists(uint256 tokenId) public view returns (bool) {
+        return _exists(tokenId);
+    }
+
+    function setTokenURI(uint256 tokenId, string memory uri) public onlyOwner {
+        _setTokenURI(tokenId, uri);
+    }
+
+    function setBaseURI(string memory baseURI) public onlyOwner {
+        _setBaseURI(baseURI);
+    }
+
+    function mint(address to, uint256 tokenId) public onlyOwner {
+        _safeMint(to, tokenId);
+    }
+
+    function mint(address to, uint256 tokenId, bytes memory _data) public onlyOwner {
+        _safeMint(to, tokenId, _data);
+    }
 }

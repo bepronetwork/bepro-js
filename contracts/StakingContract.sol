@@ -436,6 +436,7 @@ contract StakingContract is Pausable {
 
         /* Update Subscription */
         products[_product_id].subscriptions[_subscription_id].finalized = true;
+        products[_product_id].subscriptions[_subscription_id].endDate = finishDate;
         uint256 APRedAmount = getAPRAmount(subscription.APR, subscription.startDate, finishDate, subscription.amount);
         require(APRedAmount > 0);
         uint256 totalAmount = subscription.amount.add(APRedAmount);

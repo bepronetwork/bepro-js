@@ -7,7 +7,7 @@ class ERC20Contract extends IContract {
 		super({abi : ierc20, ...params});
 	}
 
-	async __assert() {
+	__assert = async () =>  {
 		this.params.contract.use(ierc20, this.getAddress());
 		this.params.decimals = await this.getDecimalsAsync();
 	}

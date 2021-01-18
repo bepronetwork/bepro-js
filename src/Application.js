@@ -7,7 +7,7 @@ const ETH_URL_MAINNET =
 const ETH_URL_TESTNET =
 	"https://kovan.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const TEST_PRIVATE_KEY = 
-	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
+	"0xfdf5475fe6be966cf39e533e5b478b2e10d04e5e966be18f45714550d2429d21";
 
 const networksEnum = Object.freeze({
 	1: "Main",
@@ -79,7 +79,7 @@ export default class Application {
      * @param {Address} ContractAddress (Opt) If it is deployed
      * @description Create a Exchange Contract
      */
-	getExchangeContract =  ({ contractAddress=null}) => {
+	getExchangeContract =  ({ contractAddress=null}={}) => {
 		try{
 			return new ExchangeContract({
 				web3: this.web3,
@@ -96,11 +96,12 @@ export default class Application {
      * @param {Address} ContractAddress (Opt) If it is deployed
      * @description Create a Staking Contract
      */
-	getStakingContract =  ({ contractAddress=null}) => {
+	getStakingContract =  ({ contractAddress=null, tokenAddress=null}={}) => {
 		try{
 			return new StakingContract({
 				web3: this.web3,
 				contractAddress: contractAddress,
+				tokenAddress,
 				acc : this.test ? this.account : null
 			});
 		}catch(err){

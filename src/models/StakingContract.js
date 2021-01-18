@@ -4,8 +4,6 @@ import IContract from './IContract';
 import _ from "lodash";
 import Numbers from "../utils/Numbers";
 import dayjs from 'dayjs'
-
-
 /**
  * Staking Contract Object
  * @constructor StakingContract
@@ -19,7 +17,7 @@ class StakingContract extends IContract {
 		try {
             super({...params, abi : staking});
             if(tokenAddress){
-                this.params.erc20TokenAddress = new ERC20Contract({
+                this.params.ERC20Contract = new ERC20Contract({
                     web3: params.web3,
                     contractAddress: tokenAddress
                 });
@@ -93,9 +91,8 @@ class StakingContract extends IContract {
                 APR,
                 Numbers.timeToSmartContractTime(startDate),
                 Numbers.timeToSmartContractTime(endDate),
-                Numbers.toSmartContractDecimals(amount, this.getERC20Contract().getDecimals()),
-                true
-            )
+                Numbers.toSmartContractDecimals(amount, this.getERC20Contract().getDecimals())
+            ), true
         );
         return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
     
@@ -120,7 +117,7 @@ class StakingContract extends IContract {
         lockedUntilFinalization
       }){
         return await this.__sendTx(
-			this.params.contract.getContract().methods .methods.createProduct(
+			this.params.contract.getContract().methods.createProduct(
                 Numbers.timeToSmartContractTime(startDate),
                 Numbers.timeToSmartContractTime(endDate),
                 Numbers.toSmartContractDecimals(
@@ -204,7 +201,7 @@ class StakingContract extends IContract {
 	 * @param {Integer} amount
      * @returns {Boolean} Success
     */
-    subscribeProduct = async ({address, product_id, amount }) => {
+    subscribeProduct = async ({address, product_id, amount}) => {
         /* Get Decimals of Amount */
         let amountWithDecimals = Numbers.toSmartContractDecimals(
             amount,
@@ -342,17 +339,14 @@ class StakingContract extends IContract {
                 const productObj = await this.getProduct({
                     product_id: product
                 })
-
-                if (dayjs.unix(productObj.endDate) > dayjs()) {
-                    return await this.getAPRAmount({
-                        APR: productObj.APR,
-                        startDate: parseInt(productObj.startDate),
-                        endDate: parseInt(dayjs().unix()),
-                        amount: productObj.totalMaxAmount
-                    })
-                } else {
-                    return 0
-                }
+                console.log("project", productObj)
+                let res = await this.getAPRAmount({
+                    APR: productObj.APR,
+                    startDate: Numbers.timeToSmartContractTime(productObj.startDate),
+                    endDate: Numbers.timeToSmartContractTime(productObj.endDate),
+                    amount: productObj.totalMaxAmount
+                })
+                return parseFloat(res);
             })
         )
         return allProducts.reduce((a, b) => a + b, 0)
@@ -370,13 +364,14 @@ class StakingContract extends IContract {
         this.params.contract.use(staking, this.getAddress());
         
         /* Set Token Address Contract for easy access */
-        this.params.ERC20Contract = new ERC20TokenContract({
+        this.params.ERC20Contract = new ERC20Contract({
             web3: this.web3,
             contractAddress: await this.erc20()
         });
 
+
         /* Assert Token Contract */
-        await this.getERC20Contract().__assert();
+        await this.params.ERC20Contract.__assert();
 	}
 
 
@@ -385,17 +380,17 @@ class StakingContract extends IContract {
         * @override
         * @description Deploy the Staking Contract
     */
-	deploy = async ({callback}) => {
-        if(!this.params.tokenAddress){
+	deploy = async ({callback}={}) => {
+        if(!this.getERC20Contract()){
             throw new Error("No Token Address Provided");
         }
 		let params = [
-            this.params.tokenAddress
+            this.getERC20Contract().getAddress()
         ];
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */
-		this.__assert();
+		await this.__assert();
 		return res;
     };
 

@@ -1,6 +1,6 @@
 # bepro-js
 
-bepro-js is package to integrate Bepro Ethereum Integrations
+bepro-js is package to integrate BEPRO On-Chain products
 
 ## Installation
 
@@ -18,6 +18,16 @@ import Application from 'bepro-js';
 
 /* Test Version */
 let app = new Application({test : true});
+
+/* Generate a Staking Platform */
+let exchangeContract = app.getStakingContract({contractAddress : /* Contract Address (optional) */});
+
+/* Assert all data */
+await exchangeContract.__assert();
+/* or */
+
+/* Deploy The Contract */
+await exchangeContract.deploy();
 
 ## License
 
