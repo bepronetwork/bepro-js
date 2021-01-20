@@ -4,6 +4,7 @@ import chai from 'chai';
 import { mochaAsync } from './utils';
 import { Application } from '..';
 import moment from 'moment';
+import delay from 'delay';
 import Numbers from '../src/utils/Numbers';
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 const tokenAddress = "0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2";
@@ -15,15 +16,15 @@ var individualMinimumAmount = 10;
 var APR = 5;
 var startDate = moment().add(1, 'minutes');
 var endDate = moment().add(10, 'minutes');
-var adminDeposit = APR/365/24/60*9*individualMinimumAmount/100;
-var totalNeededAPR = APR/365/24/60*9*totalMaxAmount/100;
-
-console.log("totalNeededAPR", totalNeededAPR, adminDeposit);
+var timeDiff = Numbers.timeToSmartContractTime(endDate) - Numbers.timeToSmartContractTime(startDate);
+var userDepositNeededAPR = APR/365/24/60*timeDiff/60*individualMinimumAmount/100;
+var totalNeededAPR = APR/365/24/60*timeDiff/60*totalMaxAmount/100;
+Numbers.toSmartContractDecimals(parseFloat(1 / 11230.22341981130).toFixed(6), 18);
 
 context('Staking Contract', async () => {
     var stakingContract;
     var app;
-    var productId, subscriptionId, withdrawTx;
+    var productId, subscriptionId, withdrawTx, startDateSubscription, endDateSubscription;
    
     before( async () =>  {
         app = new Application({test : true, mainnet : false});
@@ -81,139 +82,138 @@ context('Staking Contract', async () => {
     }));
 
     it('should get APR Data', mochaAsync(async () => {
-
         let res = await stakingContract.getAPRAmount({
             APR, 
             startDate, 
             endDate, 
             amount : individualMinimumAmount
         });
-        console.log("here", "here")
-        expect(res).to.equal(adminDeposit.toFixed(18));
-
+        expect(res).to.equal(userDepositNeededAPR.toFixed(18));
         res = await stakingContract.getTotalNeededTokensForAPRbyAdmin();
-        console.log("res", res, Numbers.fromExponential(res))
-        expect(Numbers.fromExponential(res).toFixed(18)).to.equal(totalNeededAPR.toFixed(18));
+        expect(Numbers.fromExponential(res).toString()).to.equal(totalNeededAPR.toFixed(18));
     }));
 
-    // it('should get Held Tokens == 0', mochaAsync(async () => {
-    //     /* Create Event */
-    //     let res = await stakingContract.heldTokens();
-    //     expect(res).to.equal(0);
-    // }));
+    it('should get Held Tokens == 0', mochaAsync(async () => {
+        /* Create Event */
+        let res = await stakingContract.heldTokens();
+        expect(Numbers.fromExponential(res).toString()).to.equal(Number(0).toString());
+    }));
 
-    // it('should get Available Tokens == 0', mochaAsync(async () => {
-    //     /* Create Event */
-    //     let res = await stakingContract.availableTokens();
-    //     expect(res).to.equal(0);
-    // }));
+    it('should get Available Tokens == 0', mochaAsync(async () => {
+        /* Create Event */
+        let res = await stakingContract.availableTokens();
+        expect(Numbers.fromExponential(res).toString()).to.equal(Number(0).toString());
+    }));
 
-    // it('should get Future Locked Tokens == 0', mochaAsync(async () => {
-    //     let res = await stakingContract.futureLockedTokens();
-    //     expect(res).to.equal(0);
-    // }));
+    it('should get Future Locked Tokens == 0', mochaAsync(async () => {
+        let res = await stakingContract.futureLockedTokens();
+        expect(Numbers.fromExponential(res).toString()).to.equal(Number(0).toString());
+    }));
 
-    // it('should fund with tokens needed for APR', mochaAsync(async () => {
-    //     let neededTokensAmount = await stakingContract.getTotalNeededTokensForAPRbyAdmin();
-    //     let res = await stakingContract.depositAPRTokensByAdmin({amount : neededTokensAmount});
-    //     expect(res).to.not.equal(false);
-    // }));
+    it('should get tokens needed for APR == totalNeededAPR', mochaAsync(async () => {
+        let tokensNeeded = await stakingContract.getTotalNeededTokensForAPRbyAdmin();
+        expect(Numbers.fromExponential(totalNeededAPR.toFixed(18)).toString()).to.equal(Numbers.fromExponential(tokensNeeded).toString());
+    }));
 
-    // it('should get Held Tokens == APR Needed for 1 subscription with min Amount', mochaAsync(async () => {
-    //     let res = await stakingContract.heldTokens();
-    //     expect(res).to.equal(await stakingContract.getTotalNeededTokensForAPRbyAdmin());
-    // }));
+    it('should fund with tokens needed for APR', mochaAsync(async () => {
+        let neededTokensAmount = await stakingContract.getTotalNeededTokensForAPRbyAdmin();
+        let res = await stakingContract.depositAPRTokensByAdmin({amount : Numbers.fromExponential(neededTokensAmount).toString()});
+        expect(res).to.not.equal(false);
+    }));
 
-    // it('should get Available Tokens == APR Needed for 1 subscription with min Amount', mochaAsync(async () => {
-    //     let res = await stakingContract.availableTokens();
-    //     expect(res).to.equal(await stakingContract.getTotalNeededTokensForAPRbyAdmin());
-    // }));
+    it('should get Held Tokens == APR Needed for 1 subscription with min Amount', mochaAsync(async () => {
+        let res = await stakingContract.heldTokens();
+        let tokensNeeded = await stakingContract.getTotalNeededTokensForAPRbyAdmin();
+        expect(Numbers.fromExponential(res).toString()).to.equal(Numbers.fromExponential(tokensNeeded).toString());
+    }));
 
-
-    // it('should get subscribe to product Data & APR Right', mochaAsync(async () => {
-    //     /* Approve Tx */
-    //     let res = await stakingContract.approveERC20Transfer({
-    //         address,
-    //         product_id : productId,
-    //         amount : individualMinimumAmount
-    //     });
-
-    //     expect(res).to.not.equal(false);
-
-    //     res = await stakingContract.subscribeProduct({
-    //         address : await app.getAddress(),
-    //         product_id : productId,
-    //         amount : individualMinimumAmount
-    //     });
-    //     expect(res).to.not.equal(false);
-
-    //     res = await stakingContract.getSubscriptionsByAddress({address : await app.getAddress()});
-    //     expect(res.length).to.equal(1);
-    //     subscriptionId = res[0];
-    // }));
-
-    // it('should get Subscription Data Right', mochaAsync(async () => {
-    //     let res = await stakingContract.getSubscription({
-    //         subscription_id : subscriptionId,
-    //         product_id : productId
-    //     });
-
-    //     expect(res._id).to.equal(subscriptionId);
-    //     expect(res.productId).to.equal(productId);
-    //     expect(res.startDate).to.not.equal(false);
-    //     expect(res.endDate).to.not.equal(false);
-    //     expect(res.amount).to.equal(individualMinimumAmount);
-    //     expect(res.subscriberAddress).to.equal(await app.getAddress());
-    //     expect(res.APR).to.equal(adminDeposit);
-    //     expect(res.finalized).to.equal(false);
-    // }));
+    it('should get Available Tokens == APR Needed for 1 subscription with min Amount', mochaAsync(async () => {
+        let res = await stakingContract.availableTokens();
+        let tokensNeeded = await stakingContract.getTotalNeededTokensForAPRbyAdmin();
+        expect(Numbers.fromExponential(res).toString()).to.equal(Numbers.fromExponential(tokensNeeded).toString());
+    }));
 
 
-    // it('should get Held Tokens == APR Amount + indivualAmount', mochaAsync(async () => {
-    //     let res = await stakingContract.heldTokens();
-    //     expect(res).to.equal(adminDeposit + individualMinimumAmount);
-    // }));
+    it('should get subscribe to product Data & APR Right', mochaAsync(async () => {
+        /* Approve Tx */
+        let res = await stakingContract.approveERC20Transfer();
 
-    // it('should get Available Tokens == 0 (all used)', mochaAsync(async () => {
-    //     let res = await stakingContract.availableTokens();
-    //     expect(res).to.equal(0);
-    // }));
+        expect(res).to.not.equal(false);
 
-    // it('should get Future Locked Tokens == APR Amount', mochaAsync(async () => {
-    //     let res = await stakingContract.futureLockedTokens();
-    //     expect(res).to.equal(adminDeposit + individualMinimumAmount);
-    // }));
+        res = await stakingContract.subscribeProduct({
+            address : app.account.getAddress(),
+            product_id : productId,
+            amount : individualMinimumAmount 
+        });
+        expect(res).to.not.equal(false);
+
+        res = await stakingContract.getSubscriptionsByAddress({address : app.account.getAddress()});
+        expect(res.length).to.equal(1);
+        subscriptionId = res[0];
+    }));
+
+    it('should get Subscription Data Right', mochaAsync(async () => {
+        let res = await stakingContract.getSubscription({
+            subscription_id : subscriptionId,
+            product_id : productId
+        });
+        startDateSubscription = res.startDate;
+        endDateSubscription = res.endDate;
+        console.log("res", res)
+        expect(res.startDate).to.not.equal(false);
+        expect(res.endDate).to.not.equal(false);
+        expect(res.amount).to.equal(individualMinimumAmount.toString());
+        expect(res.subscriberAddress).to.equal(app.account.getAddress());
+        expect(res.APR).to.equal(APR);
+        expect(res.finalized).to.equal(false);
+    }));
 
 
-    // it('should withdraw Subscription', mochaAsync(async () => {
-    //     let res = await stakingContract.withdrawSubscription({
-    //         subscription_id : subscriptionId,
-    //         product_id : productId
-    //     });
-    //     withdrawTx = res;
-    //     expect(res).to.not.equal(false);
-    // }));
+    it('should get Held Tokens == APR Amount + indivualAmount', mochaAsync(async () => {
+        let res = await stakingContract.heldTokens();
+        expect(res).to.equal(Number(individualMinimumAmount + totalNeededAPR).toString());
+    }));
 
-    // it('should confirm Subscription Data after Withdraw', mochaAsync(async () => {
-    //     let res = await stakingContract.getSubscription({
-    //         subscription_id : subscriptionId,
-    //         product_id : productId
-    //     });
+    it('should get Future Locked Tokens == APR Amount', mochaAsync(async () => {
+        let res = await stakingContract.futureLockedTokens();
+        let userAPR = APR/365/24/60*(Numbers.timeToSmartContractTime(endDateSubscription)-Numbers.timeToSmartContractTime(startDateSubscription))/60*individualMinimumAmount/100;
+        expect(res).to.equal(Number(individualMinimumAmount + userAPR).toString());
+    }));
 
-    //     expect(res.endDate).to.not.equal(false);
-    //     expect(res.finalized).to.equal(true);
+    it('should get Available Tokens == 0 (all used)', mochaAsync(async () => {
+        let res = await stakingContract.availableTokens();
+        let userAPR = APR/365/24/60*(Numbers.timeToSmartContractTime(endDateSubscription)-Numbers.timeToSmartContractTime(startDateSubscription))/60*individualMinimumAmount/100;
+        expect(res).to.equal(Number(totalNeededAPR - userAPR).toFixed(18));
+    }));
+
+    it('should withdraw Subscription', mochaAsync(async () => {
+        let res = await stakingContract.withdrawSubscription({
+            subscription_id : subscriptionId,
+            product_id : productId
+        });
+        withdrawTx = res;
+        expect(res).to.not.equal(false);
+    }));
+
+    it('should confirm Subscription Data after Withdraw', mochaAsync(async () => {
+        let res = await stakingContract.getSubscription({
+            subscription_id : subscriptionId,
+            product_id : productId
+        });
+
+        expect(res.endDate).to.not.equal(false);
+        expect(res.finalized).to.equal(true);
 
 
-    //     let apr = await stakingContract.getAPRAmount({
-    //         APR : APR, 
-    //         startDate : res.startDate, 
-    //         endDate : res.endDate, 
-    //         amount : individualMinimumAmount
-    //     });
-    //     console.log("v", withdrawTx)
+        let apr = await stakingContract.getAPRAmount({
+            APR : APR, 
+            startDate : res.startDate, 
+            endDate : res.endDate, 
+            amount : individualMinimumAmount
+        });
+        console.log("res", res.withdrawAmount, individualMinimumAmount, apr)
     
-    //     expect(withdrawTx.amount).to.equal(apr + individualMinimumAmount);
-
-    // }));
+        expect(res.withdrawAmount).to.equal(Number(apr) + Number(individualMinimumAmount));
+    }));
 
 });

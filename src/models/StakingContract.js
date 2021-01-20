@@ -19,7 +19,8 @@ class StakingContract extends IContract {
             if(tokenAddress){
                 this.params.ERC20Contract = new ERC20Contract({
                     web3: params.web3,
-                    contractAddress: tokenAddress
+                    contractAddress: tokenAddress,
+                    acc : params.acc
                 });
             }
 
@@ -86,6 +87,10 @@ class StakingContract extends IContract {
      * @returns {Integer}
     */
     getAPRAmount = async ({APR, startDate, endDate, amount}) => {
+        console.log("APR",    APR,
+        Numbers.timeToSmartContractTime(startDate),
+        Numbers.timeToSmartContractTime(endDate),
+        Numbers.toSmartContractDecimals(amount, this.getERC20Contract().getDecimals()))
         let res = await this.__sendTx(
             this.params.contract.getContract().methods.getAPRAmount(
                 APR,
@@ -166,6 +171,7 @@ class StakingContract extends IContract {
         );
 
         return {
+            _id : product_id,
             createdAt: Numbers.fromSmartContractTimeToMinutes(res[0]),
             startDate: Numbers.fromSmartContractTimeToMinutes(res[1]),
             endDate: Numbers.fromSmartContractTimeToMinutes(res[2]),
@@ -210,7 +216,8 @@ class StakingContract extends IContract {
         /* Verify if transfer is approved for this amount */
         let isApproved = await this.getERC20Contract().isApproved({
             address : address, amount, spenderAddress : this.getAddress()
-        })
+        });
+
         if(!isApproved){
             throw new Error("Has to Approve Token Transfer First, use the 'approve' Call");
         }
@@ -219,7 +226,6 @@ class StakingContract extends IContract {
             this.params.contract
             .getContract()
             .methods.subscribeProduct(product_id, amountWithDecimals)
-            .send()
         )
     }
 
@@ -244,14 +250,15 @@ class StakingContract extends IContract {
         ); 
 
         return {
-            _id: Numbers.fromExponential(parseInt(res[0])),
-            productId: parseInt(res[1]),
+            _id: Numbers.fromExponential(res[0]),
+            productId: Numbers.fromExponential(res[1]),
             startDate: Numbers.fromSmartContractTimeToMinutes(res[2]),
             endDate: Numbers.fromSmartContractTimeToMinutes(res[3]),
             amount: Numbers.fromDecimals(res[4], this.getERC20Contract().getDecimals()),
             subscriberAddress: res[5],
             APR: parseInt(res[6]),
-            finalized: res[7]
+            finalized: res[7],
+            withdrawAmount: Numbers.fromDecimals(res[8], this.getERC20Contract().getDecimals()),
         }
     }
 
@@ -266,7 +273,6 @@ class StakingContract extends IContract {
             this.params.contract
             .getContract()
             .methods.withdrawSubscription(product_id, subscription_id)
-            .send()
        );
     }
 
@@ -280,8 +286,8 @@ class StakingContract extends IContract {
         let res = await this.__sendTx(
             this.params.contract
             .getContract()
-            .methods.getMySubscriptions(address)
-            .send()
+            .methods.getMySubscriptions(address),
+            true
         ); 
         return res.map(r => Numbers.fromExponential(r))
     }
@@ -339,11 +345,10 @@ class StakingContract extends IContract {
                 const productObj = await this.getProduct({
                     product_id: product
                 })
-                console.log("project", productObj)
                 let res = await this.getAPRAmount({
                     APR: productObj.APR,
-                    startDate: Numbers.timeToSmartContractTime(productObj.startDate),
-                    endDate: Numbers.timeToSmartContractTime(productObj.endDate),
+                    startDate: productObj.startDate,
+                    endDate: productObj.endDate,
                     amount: productObj.totalMaxAmount
                 })
                 return parseFloat(res);
@@ -366,7 +371,8 @@ class StakingContract extends IContract {
         /* Set Token Address Contract for easy access */
         this.params.ERC20Contract = new ERC20Contract({
             web3: this.web3,
-            contractAddress: await this.erc20()
+            contractAddress: await this.erc20(),
+            acc : this.acc
         });
 
 

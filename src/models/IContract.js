@@ -86,7 +86,7 @@ class IContract {
 					value
 				).catch(err => {throw err;});
 			} else if (this.acc && call) {
-				res = await f.call({ from: this.acc.getAddress() }).catch(err => {throw err;});
+				res = await f.call({ from : this.acc.getAddress() }).catch(err => {throw err;});
 			} else {
 				res = await f.call().catch(err => {throw err;});
 			}

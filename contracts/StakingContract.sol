@@ -287,6 +287,7 @@ contract StakingContract is Pausable {
         address subscriberAddress;
         uint256 APR; /* APR for this product */
         bool finalized;
+        uint256 withdrawAmount;
     }
 
     struct ProductAPR {
@@ -328,19 +329,25 @@ contract StakingContract is Pausable {
 
     function subscribeProduct(uint256 _product_id, uint256 _amount) external whenNotPaused {
 
+        uint256 time = block.timestamp;
         /* Confirm Amount is positive */
         require(_amount > 0);
      
         /* Confirm product still exists */
         require(block.timestamp < products[_product_id].endDate);
 
+        /* Confirm Subscription prior to opening */
+        if(block.timestamp < products[_product_id].startDate){
+            time = products[_product_id].startDate;
+        }
+        
         /* Confirm Max Amount was not hit already */
         require(products[_product_id].totalMaxAmount > (products[_product_id].currentAmount + _amount));
 
         /* Confirm Amount is bigger than minimum Amount */
         require(_amount >= products[_product_id].individualMinimumAmount);
         
-        uint256 futureAPRAmount = getAPRAmount(products[_product_id].APR, block.timestamp, products[_product_id].endDate, _amount);
+        uint256 futureAPRAmount = getAPRAmount(products[_product_id].APR, time, products[_product_id].endDate, _amount);
 
         /* Confirm the current funds can assure the user the APR is valid */
         require(availableTokens() >= futureAPRAmount);
@@ -355,8 +362,8 @@ contract StakingContract is Pausable {
         incrementId = incrementId + 1;
 
         /* Create SubscriptionAPR Object */
-        SubscriptionAPR memory subscriptionAPR = SubscriptionAPR(subscription_id, _product_id, block.timestamp, products[_product_id].endDate, _amount, 
-        msg.sender, products[_product_id].APR, false);
+        SubscriptionAPR memory subscriptionAPR = SubscriptionAPR(subscription_id, _product_id, time, products[_product_id].endDate, _amount, 
+        msg.sender, products[_product_id].APR, false, 0);
 
         /* Create new subscription */
         mySubscriptions[msg.sender].push(subscription_id);
@@ -380,7 +387,7 @@ contract StakingContract is Pausable {
         address[] memory addressesI;
         uint256[] memory subscriptionsI;
         
-        /* Create SubscriptionAPR Object */
+        /* Create ProductAPR Object */
         ProductAPR memory productAPR = ProductAPR(block.timestamp, _startDate, _endDate, _totalMaxAmount, _individualMinimumAmount, _APR, 0, _lockedUntilFinalization,
             addressesI, subscriptionsI);
 
@@ -407,53 +414,55 @@ contract StakingContract is Pausable {
     function withdrawSubscription(uint256 _product_id, uint256 _subscription_id) external whenNotPaused {
 
         /* Confirm Product exists */
-        require(products[_product_id].endDate != 0);
+        require(products[_product_id].endDate != 0, "Product has expired");
 
         /* Confirm Subscription exists */
-        require(products[_product_id].subscriptions[_subscription_id].endDate != 0);
+        require(products[_product_id].subscriptions[_subscription_id].endDate != 0, "Product does not exist");
 
         /* Confirm Subscription is not finalized */
-        require(products[_product_id].subscriptions[_subscription_id].finalized == false);
+        require(products[_product_id].subscriptions[_subscription_id].finalized == false, "Subscription was finalized already");
 
         /* Confirm Subscriptor is the sender */
-        require(products[_product_id].subscriptions[_subscription_id].subscriberAddress == msg.sender);
+        require(products[_product_id].subscriptions[_subscription_id].subscriberAddress == msg.sender, "Not the subscription owner");
 
         SubscriptionAPR memory subscription = products[_product_id].subscriptions[_subscription_id];
 
         /* Confirm start date has already passed */
-        require(block.timestamp > subscription.startDate);
+        require(block.timestamp < subscription.startDate, "Now is below the start date");
 
         /* Confirm end date for APR */
         uint256 finishDate = block.timestamp;
 
         /* Verify if date has passed the end date */
-        if(block.timestamp >= subscription.endDate){
-            finishDate = subscription.endDate;
+        if(block.timestamp >= products[_product_id].endDate){
+            finishDate = products[_product_id].endDate;
         }else{
             /* Confirm the Product can be withdrawn at any time */
-            require(products[_product_id].lockedUntilFinalization == false);
+            require(products[_product_id].lockedUntilFinalization == false, "Product has to close to be withdrawned");
         }
+
+        uint256 APRedAmount = getAPRAmount(subscription.APR, subscription.startDate, finishDate, subscription.amount);
+        require(APRedAmount > 0, "APR amount has to be bigger than 0");
+        uint256 totalAmount = subscription.amount.add(APRedAmount);
 
         /* Update Subscription */
         products[_product_id].subscriptions[_subscription_id].finalized = true;
         products[_product_id].subscriptions[_subscription_id].endDate = finishDate;
-        uint256 APRedAmount = getAPRAmount(subscription.APR, subscription.startDate, finishDate, subscription.amount);
-        require(APRedAmount > 0);
-        uint256 totalAmount = subscription.amount.add(APRedAmount);
+        products[_product_id].subscriptions[_subscription_id].withdrawAmount = totalAmount;
 
         /* Transfer funds to the subscriber address */
-        require(erc20.transfer(subscription.subscriberAddress, totalAmount));
+        require(erc20.transfer(subscription.subscriberAddress, totalAmount), "Transfer has failed");
 
         /* Sub to LockedTokens */
         lockedTokens = lockedTokens.sub(totalAmount);
     }   
 
-    function getSubscription(uint256 _subscription_id, uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, address, uint256, bool){
+    function getSubscription(uint256 _subscription_id, uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, address, uint256, bool, uint256){
 
         SubscriptionAPR memory subscription = products[_product_id].subscriptions[_subscription_id];
 
         return (subscription._id, subscription.productId, subscription.startDate, subscription.endDate, 
-            subscription.amount, subscription.subscriberAddress, subscription.APR, subscription.finalized);
+            subscription.amount, subscription.subscriberAddress, subscription.APR, subscription.finalized, subscription.withdrawAmount);
     }
     
     function getProduct(uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256, bool, address[] memory, uint256[] memory){
