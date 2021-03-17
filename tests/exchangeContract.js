@@ -53,25 +53,21 @@ context('Exchange Contract', async () => {
     it('should get event data', mochaAsync(async () => {
         /* Get If Event was created */
         let res = await exchangeContract.getEventData({event_id : eventId});
-        console.log("res", res);
     }));
 
     it('should get result space data', mochaAsync(async () => {
         /* Get If Event was created */
         let res = await exchangeContract.getResultSpaceData({event_id : eventId, resultSpace_id : 1});
-        console.log("res", res);
     }));
 
     it('should be able to add liquidity', mochaAsync(async () => {
         /* Get If Event was created */
         let res = await exchangeContract.addLiquidity({event_id : eventId, ethAmount});
-        console.log("res", res);
     }));
 
     it('should be able to buy fractions', mochaAsync(async () => {
         /* Get If Event was created */
         let res = await exchangeContract.buy({event_id : eventId, fractions_amount : 0.0001, resultSpace_id : 1});
-        console.log("res", res);
     }));
     
 

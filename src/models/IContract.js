@@ -107,7 +107,6 @@ class IContract {
     };
 
     __assert = async () => {
-		console.log("master")
         if(!this.getAddress()){
             throw new Error("Contract is not deployed, first deploy it and provide a contract address");
         }  

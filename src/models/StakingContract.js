@@ -87,10 +87,6 @@ class StakingContract extends IContract {
      * @returns {Integer}
     */
     getAPRAmount = async ({APR, startDate, endDate, amount}) => {
-        console.log("APR",    APR,
-        Numbers.timeToSmartContractTime(startDate),
-        Numbers.timeToSmartContractTime(endDate),
-        Numbers.toSmartContractDecimals(amount, this.getERC20Contract().getDecimals()))
         let res = await this.__sendTx(
             this.params.contract.getContract().methods.getAPRAmount(
                 APR,
@@ -191,7 +187,7 @@ class StakingContract extends IContract {
     */
     approveERC20Transfer = async () => {
         let totalMaxAmount = await this.getERC20Contract().totalSupply();
-        await this.getERC20Contract().approve({
+        return await this.getERC20Contract().approve({
             address: this.getAddress(),
             amount: Numbers.toSmartContractDecimals(
                 totalMaxAmount,
@@ -217,7 +213,7 @@ class StakingContract extends IContract {
         let isApproved = await this.getERC20Contract().isApproved({
             address : address, amount, spenderAddress : this.getAddress()
         });
-
+        console.log("isApproved",isApproved)
         if(!isApproved){
             throw new Error("Has to Approve Token Transfer First, use the 'approve' Call");
         }
@@ -354,7 +350,7 @@ class StakingContract extends IContract {
                 return parseFloat(res);
             })
         )
-        return allProducts.reduce((a, b) => a + b, 0)
+        return Numbers.fromExponential(allProducts.reduce((a, b) => a + b, 0)).toString();
     }
 
     /**

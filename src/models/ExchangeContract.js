@@ -263,7 +263,6 @@ class ExchangeContract extends IContract{
 		fractions_amount =  Numbers.toSmartContractDecimals(fractions_amount, 7);
 		let ETHCost = await this.getFractionsCost({event_id, resultSpace_id, fractions_amount});
 		let ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
-		console.log("eth", event_id, resultSpace_id, fractions_amount, ETHCost);
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.buy(event_id, resultSpace_id, fractions_amount),
 			false,

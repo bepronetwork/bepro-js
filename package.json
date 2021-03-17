@@ -10,6 +10,16 @@
         "type": "git",
         "url": "https://github.com/betprotocol/bepro-js.git"
     },
+    "scripts": {
+        "test": "truffle compile && ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
+        "index": "babel-node ./index.js --presets es2015,stage-2",
+        "compile" : "truffle compile",
+        "docs:api": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/**/*.js > docs/README.md",
+        "docs:prepare": "gitbook install",
+        "docs:build": "npm run docs:prepare && npm run docs:api && gitbook build",
+        "docs:serve": "npm run docs:prepare && npm run docs:api && gitbook serve",
+        "docs:clean": "rimraf _book"
+    },
     "dependencies": {
         "@openzeppelin/contracts": "^3.2.0",
         "abi-decoder": "^1.2.0",
@@ -36,15 +46,7 @@
         "randomhex": "^0.1.5",
         "web3": "1.0.0-beta.53"
     },
-    "scripts": {
-        "test": "./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
-        "index": "babel-node ./index.js --presets es2015,stage-2",
-        "docs:api": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/**/*.js > docs/README.md",
-        "docs:prepare": "gitbook install",
-        "docs:build": "npm run docs:prepare && npm run docs:api && gitbook build",
-        "docs:serve": "npm run docs:prepare && npm run docs:api && gitbook serve",
-        "docs:clean": "rimraf _book"
-    },
+
     "devDependencies": {
         "babel-plugin-transform-runtime": "^6.23.0",
         "babel-preset-env": "^1.6.1",

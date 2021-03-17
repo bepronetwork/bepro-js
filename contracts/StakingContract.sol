@@ -428,11 +428,10 @@ contract StakingContract is Pausable {
         SubscriptionAPR memory subscription = products[_product_id].subscriptions[_subscription_id];
 
         /* Confirm start date has already passed */
-        require(block.timestamp < subscription.startDate, "Now is below the start date");
+        require(block.timestamp > subscription.startDate, "Now is below the start date");
 
         /* Confirm end date for APR */
         uint256 finishDate = block.timestamp;
-
         /* Verify if date has passed the end date */
         if(block.timestamp >= products[_product_id].endDate){
             finishDate = products[_product_id].endDate;
@@ -444,6 +443,7 @@ contract StakingContract is Pausable {
         uint256 APRedAmount = getAPRAmount(subscription.APR, subscription.startDate, finishDate, subscription.amount);
         require(APRedAmount > 0, "APR amount has to be bigger than 0");
         uint256 totalAmount = subscription.amount.add(APRedAmount);
+        require(totalAmount > 0, "Total Amount has to be bigger than 0");
 
         /* Update Subscription */
         products[_product_id].subscriptions[_subscription_id].finalized = true;

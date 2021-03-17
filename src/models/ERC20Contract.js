@@ -40,7 +40,7 @@ class ERC20Contract extends IContract {
 	}
 
 	async totalSupply() {
-		return await this.getContract().methods.totalSupply().call();
+		return Numbers.fromDecimals(await this.getContract().methods.totalSupply().call(), this.getDecimals());
 	}
 
 	getABI() {
@@ -73,7 +73,7 @@ class ERC20Contract extends IContract {
 				amount,
 				this.getDecimals()
 			);
-			return await this.__sendTx( 
+			let res = await this.__sendTx( 
 				this.params.contract
 				.getContract()
 				.methods.approve(address, amountWithDecimals),
@@ -81,6 +81,7 @@ class ERC20Contract extends IContract {
 				null,
 				callback
 			);
+			return res;
 		} catch (err) {
 			throw err;
 		}

@@ -3,9 +3,9 @@ import { ExchangeContract, ERC20Contract, StakingContract } from "./models/index
 import Account from './utils/Account';
 
 const ETH_URL_MAINNET =
-	"https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+	"https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
 const ETH_URL_TESTNET =
-	"https://kovan.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+	"https://kovan.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
 const TEST_PRIVATE_KEY = 
 	"0xfdf5475fe6be966cf39e533e5b478b2e10d04e5e966be18f45714550d2429d21";
 

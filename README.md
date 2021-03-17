@@ -20,14 +20,14 @@ import Application from 'bepro-js';
 let app = new Application({test : true});
 
 /* Generate a Staking Platform */
-let exchangeContract = app.getStakingContract({contractAddress : /* Contract Address (optional) */});
+let stking = app.getStakingContract({contractAddress : /* Contract Address (optional) */});
 
 /* Assert all data */
-await exchangeContract.__assert();
+await staking.__assert();
 /* or */
 
 /* Deploy The Contract */
-await exchangeContract.deploy();
+await staking.deploy();
 
 ## License
 
