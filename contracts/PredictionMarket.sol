@@ -233,13 +233,6 @@ contract PredictionMarket is Ownable {
     // market outcomes
     uint[] outcomeIds;
     mapping(uint256 => MarketOutcome) outcomes;
-
-    // TODO delete: legacy old structures
-    address[] participants;
-    mapping(address => uint) participantIndexes;
-    mapping(address => uint) participantStakes;
-    uint minStake;
-    uint totalStake;
   }
 
   struct MarketOutcome {
@@ -292,11 +285,6 @@ contract PredictionMarket is Ownable {
 
   modifier onlyBy(address addr) {
     require(addr != address(0) && addr == msg.sender);
-    _;
-  }
-
-  modifier participantHasStake(uint marketId, address sender) {
-    require(markets[marketId].participantStakes[sender] > 0);
     _;
   }
 
