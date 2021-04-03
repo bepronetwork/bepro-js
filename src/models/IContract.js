@@ -6,54 +6,54 @@ import _ from "lodash";
  * @constructor IContract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
- * @param {ABI} abi 
+ * @param {ABI} abi
  * @param {Account} acc ? (opt)
  */
 
 class IContract {
 	constructor({
 		web3,
-        contractAddress = null /* If not deployed */,
-        abi,
-        acc
+		contractAddress = null /* If not deployed */,
+		abi,
+		acc
 	}) {
 		try {
-            if(!abi){
-                throw new Error("No ABI Interface provided");
-            }
+			if(!abi){
+				throw new Error("No ABI Interface provided");
+			}
 			if(!web3){
 				throw new Error("Please provide a valid web3 provider");
-            };
-            
-            this.web3 = web3;
-            
+			};
+
+			this.web3 = web3;
+
 			if (acc) {
 				this.acc = acc;
 			}
 
 			this.params = {
-                web3: web3,
-                abi : abi,
-                contractAddress: contractAddress,
+				web3: web3,
+				abi : abi,
+				contractAddress: contractAddress,
 				contract: new Contract(web3, abi, contractAddress),
-            };
+			};
 		} catch (err) {
 			throw err;
 		}
-    }
-    
+	}
+
 	__init__ = async () => {
 		try {
 			if (!this.getAddress()) {
 				throw new Error("Please add a Contract Address");
 			}
-			
+
 			await this.__assert();
 		} catch (err) {
 			throw err;
 		}
-    };
-    
+	};
+
 	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
 		return new Promise( (resolve, reject) => {
 			f.send({
@@ -104,20 +104,20 @@ class IContract {
 			params,
 			callback
 		);
-    };
+	};
 
-    __assert = async () => {
-        if(!this.getAddress()){
-            throw new Error("Contract is not deployed, first deploy it and provide a contract address");
-        }  
-        /* Use ABI */
-        this.params.contract.use(this.params.abi, this.getAddress());
+	__assert = async () => {
+		if(!this.getAddress()){
+			throw new Error("Contract is not deployed, first deploy it and provide a contract address");
+		}
+		/* Use ABI */
+		this.params.contract.use(this.params.abi, this.getAddress());
 	}
 
 	/**
-     * @function deploy
-     * @description Deploy the Contract
-    */
+	 * @function deploy
+	 * @description Deploy the Contract
+	*/
 	deploy = async ({callback}) => {
 		let params = [];
 		let res = await this.__deploy(params, callback);
@@ -125,7 +125,7 @@ class IContract {
 		/* Call to Backend API */
 		await this.__assert();
 		return res;
-    };
+	};
 
 
 	/**
@@ -134,12 +134,12 @@ class IContract {
 	 * @param {string} address
 	 */
 	async setNewOwner({ address }){
-        return await this.__sendTx(
-            this.params.contract
-                .getContract()
-                .methods.transferOwnership(address)
-        );
-    }
+		return await this.__sendTx(
+			this.params.contract
+				.getContract()
+				.methods.transferOwnership(address)
+		);
+	}
 
 	/**
 	 * @function owner
@@ -159,8 +159,8 @@ class IContract {
 
 	async isPaused() {
 		return await this.params.contract.getContract().methods.paused().call();
-    }
-    
+	}
+
 	/**
 	 * @function pauseContract
 	 * @type admin
@@ -181,9 +181,9 @@ class IContract {
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.unpause()
 		);
-    }
-    
-    /* Optional */
+	}
+
+	/* Optional */
 
 	/**
 	 * @function removeOtherERC20Tokens
@@ -225,7 +225,7 @@ class IContract {
 		);
 	};
 
-    /**
+	/**
 	 * @function getAddress
 	 * @description Get Balance of Contract
 	 * @param {Integer} Balance
@@ -239,10 +239,10 @@ class IContract {
 	 * @description Get Balance of Contract
 	 * @param {Integer} Balance
 	 */
-	
+
 	async getBalance(){
 		let wei = await this.web3.eth.getBalance(this.getAddress());
-        return this.web3.utils.fromWei(wei, 'ether');
+		return this.web3.utils.fromWei(wei, 'ether');
 	};
 }
 

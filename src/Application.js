@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import { ExchangeContract, ERC20Contract, StakingContract } from "./models/index";
+import { ExchangeContract, ERC20Contract, StakingContract, PredictionMarketContract } from "./models/index";
 import Account from './utils/Account';
 
 const ETH_URL_MAINNET =
@@ -79,7 +79,7 @@ export default class Application {
 	 * @param {Address} ContractAddress (Opt) If it is deployed
 	 * @description Create a Exchange Contract
 	 */
-	getExchangeContract = ({ contractAddress=null}={}) => {
+	getExchangeContract = ({contractAddress=null}={}) => {
 		try {
 			return new ExchangeContract({
 				web3: this.web3,
@@ -96,9 +96,27 @@ export default class Application {
 	 * @param {Address} ContractAddress (Opt) If it is deployed
 	 * @description Create a Staking Contract
 	 */
-	getStakingContract = ({ contractAddress=null, tokenAddress=null}={}) => {
+	getStakingContract = ({contractAddress=null, tokenAddress=null}={}) => {
 		try {
 			return new StakingContract({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				tokenAddress,
+				acc : this.test ? this.account : null
+			});
+		} catch(err) {
+			throw err;
+		}
+	};
+
+	/**
+	 * @name getPredictionMarketContract
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a Staking Contract
+	 */
+	 getPredictionMarketContract = ({contractAddress=null, tokenAddress=null}={}) => {
+		try {
+			return new PredictionMarketContract({
 				web3: this.web3,
 				contractAddress: contractAddress,
 				tokenAddress,
@@ -114,7 +132,7 @@ export default class Application {
 	 * @param {Address} ContractAddress (Opt) If it is deployed
 	 * @description Create a ERC20 Contract
 	 */
-	getERC20Contract =  ({ contractAddress=null}) => {
+	getERC20Contract =  ({contractAddress=null}) => {
 		try {
 			return new ERC20Contract({
 				web3: this.web3,
