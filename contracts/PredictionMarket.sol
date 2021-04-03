@@ -700,11 +700,6 @@ contract PredictionMarket is Ownable {
     return market.state;
   }
 
-  function getMarketTotalStake(uint marketId) public view returns(uint) {
-    Market storage market = markets[marketId];
-    return market.totalStake;
-  }
-
   function getMarketWinner(uint marketId) public view returns(address) {
     Market storage market = markets[marketId];
     return market.winner;
