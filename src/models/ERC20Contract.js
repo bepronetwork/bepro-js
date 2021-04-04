@@ -86,6 +86,32 @@ class ERC20Contract extends IContract {
 			throw err;
 		}
 	}
+
+	deploy = async ({name, symbol, cap, distributionAddress, callback}) => {
+
+		if(!distributionAddress){
+			throw new Error("Please provide an Distribution address for distro");
+		}
+
+		if(!name){
+			throw new Error("Please provide a name");
+		}
+
+		if(!symbol){
+			throw new Error("Please provide a symbol");
+		}
+
+		if(!cap){
+			throw new Error("Please provide a cap");
+		}
+		let params = [name, symbol, cap, distributionAddress];
+		let res = await this.__deploy(params, callback);
+		this.params.contractAddress = res.contractAddress;
+		/* Call to Backend API */
+		await this.__assert();
+		return res;
+	};
+
 }
 
 export default ERC20Contract;

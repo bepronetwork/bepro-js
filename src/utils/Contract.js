@@ -12,25 +12,36 @@ class Contract {
 	}
 
 	async deploy(account, abi, byteCode, args = [], callback=()=>{}) {
-		var res;
-		this.contract = new this.web3.eth.Contract(abi);
-		if(account){	
-			res = await this.web3.eth.sendSignedTransaction(
-				(await account.getAccount().signTransaction({
-					data : this.contract.deploy({
-						data : byteCode,
-						arguments: args
-					}).encodeABI(),
-					from  : account.getAddress(),
-					gas : 5913388
+		return new Promise ( async (resolve, reject) => {
+			try{
+				this.contract = new this.web3.eth.Contract(abi);
+				if(account){	
+					let txSigned = await account.getAccount().signTransaction({
+						data : this.contract.deploy({
+							data : byteCode,
+							arguments: args
+						}).encodeABI(),
+							from  : account.getAddress(),
+							gas : 6913388
+						}
+					);
+					this.web3.eth.sendSignedTransaction(txSigned.rawTransaction)
+					.on('confirmation', function(confirmationNumber, receipt){
+						if(confirmationNumber > 1){
+							resolve(receipt);
+						}
+					})
+				}else{
+					const accounts = await this.web3.eth.getAccounts();
+					res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0], callback});
+					this.address = res.contractAddress;
+					resolve(res);
 				}
-			)).rawTransaction);
-		}else{
-			const accounts = await this.web3.eth.getAccounts();
-			res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0], callback});
-		}
-		this.address = res.contractAddress;
-		return res;
+			}catch(err){
+				reject(err);
+			}
+		})
+	
 	}
 
 	__metamaskDeploy = async ({byteCode, args, acc, callback = () => {}}) => {

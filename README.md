@@ -29,6 +29,16 @@ await staking.__assert();
 /* Deploy The Contract */
 await staking.deploy();
 
+```
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Notes
+
+The usage of ETH in all methods or params means using the native currency of that blockchain, example BSC in Binance Chain would still be nominated as ETH
+```javascript 
+
+isETHTrade() is also used to verify if the sale is done in BSC for Binance Chain
+
+```

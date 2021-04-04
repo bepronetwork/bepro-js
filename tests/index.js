@@ -1,4 +1,6 @@
 context('Unit Tests', async () => {
-    require('./stakingContract');
+    require('./erc721Collectibles');
+    //require('./stakingContract');
     //require('./exchangeContract');
+    //require('./erc20Contract');
 });

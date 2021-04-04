@@ -30,7 +30,6 @@ class IContract {
 			if (acc) {
 				this.acc = acc;
 			}
-
 			this.params = {
                 web3: web3,
                 abi : abi,

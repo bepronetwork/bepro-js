@@ -1,13 +1,13 @@
 import Web3 from "web3";
-import { ExchangeContract, ERC20Contract, StakingContract } from "./models/index";
+import { ExchangeContract, ERC20Contract, StakingContract, ERC721Collectibles } from "./models/index";
 import Account from './utils/Account';
 
 const ETH_URL_MAINNET =
-	"https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
+	"https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const ETH_URL_TESTNET =
-	"https://kovan.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
+	"https://ropsten.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const TEST_PRIVATE_KEY = 
-	"0xfdf5475fe6be966cf39e533e5b478b2e10d04e5e966be18f45714550d2429d21";
+	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
 const networksEnum = Object.freeze({
 	1: "Main",
@@ -102,6 +102,23 @@ export default class Application {
 				web3: this.web3,
 				contractAddress: contractAddress,
 				tokenAddress,
+				acc : this.test ? this.account : null
+			});
+		}catch(err){
+			throw err;
+		}
+    };
+
+	/**
+     * @name getERC721Collectibles
+     * @param {Address} ContractAddress (Opt) If it is deployed
+     * @description Create a ERC721Collectibles Contract
+     */
+	getERC721Collectibles = ({ contractAddress=null, tokenAddress=null}={}) => {
+		try{
+			return new ERC721Collectibles({
+				web3: this.web3,
+				contractAddress: contractAddress,
 				acc : this.test ? this.account : null
 			});
 		}catch(err){

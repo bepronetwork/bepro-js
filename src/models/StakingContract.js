@@ -213,7 +213,6 @@ class StakingContract extends IContract {
         let isApproved = await this.getERC20Contract().isApproved({
             address : address, amount, spenderAddress : this.getAddress()
         });
-        console.log("isApproved",isApproved)
         if(!isApproved){
             throw new Error("Has to Approve Token Transfer First, use the 'approve' Call");
         }
