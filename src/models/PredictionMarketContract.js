@@ -115,10 +115,10 @@ class PredictionMarketContract extends IContract {
 		const outcome2Shares = await this.__sendTx(this.getContract().methods.myShares(marketId, 1), true);
 
 		return  {
-			liquidityShares,
+			liquidityShares: Numbers.fromDecimalsNumber(liquidityShares, 18),
 			outcomeShares: {
-        0: outcome1Shares,
-        1: outcome2Shares
+        0: Numbers.fromDecimalsNumber(outcome1Shares, 18),
+        1: Numbers.fromDecimalsNumber(outcome2Shares, 18),
       }
 		};
 	}
@@ -201,7 +201,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} shares
 	 */
 	removeLiquidity = async ({marketId, shares}) => {
-    shares = Numbers.toSmartContractDecimals(shares, 7);
+    shares = Numbers.toSmartContractDecimals(shares, 18);
 		return await this.__sendTx(
 			this.getContract().methods.removeLiquidity(marketId, shares)
 		);
@@ -232,7 +232,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} shares
 	 */
 	sell = async ({marketId, outcomeId, shares}) => {
-		shares = Numbers.toSmartContractDecimals(shares, 7);
+		shares = Numbers.toSmartContractDecimals(shares, 18);
 		return await this.__sendTx(
 			this.getContract().methods.sell(marketId, outcomeId, shares),
 			false,
