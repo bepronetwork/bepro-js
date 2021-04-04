@@ -28,12 +28,11 @@ context('Prediction Market Contract', async () => {
 
         it('should deploy Prediction Market Contract', mochaAsync(async () => {
             // Create Contract
-            predictionMarketContract = app.getPredictionMarketContract({contractAddress : '0x12da09ccFfd721798d047404276d8c67Aa60b66f'});
-            // predictionMarketContract = app.getPredictionMarketContract({contractAddress : contractAddress});
+            predictionMarketContract = app.getPredictionMarketContract({contractAddress : contractAddress});
             // Deploy
-            // const res = await predictionMarketContract.deploy({});
-            // contractAddress = predictionMarketContract.getAddress();
-            // expect(res).to.not.equal(false);
+            const res = await predictionMarketContract.deploy({});
+            contractAddress = predictionMarketContract.getAddress();
+            expect(res).to.not.equal(false);
         }));
     });
 
@@ -56,7 +55,7 @@ context('Prediction Market Contract', async () => {
             const marketIds = await predictionMarketContract.getMarkets();
             marketId = marketIds[marketIds.length - 1];
             expect(marketIds.length).to.equal(1);
-            expect(marketIds[0]).to.equal(marketId);
+            expect(marketIds[marketIds.length - 1]).to.equal(marketId);
         }));
 
         it('should create another Market', mochaAsync(async () => {
@@ -75,7 +74,7 @@ context('Prediction Market Contract', async () => {
         }));
     });
 
-    context('Market Creation', async () => {
+    context('Market Data', async () => {
         it('should get Market data', mochaAsync(async () => {
             const res = await predictionMarketContract.getMarketData({marketId});
             expect(res).to.eql({
@@ -110,7 +109,89 @@ context('Prediction Market Contract', async () => {
         }));
     });
 
-    context('Market Interaction', async () => {
+    context('Market Interaction - Balanced Market (Same Outcome Odds)', async () => {
+        it('should add liquidity without changing shares balance', mochaAsync(async () => {
+            const myShares = await predictionMarketContract.getMyMarketShares({marketId});
+            const marketData = await predictionMarketContract.getMarketData({marketId});
+            const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
+            const outcome2Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[1]});
+
+            // balanced market - same price in all outcomoes
+            expect(outcome1Data.price).to.equal(outcome2Data.price);
+
+            try {
+                const res = await predictionMarketContract.addLiquidity({marketId, ethAmount})
+                expect(res.status).to.equal(true);
+            } catch(e) {
+                // TODO: review this
+            }
+
+            const myNewShares = await predictionMarketContract.getMyMarketShares({marketId});
+            const newMarketData = await predictionMarketContract.getMarketData({marketId});
+            const newOutcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
+            const newOutcome2Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[1]});
+
+            expect(newMarketData.liquidity).to.above(marketData.liquidity);
+            expect(newMarketData.liquidity).to.equal(marketData.liquidity + ethAmount);
+
+            // Outcome prices shoud remain the same after providing liquidity
+            expect(newOutcome1Data.price).to.equal(outcome1Data.price);
+            expect(newOutcome2Data.price).to.equal(outcome2Data.price);
+
+            // Price balances are 0.5-0.5, liquidity will be added solely through liquidity shares
+            expect(myNewShares.liquidityShares).to.above(myShares.liquidityShares);
+            expect(myNewShares.liquidityShares).to.equal(myShares.liquidityShares + ethAmount);
+            // shares balance remains the same
+            expect(myNewShares.outcomeShares[0]).to.equal(myShares.outcomeShares[0]);
+            expect(myNewShares.outcomeShares[1]).to.equal(myShares.outcomeShares[1]);
+        }));
+
+        it('should remove liquidity without changing shares balance', mochaAsync(async () => {
+            const myShares = await predictionMarketContract.getMyMarketShares({marketId});
+            const marketData = await predictionMarketContract.getMarketData({marketId});
+            const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
+            const outcome2Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[1]});
+            const contractBalance = Number(await predictionMarketContract.getBalance());
+
+            // balanced market - same price in all outcomoes
+            expect(outcome1Data.price).to.equal(outcome2Data.price);
+
+            try {
+                const res = await predictionMarketContract.removeLiquidity({marketId, shares: ethAmount})
+                expect(res.status).to.equal(true);
+            } catch(e) {
+                // TODO: review this
+            }
+
+            const myNewShares = await predictionMarketContract.getMyMarketShares({marketId});
+            const newMarketData = await predictionMarketContract.getMarketData({marketId});
+            const newOutcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
+            const newOutcome2Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[1]});
+            const newContractBalance = Number(await predictionMarketContract.getBalance());
+
+            expect(newMarketData.liquidity).to.below(marketData.liquidity);
+            expect(newMarketData.liquidity).to.equal(marketData.liquidity - ethAmount);
+
+            // Outcome prices shoud remain the same after providing liquidity
+            expect(newOutcome1Data.price).to.equal(outcome1Data.price);
+            expect(newOutcome2Data.price).to.equal(outcome2Data.price);
+
+            // Price balances are 0.5-0.5, liquidity will be added solely through liquidity shares
+            expect(myNewShares.liquidityShares).to.below(myShares.liquidityShares);
+            expect(myNewShares.liquidityShares).to.equal(myShares.liquidityShares - ethAmount);
+            // shares balance remains the same
+            expect(myNewShares.outcomeShares[0]).to.equal(myShares.outcomeShares[0]);
+            expect(myNewShares.outcomeShares[1]).to.equal(myShares.outcomeShares[1]);
+
+            // User gets liquidity tokens back in ETH
+            expect(newContractBalance).to.below(contractBalance);
+            // TODO: check amountTransferred from internal transactions
+            const amountTransferred = Number((contractBalance - newContractBalance).toFixed(5));
+            expect(amountTransferred).to.equal(ethAmount);
+        }));
+    });
+
+    context('Market Interaction - Unbalanced Market (Different Outcome Odds)', async () => {
         it('should display my shares', mochaAsync(async () => {
             const res = await predictionMarketContract.getMyMarketShares({marketId});
             // currently holding liquidity tokens from market creation
