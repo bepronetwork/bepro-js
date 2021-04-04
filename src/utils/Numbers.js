@@ -86,6 +86,11 @@ class numbers {
       return  Number(parseFloat(value / 10 ** decimals).toPrecision(decimals)).noExponents();
   }
 
+  fromDecimalsNumber(value, decimals) {
+      const number = Number(parseFloat(value / 10 ** decimals).toPrecision(decimals)).noExponents();
+      return Number(number);
+  }
+
   fromExponential(x) {
     if (Math.abs(x) < 1.0) {
       var e = parseInt(x.toString().split('e-')[1])

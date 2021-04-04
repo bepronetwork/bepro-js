@@ -235,6 +235,15 @@ class IContract {
 	}
 
 	/**
+	 * @function getContract
+	 * @description Gets Contract
+	 * @return {Contract} Contract
+	 */
+	getContract() {
+		return this.params.contract.getContract();
+	}
+
+	/**
 	 * @function getBalance
 	 * @description Get Balance of Contract
 	 * @param {Integer} Balance
