@@ -29,24 +29,24 @@ class PredictionMarketContract extends IContract {
 		let res = await this.params.contract
 			.getContract()
 			.methods
-      .getMarkets()
+			.getMarkets()
 			.call();
 		return res.map((marketId) => Number(Numbers.fromHex(marketId)));
 	}
 
 
-  // TODO
+	// TODO
 	// /* Get Functions */
 	// /**
 	//  * @function getMyMarkets
 	//  * @description Get Markets
 	//  * @returns {Integer | Array} Get Market Ids user interacted with
 	//  */
-  //  async getMarkets() {
+	//  async getMarkets() {
 	// 	let res = await this.params.contract
 	// 		.getContract()
 	// 		.methods
-  //     .getMyMarkets()
+	//     .getMyMarkets()
 	// 		.call();
 	// 	return res.map((id) => Numbers.fromHex(id));
 	// }
@@ -63,22 +63,22 @@ class PredictionMarketContract extends IContract {
 	 * @returns {Array} outcomeIds
 	 */
 	async getMarketData({marketId}) {
-    // TODO: move all calls to same function
-    const name = await this.__sendTx(this.getContract().methods.getMarketName(marketId), true);
-    const closeDateTime = await this.__sendTx(this.getContract().methods.getMarketClosedDateTime(marketId), true);
-    const state = await this.__sendTx(this.getContract().methods.getMarketState(marketId), true);
-    const oracleAddress = await this.__sendTx(this.getContract().methods.getMarketOracle(marketId), true);
-    const liquidity = await this.__sendTx(this.getContract().methods.getMarketAvailableLiquidity(marketId), true);
-    const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
+		// TODO: move all calls to same function
+		const name = await this.__sendTx(this.getContract().methods.getMarketName(marketId), true);
+		const closeDateTime = await this.__sendTx(this.getContract().methods.getMarketClosedDateTime(marketId), true);
+		const state = await this.__sendTx(this.getContract().methods.getMarketState(marketId), true);
+		const oracleAddress = await this.__sendTx(this.getContract().methods.getMarketOracle(marketId), true);
+		const liquidity = await this.__sendTx(this.getContract().methods.getMarketAvailableLiquidity(marketId), true);
+		const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
 
-    return {
-      name,
-      closeDateTime: moment.unix(closeDateTime).format("YYYY-MM-DD HH:mm"),
-      state,
-      oracleAddress,
-      liquidity: Numbers.fromDecimalsNumber(liquidity, 18),
-      outcomeIds: outcomeIds.map((outcomeId) => Numbers.fromBigNumberToInteger(outcomeId, 18))
-    };
+		return {
+			name,
+			closeDateTime: moment.unix(closeDateTime).format("YYYY-MM-DD HH:mm"),
+			state,
+			oracleAddress,
+			liquidity: Numbers.fromDecimalsNumber(liquidity, 18),
+			outcomeIds: outcomeIds.map((outcomeId) => Numbers.fromBigNumberToInteger(outcomeId, 18))
+		};
 	}
 
 	/**
@@ -91,15 +91,15 @@ class PredictionMarketContract extends IContract {
 	 * @returns {Integer} sahres
 	 */
 	async getOutcomeData({marketId, outcomeId}) {
-    const name = await this.__sendTx(this.getContract().methods.getMarketOutcomeName(marketId, outcomeId), true);
-    const price = await this.__sendTx(this.getContract().methods.getMarketOutcomePrice(marketId, outcomeId), true);
-    const shares = await this.__sendTx(this.getContract().methods.getMarketOutcomeAvailableShares(marketId, outcomeId), true);
+		const name = await this.__sendTx(this.getContract().methods.getMarketOutcomeName(marketId, outcomeId), true);
+		const price = await this.__sendTx(this.getContract().methods.getMarketOutcomePrice(marketId, outcomeId), true);
+		const shares = await this.__sendTx(this.getContract().methods.getMarketOutcomeAvailableShares(marketId, outcomeId), true);
 
-    return {
-      name,
-      price: Numbers.fromDecimalsNumber(price, 18),
-      shares: Numbers.fromDecimalsNumber(shares, 18),
-    };
+		return {
+			name,
+			price: Numbers.fromDecimalsNumber(price, 18),
+			shares: Numbers.fromDecimalsNumber(shares, 18),
+		};
 	}
 
 	/**
@@ -117,16 +117,16 @@ class PredictionMarketContract extends IContract {
 		return  {
 			liquidityShares: Numbers.fromDecimalsNumber(liquidityShares, 18),
 			outcomeShares: {
-        0: Numbers.fromDecimalsNumber(outcome1Shares, 18),
-        1: Numbers.fromDecimalsNumber(outcome2Shares, 18),
-      }
+				0: Numbers.fromDecimalsNumber(outcome1Shares, 18),
+				1: Numbers.fromDecimalsNumber(outcome2Shares, 18),
+			}
 		};
 	}
 
-  // TODO
+	// TODO
  	// /**
 	//  * @function isMarketOpen
-  //  * @param {Integer} marketId
+	//  * @param {Integer} marketId
 	//  * @description Check if market is open for trading
 	//  * @returns {Boolean}
 	//  */
@@ -143,12 +143,12 @@ class PredictionMarketContract extends IContract {
 	 */
 	async getMarketOutcomePrice({marketId, outcomeId}) {
 		return Numbers.fromDecimals(
-      await this.__sendTx(
-			  this.getContract().methods.getMarketOutcomePrice(marketId, outcomeId),
-        true
-      ),
-      18
-    );
+			await this.__sendTx(
+				this.getContract().methods.getMarketOutcomePrice(marketId, outcomeId),
+				true
+			),
+			18
+		);
 	}
 
 	/* POST User Functions */
@@ -163,16 +163,16 @@ class PredictionMarketContract extends IContract {
 	 * @param {String} outcome2Name
 	 * @param {Integer} ethAmount
 	 */
-   createMarket = async ({name, duration, oracleAddress, outcome1Name, outcome2Name, ethAmount}) => {
+	 createMarket = async ({name, duration, oracleAddress, outcome1Name, outcome2Name, ethAmount}) => {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
 			this.getContract().methods.createMarket(
-        name,
-        duration,
-        oracleAddress,
-        outcome1Name,
-        outcome2Name,
-      ),
+				name,
+				duration,
+				oracleAddress,
+				outcome1Name,
+				outcome2Name,
+			),
 			false,
 			ethToWei
 		);
@@ -201,7 +201,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} shares
 	 */
 	removeLiquidity = async ({marketId, shares}) => {
-    shares = Numbers.toSmartContractDecimals(shares, 18);
+		shares = Numbers.toSmartContractDecimals(shares, 18);
 		return await this.__sendTx(
 			this.getContract().methods.removeLiquidity(marketId, shares)
 		);
@@ -216,7 +216,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} ethAmount
 	 */
 	buy = async ({ marketId, outcomeId, ethAmount}) => {
-    let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
+		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
 			this.getContract().methods.buy(marketId, outcomeId),
 			false,
