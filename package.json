@@ -39,6 +39,7 @@
         "dotenv": "^8.2.0",
         "execution-time": "^1.4.1",
         "express": "^4.17.1",
+        "fs": "0.0.1-security",
         "left-pad": "^1.3.0",
         "lodash": "^4.17.10",
         "mocha": "^5.1.1",

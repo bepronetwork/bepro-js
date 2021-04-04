@@ -1,7 +1,3 @@
-var fs = require("fs");
-const _ = require("lodash");
-const web = require("web3");
-
 class Contract {
 	constructor(web3, contract_json, address) {
 		this.web3 = web3;
