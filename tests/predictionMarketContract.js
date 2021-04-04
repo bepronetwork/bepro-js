@@ -125,7 +125,11 @@ context('Prediction Market Contract', async () => {
 
         it('should buy outcome shares', mochaAsync(async () => {
             const outcomeId = 0;
-            const oppositeOutcomeId = 1;
+
+            const marketData = await predictionMarketContract.getMarketData({marketId});
+            const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
+            const outcome2Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[1]});
+            const contractBalance = Number(await predictionMarketContract.getBalance());
 
             try {
                 const res = await predictionMarketContract.buy({marketId, outcomeId, ethAmount});
@@ -134,21 +138,34 @@ context('Prediction Market Contract', async () => {
                 // TODO: review this
             }
 
-            const marketData = await predictionMarketContract.getMarketData({marketId});
-            const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
-            const outcome2Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[1]});
+            const newMarketData = await predictionMarketContract.getMarketData({marketId});
+            const newOutcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
+            const newOutcome2Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[1]});
+            const newContractBalance = Number(await predictionMarketContract.getBalance());
 
+            // outcome price should increase
+            expect(newOutcome1Data.price).to.above(outcome1Data.price);
+            expect(newOutcome1Data.price).to.equal(0.8);
+            // opposite outcome price should decrease
+            expect(newOutcome2Data.price).to.below(outcome2Data.price);
+            expect(newOutcome2Data.price).to.equal(0.2);
             // Prices sum = 1
-            // 0.8 + 0.2 = 1
-            expect(outcome1Data.price).to.equal(0.8);
-            expect(outcome2Data.price).to.equal(0.2);
-            expect(outcome1Data.price + outcome2Data.price).to.equal(1);
+            // 0.5 + 0.5 = 1
+            expect(newOutcome1Data.price + newOutcome2Data.price).to.equal(1);
 
+            // Liquidity value remains the same
+            expect(newMarketData.liquidity).to.equal(marketData.liquidity);
+
+            // outcome shares should decrease
+            expect(newOutcome1Data.shares).to.below(outcome1Data.shares);
+            expect(newOutcome1Data.shares).to.equal(0.05);
+            // opposite outcome shares should increase
+            expect(newOutcome2Data.shares).to.above(outcome2Data.shares);
+            expect(newOutcome2Data.shares).to.equal(0.2);
             // # Shares Product = Liquidity^2
             // 0.05 * 0.2 = 0.1^2
-            expect(outcome1Data.shares).to.equal(0.05);
-            expect(outcome2Data.shares).to.equal(0.2);
-            expect(outcome1Data.shares * outcome2Data.shares).to.equal(marketData.liquidity**2);
+            expect(outcome1Data.shares * outcome2Data.shares).to.equal(newMarketData.liquidity**2);
+            expect(newOutcome1Data.shares * newOutcome2Data.shares).to.equal(newMarketData.liquidity**2);
 
             const myShares = await predictionMarketContract.getMyMarketShares({marketId});
             expect(myShares).to.eql({
@@ -158,6 +175,12 @@ context('Prediction Market Contract', async () => {
                     1: 0.0,
                 }
             });
+
+            // Contract adds ethAmount to balance
+            expect(newContractBalance).to.above(contractBalance);
+            // TODO: check amountReceived from internal transactions
+            const amountReceived = Number((newContractBalance - contractBalance).toFixed(5));
+            expect(amountReceived).to.equal(ethAmount);
         }));
 
         it('should add liquidity', mochaAsync(async () => {
