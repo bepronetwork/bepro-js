@@ -31,7 +31,7 @@ class PredictionMarketContract extends IContract {
 			.methods
       .getMarkets()
 			.call();
-		return res.map((marketId) => Numbers.fromBigNumberToInteger(marketId, 18));
+		return res.map((marketId) => Number(Numbers.fromHex(marketId)));
 	}
 
 
