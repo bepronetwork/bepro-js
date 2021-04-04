@@ -96,6 +96,19 @@ class ERC721Collectibles extends IContract{
 	}
 
 	/**
+	 * @function getURITokenID
+	 * @description Verify what is the getURITokenID
+	 * @returns {String} URI
+	 */
+	
+	 async getURITokenID({tokenID}){
+		return await this.params.contract
+		.getContract()
+		.methods.tokenURI(tokenID)
+		.call();
+	}
+
+	/**
 	 * @function getRegisteredIDs
 	 * @description Get Ids
 	 * @returns {Integer | Array} ids 
@@ -161,6 +174,16 @@ class ERC721Collectibles extends IContract{
 			address: this.getAddress(),
 			amount: totalMaxAmount
 		})
+	}
+
+	 /**
+	 * @function setBaseTokenURI
+	 * @description Set Base Token URI
+    */
+	setBaseTokenURI = async ({URI}) => {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.setBaseURI(URI)
+		);
 	}
 
 	/**

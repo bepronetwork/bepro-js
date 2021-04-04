@@ -38,7 +38,7 @@ context('ERC721 Collectibles', async () => {
         /* Deploy */
         let res = await erc721Contract.deploy({
             name : 'test', symbol : 'B.E.P.R.O', 
-            limitedAmount : 2, 
+            limitedAmount : 100, 
             erc20Purchase : tokenAddress,
             feeAddress : app.account.getAddress()
         });
@@ -50,6 +50,12 @@ context('ERC721 Collectibles', async () => {
     it('should verify if sale is limited', mochaAsync(async () => {
         let res = await erc721Contract.isLimited();
         expect(res).to.equal(true);
+    }));
+
+
+    it('should add base tokenURI', mochaAsync(async () => {
+        let res = await erc721Contract.setBaseTokenURI({URI : 'https://bepronetwork.github.io/B.E.P.R.O/meta/'});
+        expect(res).to.not.equal(false);
     }));
 
     it('should set Pack Price', mochaAsync(async () => {
@@ -135,6 +141,11 @@ context('ERC721 Collectibles', async () => {
         expect(res).to.equal(1002);
     }));
 
+    it('should verify the current Token Metadatta URI', mochaAsync(async () => {
+        let res = await erc721Contract.getURITokenID({tokenID : 1000});
+        console.log("res", res)
+    }));
+
     it('should get the available token ids', mochaAsync(async () => {
         tokensHeld = await erc721Contract.getRegisteredIDs();
         expect(tokensHeld.length).to.equal(2);
@@ -160,7 +171,7 @@ context('ERC721 Collectibles', async () => {
         expect(res).to.equal(false);
     }));
 
-    it('shouldn´t be able to open a pack', mochaAsync(async () => {
+    it('should be able to open a pack', mochaAsync(async () => {
         /* Approve */
         await erc721Contract.approveERC20();
         let isApproved = await erc721Contract.isApproved({ address : app.account.getAddress(), amount : 1000});
@@ -171,7 +182,7 @@ context('ERC721 Collectibles', async () => {
            amount : 1
         });
 
-        expect(res).to.equal(false);
+        expect(res).to.not.equal(false);
     }));
 
 

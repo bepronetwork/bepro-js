@@ -1,4 +1,4 @@
-import Application from './src/Application';
+import Application from './build/Application';
 
 export {
     Application

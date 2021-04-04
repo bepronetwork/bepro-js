@@ -5,7 +5,7 @@ import Account from './utils/Account';
 const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const ETH_URL_TESTNET =
-	"https://ropsten.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+	"https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 

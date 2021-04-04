@@ -13,6 +13,7 @@
     "scripts": {
         "test": "truffle compile && ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
         "index": "babel-node ./index.js --presets es2015,stage-2",
+        "build" : "babel ./src --out-dir lib --copy-files -d ./build",
         "compile": "truffle compile",
         "docs:api": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/**/*.js > docs/README.md",
         "docs:prepare": "gitbook install",
