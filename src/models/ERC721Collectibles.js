@@ -100,13 +100,24 @@ class ERC721Collectibles extends IContract{
 	 * @description Verify what is the getURITokenID
 	 * @returns {String} URI
 	 */
-	
 	 async getURITokenID({tokenID}){
 		return await this.params.contract
 		.getContract()
 		.methods.tokenURI(tokenID)
 		.call();
 	}
+	/**
+	 * @function baseURI
+	 * @description Verify what is the baseURI
+	 * @returns {String} URI
+	 */
+	 async baseURI(){
+		return await this.params.contract
+		.getContract()
+		.methods.baseURI()
+		.call();
+	}
+	
 
 	/**
 	 * @function getRegisteredIDs
