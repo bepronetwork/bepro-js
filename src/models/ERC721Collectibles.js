@@ -122,15 +122,14 @@ class ERC721Collectibles extends IContract{
 	/**
 	 * @function getRegisteredIDs
 	 * @description Get Ids
+	 * @param {Address} address
 	 * @returns {Integer | Array} ids 
 	 */
-	async getRegisteredIDs(){
-		let res = await this.__sendTx(
-            this.params.contract
-            .getContract()
-            .methods.getRegisteredIDs(),
-            true
-        ); 
+	async getRegisteredIDs({address}){
+		let res = await this.params.contract
+		.getContract()
+		.methods.getRegisteredIDs(address)
+		.call();
 
         return res.map(r => parseInt(r))
 	}

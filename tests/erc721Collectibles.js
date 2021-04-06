@@ -90,7 +90,7 @@ context('ERC721 Collectibles', async () => {
     }));
 
     it('should get the available token ids', mochaAsync(async () => {
-        tokensHeld = await erc721Contract.getRegisteredIDs();
+        tokensHeld = await erc721Contract.getRegisteredIDs({address : app.account.getAddress()});
         expect(tokensHeld.length).to.equal(1);
         expect(tokensHeld[0]).to.equal(1000);
     }));
@@ -147,7 +147,8 @@ context('ERC721 Collectibles', async () => {
     }));
 
     it('should get the available token ids', mochaAsync(async () => {
-        tokensHeld = await erc721Contract.getRegisteredIDs();
+        console.log("address", app.account.getAddress())
+        tokensHeld = await erc721Contract.getRegisteredIDs({address : app.account.getAddress()});
         expect(tokensHeld.length).to.equal(2);
         expect(tokensHeld[0]).to.equal(1000);
         expect(tokensHeld[1]).to.equal(1001);

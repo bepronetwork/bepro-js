@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./utils/Ownable.sol";
 
-
 contract Opener is  Ownable {
     using SafeMath for uint256;
 
@@ -77,6 +76,7 @@ contract Opener is  Ownable {
         }
 
         _currentTokenId += amount;
+        _pricePerPack = _pricePerPack*109/100;
     }
 
     function _distributePackShares(address from, uint256 amount) internal {
@@ -211,7 +211,7 @@ contract ERC721Colectibles is Opener, ERC721 {
         _openPack(amount);
     }
 
-    function getRegisteredIDs() public view returns(uint256[] memory) {
-        return registeredIDsArray[msg.sender];
+    function getRegisteredIDs(address _address) public view returns(uint256[] memory) {
+        return registeredIDsArray[_address];
     }
 }
