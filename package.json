@@ -1,6 +1,6 @@
 {
     "name": "bepro-js",
-    "version": "1.1.5",
+    "version": "1.1.4",
     "description": "",
     "main": "index.js",
     "directories": {
@@ -46,7 +46,7 @@
         "moment": "^2.21.0",
         "mongoose": "^5.9.5",
         "randomhex": "^0.1.5",
-        "web3": "1.0.0-beta.52"
+        "web3": "1.0.0-beta.53"
     },
     "devDependencies": {
         "babel-plugin-transform-runtime": "^6.23.0",
