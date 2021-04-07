@@ -6,8 +6,11 @@ import { Application } from '..';
 import moment from 'moment';
 import delay from 'delay';
 import Numbers from '../src/utils/Numbers';
+
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 const tokenAddress = "0xd3f461fef313a992fc25e681acc09c6191b08bca";
+const mainnet = false;
+
 const expect = chai.expect;
 const ethAmount = 0.1;
 var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
@@ -24,11 +27,11 @@ context('ERC721 Collectibles', async () => {
     var tokensHeld, subscriptionId, withdrawTx, startDateSubscription, endDateSubscription;
    
     before( async () =>  {
-        app = new Application({test : true, mainnet : false});
+        app = new Application({test : true, mainnet});
     });
 
     it('should start the Application', mochaAsync(async () => {
-        app = new Application({test : true, mainnet : false});
+        app = new Application({test : true, mainnet});
         expect(app).to.not.equal(null);
     }));
 
@@ -37,7 +40,7 @@ context('ERC721 Collectibles', async () => {
         erc721Contract = app.getERC721Collectibles({});
         /* Deploy */
         let res = await erc721Contract.deploy({
-            name : 'test', symbol : 'B.E.P.R.O', 
+            name : 'Art | BEPRO', symbol : 'B.E.P.R.O', 
             limitedAmount : 100, 
             erc20Purchase : tokenAddress,
             feeAddress : app.account.getAddress()
