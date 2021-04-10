@@ -672,11 +672,28 @@ contract PredictionMarket is Ownable {
     return outcome.shares.holdersShares[msg.sender];
   }
 
-  /// @return liquidity stake of the `msg.sender` in the market
+  // @return liquidity stake of the `msg.sender` in the market
   function myLiquidityShares(uint marketId) public view returns(uint) {
     Market storage market = markets[marketId];
 
     return market.liquidityShares[msg.sender];
+  }
+
+  function getUserMarketShares(uint marketId, address participant)
+    public view
+    returns(
+      uint,
+      uint,
+      uint
+    )
+  {
+    Market storage market = markets[marketId];
+
+    return (
+      market.liquidityShares[participant],
+      market.outcomes[0].shares.holdersShares[participant],
+      market.outcomes[1].shares.holdersShares[participant]
+    );
   }
 
   /// Allow retrieving the the array of created contracts
@@ -730,6 +747,29 @@ contract PredictionMarket is Ownable {
     return market.sharesAvailable;
   }
 
+  function getMarketData(uint marketId)
+    public view
+    returns(
+      string memory,
+      MarketState,
+      uint,
+      uint,
+      uint,
+      uint
+    )
+  {
+    Market storage market = markets[marketId];
+
+    return (
+      market.name,
+      market.state,
+      market.closedDateTime,
+      market.liquidityAvailable,
+      market.liquidityTotal,
+      market.sharesAvailable
+    );
+  }
+
   // ------ Outcome Getters ------
 
   function getMarketOutcomeIds(uint marketId) public view returns(uint[] memory) {
@@ -768,6 +808,26 @@ contract PredictionMarket is Ownable {
     MarketOutcome storage outcome = market.outcomes[marketOutcomeId];
 
     return outcome.shares.total;
+  }
+
+  function getMarketOutcomeData(uint marketId, uint marketOutcomeId)
+    public view
+    returns(
+      string memory,
+      uint,
+      uint,
+      uint
+    )
+  {
+    Market storage market = markets[marketId];
+    MarketOutcome storage outcome = market.outcomes[marketOutcomeId];
+
+    return (
+      outcome.name,
+      getMarketOutcomePrice(marketId, marketOutcomeId),
+      outcome.shares.available,
+      outcome.shares.total
+    );
   }
 
   // ------ Getters ------
