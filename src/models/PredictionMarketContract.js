@@ -123,6 +123,25 @@ class PredictionMarketContract extends IContract {
 		};
 	}
 
+	/**
+	 * @function getMyPortfolio
+	 * @description Get My Porfolio
+	 * @returns {Array} Outcome Shares
+	 */
+	async getMyPortfolio() {
+		const marketIds = await this.getMarkets();
+
+		// TODO: improve this (avoid looping through all markets)
+		return await marketIds.reduce(async (obj, marketId) => {
+			const myShares = await this.getMyMarketShares({ marketId });
+
+			return await {
+				...(await obj),
+				[marketId]: myShares,
+			};
+		}, {});
+	}
+
 	// TODO
  	// /**
 	//  * @function isMarketOpen
