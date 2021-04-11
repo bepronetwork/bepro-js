@@ -70,6 +70,21 @@ export default class Application {
 		}
 	};
 
+	/**
+	 * @name isLoggedIn
+	 * @description Returns wether metamask account is connected to service or not
+	 */
+	 isLoggedIn = async () => {
+		try {
+			if (typeof window === "undefined" || typeof window.ethereum === "undefined") { return false; }
+			const accounts = await ethereum.request({ method: 'eth_accounts' });
+
+			return accounts.length > 0;
+		} catch(err) {
+			return false;
+		}
+	};
+
 	/*************/
 	/** GETTERS **/
 	/*************/
