@@ -200,12 +200,41 @@ library SafeMath {
 contract PredictionMarket is Ownable {
   using SafeMath for uint;
 
+  // ------ Events ------
+
+  event ParticipantAction(
+    address indexed participant,
+    MarketAction indexed action,
+    uint indexed marketId,
+    uint outcomeId,
+    uint shares,
+    uint value,
+    uint timestamp
+  );
+
+  event MarketOutcomePrice(
+    uint indexed marketId,
+    uint indexed outcomeId,
+    uint value,
+    uint timestamp
+  );
+
+  event MarketLiquidity(
+    uint indexed marketId,
+    uint value,
+    uint timestamp
+  );
+
+  // ------ Events End ------
+
+
   // Market closed time has to be at least 30 secs from current.
   uint constant MIN_DURATION = 30;
 
   uint256 constant public MAX_UINT_256 = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
 
   enum MarketState { open, closed }
+  enum MarketAction { buy, sell, addLiquidity, removeLiquidity }
 
   struct Market {
     string name;
@@ -380,14 +409,11 @@ contract PredictionMarket is Ownable {
     timeTransitions(marketId)
     atState(marketId, MarketState.open)
   {
-    address participant = msg.sender;
-
     Market storage market = markets[marketId];
 
     MarketOutcome storage outcome = market.outcomes[outcomeId];
     market.liquidityTotal = subShares ? market.liquidityTotal.sub(value) : market.liquidityTotal.add(value);
 
-    uint productBalance = market.liquidityAvailable**(market.outcomeIds.length);
     uint newProductBalance = 1;
 
     // Funding market shares with received ETH
@@ -404,30 +430,33 @@ contract PredictionMarket is Ownable {
       market.sharesAvailable = subShares ? market.sharesAvailable.sub(value) : market.sharesAvailable.add(value);
     }
 
-    uint newSharesAvailable = outcome.shares.available.mul(productBalance).div(newProductBalance);
-
-    uint shares = outcome.shares.available - newSharesAvailable;
+    // productBalance = market.liquidityAvailable**(market.outcomeIds.length);
+    // newSharesAvailable = outcome.shares.available.mul(productBalance).div(newProductBalance);
+    uint shares = outcome.shares.available - outcome.shares.available.mul(market.liquidityAvailable**(market.outcomeIds.length)).div(newProductBalance);
 
     require(shares > 0, "Can't be 0");
     require(outcome.shares.available >= shares, "Can't buy more shares than the ones available");
 
     // new participant, push into the array
-    if (market.holdersShares[participant] == 0) {
-      market.holders.push(participant);
-      market.holdersIndexes[participant] = market.holders.length - 1;
+    if (market.holdersShares[msg.sender] == 0) {
+      market.holders.push(msg.sender);
+      market.holdersIndexes[msg.sender] = market.holders.length - 1;
     }
 
     // doing it for both market and market outcomes
-    if (outcome.shares.holdersShares[participant] == 0) {
-      outcome.shares.holders.push(participant);
-      outcome.shares.holdersIndexes[participant] = market.holders.length - 1;
+    if (outcome.shares.holdersShares[msg.sender] == 0) {
+      outcome.shares.holders.push(msg.sender);
+      outcome.shares.holdersIndexes[msg.sender] = market.holders.length - 1;
     }
 
-    outcome.shares.holdersShares[participant] = outcome.shares.holdersShares[participant].add(shares);
-    market.holdersShares[participant] = market.holdersShares[participant].add(shares);
+    outcome.shares.holdersShares[msg.sender] = outcome.shares.holdersShares[msg.sender].add(shares);
+    market.holdersShares[msg.sender] = market.holdersShares[msg.sender].add(shares);
 
     outcome.shares.available = outcome.shares.available.sub(shares);
     market.sharesAvailable = market.sharesAvailable.sub(shares);
+
+    emit ParticipantAction(msg.sender, MarketAction.buy, marketId, outcomeId, shares, value, now);
+    emitMarketOutcomePriceEvents(marketId);
   }
 
   /// Sell shares of a market outcome
@@ -443,8 +472,7 @@ contract PredictionMarket is Ownable {
     require(myShares(marketId, outcomeId) >= shares);
 
     // Invariant check: make sure the market's stake is smaller than the stake
-    uint sharesHeld = outcome.shares.total - outcome.shares.available;
-    require(sharesHeld >= shares);
+    require((outcome.shares.total - outcome.shares.available) >= shares);
 
     // removing shares
     outcome.shares.holdersShares[msg.sender] = outcome.shares.holdersShares[msg.sender].sub(shares);
@@ -471,7 +499,6 @@ contract PredictionMarket is Ownable {
     market.sharesAvailable = market.sharesAvailable.add(shares);
 
     uint oppositeSharesAvailable = market.sharesAvailable.sub(outcome.shares.available);
-    uint productBalance = market.liquidityAvailable**(market.outcomeIds.length);
 
     // formula to calculate amount user will receive in ETH
     // x = 1/2 (-sqrt(a^2 - 2 a (y + z) + 4 b + (y + z)^2) + a + y + z)
@@ -481,7 +508,8 @@ contract PredictionMarket is Ownable {
     // a = # opposite shares available
     // b = product balance
 
-    uint value = (oppositeSharesAvailable**2).add(productBalance.mul(4));
+    // productBalance = market.liquidityAvailable**(market.outcomeIds.length);
+    uint value = (oppositeSharesAvailable**2).add((market.liquidityAvailable**(market.outcomeIds.length)).mul(4));
     value = value.add(outcome.shares.available**2);
     value = value.sub(oppositeSharesAvailable.mul(2).mul(outcome.shares.available));
     value = sqrt(value);
@@ -510,6 +538,9 @@ contract PredictionMarket is Ownable {
 
     // 3. Interaction
     msg.sender.transfer(value);
+
+    emit ParticipantAction(msg.sender, MarketAction.sell, marketId, outcomeId, shares, value, now);
+    emitMarketOutcomePriceEvents(marketId);
   }
 
   function addLiquidity(uint marketId) public payable {
@@ -560,6 +591,9 @@ contract PredictionMarket is Ownable {
     } else {
       buy(marketId, minOutcomeId, msg.value, false);
     }
+
+    emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityRatio, msg.value, now);
+    emit MarketLiquidity(marketId, market.liquidityAvailable, now);
   }
 
   function removeLiquidity(uint marketId, uint shares) public payable {
@@ -632,6 +666,9 @@ contract PredictionMarket is Ownable {
 
     // transferring user ETH from liquidity removed
     msg.sender.transfer(value);
+
+    emit ParticipantAction(msg.sender, MarketAction.removeLiquidity, marketId, 0, shares, value, now);
+    emit MarketLiquidity(marketId, market.liquidityAvailable, now);
   }
 
   /// Determine the winner of the market, actual algorithm is delegated to an internal function
@@ -654,13 +691,23 @@ contract PredictionMarket is Ownable {
     // TOODO
   }
 
-  // ------ Core Functions End ------
-
   /// Internal function for advancing the market state.
   function nextState(uint marketId) internal {
     Market storage market = markets[marketId];
     market.state = MarketState(uint(market.state) + 1);
   }
+
+  function emitMarketOutcomePriceEvents(
+    uint marketId
+  ) internal {
+    Market storage market = markets[marketId];
+
+    for (uint i = 0; i < market.outcomeIds.length; i++) {
+      emit MarketOutcomePrice(marketId, i, getMarketOutcomePrice(marketId, i), now);
+    }
+  }
+
+  // ------ Core Functions End ------
 
   // ------ Getters ------
 
