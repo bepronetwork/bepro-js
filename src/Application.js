@@ -2,12 +2,9 @@ import Web3 from "web3";
 import { ExchangeContract, ERC20Contract, StakingContract, ERC721Collectibles } from "./models/index";
 import Account from './utils/Account';
 
-const ETH_URL_MAINNET =
-	"https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
-const ETH_URL_TESTNET =
-	"https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
-const TEST_PRIVATE_KEY = 
-	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
+const ETH_URL_MAINNET = "https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
+const ETH_URL_TESTNET ="https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+const TEST_PRIVATE_KEY = "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
 const networksEnum = Object.freeze({
 	1: "Main",
@@ -18,8 +15,11 @@ const networksEnum = Object.freeze({
 });
 
 export default class Application {
-	constructor({test=false, mainnet=true}) {
+	constructor({test=false, mainnet=true, opt={
+		web3Connection : ETH_URL_MAINNET
+	}}) {
 		this.test = test;
+		this.opt = opt;
 		this.mainnet = mainnet;
 		if(this.test){
 			this.start();
@@ -39,7 +39,7 @@ export default class Application {
 	start = () => {
 		this.web3 = new Web3(
 			new Web3.providers.HttpProvider(
-				(this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET
+				(this.mainnet == true) ? this.opt.web3Connection : ETH_URL_TESTNET
 			)
 		);
 		if (typeof window !== "undefined") {

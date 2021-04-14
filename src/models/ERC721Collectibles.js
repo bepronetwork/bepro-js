@@ -4,7 +4,6 @@ import _ from "lodash";
 import IContract from './IContract';
 import ERC20Contract from './ERC20Contract';
 
-
 const baseFeeAddress = "0x6714d41094a264bb4b8fcb74713b42cfee6b4f74";
 /**
  * ERC721Contract Object

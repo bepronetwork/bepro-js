@@ -4,7 +4,6 @@ var _lodash = require("lodash");var _lodash2 = _interopRequireDefault(_lodash);
 var _IContract2 = require("./IContract");var _IContract3 = _interopRequireDefault(_IContract2);
 var _ERC20Contract = require("./ERC20Contract");var _ERC20Contract2 = _interopRequireDefault(_ERC20Contract);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
-
 var baseFeeAddress = "0x6714d41094a264bb4b8fcb74713b42cfee6b4f74";
 /**
                                                                     * ERC721Contract Object

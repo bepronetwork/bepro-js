@@ -18,7 +18,8 @@ class Contract {
 							arguments: args
 						}).encodeABI(),
 							from  : account.getAddress(),
-							gas : 6913388
+							gasPrice : 180000000000,
+							gas : 5913388
 						}
 					);
 					this.web3.eth.sendSignedTransaction(txSigned.rawTransaction)
@@ -78,7 +79,7 @@ class Contract {
 				from  : account.address,
 				to : this.address,
 				gas : 4430000,
-				gasPrice : 20000000000,
+				gasPrice : 200000000000,
 				value: value ? value : '0x0'
 			}
 	
