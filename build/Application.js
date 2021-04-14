@@ -2,7 +2,7 @@
 var _index = require("./models/index");
 var _Account = require("./utils/Account");var _Account2 = _interopRequireDefault(_Account);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
-var ETH_URL_MAINNET = "https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+var ETH_URL_MAINNET = "https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
 var ETH_URL_TESTNET = "https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 var TEST_PRIVATE_KEY = "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
