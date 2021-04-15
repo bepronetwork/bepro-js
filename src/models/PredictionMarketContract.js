@@ -5,6 +5,13 @@ import { prediction } from "../interfaces";
 import Numbers from "../utils/Numbers";
 import IContract from './IContract';
 
+const actions = {
+	0: 'Buy',
+	1: 'Sell',
+	2: 'Add Liquidity',
+	3: 'Remove Liquidity',
+}
+
 /**
  * Exchange Contract Object
  * @constructor ExchangeContract
@@ -33,23 +40,6 @@ class PredictionMarketContract extends IContract {
 			.call();
 		return res.map((marketId) => Number(Numbers.fromHex(marketId)));
 	}
-
-
-	// TODO
-	// /* Get Functions */
-	// /**
-	//  * @function getMyMarkets
-	//  * @description Get Markets
-	//  * @returns {Integer | Array} Get Market Ids user interacted with
-	//  */
-	//  async getMarkets() {
-	// 	let res = await this.params.contract
-	// 		.getContract()
-	// 		.methods
-	//     .getMyMarkets()
-	// 		.call();
-	// 	return res.map((id) => Numbers.fromHex(id));
-	// }
 
 	/**
 	 * @function getMarketData
@@ -101,6 +91,16 @@ class PredictionMarketContract extends IContract {
 			shares: Numbers.fromDecimalsNumber(shares, 18),
 		};
 	}
+	/**
+	 * @function getMyAccount
+	 * @description Returns connected wallet account address
+	 * @returns {String | undefined} address
+	 */
+	async getMyAccount() {
+		const accounts = await this.params.web3.eth.getAccounts();
+
+		return accounts[0];
+	}
 
 	/**
 	 * @function getMyMarketShares
@@ -140,6 +140,29 @@ class PredictionMarketContract extends IContract {
 				[marketId]: myShares,
 			};
 		}, {});
+	}
+
+	async getMyActions() {
+		const account = await this.getMyAccount();
+		if (!account) return [];
+
+		const events = await this.getContract().getPastEvents('ParticipantAction', {
+			fromBlock: 0,
+			toBlock: 'latest',
+			filter: {participant: account} // filtering by address
+		});
+
+		// filtering by address
+		return events.map(event => {
+			return {
+				action: actions[Numbers.fromBigNumberToInteger(event.returnValues.action, 18)],
+				marketId: Numbers.fromBigNumberToInteger(event.returnValues.marketId, 18),
+				outcomeId: Numbers.fromBigNumberToInteger(event.returnValues.outcomeId, 18),
+				shares: Numbers.fromDecimalsNumber(event.returnValues.shares, 18),
+				value: Numbers.fromDecimalsNumber(event.returnValues.value, 18),
+				timestamp: Numbers.fromBigNumberToInteger(event.returnValues.timestamp, 18),
+			}
+		})
 	}
 
 	// TODO
