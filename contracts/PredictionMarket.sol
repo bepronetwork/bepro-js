@@ -225,6 +225,12 @@ contract PredictionMarket is Ownable {
     uint timestamp
   );
 
+  event MarketResolved(
+    address indexed oracle,
+    uint indexed marketId,
+    uint outcomeId
+  );
+
   // ------ Events End ------
 
 
@@ -233,7 +239,7 @@ contract PredictionMarket is Ownable {
 
   uint256 constant public MAX_UINT_256 = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
 
-  enum MarketState { open, closed }
+  enum MarketState { open, closed, resolved }
   enum MarketAction { buy, sell, addLiquidity, removeLiquidity }
 
   struct Market {
@@ -248,11 +254,14 @@ contract PredictionMarket is Ownable {
 
     MarketState state;
 
+    // resolution variables
+    string oracleUrl;
     address oracle;
-    address winner;
+    uint resolvedOutcomeId;
 
     mapping(address => uint) holdersIndexes;
     mapping(address => uint) holdersShares;
+    mapping(address => bool) holdersWithdrawals; // wether participant has widthdrew liquidity winnings
     address[] holders;
 
     mapping(address => uint) liquidityIndexes;
@@ -278,9 +287,9 @@ contract PredictionMarket is Ownable {
 
     mapping(address => uint) holdersShares;
     mapping(address => uint) holdersIndexes;
+    mapping(address => bool) holdersWithdrawals; // wether participant has widthdrew resolution winnings
     address[] holders;
 
-    // TODO: liquidity
     // TODO: fees
   }
 
@@ -319,6 +328,11 @@ contract PredictionMarket is Ownable {
 
   modifier participantHasShares(uint marketId, uint outcomeId, address sender) {
     require(markets[marketId].outcomes[outcomeId].shares.holdersShares[sender] > 0);
+    _;
+  }
+
+  modifier participantHasLiquidity(uint marketId, address sender) {
+    require(markets[marketId].liquidityShares[sender] > 0);
     _;
   }
 
@@ -365,6 +379,8 @@ contract PredictionMarket is Ownable {
     market.closedDateTime = now.add(duration);
     market.state = MarketState.open;
     market.oracle = oracle;
+    // setting intial value to an integer that does not map to any outcomeId
+    market.resolvedOutcomeId = MAX_UINT_256;
 
     market.liquidityTotal = msg.value;
     market.liquidityAvailable = msg.value;
@@ -543,7 +559,10 @@ contract PredictionMarket is Ownable {
     emitMarketOutcomePriceEvents(marketId);
   }
 
-  function addLiquidity(uint marketId) public payable {
+  function addLiquidity(uint marketId) public payable
+    timeTransitions(marketId)
+    atState(marketId, MarketState.open)
+  {
     Market storage market = markets[marketId];
 
     require(msg.value > 0, "The stake has to be greater than 0.");
@@ -596,7 +615,11 @@ contract PredictionMarket is Ownable {
     emit MarketLiquidity(marketId, market.liquidityAvailable, now);
   }
 
-  function removeLiquidity(uint marketId, uint shares) public payable {
+  function removeLiquidity(uint marketId, uint shares) public payable
+    timeTransitions(marketId)
+    participantHasLiquidity(marketId, msg.sender)
+    atState(marketId, MarketState.open)
+  {
     Market storage market = markets[marketId];
 
     // Invariant check: make sure the stake is <= than user's stake
@@ -671,24 +694,73 @@ contract PredictionMarket is Ownable {
     emit MarketLiquidity(marketId, market.liquidityAvailable, now);
   }
 
-  /// Determine the winner of the market, actual algorithm is delegated to an internal function
-  /// @dev Purposefully make this function allowed to be run by anybody, not just the contract owner.
-  /// @return Address of the winner
+  /// Determine the result of the market
+  /// @dev Only allowed by oracle
+  /// @return Id of the outcome
   function resolveMarketOutcome(uint marketId, uint outcomeId) public
     timeTransitions(marketId)
     atState(marketId, MarketState.closed)
-    returns(address)
+    transitionNext(marketId)
+    returns(uint)
   {
-    // TODO
+    Market storage market = markets[marketId];
+    MarketOutcome storage outcome = market.outcomes[outcomeId];
+
+    // assuring action is performed by oracle
+    require(market.oracle == msg.sender, "Market resolution needs to be performed by oracle");
+    require(market.resolvedOutcomeId == MAX_UINT_256, "Market already resolved");
+
+    // assuring outcome is valid
+    require(outcome.marketId == marketId, "Market is not valid");
+
+    market.resolvedOutcomeId = outcomeId;
+    emit MarketResolved(market.oracle, marketId, outcomeId);
+
+    return market.resolvedOutcomeId;
   }
 
-
-  /// Allowing winner to withdraw money.
-  /// @dev in order to prevent withrawal address is a malicious contract, we use check-effect-interaction pattern inside.
-  function winnerWithdraw(uint marketId) public
-    atState(marketId, MarketState.closed)
+  /// Allowing holders of resolved outcome shares to withdraw earnings.
+  function withdrawResolvedOutcomeShares(uint marketId) public
+    atState(marketId, MarketState.resolved)
   {
-    // TOODO
+    Market storage market = markets[marketId];
+    MarketOutcome storage resolvedOutcome = market.outcomes[market.resolvedOutcomeId];
+
+    require(resolvedOutcome.shares.holdersShares[msg.sender] > 0, "Participant does not hold resolved outcome shares");
+    require(resolvedOutcome.shares.holdersWithdrawals[msg.sender] == false, "Participant already withdrew resolved outcome winnings");
+
+    // 1 share = 1 ETH
+    uint value = resolvedOutcome.shares.holdersShares[msg.sender];
+
+    // assuring market has enough funds
+    require(market.liquidityTotal >= value, "Market does not have enough balance");
+
+    market.liquidityTotal = market.liquidityTotal.sub(value);
+    resolvedOutcome.shares.holdersWithdrawals[msg.sender] = true;
+
+    msg.sender.transfer(value);
+  }
+
+  /// Allowing liquidity providers to withdraw earnings from liquidity providing.
+  function withdrawResolvedLiquidity(uint marketId) public
+    atState(marketId, MarketState.resolved)
+  {
+    Market storage market = markets[marketId];
+    MarketOutcome storage resolvedOutcome = market.outcomes[market.resolvedOutcomeId];
+
+    require(market.holdersShares[msg.sender] > 0, "Participant does not hold liquidity shares");
+    require(market.holdersWithdrawals[msg.sender] == false, "Participant already withdrew liquidity winnings");
+
+    // value = total resolved outcome pool shares * pool share (%)
+    uint value = resolvedOutcome.shares.available.mul(myLiquidityPoolShare(marketId)).div(10**18);
+
+    // assuring market has enough funds
+    require(market.liquidityTotal >= value, "Market does not have enough balance");
+
+    market.liquidityTotal = market.liquidityTotal.sub(value);
+    market.holdersWithdrawals[msg.sender] = true;
+
+    msg.sender.transfer(value);
   }
 
   /// Internal function for advancing the market state.
@@ -724,6 +796,13 @@ contract PredictionMarket is Ownable {
     Market storage market = markets[marketId];
 
     return market.liquidityShares[msg.sender];
+  }
+
+  // @return % of liquidity pool stake
+  function myLiquidityPoolShare(uint marketId) public view returns(uint) {
+    Market storage market = markets[marketId];
+
+    return market.liquidityShares[msg.sender].mul(10**18).div(market.liquidityAvailable);
   }
 
   function getUserMarketShares(uint marketId, address participant)
@@ -762,11 +841,6 @@ contract PredictionMarket is Ownable {
   function getMarketState(uint marketId) public view returns(MarketState) {
     Market storage market = markets[marketId];
     return market.state;
-  }
-
-  function getMarketWinner(uint marketId) public view returns(address) {
-    Market storage market = markets[marketId];
-    return market.winner;
   }
 
   function getMarketOracle(uint marketId) public view returns(address) {
