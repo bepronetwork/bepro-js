@@ -297,6 +297,27 @@ class PredictionMarketContract extends IContract {
 		);
 	};
 
+	resolveMarketOutcome = async ({marketId, outcomeId}) => {
+		return await this.__sendTx(
+			this.getContract().methods.resolveMarketOutcome(marketId, outcomeId),
+			false,
+		);
+	};
+
+	claimWinnings = async ({marketId}) => {
+		return await this.__sendTx(
+			this.getContract().methods.claimWinnings(marketId),
+			false,
+		);
+	};
+
+	claimLiquidity = async ({marketId}) => {
+		return await this.__sendTx(
+			this.getContract().methods.claimLiquidity(marketId),
+			false,
+		);
+	};
+
 	/**
 	* @function deploy
 	* @description Deploy the Pool Contract
