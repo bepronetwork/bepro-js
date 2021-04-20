@@ -133,11 +133,26 @@ class PredictionMarketContract extends IContract {
 
 		// TODO: improve this (avoid looping through all markets)
 		return await marketIds.reduce(async (obj, marketId) => {
-			const myShares = await this.getMyMarketShares({ marketId });
+			const marketShares = await this.getContract().methods.myMarketShares(marketId).call();
+			const claimStatus = await this.getContract().methods.myClaimStatus(marketId).call();
+
+			const portfolio = {
+				liquidityShares: Numbers.fromDecimalsNumber(marketShares[0], 18),
+				outcomeShares: {
+					0: Numbers.fromDecimalsNumber(marketShares[1], 18),
+					1: Numbers.fromDecimalsNumber(marketShares[2], 18),
+				},
+				claimStatus: {
+					winningsToClaim: claimStatus[0],
+					winningsClaimed: claimStatus[1],
+					liquidityToClaim: claimStatus[2],
+					liquidityClaimed: claimStatus[3]
+				}
+			};
 
 			return await {
 				...(await obj),
-				[marketId]: myShares,
+				[marketId]: portfolio,
 			};
 		}, {});
 	}
@@ -161,6 +176,7 @@ class PredictionMarketContract extends IContract {
 				shares: Numbers.fromDecimalsNumber(event.returnValues.shares, 18),
 				value: Numbers.fromDecimalsNumber(event.returnValues.value, 18),
 				timestamp: Numbers.fromBigNumberToInteger(event.returnValues.timestamp, 18),
+				transactionHash: event.transactionHash,
 			}
 		})
 	}
