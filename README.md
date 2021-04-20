@@ -18,6 +18,8 @@ Before try to install, make sure your working directory has `Python 2` and the r
 // Install it via bash terminal globally
 $ sudo apt install python2
 
+
+
 // Check the installed version.
 // Must shown Python 2.7.18rc1 on terminal to the install be OK
 $ python2 --version
