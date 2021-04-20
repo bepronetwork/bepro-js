@@ -957,7 +957,8 @@ contract PredictionMarket is Ownable {
       uint,
       uint,
       uint,
-      uint
+      uint,
+      int
     )
   {
     Market storage market = markets[marketId];
@@ -968,7 +969,8 @@ contract PredictionMarket is Ownable {
       market.closedDateTime,
       market.liquidityAvailable,
       market.liquidityTotal,
-      market.sharesAvailable
+      market.sharesAvailable,
+      getMarketResolvedOutcome(marketId)
     );
   }
 
@@ -977,6 +979,17 @@ contract PredictionMarket is Ownable {
 
     // liquidity price = # liquidity shares / # outcome shares * # outcomes
     return market.liquidityAvailable.mul(ONE * market.outcomeIds.length).div(market.sharesAvailable);
+  }
+
+  function getMarketResolvedOutcome(uint marketId) public view returns(int) {
+    Market storage market = markets[marketId];
+
+    // returning -1 if market still not resolved
+    if (market.state != MarketState.resolved) {
+      return -1;
+    }
+
+    return int(market.resolvedOutcomeId);
   }
 
   // ------ Outcome Getters ------
