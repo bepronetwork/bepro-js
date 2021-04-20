@@ -221,7 +221,8 @@ contract PredictionMarket is Ownable {
 
   event MarketLiquidity(
     uint indexed marketId,
-    uint value,
+    uint value, // total liquidity (ETH)
+    uint price, // value of 1 liquidity share; max: 1 ETH (50-50 situation)
     uint timestamp
   );
 
@@ -414,6 +415,9 @@ contract PredictionMarket is Ownable {
       market.sharesTotal = market.sharesTotal.add(msg.value);
       market.sharesAvailable = market.sharesAvailable.add(msg.value);
     }
+
+    // emiting initial price events
+    emitMarketOutcomePriceEvents(marketIndex);
 
     marketIndex = marketIndex + 1;
   }
@@ -614,7 +618,7 @@ contract PredictionMarket is Ownable {
     }
 
     emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityRatio, msg.value, now);
-    emit MarketLiquidity(marketId, market.liquidityAvailable, now);
+    emit MarketLiquidity(marketId, market.liquidityAvailable, getMarketLiquidityPrice(marketId), now);
   }
 
   function removeLiquidity(uint marketId, uint shares) public payable
@@ -693,7 +697,7 @@ contract PredictionMarket is Ownable {
     msg.sender.transfer(value);
 
     emit ParticipantAction(msg.sender, MarketAction.removeLiquidity, marketId, 0, shares, value, now);
-    emit MarketLiquidity(marketId, market.liquidityAvailable, now);
+    emit MarketLiquidity(marketId, market.liquidityAvailable, getMarketLiquidityPrice(marketId), now);
   }
 
   /// Determine the result of the market
@@ -803,6 +807,9 @@ contract PredictionMarket is Ownable {
     for (uint i = 0; i < market.outcomeIds.length; i++) {
       emit MarketOutcomePrice(marketId, i, getMarketOutcomePrice(marketId, i), now);
     }
+
+    // liquidity shares also change value
+    emit MarketLiquidity(marketId, market.liquidityAvailable, getMarketLiquidityPrice(marketId), now);
   }
 
   // ------ Core Functions End ------
@@ -963,6 +970,13 @@ contract PredictionMarket is Ownable {
       market.liquidityTotal,
       market.sharesAvailable
     );
+  }
+
+  function getMarketLiquidityPrice(uint marketId) public view returns(uint) {
+    Market storage market = markets[marketId];
+
+    // liquidity price = # liquidity shares / # outcome shares * # outcomes
+    return market.liquidityAvailable.mul(ONE * market.outcomeIds.length).div(market.sharesAvailable);
   }
 
   // ------ Outcome Getters ------
