@@ -726,6 +726,9 @@ contract PredictionMarket is Ownable {
     emit MarketOutcomePrice(marketId, outcomeId, ONE, now);
     // emitting 0 price event for loser outcome
     emit MarketOutcomePrice(marketId, (outcomeId == 0 ? 1 : 0), 0, now);
+    // final liquidity price = outcome shares / liquidity shares
+    uint liquidityPrice = outcome.shares.available.mul(ONE).div(market.liquidityAvailable);
+    emit MarketLiquidity(marketId, market.liquidityAvailable, liquidityPrice, now);
 
     return market.resolvedOutcomeId;
   }
