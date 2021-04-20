@@ -831,6 +831,29 @@ contract PredictionMarket is Ownable {
     return market.liquidityShares[msg.sender].mul(ONE).div(market.liquidityAvailable);
   }
 
+  function myMarketShares(uint marketId)
+    public view
+    returns(
+      uint,
+      uint,
+      uint
+    )
+  {
+    return getUserMarketShares(marketId, msg.sender);
+  }
+
+  function myClaimStatus(uint marketId)
+    public view
+    returns(
+      bool,
+      bool,
+      bool,
+      bool
+    )
+  {
+    return getUserClaimStatus(marketId, msg.sender);
+  }
+
   function getUserMarketShares(uint marketId, address participant)
     public view
     returns(
@@ -850,7 +873,6 @@ contract PredictionMarket is Ownable {
 
   function getUserClaimStatus(uint marketId, address participant)
     public view
-    atState(marketId, MarketState.resolved)
     returns(
       bool,
       bool,
@@ -859,6 +881,11 @@ contract PredictionMarket is Ownable {
     )
   {
     Market storage market = markets[marketId];
+    // market still not resolved
+    if (market.state != MarketState.resolved) {
+      return (false, false, false, false);
+    }
+
     MarketOutcome storage outcome = market.outcomes[market.resolvedOutcomeId];
 
     return (
