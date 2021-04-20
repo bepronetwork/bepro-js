@@ -418,6 +418,7 @@ contract PredictionMarket is Ownable {
 
     // emiting initial price events
     emitMarketOutcomePriceEvents(marketIndex);
+    emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketIndex, 0, msg.value, msg.value, now);
 
     marketIndex = marketIndex + 1;
   }
