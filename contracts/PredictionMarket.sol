@@ -1011,6 +1011,11 @@ contract PredictionMarket is Ownable {
     Market storage market = markets[marketId];
     MarketOutcome storage outcome = market.outcomes[marketOutcomeId];
 
+    if (market.state == MarketState.resolved) {
+      // resolved market, price is either 0 or 1
+      return marketOutcomeId == market.resolvedOutcomeId ? ONE : 0;
+    }
+
     require(outcome.shares.total >= outcome.shares.available, "Total shares has to be equal or higher than available shares");
     require(market.sharesAvailable >= outcome.shares.available, "Total # available shares has to be equal or higher than outcome available shares");
 
