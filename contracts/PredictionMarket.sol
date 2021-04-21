@@ -424,18 +424,20 @@ contract PredictionMarket is Ownable {
   }
 
   function buy(uint marketId, uint outcomeId) public payable {
-    buy(marketId, outcomeId, msg.value, false);
+    buy(marketId, outcomeId, msg.value, MarketAction.buy);
   }
 
   /// Buy shares of a market outcome
-  function buy(uint marketId, uint outcomeId, uint value, bool subShares) internal
+  function buy(uint marketId, uint outcomeId, uint value, MarketAction parentAction) internal
     timeTransitions(marketId)
     atState(marketId, MarketState.open)
   {
     Market storage market = markets[marketId];
 
     MarketOutcome storage outcome = market.outcomes[outcomeId];
-    market.liquidityTotal = subShares ? market.liquidityTotal.sub(value) : market.liquidityTotal.add(value);
+    market.liquidityTotal = parentAction == MarketAction.removeLiquidity
+      ? market.liquidityTotal.sub(value)
+      : market.liquidityTotal.add(value);
 
     uint newProductBalance = 1;
 
@@ -443,14 +445,22 @@ contract PredictionMarket is Ownable {
     for (uint i = 0; i < market.outcomeIds.length; i++) {
       MarketOutcome storage marketOutcome = market.outcomes[i];
 
-      marketOutcome.shares.available = subShares ? marketOutcome.shares.available.sub(value) : marketOutcome.shares.available.add(value);
-      marketOutcome.shares.total = subShares ? marketOutcome.shares.total.sub(value) : marketOutcome.shares.total.add(value);
+      marketOutcome.shares.available = parentAction == MarketAction.removeLiquidity
+        ? marketOutcome.shares.available.sub(value)
+        : marketOutcome.shares.available.add(value);
+      marketOutcome.shares.total = parentAction == MarketAction.removeLiquidity
+        ? marketOutcome.shares.total.sub(value)
+        : marketOutcome.shares.total.add(value);
 
       newProductBalance = newProductBalance.mul(marketOutcome.shares.available);
 
       // only adding to market total shares, the available remains
-      market.sharesTotal = subShares ? market.sharesTotal.sub(value) : market.sharesTotal.add(value);
-      market.sharesAvailable = subShares ? market.sharesAvailable.sub(value) : market.sharesAvailable.add(value);
+      market.sharesTotal = parentAction == MarketAction.removeLiquidity
+        ? market.sharesTotal.sub(value)
+        : market.sharesTotal.add(value);
+      market.sharesAvailable = parentAction == MarketAction.removeLiquidity
+        ? market.sharesAvailable.sub(value)
+        : market.sharesAvailable.add(value);
     }
 
     // productBalance = market.liquidityAvailable**(market.outcomeIds.length);
@@ -477,6 +487,11 @@ contract PredictionMarket is Ownable {
 
     outcome.shares.available = outcome.shares.available.sub(shares);
     market.sharesAvailable = market.sharesAvailable.sub(shares);
+
+    // transaction value is calculated differently if parent action is not buy
+    if (parentAction != MarketAction.buy) {
+      value = shares.mul(getMarketOutcomePrice(marketId, outcomeId)).div(ONE);
+    }
 
     emit ParticipantAction(msg.sender, MarketAction.buy, marketId, outcomeId, shares, value, now);
     emitMarketOutcomePriceEvents(marketId);
@@ -578,6 +593,7 @@ contract PredictionMarket is Ownable {
     // getting liquidity ratio
     uint minShares = MAX_UINT_256;
     uint minOutcomeId;
+    uint value;
 
     for (uint i = 0; i < market.outcomeIds.length; i++) {
       uint outcomeId = market.outcomeIds[i];
@@ -613,12 +629,14 @@ contract PredictionMarket is Ownable {
 
         market.sharesTotal = market.sharesTotal.add(liquidityRatio);
         market.sharesAvailable = market.sharesAvailable.add(liquidityRatio);
+        value = msg.value;
       }
     } else {
-      buy(marketId, minOutcomeId, msg.value, false);
+      buy(marketId, minOutcomeId, msg.value, MarketAction.addLiquidity);
+      value = liquidityRatio.mul(getMarketLiquidityPrice(marketId)).div(ONE);
     }
 
-    emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityRatio, msg.value, now);
+    emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityRatio, value, now);
     emit MarketLiquidity(marketId, market.liquidityAvailable, getMarketLiquidityPrice(marketId), now);
   }
 
@@ -690,7 +708,7 @@ contract PredictionMarket is Ownable {
       // removing liquidity from market (shares = value)
       market.liquidityAvailable = market.liquidityAvailable.sub(shares);
 
-      buy(marketId, outcomeId, value, true);
+      buy(marketId, outcomeId, value, MarketAction.removeLiquidity);
       // msg.sender.transfer(value);
     }
 
