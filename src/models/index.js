@@ -4,8 +4,8 @@ import StakingContract from './StakingContract';
 import ERC721Collectibles from './ERC721Collectibles';
 
 export {
-	ERC20Contract,
-	ExchangeContract,
-	StakingContract,
-	ERC721Collectibles
-}
+  ERC20Contract,
+  ExchangeContract,
+  StakingContract,
+  ERC721Collectibles,
+};
