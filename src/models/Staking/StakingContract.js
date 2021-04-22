@@ -1,9 +1,9 @@
-import { staking } from "../interfaces";
-import ERC20Contract from './ERC20Contract';
-import IContract from './IContract';
+import { staking } from "../../interfaces";
+import ERC20Contract from '../ERC20/ERC20Contract';
+import IContract from '../IContract';
 import _ from "lodash";
-import Numbers from "../utils/Numbers";
-import dayjs from 'dayjs'
+import Numbers from "../../utils/Numbers";
+
 /**
  * Staking Contract Object
  * @constructor StakingContract

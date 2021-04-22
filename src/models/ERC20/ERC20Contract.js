@@ -1,6 +1,6 @@
-import { ierc20 } from "../interfaces";
-import Numbers from "../utils/Numbers";
-import IContract from './IContract';
+import { ierc20 } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
+import IContract from '../IContract';
 
 class ERC20Contract extends IContract {
 	constructor(params) {

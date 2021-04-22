@@ -114,12 +114,27 @@ function Application(_ref)
 
 
 
-	getERC721Collectibles = function () {var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref5$contractAddress = _ref5.contractAddress,contractAddress = _ref5$contractAddress === undefined ? null : _ref5$contractAddress,_ref5$tokenAddress = _ref5.tokenAddress,tokenAddress = _ref5$tokenAddress === undefined ? null : _ref5$tokenAddress;
+
+	getERC721Collectibles = function () {var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref5$customID = _ref5.customID,customID = _ref5$customID === undefined ? 1 : _ref5$customID,_ref5$contractAddress = _ref5.contractAddress,contractAddress = _ref5$contractAddress === undefined ? null : _ref5$contractAddress;
 		try {
-			return new _index.ERC721Collectibles({
-				web3: _this.web3,
-				contractAddress: contractAddress,
-				acc: _this.test ? _this.account : null });
+
+			switch (customID) {
+				case 0:{
+						return new _index.ERC721Collectibles({
+							web3: _this.web3,
+							contractAddress: contractAddress,
+							acc: _this.test ? _this.account : null });
+
+					}
+				case 1:{
+						return new _index.ERC721Collectibles({
+							web3: _this.web3,
+							contractAddress: contractAddress,
+							acc: _this.test ? _this.account : null });
+
+					};}
+
+
 
 		} catch (err) {
 			throw err;
@@ -194,6 +209,7 @@ function Application(_ref)
                                                                                                                                                                                                                                                                                                                                                                                                                         */ /**
                                                                                                                                                                                                                                                                                                                                                                                                                                * @name getERC721Collectibles
                                                                                                                                                                                                                                                                                                                                                                                                                                * @param {Address} ContractAddress (Opt) If it is deployed
+                                                                                                                                                                                                                                                                                                                                                                                                                            * @param {Integer} CustomID  
                                                                                                                                                                                                                                                                                                                                                                                                                                * @description Create a ERC721Collectibles Contract
                                                                                                                                                                                                                                                                                                                                                                                                                                */ /**
                                                                                                                                                                                                                                                                                                                                                                                                                                   * @name getERC20Contract
