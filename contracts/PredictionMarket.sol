@@ -996,8 +996,30 @@ contract PredictionMarket is Ownable {
     );
   }
 
+
+  function getMarketPrices(uint marketId)
+    public view
+    returns(
+      uint,
+      uint,
+      uint
+    )
+  {
+    return (
+      getMarketLiquidityPrice(marketId),
+      getMarketOutcomePrice(marketId, 0),
+      getMarketOutcomePrice(marketId, 1)
+    );
+  }
+
   function getMarketLiquidityPrice(uint marketId) public view returns(uint) {
     Market storage market = markets[marketId];
+
+    if (market.state == MarketState.resolved) {
+      // resolved market, price is either 0 or 1
+      // final liquidity price = outcome shares / liquidity shares
+      return market.outcomes[market.resolvedOutcomeId].shares.available.mul(ONE).div(market.liquidityAvailable);
+    }
 
     // liquidity price = # liquidity shares / # outcome shares * # outcomes
     return market.liquidityAvailable.mul(ONE * market.outcomeIds.length).div(market.sharesAvailable);
