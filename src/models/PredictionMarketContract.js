@@ -124,6 +124,56 @@ class PredictionMarketContract extends IContract {
 	}
 
 	/**
+	 * @function getAverageOutcomeBuyPrice
+	 * @description Calculates average buy price of market outcome based on user events
+	 * @param {Array} events
+	 * @param {Integer} marketId
+	 * @param {Integer} outcomeId
+	 * @returns {Integer} price
+	 */
+	getAverageOutcomeBuyPrice({events, marketId, outcomeId}) {
+		// filtering by marketId + outcomeId + buy action
+		events = events.filter(event => {
+      return (
+        event.action === 'Buy' &&
+        event.marketId === marketId &&
+        event.outcomeId === outcomeId
+			);
+		});
+
+		if (events.length === 0) return 0;
+
+		const totalShares = events.map(item => item.shares).reduce((prev, next) => prev + next);
+		const totalAmount = events.map(item => item.value).reduce((prev, next) => prev + next);
+
+		return totalAmount / totalShares;
+	}
+
+	/**
+	 * @function getAverageAddLiquidityPrice
+	 * @description Calculates average add liquidity of market outcome based on user events
+	 * @param {Array} events
+	 * @param {Integer} marketId
+	 * @returns {Integer} price
+	 */
+	 getAverageAddLiquidityPrice({events, marketId}) {
+		// filtering by marketId + add liquidity action
+		events = events.filter(event => {
+      return (
+        event.action === 'Add Liquidity' &&
+        event.marketId === marketId
+			);
+		});
+
+		if (events.length === 0) return 0;
+
+		const totalShares = events.map(item => item.shares).reduce((prev, next) => prev + next);
+		const totalAmount = events.map(item => item.value).reduce((prev, next) => prev + next);
+
+		return totalAmount / totalShares;
+	}
+
+	/**
 	 * @function getMyPortfolio
 	 * @description Get My Porfolio
 	 * @returns {Array} Outcome Shares
@@ -135,12 +185,22 @@ class PredictionMarketContract extends IContract {
 		return await marketIds.reduce(async (obj, marketId) => {
 			const marketShares = await this.getContract().methods.myMarketShares(marketId).call();
 			const claimStatus = await this.getContract().methods.myClaimStatus(marketId).call();
+			const events = await this.getMyActions();
 
 			const portfolio = {
-				liquidityShares: Numbers.fromDecimalsNumber(marketShares[0], 18),
-				outcomeShares: {
-					0: Numbers.fromDecimalsNumber(marketShares[1], 18),
-					1: Numbers.fromDecimalsNumber(marketShares[2], 18),
+				liquidity: {
+					shares: Numbers.fromDecimalsNumber(marketShares[0], 18),
+					price: this.getAverageAddLiquidityPrice({events, marketId}),
+				},
+				outcomes: {
+					0: {
+						shares: Numbers.fromDecimalsNumber(marketShares[1], 18),
+						price: this.getAverageOutcomeBuyPrice({events, marketId, outcomeId: 0}),
+					},
+					1: {
+						shares: Numbers.fromDecimalsNumber(marketShares[2], 18),
+						price: this.getAverageOutcomeBuyPrice({events, marketId, outcomeId: 1}),
+					},
 				},
 				claimStatus: {
 					winningsToClaim: claimStatus[0],
