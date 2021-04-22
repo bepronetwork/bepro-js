@@ -7,4 +7,4 @@ const index = {
   erc721standard: require('../../build/contracts/ERC721Standard.json'),
 };
 
-export default index;
+module.exports = index;

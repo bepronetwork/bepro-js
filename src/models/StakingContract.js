@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import dayjs from 'dayjs';
-import { staking } from '../interfaces';
+import staking from '../interfaces';
 import ERC20Contract from './ERC20Contract';
 import IContract from './IContract';
 import Numbers from '../utils/Numbers';
@@ -14,8 +14,9 @@ import Numbers from '../utils/Numbers';
 
 class StakingContract extends IContract {
   constructor({ tokenAddress /* Token Address */, ...params }) {
+    const stakingAbi = staking.staking;
     try {
-      super({ ...params, abi: staking });
+      super({ ...params, abi: stakingAbi });
       if (tokenAddress) {
         this.params.ERC20Contract = new ERC20Contract({
           web3: params.web3,

@@ -3,16 +3,17 @@ var _accounting = require('accounting');var _accounting2 = _interopRequireDefaul
 var _dayjs = require('dayjs');var _dayjs2 = _interopRequireDefault(_dayjs);
 var _bn = require('bn.js');var _bn2 = _interopRequireDefault(_bn);
 var _web = require('web3');var _web2 = _interopRequireDefault(_web);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
 var Web3 = new _web2.default();
 
 Number.prototype.noExponents = function () {
   var data = String(this).split(/[eE]/);
   if (data.length == 1) return data[0];
 
-  var z = '',
-  sign = this < 0 ? '-' : '',
-  str = data[0].replace('.', ''),
-  mag = Number(data[1]) + 1;
+  var z = '';
+  var sign = this < 0 ? '-' : '';
+  var str = data[0].replace('.', '');
+  var mag = Number(data[1]) + 1;
 
   if (mag < 0) {
     z = sign + '0.';
