@@ -4,6 +4,9 @@ import _ from "lodash";
 import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
+
+const beproAddress = "0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A";
+
 /**
  * BEPRONetwork Object
  * @constructor BEPRONetwork
@@ -29,22 +32,36 @@ class BEPRONetwork extends IContract{
         /* Set Token Address Contract for easy access */
         this.params.ERC20Contract = new ERC20Contract({
             web3: this.web3,
-            contractAddress: await this.purchaseToken(),
+            contractAddress: beproAddress,
             acc : this.acc
         });
 
         /* Assert Token Contract */
         await this.params.ERC20Contract.__assert();
 	}
-
 	   
     /**
-	 * @function getAmountofStakers
-	 * @description Get Amount of Stakers in the network
-	 * @returns {Integer}
+	 * @function getOpenIssues
+	 * @description Get Open Issues Available
+	 * @returns {Integer | Array}
 	*/
-	async getAmountofStakers() {
-		return parseInt(await this.params.contract.getContract().methods.incrementID().call());
+	async getOpenIssues() {
+		throw new Error("This should be done with a function outside of bepro-js, via the events OpenIssue & CloseIssue and maintained in a offchain system")
+    }
+   
+    /**
+	 * @function getIssuesByAddress
+	 * @description Get Open Issues Available
+	 * @param {Address} address
+	 * @returns {Integer | Array}
+	*/
+	async getIssuesByAddress(address) {
+		let res = await this.params.contract
+		.getContract()
+		.methods.getIssuesByAddress(address)
+		.call();
+
+        return res.map(r => parseInt(r))
     }
 
     /**
@@ -56,22 +73,13 @@ class BEPRONetwork extends IContract{
 		return parseInt(await this.params.contract.getContract().methods.incrementIssueID().call());
     }
 
-    /**
-	 * @function getTicketBEPROAPR
-	 * @description Get Amount of BEPRO APR for Tickets in the network
+	 /**
+	 * @function getAmountofIssuesClosed
+	 * @description Get Amount of Issues Closed in the network
 	 * @returns {Integer}
 	*/
-	async getTicketBEPROAPR() {
-		return parseInt(await this.params.contract.getContract().methods.ticketGenAPR().call());
-    }
-
-     /**
-	 * @function getTicketReputationCorrelation
-	 * @description Get Amount of Ticket -> Issues correlation in the network
-	 * @returns {Integer}
-	*/
-	async getTicketReputationCorrelation() {
-		return parseInt(await this.params.contract.getContract().methods.ticketToReputationTrade().call());
+	async getAmountofIssuesClosed() {
+		return parseInt(await this.params.contract.getContract().methods.closedIdsCount().call());
     }
 
     /**
@@ -83,27 +91,35 @@ class BEPRONetwork extends IContract{
 		return Numbers.fromDecimals(await this.params.contract.getContract().methods.totalStaked().call(), 18);
     }
 
-    /**
-	 * @function totalTicketsStaked
-	 * @description Get Total Amount of Tickets Staked in the network
-	 * @returns {Integer}
-	*/
-	async totalTicketsStaked() {
-		return Numbers.fromDecimals(await this.params.contract.getContract().methods.totalTicketsStaked().call(), 18);
-    }
-
 	/**
-	 * @function getTicketAPRAmount
-	 * @description Get year APR Ticket
-	 * @returns {Integer} Token Id
-	 */
-	async getTicketAPRAmount({startDate, endDate, amount}) {
-		return Numbers.fromDecimals(await this.__sendTx(
-			this.params.contract.getContract().methods.getTicketAPRAmount(
-                startDate, endDate, amount
-            )
-		), 18);	
+	 * @function getIssueById
+	 * @description Get Issue Id Info
+	 * @param {Integer} issue_id
+	 * @returns {Integer} _id
+	 * @returns {Integer} beproStaked
+	 * @returns {Address} issueGenerator
+	 * @returns {Bool} finalized
+	 * @returns {Address | Array} prAddresses
+	 * @returns {Integer | Array} prAmounts
+	*/
+
+	async getIssueById({issue_id}) {
+
+		let r = await this.__sendTx(
+			this.params.contract.getContract().methods.getIssueById(issue_id),
+			true
+		);
+
+		return {
+			_id : Numbers.fromHex(r[0]),
+			beproStaked : Numbers.fromDecimals(r[1], 18),
+			issueGenerator : r[2],
+			finalized: r[3],
+			prAddresses: r[4],
+			prAmounts: r[5] ? r[5].map( a => Numbers.fromDecimals(a, 18)) : 0
+		}
 	}
+
 
 	/**
 	 * @function approveERC20
@@ -117,35 +133,81 @@ class BEPRONetwork extends IContract{
 		})
 	}
 
+	/**
+	 * @function isApprovedERC20
+	 * @description Verify if Approved
+    */
+	isApprovedERC20 = async ({amount, address}) => {
+		return await this.getERC20Contract().isApproved({
+			address: address,
+			amount: amount,
+			spenderAddress : this.getAddress()
+		})
+	}
+
 
 	/**
-	 * @function setFeeAddress
-	 * @description set Fee Address
-	 * @param {Address} purchaseToken 
+	 * @function openIssue
+	 * @description open Issue 
+	 * @param {integer} beproAmount 
+	 * @param {address} address
 	*/
-	async setFeeAddress({purchaseToken}) {
+	async openIssue({beproAmount, address}) {
+
+		if(beproAmount < 0){
+			throw new Error("Bepro Amount has to be higher than 0")
+		}
+
+		if(!await this.isApprovedERC20({amount, address})){
+			throw new Error("Bepro not approve for tx, first use 'approveERC20'");
+		}
+
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.setFeeAddress(purchaseToken)
+			this.params.contract.getContract().methods.openIssue(beproAmount)
+		);
+	}
+
+	/**
+	 * @function updateIssue
+	 * @description open Issue 
+	 * @param {integer} issueID
+	 * @param {integer} beproAmount 
+	 * @param {address} address
+	*/
+	async updateIssue({issueID, beproAmount, address}) {
+
+		if(beproAmount < 0){
+			throw new Error("Bepro Amount has to be higher than 0")
+		}
+
+		if(!await this.isApprovedERC20({amount, address})){
+			throw new Error("Bepro not approve for tx, first use 'approveERC20'");
+		}
+
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.updateIssue(issueID, beproAmount, address)
+		);
+	}
+
+	/**
+	 * @function closeIssue
+	 * @description close Issue 
+	 * @param {integer} issueID 
+	 * @param {address | Array} prAddresses
+	 * @param {address | Integer} prAmounts
+	*/
+	async closeIssue({issueID, prAddresses, prAmounts}) {
+		if(prAddresses.length != prAmounts.length){
+			throw new Error("prAddresses dont match prAmounts size")
+		}
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.closeIssue(issueID, prAddresses, prAmounts)
 		);
 	}
 
 
-	deploy = async ({name, symbol, limitedAmount=0, erc20Purchase, 
-		feeAddress='0x0000000000000000000000000000000000000001', 
-		otherAddress='0x0000000000000000000000000000000000000001', callback}) => {
-
-		if(!erc20Purchase){
-			throw new Error("Please provide an erc20 address for purchases");
-		}
-
-		if(!name){
-			throw new Error("Please provide a name");
-		}
-
-		if(!symbol){
-			throw new Error("Please provide a symbol");
-		}
-		let params = [name, symbol, limitedAmount, erc20Purchase, baseFeeAddress, feeAddress, otherAddress];
+	deploy = async ({callback}) => {
+		let params = [];
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */
