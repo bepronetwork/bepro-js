@@ -3,10 +3,10 @@ import _ from "lodash";
 
 /**
  * Contract Object Interface
- * @constructor IContract
+ * @class IContract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
- * @param {ABI} abi 
+ * @param {ABI} abi
  * @param {Account} acc ? (opt)
  */
 
@@ -24,9 +24,9 @@ class IContract {
 			if(!web3){
 				throw new Error("Please provide a valid web3 provider");
             };
-            
+
             this.web3 = web3;
-            
+
 			if (acc) {
 				this.acc = acc;
 			}
@@ -40,19 +40,19 @@ class IContract {
 			throw err;
 		}
     }
-    
+
 	__init__ = async () => {
 		try {
 			if (!this.getAddress()) {
 				throw new Error("Please add a Contract Address");
 			}
-			
+
 			await this.__assert();
 		} catch (err) {
 			throw err;
 		}
     };
-    
+
 	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
 		return new Promise( (resolve, reject) => {
 			f.send({
@@ -108,13 +108,13 @@ class IContract {
     __assert = async () => {
         if(!this.getAddress()){
             throw new Error("Contract is not deployed, first deploy it and provide a contract address");
-        }  
+        }
         /* Use ABI */
         this.params.contract.use(this.params.abi, this.getAddress());
 	}
 
 	/**
-     * @function deploy
+     * @function
      * @description Deploy the Contract
     */
 	deploy = async ({callback}) => {
@@ -128,7 +128,7 @@ class IContract {
 
 
 	/**
-	 * @function setNewOwner
+	 * @function
 	 * @description Set New Owner of the Contract
 	 * @param {string} address
 	 */
@@ -141,7 +141,7 @@ class IContract {
     }
 
 	/**
-	 * @function owner
+	 * @function
 	 * @description Get Owner of the Contract
 	 * @returns {string} address
 	 */
@@ -151,7 +151,7 @@ class IContract {
 	}
 
 	/**
-	 * @function isPaused
+	 * @function
 	 * @description Get Owner of the Contract
 	 * @returns {boolean}
 	 */
@@ -159,9 +159,9 @@ class IContract {
 	async isPaused() {
 		return await this.params.contract.getContract().methods.paused().call();
     }
-    
+
 	/**
-	 * @function pauseContract
+	 * @function
 	 * @type admin
 	 * @description Pause Contract
 	 */
@@ -172,7 +172,7 @@ class IContract {
 	}
 
 	/**
-	 * @function unpauseContract
+	 * @function
 	 * @type admin
 	 * @description Unpause Contract
 	 */
@@ -181,11 +181,11 @@ class IContract {
 			this.params.contract.getContract().methods.unpause()
 		);
     }
-    
+
     /* Optional */
 
 	/**
-	 * @function removeOtherERC20Tokens
+	 * @function
 	 * @description Remove Tokens from other ERC20 Address (in case of accident)
 	 * @param {Address} tokenAddress
 	 * @param {Address} toAddress
@@ -199,7 +199,7 @@ class IContract {
 	};
 
 	/**
-	 * @function safeGuardAllTokens
+	 * @function
 	 * @description Remove all tokens for the sake of bug or problem in the smart contract, contract has to be paused first, only Admin
 	 * @param {Address} toAddress
 	 */
@@ -212,7 +212,7 @@ class IContract {
 	};
 
 	/**
-	 * @function changeTokenAddress
+	 * @function
 	 * @description Change Token Address of Application
 	 * @param {Address} newTokenAddress
 	 */
@@ -225,7 +225,7 @@ class IContract {
 	};
 
     /**
-	 * @function getAddress
+	 * @function
 	 * @description Get Balance of Contract
 	 * @param {Integer} Balance
 	 */
@@ -234,11 +234,11 @@ class IContract {
 	}
 
 	/**
-	 * @function getBalance
+	 * @function
 	 * @description Get Balance of Contract
 	 * @param {Integer} Balance
 	 */
-	
+
 	async getBalance(){
 		let wei = await this.web3.eth.getBalance(this.getAddress());
         return this.web3.utils.fromWei(wei, 'ether');
