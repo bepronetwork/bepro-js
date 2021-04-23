@@ -6,7 +6,7 @@ import Numbers from "../utils/Numbers";
 import dayjs from 'dayjs'
 /**
  * Staking Contract Object
- * @constructor StakingContract
+ * @class StakingContract
  * @param {Web3} web3
  * @param {Address} tokenAddress
  * @param {Address} contractAddress ? (opt)
@@ -28,9 +28,9 @@ class StakingContract extends IContract {
 			throw err;
 		}
     }
-    
+
     /**
-	 * @function erc20
+	 * @function
 	 * @description Get ERC20 Address of the Contract
 	 * @returns {Address}
 	*/
@@ -39,8 +39,8 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function getTokenAmount
-	 * @description Get Token Amount of ERC20 Address 
+	 * @function
+	 * @description Get Token Amount of ERC20 Address
 	 * @returns {Address}
 	*/
     getTokenAmount = async ({ address }) => {
@@ -48,7 +48,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function futureLockedTokens
+	 * @function
 	 * @description Get All Tokens Locked for the APR
 	 * @returns {Integer}
 	*/
@@ -58,7 +58,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function availableTokens
+	 * @function
 	 * @description Get All Tokens Available for the Subscription Amount
 	 * @returns {Integer}
 	*/
@@ -68,7 +68,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function heldTokens
+	 * @function
 	 * @description Get All Tokens Held in Stake at that specific moment
 	 * @returns {Integer}
 	*/
@@ -78,7 +78,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function getAPRAmount
+	 * @function
 	 * @description Get APR Amount based on amount of timestamp, amount and APR of that product
      * @param {Integer} APR
 	 * @param {Date} startDate
@@ -96,10 +96,10 @@ class StakingContract extends IContract {
             ), true
         );
         return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
-    
+
     }
     /**
-	 * @function createProduct
+	 * @function
 	 * @description createProduct
 	 * @param {Date} startDate
 	 * @param {Date} endDate
@@ -122,7 +122,7 @@ class StakingContract extends IContract {
                 Numbers.timeToSmartContractTime(startDate),
                 Numbers.timeToSmartContractTime(endDate),
                 Numbers.toSmartContractDecimals(
-                    totalMaxAmount, 
+                    totalMaxAmount,
                     this.getERC20Contract().getDecimals()
                 ),
                 Numbers.toSmartContractDecimals(
@@ -132,11 +132,11 @@ class StakingContract extends IContract {
                 APR,
                 lockedUntilFinalization
             )
-        )    
+        )
     }
 
      /**
-	 * @function getProducts
+	 * @function
 	 * @description Get All Available Products
      * @returns {Array | Integer} ids
     */
@@ -146,7 +146,7 @@ class StakingContract extends IContract {
     );
 
     /**
-	 * @function getProduct
+	 * @function
 	 * @description Get Subscription from product
 	 * @param {Integer} product_id
      * @returns {Date} createdAt
@@ -182,7 +182,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function approveERC20Transfer
+	 * @function
 	 * @description Approve ERC20 Allowance for Transfer for Subscribe Product
     */
     approveERC20Transfer = async () => {
@@ -197,7 +197,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function subscribeProduct
+	 * @function
 	 * @description Subscribe to a product Staking
 	 * @param {Integer} product_id
 	 * @param {Integer} amount
@@ -225,7 +225,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function getSubscription
+	 * @function
 	 * @description Get Subscription from product
 	 * @param {Integer} product_id
 	 * @param {Integer} subscription_id
@@ -242,7 +242,7 @@ class StakingContract extends IContract {
             this.params.contract
             .getContract()
             .methods.getSubscription(subscription_id, product_id), true
-        ); 
+        );
 
         return {
             _id: Numbers.fromExponential(res[0]),
@@ -258,7 +258,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function withdrawSubscription
+	 * @function
 	 * @description Withdraw Subscription to a product Staking
 	 * @param {Integer} product_id
 	 * @param {Integer} subscription_id
@@ -272,7 +272,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function getMySubscriptions
+	 * @function
 	 * @description Get Subscriptions by Address
 	 * @param {Address} address
 	 * @returns {Array | Integer} subscriptions_ids
@@ -283,19 +283,19 @@ class StakingContract extends IContract {
             .getContract()
             .methods.getMySubscriptions(address),
             true
-        ); 
+        );
         return res.map(r => Numbers.fromExponential(r))
     }
 
     /**
-	 * @function getAllSubscriptions
+	 * @function
 	 * @description Get All Subscriptions done
 	 * @returns {Array | Subscription} subscriptions
     */
     getAllSubscriptions = async () => {
         /* Get All Products */
         const products = await this.getProducts();
-        
+
         /* Get All Subscriptions */
         const subscriptions = await Promise.all(
             products.map(async product => {
@@ -316,7 +316,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function depositAPRTokensByAdmin
+	 * @function
 	 * @description Transfer Tokens by the Admin to ensure APR Amount
 	 * @param {Integer} amount
     */
@@ -328,7 +328,7 @@ class StakingContract extends IContract {
     }
 
     /**
-	 * @function getTotalNeededTokensForAPRbyAdmin
+	 * @function
 	 * @description Get Total Amount of tokens needed to be deposited by Admin to ensure APR for all available Products
 	 * @return {Integer} Amount
     */
@@ -353,16 +353,16 @@ class StakingContract extends IContract {
     }
 
     /**
-     * @override 
+     * @override
      */
 	__assert = async () => {
         if(!this.getAddress()){
             throw new Error("Contract is not deployed, first deploy it and provide a contract address");
         }
-        
+
         /* Use ABI */
         this.params.contract.use(staking, this.getAddress());
-        
+
         /* Set Token Address Contract for easy access */
         this.params.ERC20Contract = new ERC20Contract({
             web3: this.web3,
@@ -377,7 +377,7 @@ class StakingContract extends IContract {
 
 
 	/**
-        * @function deploy
+        * @function
         * @override
         * @description Deploy the Staking Contract
     */
