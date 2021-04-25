@@ -260,11 +260,11 @@ contract PredictionMarket is Ownable {
 
     mapping(address => uint) holdersIndexes;
     mapping(address => uint) holdersShares;
-    mapping(address => bool) holdersClaims; // wether participant has claimed liquidity winnings
     address[] holders;
 
     mapping(address => uint) liquidityIndexes;
     mapping(address => uint) liquidityShares;
+    mapping(address => bool) liquidityClaims; // wether participant has claimed liquidity winnings
     address[] liquidityHolders;
 
     // market outcomes
@@ -791,8 +791,8 @@ contract PredictionMarket is Ownable {
     Market storage market = markets[marketId];
     MarketOutcome storage resolvedOutcome = market.outcomes[market.resolvedOutcomeId];
 
-    require(market.holdersShares[msg.sender] > 0, "Participant does not hold liquidity shares");
-    require(market.holdersClaims[msg.sender] == false, "Participant already claimed liquidity winnings");
+    require(market.liquidityShares[msg.sender] > 0, "Participant does not hold liquidity shares");
+    require(market.liquidityClaims[msg.sender] == false, "Participant already claimed liquidity winnings");
 
     // value = total resolved outcome pool shares * pool share (%)
     uint value = resolvedOutcome.shares.available.mul(myLiquidityPoolShare(marketId)).div(ONE);
@@ -801,7 +801,7 @@ contract PredictionMarket is Ownable {
     require(market.liquidityTotal >= value, "Market does not have enough balance");
 
     market.liquidityTotal = market.liquidityTotal.sub(value);
-    market.holdersClaims[msg.sender] = true;
+    market.liquidityClaims[msg.sender] = true;
 
     emit ParticipantAction(
       msg.sender,
@@ -921,8 +921,8 @@ contract PredictionMarket is Ownable {
     return (
       outcome.shares.holdersShares[participant] > 0,
       outcome.shares.holdersClaims[participant],
-      market.holdersShares[participant] > 0,
-      market.holdersClaims[participant]
+      market.liquidityShares[participant] > 0,
+      market.liquidityClaims[participant]
     );
   }
 
