@@ -234,10 +234,6 @@ contract PredictionMarket is Ownable {
 
   // ------ Events End ------
 
-
-  // Market closed time has to be at least 30 secs from current.
-  uint constant MIN_DURATION = 30;
-
   uint256 constant public MAX_UINT_256 = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
 
   uint constant public ONE = 10**18;
@@ -359,27 +355,29 @@ contract PredictionMarket is Ownable {
   /// Create a new Market contract
   /// @dev The new Market contract is then saved in the array of this contract for future reference.
   /// @param name - Name of the market
-  /// @param duration - The duration of the market `open` period
+  /// @param closesAt - The duration of the market `open` period
   /// @param oracle - oracle address
   function createMarket(
-    string memory name, uint duration, address oracle, string memory outcome1, string memory outcome2
+    string memory name, uint closesAt, address oracle, string memory outcome1, string memory outcome2
   )
   public payable
+  returns(uint)
   {
-    marketIds.push(marketIndex);
+    uint marketId = marketIndex;
+    marketIds.push(marketId);
 
-    Market storage market = markets[marketIndex];
+    Market storage market = markets[marketId];
 
     string[2] memory outcomes = [outcome1, outcome2];
 
     require(msg.value > 0, "The stake has to be greater than 0.");
-    require(duration >= MIN_DURATION);
+    require(closesAt >= now, "Market has to close after the current date");
     require(oracle == address(oracle), "Invalid oracle address");
     // starting with secondary markets
     require(outcomes.length == 2, "Number market outcome has to be 2");
 
     market.name = name;
-    market.closedDateTime = now.add(duration);
+    market.closedDateTime = closesAt;
     market.state = MarketState.open;
     market.oracle = oracle;
     // setting intial value to an integer that does not map to any outcomeId
@@ -402,7 +400,7 @@ contract PredictionMarket is Ownable {
       market.outcomeIds.push(i);
       MarketOutcome storage outcome = market.outcomes[i];
 
-      outcome.marketId = marketIndex;
+      outcome.marketId = marketId;
       outcome.index = i;
       outcome.id = i;
       outcome.name = outcomes[i];
@@ -417,10 +415,13 @@ contract PredictionMarket is Ownable {
     }
 
     // emiting initial price events
-    emitMarketOutcomePriceEvents(marketIndex);
-    emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketIndex, 0, msg.value, msg.value, now);
+    emitMarketOutcomePriceEvents(marketId);
+    emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, msg.value, msg.value, now);
 
+    // incrementing market array index
     marketIndex = marketIndex + 1;
+
+    return marketId;
   }
 
   function buy(uint marketId, uint outcomeId) public payable {
