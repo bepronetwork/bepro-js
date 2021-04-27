@@ -1,41 +1,45 @@
-import Web3 from "web3";
-import { ExchangeContract, ERC20Contract, StakingContract, ERC721Collectibles } from "./models/index";
+import Web3 from 'web3';
+import { ExchangeContract, ERC20Contract, StakingContract, ERC20TokenLock, ERC721Collectibles } from './models/index';
 import Account from './utils/Account';
 
-const ETH_URL_MAINNET = "https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
-const ETH_URL_TESTNET ="https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
-const TEST_PRIVATE_KEY = "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
+const ETH_URL_MAINNET = 'https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc';
+const ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
+const TEST_PRIVATE_KEY = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
 const networksEnum = Object.freeze({
-	1: "Main",
-	2: "Morden",
-	3: "Ropsten",
-	4: "Rinkeby",
-	42: "Kovan",
+	1: 'Main',
+	2: 'Morden',
+	3: 'Ropsten',
+	4: 'Rinkeby',
+	42: 'Kovan',
 });
 
 export default class Application {
-	constructor({test=false, mainnet=true, opt={
-		web3Connection : ETH_URL_MAINNET
-	}}) {
+	constructor({
+		test = false,
+		mainnet = true,
+		opt = {
+			web3Connection: ETH_URL_MAINNET,
+		},
+	}) {
 		this.test = test;
 		this.opt = opt;
 		this.mainnet = mainnet;
-		if(this.test){
+		if (this.test) {
 			this.start();
 			this.login();
 			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
 		}
-    }
+	}
 
-    /****** */
-    /*** CORE */
-    /****** */
+	/****** */
+	/*** CORE */
+	/****** */
 
-    /**
-     * @name start
-     * @description Start the Application
-     */
+	/**
+	 * @name start
+	 * @description Start the Application
+	 */
 	start = () => {
 		this.web3 = new Web3(
 			new Web3.providers.HttpProvider(
@@ -44,17 +48,17 @@ export default class Application {
 		);
 		if (typeof window !== "undefined") {
 			window.web3 = this.web3;
-		}else{
-			if(!this.test){
-				throw new Error("Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet");
+		} else {
+			if (!this.test) {
+				throw new Error('Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet');
 			}
 		}
-	}
+	};
 
-    /**
-     * @name login
-     * @description Login with Metamask or a web3 provider
-     */
+	/**
+	 * @name login
+	 * @description Login with Metamask or a web3 provider
+	 */
 	login = async () => {
 		try{
 			if (typeof window === "undefined") { return false; }
@@ -110,6 +114,24 @@ export default class Application {
     };
 
 	/**
+	 * @name getERC20TokenLock
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a ERC20TokenLock Contract
+	 */
+	getERC20TokenLock = ({ contractAddress = null, tokenAddress = null } = {}) => {
+		try {
+			return new ERC20TokenLock({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				tokenAddress,
+				acc: this.test ? this.account : null,
+			});
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	/**
      * @name getERC721Collectibles
      * @param {Address} ContractAddress (Opt) If it is deployed
 	 * @param {Integer} CustomID  
@@ -140,59 +162,56 @@ export default class Application {
 			throw err;
 		}
     };
-    
-     /**
-     * @name getERC20Contract
-     * @param {Address} ContractAddress (Opt) If it is deployed
-     * @description Create a ERC20 Contract
-     */
-	getERC20Contract =  ({ contractAddress=null}) => {
-		try{
+
+	/**
+	 * @name getERC20Contract
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a ERC20 Contract
+	 */
+	getERC20Contract = ({ contractAddress = null }) => {
+		try {
 			return new ERC20Contract({
 				web3: this.web3,
 				contractAddress: contractAddress,
-				acc : this.test ? this.account : null
+				acc: this.test ? this.account : null,
 			});
-		}catch(err){
+		} catch (err) {
 			throw err;
 		}
-    };
-    
-    /******* */
-    /** UTILS */
-    /******* */
+	};
+
+	/******* */
+	/** UTILS */
+	/******* */
 
 	/**
-     * @name getETHNetwork
-     * @description Access current ETH Network used
-     * @returns {String} Eth Network
-    */
+	 * @name getETHNetwork
+	 * @description Access current ETH Network used
+	 * @returns {String} Eth Network
+	 */
 	getETHNetwork = async () => {
 		const netId = await this.web3.eth.net.getId();
-		const networkName = networksEnum.hasOwnProperty(netId)
-			? networksEnum[netId]
-			: "Unknown";
+		const networkName = networksEnum.hasOwnProperty(netId) ? networksEnum[netId] : 'Unknown';
 		return networkName;
 	};
 
 	/**
-     * @name getAddress
-     * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
-     * @returns {Address} Address
-    */
+	 * @name getAddress
+	 * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
+	 * @returns {Address} Address
+	 */
 	getAddress = async () => {
 		const accounts = await this.web3.eth.getAccounts();
 		return accounts[0];
 	};
 
 	/**
-     * @name getETHBalance
-     * @description Access current ETH Balance Available for the Injected Web3 Address
-     * @returns {Integer} Balance
-    */
+	 * @name getETHBalance
+	 * @description Access current ETH Balance Available for the Injected Web3 Address
+	 * @returns {Integer} Balance
+	 */
 	getETHBalance = async () => {
 		let wei = await this.web3.eth.getBalance(await this.getAddress());
-		return this.web3.utils.fromWei(wei, "ether");
+		return this.web3.utils.fromWei(wei, 'ether');
 	};
 }
-
