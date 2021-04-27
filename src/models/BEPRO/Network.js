@@ -206,8 +206,8 @@ class BEPRONetwork extends IContract{
 	}
 
 
-	deploy = async ({callback}) => {
-		let params = [];
+	deploy = async ({tokenAddress, callback}) => {
+		let params = [tokenAddress];
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */
