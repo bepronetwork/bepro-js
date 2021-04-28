@@ -37,8 +37,9 @@ contract BEPRONetwork is Pausable, Ownable{
     uint256 public totalStaked = 0;
     address public feeAddress = 0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A;
     uint256 public feeShare = 2; // (%) - Share to go to company creator
-    uint256 public percentageNeededForApprove = 10; // (%) - Amount needed to approve a PR and distribute the rewards
-    uint256 public percentageNeededForMerge = 10; // (%) - Amount needed to approve a PR and distribute the rewards
+    uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to company creator
+    uint256 public percentageNeededForApprove = 20; // (%) - Amount needed to approve a PR and distribute the rewards
+    uint256 public percentageNeededForMerge = 20; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public beproVotesStaked = 0;
 
     mapping(uint256 => Issue) public issues; /* Distribution object */
@@ -204,6 +205,7 @@ contract BEPRONetwork is Pausable, Ownable{
     function updateIssue(uint256 _issueId, uint256 _newbeproAmount) public whenNotPaused {
         require(issues[_issueId].beproStaked != 0, "Issue has to exist");
         require(issues[_issueId].issueGenerator == msg.sender, "Has to be the issue creator");
+        require(!isIssueApproved(_issueId), "Issue is already Approved");
 
         uint256 previousAmount = issues[_issueId].beproStaked;
         // Update Issue
@@ -224,6 +226,7 @@ contract BEPRONetwork is Pausable, Ownable{
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
         require(_prAmounts.length == _prAddresses.length, "Amounts has to equal addresses length");
+        require(/* BEPRO Amount above 1000 */);
 
         MergeProposal memory mergeProposal;
         mergeProposal._id = issue.mergeIDIncrement;
@@ -231,10 +234,10 @@ contract BEPRONetwork is Pausable, Ownable{
         mergeProposal.prAddresses = _prAddresses;
         mergeProposal.proposalAddress = msg.sender;
 
-        uint256 total = ((issues[_issueID].beproStaked * feeShare) / 100); // Fee + 0
+        uint256 total = ((issues[_issueID].beproStaked * (feeShare + mergeCreatorFeeShare)) / 100); // Fee + Merge Creator Fee + 0
 
         for(uint i = 0; i < _prAddresses.length; i++){
-            total = total.add((_prAmounts[i] * (100-feeShare)) / 100);
+            total = total.add((_prAmounts[i] * (100-feeShare-mergeCreatorFeeShare)) / 100);
         }
 
         require(total == issues[_issueID].beproStaked, "Totals dont match");
@@ -266,11 +269,14 @@ contract BEPRONetwork is Pausable, Ownable{
 
         // Fee Transfer
         require(beproToken.transfer(feeAddress, (issues[_issueID].beproStaked * feeShare) / 100), "Has to transfer");
+
+        // Merge Creator Transfer
+        require(beproToken.transfer(feeAddress, (issues[_issueID].beproStaked * mergeCreatorFeeShare) / 100), "Has to transfer");
         
         // Generate Reputation Tokens
         for(uint i = 0; i < merge._prAddresses.length; i++){
             myIssues[merge._prAddresses[i]].push(_issueID);
-            require(beproToken.transfer(merge._prAddresses[i], (merge._prAmounts[i] * (100-feeShare)) / 100), "Has to transfer");
+            require(beproToken.transfer(merge._prAddresses[i], (merge._prAmounts[i] * (100-feeShare-mergeCreatorFeeShare)) / 100), "Has to transfer");
         }
 
         closedIdsCount = closedIdsCount.add(1);
