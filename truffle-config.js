@@ -6,6 +6,8 @@ module.exports = {
       network_id: "*" // Match any network id
     }
   },
+  // config custom test folder for smart contracts
+  test_directory: './tests/contracts',
   // Configure your compilers
   compilers: {
     solc: {

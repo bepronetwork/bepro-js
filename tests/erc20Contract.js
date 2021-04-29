@@ -5,7 +5,9 @@ import { mochaAsync } from './utils';
 import { Application } from '..';
 import Numbers from '../src/utils/Numbers';
 const expect = chai.expect;
-var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
+//var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
+// this is already deployed on rinkeby network for testing
+var contractAddress = '0x4197A48d240B104f2bBbb11C0a43fA789f2A5675';
 
 context('ERC20', async () => {
     var erc20Contract;
@@ -34,6 +36,6 @@ context('ERC20', async () => {
         contractAddress = erc20Contract.getAddress();
         expect(res).to.not.equal(false);
         expect(contractAddress).to.equal(res.contractAddress);
-
+		console.log('Deployed ERC20Contract address: ' + contractAddress);
     }));
 });

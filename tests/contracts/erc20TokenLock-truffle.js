@@ -69,16 +69,8 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
 		res = await erc20Lock.totalAmountStaked();
 		expect(Number(res).toString()).to.equal(Number(0).toString());
 
-		res = await erc20Lock.erc20();
-		console.log(
-			'Init tests: \n* erc20 			     : ' +
-				res +
-				'\n* erc20TokenContract : ' +
-				erc20TokenContract +
-				'\n* ret_tokenAddress    : ' +
-				ret_tokenAddress
-		);
-		expect(res).to.equal(erc20TokenContract);
+		console.log('Init tests: \n* erc20              : ' + ret_tokenAddress +
+								'\n* erc20TokenContract : ' + erc20TokenContract);
 	});
 
 	it(TEST_TAG + 'should set max tokens to lock per user', async () => {
@@ -87,6 +79,15 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
 			from: owner,
 		});
 		expect(res).to.not.equal(false);
+		
+		//console.log('***setMaxAmountToLock.res.logs[0] >>> ', res.logs[0]);
+		// event MaxAmountToLockChanged(address admin, uint256 oldValue, uint256 newValue);
+		assert.equal(res.logs.length, 1, 'triggers one event');
+		assert.equal(res.logs[0].event, 'MaxAmountToLockChanged', 'should be the "MaxAmountToLockChanged" event');
+		assert.equal(res.logs[0].args.admin, owner, 'logs the admin address that performed the operation');
+		assert.equal(res.logs[0].args.oldValue, 0, 'logs the old value');
+		assert.equal(res.logs[0].args.newValue, maxTokenAmount, 'logs the new value');
+		
 		// Check if max token amount was set
 		res = await erc20Lock.maxAmountToLock();
 		expect(Number(res).toString()).to.equal(Number(7000).toString());
@@ -98,6 +99,15 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
 			from: owner,
 		});
 		expect(res).to.not.equal(false);
+		
+		//console.log('***setMinAmountToLock.res.logs[0] >>> ', res.logs[0]);
+		// event MinAmountToLockChanged(address admin, uint256 oldValue, uint256 newValue);
+		assert.equal(res.logs.length, 1, 'triggers one event');
+		assert.equal(res.logs[0].event, 'MinAmountToLockChanged', 'should be the "MinAmountToLockChanged" event');
+		assert.equal(res.logs[0].args.admin, owner, 'logs the admin address that performed the operation');
+		assert.equal(res.logs[0].args.oldValue, 0, 'logs the old value');
+		assert.equal(res.logs[0].args.newValue, minTokenAmount, 'logs the new value');
+		
 		// Check if min token amount was set
 		res = await erc20Lock.minAmountToLock();
 		expect(Number(res).toString()).to.equal(Number(1000).toString());
@@ -158,7 +168,14 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
 		endDate = timeToSmartContractTime(moment().add(lockSeconds, 'seconds'));
 		res = await erc20Lock.lock(lockTokens, endDate, { from: userAddress });
 		expect(res).to.not.equal(false);
-
+		//console.log('res.logs[0] >>> ', res.logs[0]);
+		// event TokensLocked(address user, uint256 amount, uint256 startDate, uint256 endDate);
+		assert.equal(res.logs.length, 1, 'triggers one event');
+		assert.equal(res.logs[0].event, 'TokensLocked', 'should be the "TokensLocked" event');
+		assert.equal(res.logs[0].args.user, userAddress, 'logs the locked tokens owner address');
+		//assert.equal(res.logs[0].args.startDate, ..., 'logs the startDate of locked tokens event');
+		assert.equal(res.logs[0].args.endDate, endDate, 'logs the endDate of locked tokens event');
+		
 		// Check if user locked tokens successfully
 		res = await erc20Lock.getLockedTokensInfo(userAddress);
 
@@ -194,7 +211,14 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
 			// release and withdraw unlocked tokens
 			let res = await erc20Lock.release({ from: userAddress });
 			expect(res).to.not.equal(false);
-
+			//console.log('res.logs[0] >>> ', res.logs[0]);
+			//event TokensReleased(address user, uint256 amount, uint256 withdrawDate);
+			assert.equal(res.logs.length, 1, 'triggers one event');
+			assert.equal(res.logs[0].event, 'TokensReleased', 'should be the "TokensReleased" event');
+			assert.equal(res.logs[0].args.user, userAddress, 'logs the released tokens owner address');
+			assert.equal(res.logs[0].args.amount, lockTokens, 'logs the released tokens amount');
+			//assert.equal(res.logs[0].args.withdrawDate, ..., 'logs the withdrawDate of released tokens event');
+			
 			// Check if user had withdrawn unlocked tokens successfully
 			res = await erc20Lock.getLockedTokens(userAddress);
 
@@ -203,8 +227,6 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
 			//'should get totalAmountStaked == 0 (all withdrawn)'
 			res = await erc20Lock.totalAmountStaked();
 			expect(Number(res).toString()).to.equal(Number(0).toString());
-
-			done();
 		}, lockSeconds * 1000);
 	});
 

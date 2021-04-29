@@ -29,6 +29,7 @@ export default class Application {
 			this.start();
 			this.login();
 			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
+			console.log('My address: ' + this.account.getAddress())
 		}
 	}
 
@@ -42,11 +43,9 @@ export default class Application {
 	 */
 	start = () => {
 		this.web3 = new Web3(
-			new Web3.providers.HttpProvider(
-				(this.mainnet == true) ? this.opt.web3Connection : ETH_URL_TESTNET
-			)
+			new Web3.providers.HttpProvider(this.mainnet == true ? this.opt.web3Connection : ETH_URL_TESTNET)
 		);
-		if (typeof window !== "undefined") {
+		if (typeof window !== 'undefined') {
 			window.web3 = this.web3;
 		} else {
 			if (!this.test) {
@@ -60,8 +59,10 @@ export default class Application {
 	 * @description Login with Metamask or a web3 provider
 	 */
 	login = async () => {
-		try{
-			if (typeof window === "undefined") { return false; }
+		try {
+			if (typeof window === 'undefined') {
+				return false;
+			}
 			if (window.ethereum) {
 				window.web3 = new Web3(window.ethereum);
 				this.web3 = window.web3;
@@ -69,49 +70,49 @@ export default class Application {
 				return true;
 			}
 			return false;
-		}catch(err){
+		} catch (err) {
 			throw err;
 		}
-    };
-    
-    /****** */
-    /** GETTERS */
-    /****** */
+	};
 
-    /**
-     * @name getExchangeContract
-     * @param {Address} ContractAddress (Opt) If it is deployed
-     * @description Create a Exchange Contract
-     */
-	getExchangeContract =  ({ contractAddress=null}={}) => {
-		try{
+	/****** */
+	/** GETTERS */
+	/****** */
+
+	/**
+	 * @name getExchangeContract
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a Exchange Contract
+	 */
+	getExchangeContract = ({ contractAddress = null } = {}) => {
+		try {
 			return new ExchangeContract({
 				web3: this.web3,
 				contractAddress: contractAddress,
-				acc : this.test ? this.account : null
+				acc: this.test ? this.account : null,
 			});
-		}catch(err){
+		} catch (err) {
 			throw err;
 		}
-    };
-    
-     /**
-     * @name getStakingContract
-     * @param {Address} ContractAddress (Opt) If it is deployed
-     * @description Create a Staking Contract
-     */
-	getStakingContract =  ({ contractAddress=null, tokenAddress=null}={}) => {
-		try{
+	};
+
+	/**
+	 * @name getStakingContract
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a Staking Contract
+	 */
+	getStakingContract = ({ contractAddress = null, tokenAddress = null } = {}) => {
+		try {
 			return new StakingContract({
 				web3: this.web3,
 				contractAddress: contractAddress,
 				tokenAddress,
-				acc : this.test ? this.account : null
+				acc: this.test ? this.account : null,
 			});
-		}catch(err){
+		} catch (err) {
 			throw err;
 		}
-    };
+	};
 
 	/**
 	 * @name getERC20TokenLock

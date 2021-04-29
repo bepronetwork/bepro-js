@@ -3,6 +3,7 @@ import ERC20Contract from './ERC20Contract';
 import IContract from './IContract';
 import _ from 'lodash';
 import Numbers from '../utils/Numbers';
+import moment from 'moment';
 import dayjs from 'dayjs';
 var assert = require('assert');
 
@@ -18,6 +19,8 @@ class ERC20TokenLock extends IContract {
 	constructor({ tokenAddress /* Token Address */, ...params }) {
 		try {
 			super({ ...params, abi: tokenlock });
+			 console.log('ERC20TokenLock.ctor.tokenAddress: ' + tokenAddress);
+			 console.log('ERC20TokenLock.ctor.contractAddress: ' + params.contractAddress);
 			if (tokenAddress) {
 				this.params.ERC20Contract = new ERC20Contract({
 					web3: params.web3,
@@ -38,7 +41,7 @@ class ERC20TokenLock extends IContract {
 	async erc20() {
 		return await this.params.contract.getContract().methods.erc20().call();
 	}
-
+	
 	/**
 	 * @function getTokenAmount
 	 * @description Get Token Amount of ERC20 Address
@@ -64,7 +67,7 @@ class ERC20TokenLock extends IContract {
 	 * @returns {Integer}
 	 */
 	async minAmountToLock() {
-		let res = await this.params.contract.getContract().methods.minAmountToLock();
+		let res = await this.params.contract.getContract().methods.minAmountToLock().call();
 		return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
 	}
 
@@ -74,7 +77,7 @@ class ERC20TokenLock extends IContract {
 	 * @returns {Integer}
 	 */
 	async maxAmountToLock() {
-		let res = await this.params.contract.getContract().methods.maxAmountToLock();
+		let res = await this.params.contract.getContract().methods.maxAmountToLock().call();
 		return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
 	}
 
@@ -106,7 +109,7 @@ class ERC20TokenLock extends IContract {
 	 */
 	getLockedTokensInfo = async ({ address }) => {
 		let res = await this.params.contract.getContract().methods.getLockedTokensInfo(address).call();
-
+		
 		return {
 			startDate: Numbers.fromSmartContractTimeToMinutes(res[0]),
 			endDate: Numbers.fromSmartContractTimeToMinutes(res[1]),
@@ -121,7 +124,7 @@ class ERC20TokenLock extends IContract {
 	 * @returns {Boolean} Success True if operation was successful
 	 */
 	setMaxAmountToLock = async ({ tokenAmount }) => {
-		onlyOwner(); //verify that user is admin
+		this.onlyOwner(); //verify that user is admin
 
 		/* Get Decimals of Amount */
 		let amountWithDecimals = Numbers.toSmartContractDecimals(tokenAmount, this.getERC20Contract().getDecimals());
@@ -136,7 +139,7 @@ class ERC20TokenLock extends IContract {
 	 * @returns {Boolean} Success True if operation was successful
 	 */
 	setMinAmountToLock = async ({ tokenAmount }) => {
-		onlyOwner(); //verify that user is admin
+		this.onlyOwner(); //verify that user is admin
 
 		/* Get Decimals of Amount */
 		let amountWithDecimals = Numbers.toSmartContractDecimals(tokenAmount, this.getERC20Contract().getDecimals());
@@ -156,7 +159,7 @@ class ERC20TokenLock extends IContract {
 	lock = async ({ address, amount, endDate }) => {
 		/// 'address' is current user address
 
-		whenNotPaused(); // verify that contract is not paused
+		this.whenNotPaused(); // verify that contract is not paused
 
 		assert(
 			amount > 0 && amount >= (await this.minAmountToLock()) && amount <= (await this.maxAmountToLock()),
@@ -177,7 +180,7 @@ class ERC20TokenLock extends IContract {
 		if (!isApproved) {
 			throw new Error("Has to Approve Token Transfer First, use the 'approve' Call");
 		}
-
+		
 		return await this.__sendTx(
 			this.params.contract
 				.getContract()
@@ -197,10 +200,11 @@ class ERC20TokenLock extends IContract {
 		/// 'address' is current user address
 
 		// check if user has locked tokens and if he can unlock and withdraw them
-		let { startDate, endDate, amount: lockedAmount } = await this.getLockedTokensInfo({ address: address });
-
-		assert(lockedAmount > 0, 'user has no locked tokens');
-		assert(moment() >= endDate, 'tokens release date not reached');
+		let { startDate, endDate, amount } = await this.getLockedTokensInfo({ address: address });
+		let lockedAmount = amount;
+		
+		assert(lockedAmount > 0, 'ERC20TokenLock.user has no locked tokens');
+		assert(moment() >= endDate, 'ERC20TokenLock.tokens release date not reached');
 
 		return await this.__sendTx(this.params.contract.getContract().methods.release());
 	};
@@ -231,12 +235,14 @@ class ERC20TokenLock extends IContract {
 		this.params.contract.use(tokenlock, this.getAddress());
 
 		/* Set Token Address Contract for easy access */
-		this.params.ERC20Contract = new ERC20Contract({
-			web3: this.web3,
-			contractAddress: await this.erc20(),
-			acc: this.acc,
-		});
-
+		if (!this.params.ERC20Contract) {
+			//console.log('---ERC20TokenLock.__assert.ERC20Contract null, creating new one');
+			this.params.ERC20Contract = new ERC20Contract({
+				web3: this.web3,
+				contractAddress: await this.erc20(),
+				acc: this.acc,
+			});
+		}
 		/* Assert Token Contract */
 		await this.params.ERC20Contract.__assert();
 	};
@@ -258,7 +264,7 @@ class ERC20TokenLock extends IContract {
 		await this.__assert();
 		return res;
 	};
-
+	
 	getERC20Contract = () => this.params.ERC20Contract;
 }
 
