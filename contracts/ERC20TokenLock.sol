@@ -26,6 +26,13 @@ contract ERC20TokenLock is Pausable, Ownable {
         uint256 amount;
     }
 	
+	
+	// set maxAmountToLock event
+	event MaxAmountToLockChanged(address admin, uint256 oldValue, uint256 newValue);
+	
+	// set minAmountToLock event
+	event MinAmountToLockChanged(address admin, uint256 oldValue, uint256 newValue);
+	
 	// tokens locked event
 	event TokensLocked(address user, uint256 amount, uint256 startDate, uint256 endDate);
 	
@@ -57,7 +64,9 @@ contract ERC20TokenLock is Pausable, Ownable {
 	function setMaxAmountToLock(uint256 tokenAmount) external onlyOwner returns (bool) {
 		require(tokenAmount != maxAmountToLock, "Different token amount required");
 		require(tokenAmount >= minAmountToLock, ">= minAmountToLock required");
+		uint256 oldValue = maxAmountToLock;
 		maxAmountToLock = tokenAmount;
+		emit MaxAmountToLockChanged(msg.sender, oldValue, tokenAmount);
 		return true;
 	}
 	
@@ -69,7 +78,9 @@ contract ERC20TokenLock is Pausable, Ownable {
 	function setMinAmountToLock(uint256 tokenAmount) external onlyOwner returns (bool) {
 		require(tokenAmount != minAmountToLock, "Different token amount required");
 		require(tokenAmount <= maxAmountToLock, "<= maxAmountToLock required");
+		uint256 oldValue = minAmountToLock;
 		minAmountToLock = tokenAmount;
+		emit MinAmountToLockChanged(msg.sender, oldValue, tokenAmount);
 		return true;
 	}
 	
