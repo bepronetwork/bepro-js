@@ -60,7 +60,8 @@
         "jsdoc-md": "^8.0.0",
         "jsdoc-to-markdown": "^6.0.1",
         "should": "^7.1.0",
-        "supertest": "^1.0.0"
+        "supertest": "^1.0.0",
+        "truffle": "5.1.7"
     },
     "babel": {
         "presets": [
