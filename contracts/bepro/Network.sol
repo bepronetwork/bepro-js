@@ -36,14 +36,15 @@ contract BEPRONetwork is Pausable, Ownable{
     uint256 public closedIdsCount = 0;
     uint256 public totalStaked = 0;
     address public feeAddress = 0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A;
-    uint256 public feeShare = 2; // (%) - Share to go to company creator
-    uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to company creator
-    uint256 public percentageNeededForApprove = 20; // (%) - Amount needed to approve a PR and distribute the rewards
+    uint256 public feeShare = 2; // (%) - Share to go to marketplace manager
+    uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to the merge proposal creator
+    uint256 public percentageNeededForApprove = 10; // (%) - Amount needed to approve a PR and distribute the rewards
+    uint256 constant public timeOpenForIssueApprove = 3 days;
     uint256 public percentageNeededForMerge = 20; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public beproVotesStaked = 0;
 
-    uint256 public COUNCIL_BEPRO_AMOUNT = 25000000; // 25M
-    uint256 public OPERATOR_BEPRO_AMOUNT = 1000000; // 10M
+    uint256 public COUNCIL_BEPRO_AMOUNT = 10000000; // 10M
+    uint256 public OPERATOR_BEPRO_AMOUNT = 1000000; // 1M
     uint256 public DEVELOPER_BEPRO_AMOUNT = 10000; // 10k
 
     mapping(uint256 => Issue) public issues; /* Distribution object */
@@ -64,6 +65,7 @@ contract BEPRONetwork is Pausable, Ownable{
 
     struct Issue {
         uint256 _id;
+        uint256 creationDate;
         uint256 beproStaked;
         address issueGenerator;
         mapping(address => uint256) votesForApproveByAddress;
@@ -91,7 +93,7 @@ contract BEPRONetwork is Pausable, Ownable{
         beproToken = _IERC20(_tokenAddress);
     }
 
-    function lockVotes(uint256 _beproAmount) public {
+    function lockBepro(uint256 _beproAmount) public {
         require(_beproAmount > 0, "BEPRO Amount is to be higher than 0");
         require(beproToken.transferFrom(msg.sender, address(this), _beproAmount), "Needs Allowance");
 
@@ -109,7 +111,7 @@ contract BEPRONetwork is Pausable, Ownable{
         }
     }
 
-    function unlockVotes(uint256 _beproAmount, address _from) public {
+    function unlockBepro(uint256 _beproAmount, address _from) public {
         Voter storage voter = voters[msg.sender];
         require(voter.beproLocked >= _beproAmount, "Has to have bepro to unlock");
         require(voter.votesDelegated[_from] >= _beproAmount, "From has to have bepro to unlock");
@@ -124,7 +126,7 @@ contract BEPRONetwork is Pausable, Ownable{
         beproVotesStaked.sub(_beproAmount);
     }
 
-    function delegateVotes(uint256 _beproAmount, address _delegatedTo) internal {
+    function delegateOracles(uint256 _beproAmount, address _delegatedTo) internal {
         Voter storage voter = voters[msg.sender];
 
         require(_delegatedTo != address(0), "Cannot transfer to the zero address");
@@ -197,6 +199,7 @@ contract BEPRONetwork is Pausable, Ownable{
         issue._id = incrementIssueID;
         issue.beproStaked = _beproAmount;
         issue.issueGenerator = msg.sender;
+        issue.creationDate = block.timestamp;
         issue.finalized = false;
         issues[incrementIssueID] = issue;
         myIssues[msg.sender].push(incrementIssueID);
@@ -296,7 +299,7 @@ contract BEPRONetwork is Pausable, Ownable{
         }
 
         closedIdsCount = closedIdsCount.add(1);
-
+        totalStaked = totalStaked.sub(issue.beproStaked);
         emit CloseIssue(_issueID, _mergeID, merge.prAddresses);
     }
 
@@ -309,9 +312,9 @@ contract BEPRONetwork is Pausable, Ownable{
         return voter.votesDelegatedByOthers.add(voter.votesDelegated[_address]);
     }
     
-    function getIssueById(uint256 _issueID) public returns (uint256, uint256, address, uint256, uint256, bool){
+    function getIssueById(uint256 _issueID) public returns (uint256, uint256, uint256, address, uint256, uint256, bool){
         Issue memory issue = issues[_issueID];
-        return (issue._id, issue.beproStaked, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized);
+        return (issue._id, issue.beproStaked, issue.creationDate, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized);
     }
 
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, address[] memory, uint256[] memory, address){
