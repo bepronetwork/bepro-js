@@ -73,7 +73,7 @@ contract BEPRONetwork is Pausable, Ownable{
         mapping(uint256 => MergeProposal) mergeProposals; // Id -> Merge Proposal
         uint256 mergeIDIncrement;
         bool finalized;
-
+        bool canceled;
     }
 
     struct Voter {
@@ -146,6 +146,7 @@ contract BEPRONetwork is Pausable, Ownable{
         Voter memory voter = voters[msg.sender];
         Issue memory issue = issues[_issueID];
         require(issue._id != 0, "Issue does not exist");
+        require(isIssueApprovable(_issueID));
         require(issues[_issueID].votesForApproveByAddress[msg.sender] == 0, "Has already voted");
 
         uint256 votesToAdd = getVotesByAddress(msg.sender);
@@ -169,6 +170,11 @@ contract BEPRONetwork is Pausable, Ownable{
         issues[_issueID].mergeProposals[_mergeID].votesForMergeByAddress[msg.sender] = votesToAdd;
         
         emit ApproveMerge(_issueID, _mergeID, votesToAdd, msg.sender);
+    }
+
+    function isIssueApprovable(uint256 _issueID) public returns (bool){
+        // Only if in the open window
+        return (issues[_issueID].creationDate.add(timeOpenForIssueApprove) < block.timestamp);
     }
 
     function isIssueApproved(uint256 _issueID) public returns (bool) {
@@ -209,6 +215,16 @@ contract BEPRONetwork is Pausable, Ownable{
         incrementIssueID = incrementIssueID + 1;
         emit OpenIssue(incrementIssueID, msg.sender, _beproAmount);
     }
+
+    function redeemIssue(uint256 _issueId) public whenNotPaused {
+        require(issues[_issueId].issueGenerator == msg.sender, "Has to be the issue creator");
+        require(!isIssueApproved(_issueId), "Issue has to not be approved");
+        require(!isIssueApprovable(_issueID), "Time for approving has to be already passed");
+        issues[_issueId].finalized = true;
+        issues[_issueId].canceled = true;
+        require(beproToken.transfer(msg.sender, issues[_issueId].beproStaked), "Transfer not sucessful");
+    }
+
 
 
     /**
@@ -312,9 +328,9 @@ contract BEPRONetwork is Pausable, Ownable{
         return voter.votesDelegatedByOthers.add(voter.votesDelegated[_address]);
     }
     
-    function getIssueById(uint256 _issueID) public returns (uint256, uint256, uint256, address, uint256, uint256, bool){
+    function getIssueById(uint256 _issueID) public returns (uint256, uint256, uint256, address, uint256, uint256, bool, bool){
         Issue memory issue = issues[_issueID];
-        return (issue._id, issue.beproStaked, issue.creationDate, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized);
+        return (issue._id, issue.beproStaked, issue.creationDate, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
     }
 
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, address[] memory, uint256[] memory, address){

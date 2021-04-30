@@ -101,6 +101,15 @@ class BEPRONetwork extends IContract{
     }
 
 	 /**
+	 * @function timeOpenForIssueApprove
+	 * @description GetTotal amount of time where an issue has to be approved
+	 * @returns {Date}
+	*/
+	async timeOpenForIssueApprove() {
+		return Numbers.fromSmartContractTimeToMinutes(await this.params.contract.getContract().methods.timeOpenForIssueApprove().call());
+    }
+
+	 /**
 	 * @function beproVotesStaked
 	 * @description Get Total Amount of BEPRO Staked for Tickets in the network
 	 * @returns {Integer}
@@ -127,7 +136,7 @@ class BEPRONetwork extends IContract{
 		return Numbers.fromDecimals(await this.params.contract.getContract().methods.OPERATOR_BEPRO_AMOUNT().call(), 18);
     }
 
-		/**
+	/**
 	 * @function DEVELOPER_BEPRO_AMOUNT
 	 * @description Get Total Amount of BEPRO Staked for Developer in the network
 	 * @returns {Integer}
@@ -144,6 +153,16 @@ class BEPRONetwork extends IContract{
 	*/
 	async isIssueApproved({issueId}) {
 		return await this.params.contract.getContract().methods.isIssueApproved(issueId).call();
+    }
+
+	/**
+	 * @function isIssueApprovable
+	 * @description Is issue available to be approved (time wise)
+	 * @param {Integer} issueId
+	 * @returns {Bool}
+	*/
+	async isIssueApprovable({issueId}) {
+		return await this.params.contract.getContract().methods.isIssueApprovable(issueId).call();
     }
 
 
@@ -192,6 +211,7 @@ class BEPRONetwork extends IContract{
 	 * @returns {Integer} votesForApprove
 	 * @returns {Integer} mergeProposalsAmount
 	 * @returns {Bool} finalized
+	 * @returns {Bool} canceled
 	*/
 
 	async getIssueById({issue_id}) {
@@ -209,6 +229,7 @@ class BEPRONetwork extends IContract{
 			votesForApprove : Numbers.fromDecimals(r[4], 18),
 			mergeProposalsAmount : parseInt(r[5]),
 			finalized: r[6],
+			canceled : r[7]
 		}
 	}
 
@@ -349,6 +370,16 @@ class BEPRONetwork extends IContract{
 	async approveIssue({issueId}) {
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.approveIssue(issueId)
+		);
+	}
+
+	/**
+	 * @function redeemIssue
+	 * @description redeem Issue 
+	*/
+	async redeemIssue({issueId}) {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.redeemIssue(issueId)
 		);
 	}
 
