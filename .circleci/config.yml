@@ -6,7 +6,7 @@ executors:
       - image: circleci/node:8.12.0
         # environment:
         #   FOOD: $BAR
-    # resource_class: large
+    resource_class: xlarge
 
 references:
   # Paths
