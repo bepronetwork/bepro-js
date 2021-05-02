@@ -39,7 +39,7 @@ commands:
           paths:
             - node_modules
 jobs:
-  test:
+  tests:
     working_directory: *default_workspace
     executor: node
     steps:
@@ -53,4 +53,3 @@ workflows:
     jobs:
       - tests:
           filters: *feature_filter
-
