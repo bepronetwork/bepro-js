@@ -34,7 +34,7 @@ commands:
           command: sudo npm install -g --unsafe-perm=true truffle@5.1.7
       - run:
           name: install repo's node modules
-          command: npm run install
+          command: npm install
       - save_cache:
           key: *node_cache_key
           paths:
