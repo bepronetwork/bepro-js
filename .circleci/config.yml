@@ -26,7 +26,7 @@ commands:
           key: *node_cache_key
       - run:
           name: update-npm
-          command: "sudo npm install -g npm@latest"
+          command: "npm install -g npm@latest"
       - run:
           name: install truffle@5.1.7 globally
           command: npm install -g truffle@5.1.7
@@ -49,7 +49,7 @@ jobs:
           command: npm run test
 
 workflows:
-  checks:
+  code-checks:
     jobs:
       - tests:
           filters: *feature_filter
