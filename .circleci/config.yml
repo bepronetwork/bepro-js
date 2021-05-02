@@ -1,38 +1,55 @@
-version: 2 # use CircleCI 2.0
-jobs: # a collection of steps
-  build: # runs not using Workflows must have a `build` job as entry point
-    working_directory: ~/mern-starter # directory where steps will run
-    docker: # run the steps with Docker
-      - image: circleci/node:8.12.0 # ...with this image as the primary container; this is where all `steps` will run
-    steps: # a collection of executable commands
-      - checkout # special step to check out source code to working directory
+version: 2.1
+
+executors:
+  node:
+    docker:
+      - image: circleci/node:8.12.0
+        # environment:
+        #   FOOD: $BAR
+    # resource_class: large
+
+references:
+  # Paths
+  default_workspace: &default_workspace ~/beprojs-repo
+  # Cache keys
+  node_cache_key: &node_cache_key node-v1-{{ checksum "package.json" }}-{{ arch }}
+  # Branch filters
+  feature_filter: &feature_filter
+    branches:
+      ignore:
+        - master
+
+commands:
+  prepare_code:
+    steps:
+      - restore_cache:
+          key: *node_cache_key
       - run:
           name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache: # special step to restore the dependency cache
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: dependency-cache-{{ checksum "package.json" }}
+          command: "sudo npm install -g npm@latest"
       - run:
-          name: install-npm-wee
-          command: npm install
+          name: install truffle@5.1.7 globally
+          command: npm install -g truffle@5.1.7
+      - checkout
       - run:
-          name: Define Environment Variable at Runtime
-          command: |
-            source $BASH_ENV
-      - run: # run tests
-          name: test
-          command: npm test
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: install repo's node modules
+          command: npm run install
+      - save_cache:
+          key: *node_cache_key
           paths:
-            - ./node_modules
-      - store_artifacts: # special step to save test results as as artifact
-          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
-          path: test-results.xml
-          prefix: tests
-      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
-          path: coverage
-          prefix: coverage
-      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: test-results.xml
-      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
+            - node_modules
+jobs:
+  test:
+    working_directory: *default_workspace
+    executor: node
+    steps:
+      - prepare_code
+      - run:
+          name: tests
+          command: npm run test
+
+workflows:
+  checks:
+    jobs:
+      - tests:
+          filters: *feature_filter
