@@ -31,7 +31,7 @@ commands:
       #     command: "npm install -g npm@latest"
       - run:
           name: install truffle@5.1.7 globally
-          command: npm install -g --unsafe-perm=true truffle@5.1.7
+          command: sudo npm install -g --unsafe-perm=true truffle@5.1.7
       - run:
           name: install repo's node modules
           command: npm run install
