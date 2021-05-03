@@ -1,7 +1,7 @@
-import { exchange } from "../interfaces";
-import Numbers from "../utils/Numbers";
+import { exchange } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
 import _ from "lodash";
-import IContract from './IContract';
+import IContract from '../IContract';
 
 /**
  * Exchange Contract Object
