@@ -1,8 +1,8 @@
-import { tokenlock } from '../interfaces';
+import { tokenlock } from '../../interfaces';
 import ERC20Contract from './ERC20Contract';
-import IContract from './IContract';
+import IContract from '../IContract';
 import _ from 'lodash';
-import Numbers from '../utils/Numbers';
+import Numbers from "../../utils/Numbers";
 import moment from 'moment';
 import dayjs from 'dayjs';
 var assert = require('assert');

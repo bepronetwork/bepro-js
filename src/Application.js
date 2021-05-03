@@ -133,21 +133,36 @@ export default class Application {
 	};
 
 	/**
-	 * @name getERC721Collectibles
-	 * @param {Address} ContractAddress (Opt) If it is deployed
-	 * @description Create a ERC721Collectibles Contract
-	 */
-	getERC721Collectibles = ({ contractAddress = null, tokenAddress = null } = {}) => {
-		try {
-			return new ERC721Collectibles({
-				web3: this.web3,
-				contractAddress: contractAddress,
-				acc: this.test ? this.account : null,
-			});
-		} catch (err) {
+     * @name getERC721Collectibles
+     * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @param {Integer} CustomID  
+     * @description Create a ERC721Collectibles Contract
+     */
+	getERC721Collectibles = ({customID=1, contractAddress=null}={}) => {
+		try{
+
+			switch(customID){
+				case 0 : {
+					return new ERC721Collectibles({
+						web3: this.web3,
+						contractAddress: contractAddress,
+						acc : this.test ? this.account : null
+					});
+				}
+				case 1 : {
+					return new ERC721Collectibles({
+						web3: this.web3,
+						contractAddress: contractAddress,
+						acc : this.test ? this.account : null
+					});
+				};
+			
+			}
+			
+		}catch(err){
 			throw err;
 		}
-	};
+    };
 
 	/**
 	 * @name getERC20Contract
