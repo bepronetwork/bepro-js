@@ -12,7 +12,7 @@
     },
     "scripts": {
         "pretest": "npm run build && truffle compile",
-        "test": "mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-junit-reporter",
+        "test": "./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
         "index": "babel-node ./index.js --presets es2015,stage-2",
         "build": "babel ./src --out-dir lib --copy-files -d ./build",
         "compile": "truffle compile",
@@ -58,7 +58,7 @@
         "jsdoc-babel": "^0.5.0",
         "jsdoc-md": "^8.0.0",
         "jsdoc-to-markdown": "^6.0.1",
-        "mocha-junit-reporter": "^2.0.0",
+        "mocha-multi-reporters": "^1.5.1",
         "should": "^7.1.0",
         "supertest": "^1.0.0"
     },
