@@ -6,7 +6,7 @@ executors:
       - image: circleci/node:8.12.0
         # environment:
         #   FOOD: $BAR
-    resource_class: xlarge
+    resource_class: medium
 
 references:
   # Paths
@@ -26,9 +26,9 @@ commands:
           path: *default_workspace
       - restore_cache:
           key: *node_cache_key
-      # - run:
-      #     name: update-npm
-      #     command: "npm install -g npm@latest"
+      - run:
+          name: update-npm
+          command: "sudo npm install -g npm@latest"
       - run:
           name: install truffle@5.1.7 globally
           command: sudo npm install -g --unsafe-perm=true truffle@5.1.7
@@ -45,9 +45,17 @@ jobs:
     executor: node
     steps:
       - prepare_code
+      - run: mkdir ~/reports
       - run:
           name: tests
           command: npm run test
+          environment:
+            MOCHA_FILE: ~/reports/results.xml
+          when: always
+      - store_test_results:
+          path: ~/reports
+      - store_artifacts:
+          path: ~/reports
 
 workflows:
   code-checks:
