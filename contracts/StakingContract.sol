@@ -184,6 +184,7 @@ contract StakingContract is Pausable, Ownable {
         uint256 APRedAmount = getAPRAmount(subscription.APR, subscription.startDate, finishDate, subscription.amount);
         require(APRedAmount > 0, "APR amount has to be bigger than 0");
         uint256 totalAmount = subscription.amount.add(APRedAmount);
+        uint256 totalAmountWithFullAPR = subscription.amount.add(getAPRAmount(subscription.APR, subscription.startDate, products[_product_id].endDate, subscription.amount));
         require(totalAmount > 0, "Total Amount has to be bigger than 0");
 
         /* Update Subscription */
@@ -195,7 +196,7 @@ contract StakingContract is Pausable, Ownable {
         require(erc20.transfer(subscription.subscriberAddress, totalAmount), "Transfer has failed");
 
         /* Sub to LockedTokens */
-        lockedTokens = lockedTokens.sub(totalAmount);
+        lockedTokens = lockedTokens.sub(totalAmountWithFullAPR);
     }   
 
     function getSubscription(uint256 _subscription_id, uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, address, uint256, bool, uint256){

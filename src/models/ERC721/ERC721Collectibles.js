@@ -1,10 +1,11 @@
-import { erc721collectibles } from "../interfaces";
-import Numbers from "../utils/Numbers";
+import { erc721collectibles } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
 import _ from "lodash";
-import IContract from './IContract';
-import ERC20Contract from './ERC20Contract';
+import IContract from '../IContract';
+import ERC20Contract from '../ERC20/ERC20Contract';
 
 const baseFeeAddress = "0x6714d41094a264bb4b8fcb74713b42cfee6b4f74";
+
 /**
  * ERC721Contract Object
  * @constructor ERC721Contract
