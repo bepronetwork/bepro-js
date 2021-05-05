@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 /**
  * Contract Object Interface
- * @constructor IContract
+ * @class IContract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
  * @param {ABI} abi
@@ -11,7 +11,12 @@ import _ from 'lodash';
  */
 
 class IContract {
-	constructor({ web3, contractAddress = null /* If not deployed */, abi, acc }) {
+	constructor({
+    web3, 
+    contractAddress = null /* If not deployed */, 
+    abi, 
+    acc
+  }) {
 		try {
 			if (!abi) {
 				throw new Error('No ABI Interface provided');
@@ -138,8 +143,7 @@ class IContract {
 	 * @description Get Owner of the Contract
 	 * @returns {string} address
 	 */
-
-	async owner() {
+  async owner() {
 		return await this.params.contract.getContract().methods.owner().call();
 	}
 
@@ -148,7 +152,6 @@ class IContract {
 	 * @description Get Owner of the Contract
 	 * @returns {boolean}
 	 */
-
 	async isPaused() {
 		return await this.params.contract.getContract().methods.paused().call();
 	}
