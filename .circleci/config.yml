@@ -4,6 +4,7 @@ executors:
   node:
     docker:
       - image: circleci/node:8.12.0
+      - image: trufflesuite/ganache-cli
         # environment:
         #   FOOD: $BAR
     resource_class: medium
@@ -45,7 +46,7 @@ jobs:
       - run: mkdir ~/reports
       - run:
           name: tests
-          command: npm run test
+          command: npm run test:truffle
           environment:
             MOCHA_FILE: ~/reports/results.xml
           when: always
