@@ -219,7 +219,7 @@ contract BEPRONetwork is Pausable, Ownable{
     function redeemIssue(uint256 _issueId) public whenNotPaused {
         require(issues[_issueId].issueGenerator == msg.sender, "Has to be the issue creator");
         require(!isIssueApproved(_issueId), "Issue has to not be approved");
-        require(!isIssueApprovable(_issueID), "Time for approving has to be already passed");
+        require(!isIssueApprovable(_issueId), "Time for approving has to be already passed");
         issues[_issueId].finalized = true;
         issues[_issueId].canceled = true;
         require(beproToken.transfer(msg.sender, issues[_issueId].beproStaked), "Transfer not sucessful");
