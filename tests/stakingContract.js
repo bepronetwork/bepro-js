@@ -8,6 +8,7 @@ import delay from 'delay';
 import Numbers from '../src/utils/Numbers';
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 const tokenAddress = "0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2";
+import { deployed_tokenAddress } from './erc20Contract';
 const expect = chai.expect;
 const ethAmount = 0.1;
 var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
@@ -20,23 +21,27 @@ var timeDiff = Numbers.timeToSmartContractTime(endDate) - Numbers.timeToSmartCon
 var userDepositNeededAPR = APR/365/24/60*timeDiff/60*individualMinimumAmount/100;
 var totalNeededAPR = APR/365/24/60*timeDiff/60*totalMaxAmount/100;
 console.log(totalNeededAPR.toFixed(18))
+
 context('Staking Contract', async () => {
     var stakingContract;
     var app;
     var productId, subscriptionId, withdrawTx, startDateSubscription, endDateSubscription;
-   
+	var userAddress;
+	
     before( async () =>  {
-        app = new Application({test : true, mainnet : false});
+        app = new Application({test : true, localtest: true, mainnet : false});
+		console.log('stakingContract.deployed_tokenAddress: ' + deployed_tokenAddress);
     });
 
     it('should start the Application', mochaAsync(async () => {
-        app = new Application({test : true, mainnet : false});
+        app = new Application({test : true, localtest: true, mainnet : false});
         expect(app).to.not.equal(null);
+		userAddress = await app.getAddress();
     }));
 
     it('should deploy Staking Contract', mochaAsync(async () => {
         /* Create Contract */
-        stakingContract = app.getStakingContract({tokenAddress : tokenAddress});
+        stakingContract = app.getStakingContract({tokenAddress : deployed_tokenAddress});
         /* Deploy */
         let res = await stakingContract.deploy();
         await stakingContract.__assert();
@@ -140,13 +145,13 @@ context('Staking Contract', async () => {
         expect(res).to.not.equal(false);
 
         res = await stakingContract.subscribeProduct({
-            address : app.account.getAddress(),
+            address : userAddress,
             product_id : productId,
             amount : individualMinimumAmount 
         });
         expect(res).to.not.equal(false);
 
-        res = await stakingContract.getSubscriptionsByAddress({address : app.account.getAddress()});
+        res = await stakingContract.getSubscriptionsByAddress({address : userAddress});
         expect(res.length).to.equal(1);
         subscriptionId = res[0];
     }));
@@ -162,7 +167,7 @@ context('Staking Contract', async () => {
         expect(res.startDate).to.not.equal(false);
         expect(res.endDate).to.not.equal(false);
         expect(res.amount).to.equal(individualMinimumAmount.toString());
-        expect(res.subscriberAddress).to.equal(app.account.getAddress());
+        expect(res.subscriberAddress).to.equal(userAddress);
         expect(res.APR).to.equal(APR);
         expect(res.finalized).to.equal(false);
     }));

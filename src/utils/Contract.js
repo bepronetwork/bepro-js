@@ -30,7 +30,7 @@ class Contract {
 					})
 				}else{
 					const accounts = await this.web3.eth.getAccounts();
-					res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0], callback});
+					let res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0], callback});
 					this.address = res.contractAddress;
 					resolve(res);
 				}
@@ -44,19 +44,32 @@ class Contract {
 	__metamaskDeploy = async ({byteCode, args, acc, callback = () => {}}) => {
 		return new Promise ((resolve, reject) => {
 			try{
+				 console.log('Contract.__metamaskDeploy.acc: ' + acc);
 				this.getContract()
 				.deploy({
 					data: byteCode,
 					arguments: args,
-				}).send({from : acc})
+				}).send({from : acc
+						//BUGFIX: without gas and gasPrice set here, we get the following error:
+						//Error: Node error: {"message":"base fee exceeds gas limit","code":-32000,"data":{"stack":"Error: base fee exceeds gas limit
+						//,gasPrice : 180000000000
+						//,gas : 5913388
+						,gasPrice : 20000000000
+						,gas : 5913388 //6721975
+						})
 				.on('confirmation', (confirmationNumber, receipt) => { 
+					 console.log('Contract.__metamaskDeploy.confirmationNumber: ' + confirmationNumber);
 					callback(confirmationNumber)
 					if(confirmationNumber > 0){
 						resolve(receipt);
 					}
 				})
-				.on('error', err => {reject(err)});
+				.on('error', err => {
+					 console.log('Contract.__metamaskDeploy.error: ' + err);
+					reject(err)
+				});
 			}catch(err){
+				 console.log('Contract.__metamaskDeploy.catch.error: ' + err);
 				reject(err);
 			}
 		})
