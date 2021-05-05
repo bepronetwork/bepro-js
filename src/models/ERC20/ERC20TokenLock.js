@@ -180,7 +180,7 @@ class ERC20TokenLock extends IContract {
 		if (!isApproved) {
 			throw new Error("Has to Approve Token Transfer First, use the 'approve' Call");
 		}
-		
+		console.log('---lock.bp0');
 		return await this.__sendTx(
 			this.params.contract
 				.getContract()

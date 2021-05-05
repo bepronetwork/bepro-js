@@ -14,3 +14,17 @@ export const detectValidationErrors = (res) => {
         return false;
     }
 }
+
+// run given function after a delay of x milliseconds
+export const runAfter = async (func, delayMs) => {
+	return new Promise( async (resolve, reject) => {
+		setTimeout(async () => {
+			try {
+				let res = await func();
+				resolve(res);
+			} catch (err) {
+				reject(err);
+			}
+		}, delayMs);
+	})
+}

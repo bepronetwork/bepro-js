@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 /**
  * Contract Object Interface
- * @constructor IContract
+ * @class IContract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
  * @param {ABI} abi
@@ -11,7 +11,12 @@ import _ from 'lodash';
  */
 
 class IContract {
-	constructor({ web3, contractAddress = null /* If not deployed */, abi, acc }) {
+	constructor({
+    web3, 
+    contractAddress = null /* If not deployed */, 
+    abi, 
+    acc
+  }) {
 		try {
 			if (!abi) {
 				throw new Error('No ABI Interface provided');
@@ -53,6 +58,8 @@ class IContract {
 			f.send({
 				from: acc,
 				value: value,
+				gasPrice : 20000000000, //temp test
+				gas : 5913388 //6721975 //temp test
 			})
 			.on('confirmation', (confirmationNumber, receipt) => {
 				callback(confirmationNumber);
@@ -71,6 +78,7 @@ class IContract {
 			var res;
 			if (!this.acc && !call) {
 				const accounts = await this.params.web3.eth.getAccounts();
+				console.log('---__sendTx.bp0');
 				res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
 			} else if (this.acc && !call) {
 				let data = f.encodeABI();
@@ -135,8 +143,7 @@ class IContract {
 	 * @description Get Owner of the Contract
 	 * @returns {string} address
 	 */
-
-	async owner() {
+  async owner() {
 		return await this.params.contract.getContract().methods.owner().call();
 	}
 
@@ -145,7 +152,6 @@ class IContract {
 	 * @description Get Owner of the Contract
 	 * @returns {boolean}
 	 */
-
 	async isPaused() {
 		return await this.params.contract.getContract().methods.paused().call();
 	}

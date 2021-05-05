@@ -9,7 +9,9 @@ import Numbers from '../src/utils/Numbers';
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 const tokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 // this is already deployed on rinkeby network for testing
-const deployed_tokenAddress = '0x4197A48d240B104f2bBbb11C0a43fA789f2A5675';
+//var deployed_tokenAddress = '0x4197A48d240B104f2bBbb11C0a43fA789f2A5675';
+//var deployed_tokenAddress = '0x422E11f71440e17EbA859faCF44Dfd03fD259DDB'; //ganache
+import { deployed_tokenAddress } from './erc20Contract';
 const expect = chai.expect;
 const assert = chai.assert;
 const ethAmount = 0.1;
@@ -28,20 +30,24 @@ const maxTokenAmount = 7000;
 const minTokenAmount = 1000;
 
 context('ERC20TokenLock Contract', async () => {
+	var erc20Token;
 	var erc20Lock;
 	var app;
 	var userAddress;
 
 	before(async () => {
 		console.log('---moment: ' + moment());
-		app = new Application({ test: true, mainnet: false });
-		userAddress = app.account.getAddress();
+		app = new Application({ test: true, localtest: true, mainnet: false });
+		// userAddress = app.account.getAddress();
+		userAddress = await app.getAddress(); //local test with ganache
+		console.log('erc20TokenLock.my-address: ' + userAddress);
+		console.log('erc20TokenLock.deployed_tokenAddress: ' + deployed_tokenAddress);
 	});
 	
 	it(
 		'should start the Application',
 		mochaAsync(async () => {
-			app = new Application({ test: true, mainnet: false });
+			app = new Application({ test: true, localtest: true, mainnet: false });
 			expect(app).to.not.equal(null);
 		})
 	);
@@ -67,7 +73,7 @@ context('ERC20TokenLock Contract', async () => {
 	///<=
 	
 	///=> test already DEPLOYED contracts
-	it(
+	/*it(
 		'test deployed ERC20TokenLock contract: testing ERC20Token contract',
 		mochaAsync(async () => {
 			// test already deployed Contract
@@ -92,7 +98,7 @@ context('ERC20TokenLock Contract', async () => {
 			let decAsync = await erc20Lock.getERC20Contract().getDecimalsAsync();
 			console.log('erc20Lock.getERC20TokenDecimalsAsync: ' + decAsync);
 		})
-	);
+	);*/
 	///<=
 	
 	
@@ -111,6 +117,46 @@ context('ERC20TokenLock Contract', async () => {
 	///<=
 	
 	
+	
+	/*it(
+		'should deploy ERC20Contract for testing',
+		mochaAsync(async () => {
+			// Create Contract
+			erc20Token = app.getERC20Contract({});
+			 console.log('---Deployed ERC20Contract bp0');
+			// Deploy
+			let res = await await erc20Token.deploy({
+				name : 'test', symbol : 'B.E.P.R.O', 
+				cap : Numbers.toSmartContractDecimals(100000000, 18), 
+				distributionAddress : userAddress //await app.getAddress()
+			});
+			 console.log('---Deployed ERC20Contract bp1');
+			await erc20Token.__assert();
+			 console.log('---Deployed ERC20Contract bp2');
+			deployed_tokenAddress = erc20Token.getAddress();
+			expect(res).to.not.equal(false);
+			 console.log('---Deployed ERC20Contract bp3');
+			expect(deployed_tokenAddress).to.equal(res.contractAddress);
+			 console.log('---Deployed ERC20Contract bp4');
+			console.log('Deployed ERC20Contract address: ' + deployed_tokenAddress);
+		})
+	);*/
+	
+	it(
+		'should deploy ERC20TokenLock Contract',
+		mochaAsync(async () => {
+			// Create Contract
+			erc20Lock = app.getERC20TokenLock({ tokenAddress: deployed_tokenAddress });
+			// Deploy
+			let res = await erc20Lock.deploy();
+			await erc20Lock.__assert();
+			contractAddress = erc20Lock.getAddress();
+			deployed_contractAddress = erc20Lock.getAddress();
+			console.log('Deployed ERC20TokenLock address: ' + deployed_contractAddress);
+			assert.equal(deployed_tokenAddress, erc20Lock.getERC20Contract().getAddress(), 'token address should match');
+			expect(res).to.not.equal(false);
+		})
+	);
 	
 	it(
 		'ERC20TokenLock Contract should have initial variables expected values',
@@ -171,7 +217,7 @@ context('ERC20TokenLock Contract', async () => {
 			// Approve Tx
 			let res = await erc20Lock.approveERC20Transfer();
 			expect(res).to.not.equal(false);
-			
+			console.log('---erc20Lock.lock bp0');
 			endDate = moment().add(lockSeconds, 'seconds');
 			let smEndDate = Numbers.timeToSmartContractTime(endDate);
 			
@@ -182,10 +228,12 @@ context('ERC20TokenLock Contract', async () => {
 				endDate: endDate,
 			});
 			expect(res).to.not.equal(false);
-
+			console.log('---erc20Lock.lock bp1');
+			
 			// Check if user locked tokens successfully
 			res = await erc20Lock.getLockedTokensInfo({ address: userAddress });
 			let retEndDate = Numbers.timeToSmartContractTime(res.endDate);
+			console.log('---erc20Lock.lock bp2');
 			
 			assert(res.startDate != null, "startDate should be valid");
 			console.log('***lock.tokens.endDate:     ' + endDate);
@@ -216,7 +264,7 @@ context('ERC20TokenLock Contract', async () => {
 				assert.fail();
 			}
 			catch (err) {
-				//assert(error.message.indexOf('revert') >= 0, 'ERC20TokenLock.release should fail');
+				assert(err.message.indexOf('tokens release date not reached') >= 0, 'ERC20TokenLock.release should fail with expected error');
 				console.log('erc20Lock.release: ' + err.message);
 			}
 		})
@@ -226,6 +274,7 @@ context('ERC20TokenLock Contract', async () => {
 		'should release and withdraw unlocked tokens',
 		mochaAsync(async () => {
 			// wait the time needed until tokens are released
+			//TODO: replace setTimeout with 'runAfter' function from utils
 			setTimeout(async () => {
 				// release and withdraw unlocked tokens
 				let res = await erc20Lock.release({ address: userAddress });

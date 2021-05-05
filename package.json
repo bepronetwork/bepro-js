@@ -11,8 +11,9 @@
         "url": "https://github.com/betprotocol/bepro-js.git"
     },
     "scripts": {
-        "test": "npm run build && truffle compile && ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
-        "truffle-test": "truffle compile && truffle test ./tests/contracts/erc20TokenLock-truffle.js",
+        "pretest": "npm run build && truffle compile && truffle migrate --network development",
+        "test": "./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
+        "test:truffle": "truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "index": "babel-node ./index.js --presets es2015,stage-2",
         "build": "babel ./src --out-dir lib --copy-files -d ./build",
         "compile": "truffle compile",
@@ -21,7 +22,9 @@
         "docs:prepare": "gitbook install",
         "docs:build": "npm run docs:prepare && npm run docs:api && gitbook build",
         "docs:serve": "npm run docs:prepare && npm run docs:api && gitbook serve",
-        "docs:clean": "rimraf _book"
+        "docs:clean": "rimraf _book",
+        "jsdoc:build": "jsdoc -t ./docs-template/ -v src -r -c ./docs-template/jsdoc.json",
+        "jsdoc:serve": "http-server ./docs/ -o"
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",
@@ -59,8 +62,12 @@
         "jsdoc-babel": "^0.5.0",
         "jsdoc-md": "^8.0.0",
         "jsdoc-to-markdown": "^6.0.1",
+        "mocha-multi-reporters": "^1.5.1",
         "should": "^7.1.0",
-        "supertest": "^1.0.0"
+        "supertest": "^1.0.0",
+        "truffle": "5.1.7",
+        "http-server": "^0.12.3",
+        "jsdoc": "^3.6.6"
     },
     "babel": {
         "presets": [
