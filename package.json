@@ -63,7 +63,7 @@
         "jsdoc-to-markdown": "^6.0.1",
         "should": "^7.1.0",
         "supertest": "^1.0.0",
-        "truffle": "5.1.7"
+        "truffle": "5.1.7",
         "http-server": "^0.12.3",
         "jsdoc": "^3.6.6"
     },
