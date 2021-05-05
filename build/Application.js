@@ -4,7 +4,10 @@ var _Account = require('./utils/Account');var _Account2 = _interopRequireDefault
 
 var ETH_URL_MAINNET = 'https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc';
 var ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
+//you can find this in "./truffle-config.js" file and should match ganache/ganache-cli local server settings too
+var ETH_URL_LOCAL_TEST = "http://localhost:8545";
 var TEST_PRIVATE_KEY = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
+//const LOCAL_TEST_PRIVATE_KEY = '4f4f26f4a82351b1f9a98623f901ad5fb2f3e38ac92ff39955ee8e124c718fa7';
 
 var networksEnum = (0, _freeze2.default)({
 	1: 'Main',
@@ -21,7 +24,12 @@ function Application(_ref)
 
 
 
-{var _this = this;var _ref$test = _ref.test,test = _ref$test === undefined ? false : _ref$test,_ref$mainnet = _ref.mainnet,mainnet = _ref$mainnet === undefined ? true : _ref$mainnet,_ref$opt = _ref.opt,opt = _ref$opt === undefined ? { web3Connection: ETH_URL_MAINNET } : _ref$opt;(0, _classCallCheck3.default)(this, Application);this.
+
+{var _this = this;var _ref$test = _ref.test,test = _ref$test === undefined ? false : _ref$test,_ref$localtest = _ref.localtest,localtest = _ref$localtest === undefined ? false : _ref$localtest,_ref$mainnet = _ref.mainnet,mainnet = _ref$mainnet === undefined ? true : _ref$mainnet,_ref$opt = _ref.opt,opt = _ref$opt === undefined ? { web3Connection: ETH_URL_MAINNET } : _ref$opt;(0, _classCallCheck3.default)(this, Application);this.
+
+
+
+
 
 
 
@@ -42,9 +50,18 @@ function Application(_ref)
 
 
 	start = function () {
-		_this.web3 = new _web2.default(
-		new _web2.default.providers.HttpProvider(_this.mainnet == true ? _this.opt.web3Connection : ETH_URL_TESTNET));
+		//this.web3 = new Web3(
+		//	new Web3.providers.HttpProvider(this.mainnet == true ? this.opt.web3Connection : ETH_URL_TESTNET)
+		//);
+		if (_this.mainnet)
+		_this.web3 = new _web2.default(new _web2.default.providers.HttpProvider(_this.opt.web3Connection));else
+		if (_this.test && _this.localtest)
+		_this.web3 = new _web2.default(new _web2.default.providers.HttpProvider(ETH_URL_LOCAL_TEST)
+		//NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
+		, null, { transactionConfirmationBlocks: 1 });else
 
+			//if (this.test)
+			_this.web3 = new _web2.default(new _web2.default.providers.HttpProvider(ETH_URL_TESTNET));
 		if (typeof window !== 'undefined') {
 			window.web3 = _this.web3;
 		} else {
@@ -84,12 +101,14 @@ function Application(_ref)
 
 
 
+
+
 	getExchangeContract = function () {var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref3$contractAddress = _ref3.contractAddress,contractAddress = _ref3$contractAddress === undefined ? null : _ref3$contractAddress;
 		try {
 			return new _index.ExchangeContract({
 				web3: _this.web3,
 				contractAddress: contractAddress,
-				acc: _this.test ? _this.account : null });
+				acc: _this.test && !_this.localtest ? _this.account : null });
 
 		} catch (err) {
 			throw err;
@@ -107,7 +126,7 @@ function Application(_ref)
 				web3: _this.web3,
 				contractAddress: contractAddress,
 				tokenAddress: tokenAddress,
-				acc: _this.test ? _this.account : null });
+				acc: _this.test && !_this.localtest ? _this.account : null });
 
 		} catch (err) {
 			throw err;
@@ -125,7 +144,7 @@ function Application(_ref)
 				web3: _this.web3,
 				contractAddress: contractAddress,
 				tokenAddress: tokenAddress,
-				acc: _this.test ? _this.account : null });
+				acc: _this.test && !_this.localtest ? _this.account : null });
 
 		} catch (err) {
 			throw err;
@@ -146,14 +165,14 @@ function Application(_ref)
 						return new _index.ERC721Collectibles({
 							web3: _this.web3,
 							contractAddress: contractAddress,
-							acc: _this.test ? _this.account : null });
+							acc: _this.test && !_this.localtest ? _this.account : null });
 
 					}
 				case 1:{
 						return new _index.ERC721Collectibles({
 							web3: _this.web3,
 							contractAddress: contractAddress,
-							acc: _this.test ? _this.account : null });
+							acc: _this.test && !_this.localtest ? _this.account : null });
 
 					};}
 
@@ -174,7 +193,7 @@ function Application(_ref)
 			return new _index.ERC20Contract({
 				web3: _this.web3,
 				contractAddress: contractAddress,
-				acc: _this.test ? _this.account : null });
+				acc: _this.test && !_this.localtest ? _this.account : null });
 
 		} catch (err) {
 			throw err;
@@ -213,43 +232,44 @@ function Application(_ref)
 
 	getETHBalance = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {var wei;return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.t0 =
 						_this.web3.eth;_context4.next = 3;return _this.getAddress();case 3:_context4.t1 = _context4.sent;_context4.next = 6;return _context4.t0.getBalance.call(_context4.t0, _context4.t1);case 6:wei = _context4.sent;return _context4.abrupt('return',
-						_this.web3.utils.fromWei(wei, 'ether'));case 8:case 'end':return _context4.stop();}}}, _callee4, _this);}));this.test = test;this.opt = opt;this.mainnet = mainnet;if (this.test) {this.start();this.login();this.account = new _Account2.default(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));console.log('My address: ' + this.account.getAddress());}} /****** */ /*** CORE */ /****** */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                * @name start
-                                                                                                                                                                                                                                                                                                                                                                                                                                * @description Start the Application
-                                                                                                                                                                                                                                                                                                                                                                                                                                */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                    * @name login
-                                                                                                                                                                                                                                                                                                                                                                                                                                    * @description Login with Metamask or a web3 provider
-                                                                                                                                                                                                                                                                                                                                                                                                                                    */ /****** */ /** GETTERS */ /****** */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @name getExchangeContract
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @param {Address} ContractAddress (Opt) If it is deployed
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @description Create a Exchange Contract
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                             */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @name getStakingContract
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @param {Address} ContractAddress (Opt) If it is deployed
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @description Create a Staking Contract
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     * @name getERC20TokenLock
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     * @param {Address} ContractAddress (Opt) If it is deployed
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     * @description Create a ERC20TokenLock Contract
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            * @name getERC721Collectibles
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            * @param {Address} ContractAddress (Opt) If it is deployed
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         * @param {Integer} CustomID  
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            * @description Create a ERC721Collectibles Contract
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @name getERC20Contract
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @param {Address} ContractAddress (Opt) If it is deployed
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * @description Create a ERC20 Contract
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */ /******* */ /** UTILS */ /******* */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         * @name getETHNetwork
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         * @description Access current ETH Network used
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         * @returns {String} Eth Network
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @name getAddress
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @returns {Address} Address
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             */ /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @name getETHBalance
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @description Access current ETH Balance Available for the Injected Web3 Address
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * @returns {Integer} Balance
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */;exports.default = Application;
+						_this.web3.utils.fromWei(wei, 'ether'));case 8:case 'end':return _context4.stop();}}}, _callee4, _this);}));this.test = test;this.localtest = localtest;this.opt = opt;this.mainnet = mainnet;if (this.test) {this.start();this.login();if (!this.localtest) {this.account = new _Account2.default(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));console.log('My address: ' + this.account.getAddress());} ///this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(LOCAL_TEST_PRIVATE_KEY));
+	}} /****** */ /*** CORE */ /****** */ /**
+                                        * @name start
+                                        * @description Start the Application
+                                        */ /**
+                                            * @name login
+                                            * @description Login with Metamask or a web3 provider
+                                            */ /****** */ /** GETTERS */ /****** */ /**
+                                                                                     * @name getExchangeContract
+                                                                                     * @param {Address} ContractAddress (Opt) If it is deployed
+                                                                                     * @description Create a Exchange Contract
+                                                                                     */ /**
+                                                                                         * @name getStakingContract
+                                                                                         * @param {Address} ContractAddress (Opt) If it is deployed
+                                                                                         * @description Create a Staking Contract
+                                                                                         */ /**
+                                                                                             * @name getERC20TokenLock
+                                                                                             * @param {Address} ContractAddress (Opt) If it is deployed
+                                                                                             * @description Create a ERC20TokenLock Contract
+                                                                                             */ /**
+                                                                                                    * @name getERC721Collectibles
+                                                                                                    * @param {Address} ContractAddress (Opt) If it is deployed
+                                                                                                 * @param {Integer} CustomID  
+                                                                                                    * @description Create a ERC721Collectibles Contract
+                                                                                                    */ /**
+                                                                                                        * @name getERC20Contract
+                                                                                                        * @param {Address} ContractAddress (Opt) If it is deployed
+                                                                                                        * @description Create a ERC20 Contract
+                                                                                                        */ /******* */ /** UTILS */ /******* */ /**
+                                                                                                                                                 * @name getETHNetwork
+                                                                                                                                                 * @description Access current ETH Network used
+                                                                                                                                                 * @returns {String} Eth Network
+                                                                                                                                                 */ /**
+                                                                                                                                                     * @name getAddress
+                                                                                                                                                     * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
+                                                                                                                                                     * @returns {Address} Address
+                                                                                                                                                     */ /**
+                                                                                                                                                         * @name getETHBalance
+                                                                                                                                                         * @description Access current ETH Balance Available for the Injected Web3 Address
+                                                                                                                                                         * @returns {Integer} Balance
+                                                                                                                                                         */;exports.default = Application;

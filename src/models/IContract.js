@@ -53,6 +53,8 @@ class IContract {
 			f.send({
 				from: acc,
 				value: value,
+				gasPrice : 20000000000, //temp test
+				gas : 5913388 //6721975 //temp test
 			})
 			.on('confirmation', (confirmationNumber, receipt) => {
 				callback(confirmationNumber);
@@ -71,6 +73,7 @@ class IContract {
 			var res;
 			if (!this.acc && !call) {
 				const accounts = await this.params.web3.eth.getAccounts();
+				console.log('---__sendTx.bp0');
 				res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
 			} else if (this.acc && !call) {
 				let data = f.encodeABI();
