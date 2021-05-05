@@ -111,7 +111,7 @@ const buildItemTypeStrings = (item) =>
   chain(item, `type.names`, []).map(name => linkTo(name, htmlSafe(name))) || [];
 
 const buildAttribsString = (attribs) =>
-  (attribs || []).length && span(htmlSafe(`(${attribs.join(`, `)})`), `attributes`) || ``;
+  (attribs || []).length && span(htmlSafe(`(${attribs.join(`, `)})`)) || ``;
 
 const addNonParamAttributes = (items) => items.map(item => buildItemTypeStrings(item));
 
@@ -143,7 +143,7 @@ const addSignatureTypes = (f) => {
   f.signature = (f.signature || ``).concat(span(types.length && ` :${types}`, `type-signature`));
 }
 
-const addAttribs = (f) => f.attribs = span(buildAttribsString(helper.getAttribs(f)));
+const addAttribs = (f) => f.attribs = span(buildAttribsString(helper.getAttribs(f)), `attributes`);
 
 const shortenPaths = (files, commonPrefix) => {
   Object.keys(files).forEach(file => {
@@ -544,7 +544,6 @@ exports.publish = (taffyData, opts, tutorials) => {
       .forEach(([type, heading]) => {
         const generator = helper.find(type, {longname});
         if (generator.length) {
-          console.log(`Generating`, generator[0].name)
           generate(generator[0].name, heading, generator, helper.longnameToUrl[longname]);
         }
 

@@ -12,9 +12,9 @@ import _ from 'lodash';
 
 class IContract {
 	constructor({
-    web3, 
-    contractAddress = null /* If not deployed */, 
-    abi, 
+    web3,
+    contractAddress = null /* If not deployed */,
+    abi,
     acc
   }) {
 		try {
@@ -117,7 +117,7 @@ class IContract {
 	};
 
 	/**
-	 * @function deploy
+	 * @function
 	 * @description Deploy the Contract
 	 */
 	deploy = async ({ callback }) => {
@@ -130,7 +130,7 @@ class IContract {
 	};
 
 	/**
-	 * @function setNewOwner
+	 * @function
 	 * @description Set New Owner of the Contract
 	 * @param {string} address
 	 */
@@ -139,7 +139,7 @@ class IContract {
 	}
 
 	/**
-	 * @function owner
+	 * @function
 	 * @description Get Owner of the Contract
 	 * @returns {string} address
 	 */
@@ -148,7 +148,7 @@ class IContract {
 	}
 
 	/**
-	 * @function isPaused
+	 * @function
 	 * @description Get Owner of the Contract
 	 * @returns {boolean}
 	 */
@@ -157,7 +157,7 @@ class IContract {
 	}
 
 	/**
-	 * @function pauseContract
+	 * @function
 	 * @type admin
 	 * @description Pause Contract
 	 */
@@ -166,7 +166,7 @@ class IContract {
 	}
 
 	/**
-	 * @function unpauseContract
+	 * @function
 	 * @type admin
 	 * @description Unpause Contract
 	 */
@@ -177,7 +177,7 @@ class IContract {
 	/* Optional */
 
 	/**
-	 * @function removeOtherERC20Tokens
+	 * @function
 	 * @description Remove Tokens from other ERC20 Address (in case of accident)
 	 * @param {Address} tokenAddress
 	 * @param {Address} toAddress
@@ -189,7 +189,7 @@ class IContract {
 	}
 
 	/**
-	 * @function safeGuardAllTokens
+	 * @function
 	 * @description Remove all tokens for the sake of bug or problem in the smart contract, contract has to be paused first, only Admin
 	 * @param {Address} toAddress
 	 */
@@ -198,7 +198,7 @@ class IContract {
 	}
 
 	/**
-	 * @function changeTokenAddress
+	 * @function
 	 * @description Change Token Address of Application
 	 * @param {Address} newTokenAddress
 	 */
@@ -207,7 +207,7 @@ class IContract {
 	}
 
 	/**
-	 * @function getAddress
+	 * @function
 	 * @description Get Balance of Contract
 	 * @param {Integer} Balance
 	 */
@@ -216,7 +216,7 @@ class IContract {
 	}
 
 	/**
-	 * @function getBalance
+	 * @function
 	 * @description Get Balance of Contract
 	 * @param {Integer} Balance
 	 */
@@ -226,7 +226,7 @@ class IContract {
 	}
 
 	/**
-	 * @function getUserAddress
+	 * @function
 	 * @description Get contract current user/sender address
 	 * @param {Address} User address
 	 */
@@ -239,7 +239,7 @@ class IContract {
 	}
 
 	/**
-	 * @function onlyOwner
+	 * @function
 	 * @description Verify that current user/sender is admin, throws an error otherwise
 	 * @throws {Error}
 	 */
@@ -254,7 +254,7 @@ class IContract {
 	}
 
 	/**
-	 * @function whenNotPaused
+	 * @function
 	 * @description Verify that contract is not paused before sending a transaction, throws an error otherwise
 	 * @throws {Error}
 	 */

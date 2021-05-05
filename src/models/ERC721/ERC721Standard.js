@@ -4,7 +4,7 @@ import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 /**
  * ERC721Contract Object
- * @constructor ERC721Contract
+ * @class ERC721Contract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
  */
@@ -14,9 +14,6 @@ class ERC721Standard extends IContract{
 		super({abi : erc721standard, ...params});
 	}
 
-	  /**
-     * @override 
-     */
 	__assert = async () => {
         if(!this.getAddress()){
             throw new Error("Contract is not deployed, first deploy it and provide a contract address");
@@ -36,19 +33,19 @@ class ERC721Standard extends IContract{
 	}
 
 	/**
-	 * @function exists
-	 * @description Verify if token ID exists 
+	 * @function
+	 * @description Verify if token ID exists
 	 * @returns {Integer} Token Id
 	 */
 	async exists({tokenID}) {
 		return await this.params.contract
 		.getContract()
 		.methods.exists(tokenID)
-		.call();	
+		.call();
 	}
 
 	/**
-	 * @function getURITokenID
+	 * @function
 	 * @description Verify what is the getURITokenID
 	 * @returns {String} URI
 	 */
@@ -59,7 +56,7 @@ class ERC721Standard extends IContract{
 		.call();
 	}
 	/**
-	 * @function baseURI
+	 * @function
 	 * @description Verify what is the baseURI
 	 * @returns {String} URI
 	 */
@@ -71,7 +68,7 @@ class ERC721Standard extends IContract{
 	}
 
 	 /**
-	 * @function setBaseTokenURI
+	 * @function
 	 * @description Set Base Token URI
     */
 	setBaseTokenURI = async ({URI}) => {
@@ -81,8 +78,8 @@ class ERC721Standard extends IContract{
 	}
 
 	/**
-	 * @function mint
-	 * @description Mint created TokenID 
+	 * @function
+	 * @description Mint created TokenID
 	 * @param {Address} to
 	 * @param {Integer} tokenID
 	*/
