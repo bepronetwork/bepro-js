@@ -1,4 +1,10 @@
+
+// Build 
+``npm build``
+
 // Update Github
+``git add .``
+``git commit -m "MESSAGE"``
 ``git push origin master``
 
 // Create a new version 

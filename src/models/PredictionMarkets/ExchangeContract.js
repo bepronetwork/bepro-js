@@ -1,11 +1,11 @@
-import { exchange } from "../interfaces";
-import Numbers from "../utils/Numbers";
+import { exchange } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
 import _ from "lodash";
-import IContract from './IContract';
+import IContract from '../IContract';
 
 /**
  * Exchange Contract Object
- * @constructor ExchangeContract
+ * @class ExchangeContract
  * @param {Web3} web3
  * @param {Address} tokenAddress
  * @param {Integer} decimals
@@ -19,22 +19,22 @@ class ExchangeContract extends IContract{
 
 	/* Get Functions */
 	/**
-	 * @function getEvents
-	 * @description Get Events 
+	 * @function
+	 * @description Get Events
 	 * @returns {Integer | Array} Get Events ID
 	 */
 	async getEvents() {
 		let res = await this.params.contract
 			.getContract()
 			.methods.getEvents()
-			.call();	
+			.call();
 		return res.map((id) => Numbers.fromHex(id));
-	
+
 	}
-	
+
 	/**
-	 * @function getMyEvents
-	 * @description Get Events 
+	 * @function
+	 * @description Get Events
 	 * @returns {Integer | Array} Get Events ID
 	*/
 	async getMyEvents() {
@@ -46,8 +46,8 @@ class ExchangeContract extends IContract{
 	}
 
 	/**
-	 * @function getEventData
-	 * @description Get EventData 
+	 * @function
+	 * @description Get EventData
 	 * @param {Integer} event_id
 	 * @returns {String} Event Name
 	 * @returns {Integer} Result Id
@@ -55,7 +55,7 @@ class ExchangeContract extends IContract{
 	 * @returns {Boolean} Is Resolved
 	 */
 	async getEventData({event_id}) {
-		
+
 		let r = await this.__sendTx(
 			this.params.contract.getContract().methods.getEventData(event_id),
 			true
@@ -67,12 +67,12 @@ class ExchangeContract extends IContract{
 			urlOracle : r[2],
 			isResolved: r[3]
 		}
-	
+
 	}
 
 	/**
-	 * @function getMyEventHoldings
-	 * @description Get My Event Holdings 
+	 * @function
+	 * @description Get My Event Holdings
 	 * @param {Integer} event_id
 	 * @returns {Integer} 1 In Pool Balances
 	 * @returns {Integer} 1 Out Pool Balances
@@ -81,7 +81,7 @@ class ExchangeContract extends IContract{
 	 * @returns {Integer} 2 Out Pool Balances
 	 * @returns {Integer} 2 Liquidity Balances
 	 */
-	
+
 	async getMyEventHoldings({event_id}) {
 
 		let r = await this.__sendTx(
@@ -100,7 +100,7 @@ class ExchangeContract extends IContract{
 	}
 
 	/**
-	 * @function getResultSpaceData
+	 * @function
 	 * @description Get Result Space Data
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -115,7 +115,7 @@ class ExchangeContract extends IContract{
 	 * @returns {Integer} fees
 	 * @returns {Integer} liqAmount
 	 */
-	
+
 	async getResultSpaceData({event_id, resultSpace_id}) {
 
 		let r = await this.__sendTx(
@@ -138,17 +138,17 @@ class ExchangeContract extends IContract{
 	}
 
  	/**
-	 * @function isEventOpen
+	 * @function
 	 * @description To see if Event is open
 	 * @returns {Boolean}
 	 */
 	async isEventOpen() {
 		return await this.params.contract.getContract().methods.isEventOpen().call()
-		
+
 	}
 
 	/**
-	 * @function getFractionsCost
+	 * @function
 	 * @description Get Fractions Cost
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -162,7 +162,7 @@ class ExchangeContract extends IContract{
 	}
 
  	/**
-	 * @function getSlipageOnBuy
+	 * @function
 	 * @description Get Slipage on Buy
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -174,7 +174,7 @@ class ExchangeContract extends IContract{
 	}
 
 	/**
-	 * @function getSlipageOnSell
+	 * @function
 	 * @description Get Slipage on Sell
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -188,7 +188,7 @@ class ExchangeContract extends IContract{
 	/* POST User Functions */
 
 	/**
-	 * @function createEvent
+	 * @function
 	 * @description Create an Event
 	 * @param {Integer | Array} _resultSpaceIds
 	 * @param {String} urlOracle
@@ -202,7 +202,7 @@ class ExchangeContract extends IContract{
 		}
 		let ETHToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.createEvent(resultSpaceIds, urlOracle, eventName), 
+			this.params.contract.getContract().methods.createEvent(resultSpaceIds, urlOracle, eventName),
 			false,
 			ETHToWei
 		);
@@ -210,7 +210,7 @@ class ExchangeContract extends IContract{
 
 
 	/**
-	 * @function resolveEvent
+	 * @function
 	 * @description Resolve Event
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -224,7 +224,7 @@ class ExchangeContract extends IContract{
 
 
 	/**
-	 * @function addLiquidity
+	 * @function
 	 * @description Add Liquidity
 	 * @param {Integer} eventId
 	 */
@@ -239,7 +239,7 @@ class ExchangeContract extends IContract{
 	};
 
 	/**
-	 * @function removeLiquidity
+	 * @function
 	 * @description Remove Liquidity
 	 * @param {Integer} eventId
 	 */
@@ -252,7 +252,7 @@ class ExchangeContract extends IContract{
 
 
 	/**
-	 * @function buy
+	 * @function
 	 * @description Buy Fractions
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -271,7 +271,7 @@ class ExchangeContract extends IContract{
 	};
 
 	/**
-	 * @function sell
+	 * @function
 	 * @description Sell Fractions
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -285,7 +285,7 @@ class ExchangeContract extends IContract{
 	};
 
 	/**
-	 * @function pullFractions
+	 * @function
 	 * @description Take Fractions out of the pool
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -299,7 +299,7 @@ class ExchangeContract extends IContract{
 	};
 
 	/**
-	 * @function pushFractions
+	 * @function
 	 * @description Move Fractions to the Pool
 	 * @param {Integer} eventId
 	 * @param {Integer} resultSpace_id
@@ -314,7 +314,7 @@ class ExchangeContract extends IContract{
 
 
 	/**
-	 * @function withdrawWins
+	 * @function
 	 * @description Withdraw Wins on end of Event
 	 * @param {Integer} event_id
 	 * @param {Integer} resultSpace_id
@@ -327,7 +327,7 @@ class ExchangeContract extends IContract{
 	};
 
 	/**
-	* @function deploy
+	* @function
 	* @description Deploy the Pool Contract
 
 	*/
