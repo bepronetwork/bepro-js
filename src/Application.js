@@ -4,7 +4,10 @@ import Account from './utils/Account';
 
 const ETH_URL_MAINNET = 'https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc';
 const ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
+//you can find this in "./truffle-config.js" file and should match ganache/ganache-cli local server settings too
+const ETH_URL_LOCAL_TEST = "http://localhost:8545";
 const TEST_PRIVATE_KEY = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
+//const LOCAL_TEST_PRIVATE_KEY = '4f4f26f4a82351b1f9a98623f901ad5fb2f3e38ac92ff39955ee8e124c718fa7';
 
 const networksEnum = Object.freeze({
 	1: 'Main',
@@ -17,19 +20,24 @@ const networksEnum = Object.freeze({
 export default class Application {
 	constructor({
 		test = false,
+		localtest = false, //ganache local blockchain
 		mainnet = true,
 		opt = {
 			web3Connection: ETH_URL_MAINNET,
 		},
 	}) {
 		this.test = test;
+		this.localtest = localtest;
 		this.opt = opt;
 		this.mainnet = mainnet;
 		if (this.test) {
 			this.start();
 			this.login();
-			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
-			console.log('My address: ' + this.account.getAddress())
+			if(!this.localtest) {
+				this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
+				console.log('My address: ' + this.account.getAddress())
+			}
+			///this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(LOCAL_TEST_PRIVATE_KEY));
 		}
 	}
 
@@ -42,9 +50,18 @@ export default class Application {
 	 * @description Start the Application
 	 */
 	start = () => {
-		this.web3 = new Web3(
-			new Web3.providers.HttpProvider(this.mainnet == true ? this.opt.web3Connection : ETH_URL_TESTNET)
-		);
+		//this.web3 = new Web3(
+		//	new Web3.providers.HttpProvider(this.mainnet == true ? this.opt.web3Connection : ETH_URL_TESTNET)
+		//);
+		if (this.mainnet)
+			this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
+		else if (this.test && this.localtest)
+			this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST)
+			//NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
+			, null, { transactionConfirmationBlocks: 1 }
+			);
+		else //if (this.test)
+			this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL_TESTNET));
 		if (typeof window !== 'undefined') {
 			window.web3 = this.web3;
 		} else {
@@ -74,7 +91,9 @@ export default class Application {
 			throw err;
 		}
 	};
-
+	
+	
+	
 	/****** */
 	/** GETTERS */
 	/****** */
@@ -89,7 +108,7 @@ export default class Application {
 			return new ExchangeContract({
 				web3: this.web3,
 				contractAddress: contractAddress,
-				acc: this.test ? this.account : null,
+				acc: (this.test && !this.localtest) ? this.account : null,
 			});
 		} catch (err) {
 			throw err;
@@ -107,7 +126,7 @@ export default class Application {
 				web3: this.web3,
 				contractAddress: contractAddress,
 				tokenAddress,
-				acc: this.test ? this.account : null,
+				acc: (this.test && !this.localtest) ? this.account : null,
 			});
 		} catch (err) {
 			throw err;
@@ -125,7 +144,7 @@ export default class Application {
 				web3: this.web3,
 				contractAddress: contractAddress,
 				tokenAddress,
-				acc: this.test ? this.account : null,
+				acc: (this.test && !this.localtest) ? this.account : null,
 			});
 		} catch (err) {
 			throw err;
@@ -146,14 +165,14 @@ export default class Application {
 					return new ERC721Collectibles({
 						web3: this.web3,
 						contractAddress: contractAddress,
-						acc : this.test ? this.account : null
+						acc : (this.test && !this.localtest) ? this.account : null
 					});
 				}
 				case 1 : {
 					return new ERC721Collectibles({
 						web3: this.web3,
 						contractAddress: contractAddress,
-						acc : this.test ? this.account : null
+						acc : (this.test && !this.localtest) ? this.account : null
 					});
 				};
 			
@@ -174,7 +193,7 @@ export default class Application {
 			return new ERC20Contract({
 				web3: this.web3,
 				contractAddress: contractAddress,
-				acc: this.test ? this.account : null,
+				acc: (this.test && !this.localtest) ? this.account : null,
 			});
 		} catch (err) {
 			throw err;

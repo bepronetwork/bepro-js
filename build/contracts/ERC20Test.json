@@ -942,7 +942,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-05-03T17:29:04.189Z",
+  "updatedAt": "2021-05-04T14:23:00.934Z",
   "devdoc": {
     "details": "Mintable token with a token cap having msg.sender as distributionContract address.",
     "methods": {

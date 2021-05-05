@@ -16,11 +16,11 @@ context('Network - (TO DO)', async () => {
     var issue;
    
     before( async () =>  {
-        app = new Application({test : true, mainnet});
+        app = new Application({test : true, localtest: true, mainnet});
     });
 
     it('no tests done', mochaAsync(async () => {
-        app = new Application({test : true, mainnet});
+        app = new Application({test : true, localtest: true, mainnet});
         expect(app).to.not.equal(null);
     }));
 
