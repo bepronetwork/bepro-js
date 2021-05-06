@@ -10,7 +10,7 @@ import ERC20Contract from '../ERC20/ERC20Contract';
  * @param params.web3 {Web3}
  * @param params.contractAddress {Address}
  * @param params.acc {*}
- * @param params.realFvrAddress {*}
+ * @param params.tokenAddress {*}
  * @param params.abi {realFvr}
  */
 class OpenerRealFvr extends IContract {
@@ -29,7 +29,7 @@ class OpenerRealFvr extends IContract {
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
       web3: this.web3,
-      contractAddress: this.realFvrAddress,
+      contractAddress: this.tokenAddress,
       acc: this.acc
     });
 

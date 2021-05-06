@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import { ExchangeContract, ERC20Contract, StakingContract, ERC20TokenLock, ERC721Collectibles } from './models/index';
+import { ExchangeContract, ERC20Contract, StakingContract, ERC20TokenLock, ERC721Collectibles, OpenerRealFvr } from './models/index';
 import Account from './utils/Account';
 
 const ETH_URL_MAINNET = 'https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc';
@@ -115,6 +115,29 @@ export default class Application {
 		}
 	};
 
+	/****** */
+	/** GETTERS */
+	/****** */
+
+	/**
+	 * @name getOpenRealFvrContract
+	 * @param {Address} contractAddress (Opt) If it is deployed
+	 * @param {Address} tokenAddress (Opt) If it is deployed
+	 * @description Create a Exchange Contract
+	 */
+	 getOpenRealFvrContract = ({ contractAddress = null,  tokenAddress = null} = {}) => {
+		try {
+			return new OpenerRealFvr({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				tokenAddress,
+				acc: (this.test && !this.localtest) ? this.account : null,
+			});
+		} catch (err) {
+			throw err;
+		}
+	};
+
 	/**
 	 * @name getStakingContract
 	 * @param {Address} ContractAddress (Opt) If it is deployed
@@ -154,30 +177,15 @@ export default class Application {
 	/**
      * @name getERC721Collectibles
      * @param {Address} ContractAddress (Opt) If it is deployed
-	 * @param {Integer} CustomID  
      * @description Create a ERC721Collectibles Contract
      */
-	getERC721Collectibles = ({customID=1, contractAddress=null}={}) => {
+	getERC721Collectibles = ({contractAddress=null}={}) => {
 		try{
-
-			switch(customID){
-				case 0 : {
-					return new ERC721Collectibles({
-						web3: this.web3,
-						contractAddress: contractAddress,
-						acc : (this.test && !this.localtest) ? this.account : null
-					});
-				}
-				case 1 : {
-					return new ERC721Collectibles({
-						web3: this.web3,
-						contractAddress: contractAddress,
-						acc : (this.test && !this.localtest) ? this.account : null
-					});
-				};
-			
-			}
-			
+			return new ERC721Collectibles({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				acc : (this.test && !this.localtest) ? this.account : null
+			});	
 		}catch(err){
 			throw err;
 		}
