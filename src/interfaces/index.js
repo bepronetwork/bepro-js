@@ -5,7 +5,8 @@ let index = {
 	ierc20 		: require('../../build/contracts/Token.json'),
 	erc721collectibles     : require('../../build/contracts/ERC721Colectibles.json'),
 	erc721standard     : require('../../build/contracts/ERC721Standard.json'),
-	beproNetwork     : require('../../build/contracts/BEPRONetwork.json')
+	beproNetwork     : require('../../build/contracts/BEPRONetwork.json'),
+	openerRealFvr : require('../../build/contracts/OpenerRealFvr.json')
 };
 
 module.exports = index;

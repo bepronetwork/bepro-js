@@ -4,7 +4,7 @@ var _IContract2 = require("../IContract");var _IContract3 = _interopRequireDefau
 var _ERC20Contract = require("../ERC20/ERC20Contract");var _ERC20Contract2 = _interopRequireDefault(_ERC20Contract);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 /**
                                                                                                                                                                                                                    * ERC721Contract Object
-                                                                                                                                                                                                                   * @constructor ERC721Contract
+                                                                                                                                                                                                                   * @class ERC721Contract
                                                                                                                                                                                                                    * @param {Web3} web3
                                                                                                                                                                                                                    * @param {Address} contractAddress ? (opt)
                                                                                                                                                                                                                    */var
@@ -12,11 +12,8 @@ var _ERC20Contract = require("../ERC20/ERC20Contract");var _ERC20Contract2 = _in
 ERC721Standard = function (_IContract) {(0, _inherits3.default)(ERC721Standard, _IContract);
 	function ERC721Standard(params) {(0, _classCallCheck3.default)(this, ERC721Standard);var _this = (0, _possibleConstructorReturn3.default)(this, (ERC721Standard.__proto__ || (0, _getPrototypeOf2.default)(ERC721Standard)).call(this, (0, _extends3.default)({
 			abi: _interfaces.erc721standard }, params)));_initialiseProps.call(_this);return _this;
-	}
+	}(0, _createClass3.default)(ERC721Standard, [{ key: "exists",
 
-	/**
-     * @override 
-     */(0, _createClass3.default)(ERC721Standard, [{ key: "exists",
 
 
 
@@ -36,10 +33,10 @@ ERC721Standard = function (_IContract) {(0, _inherits3.default)(ERC721Standard, 
 
 
 		/**
-                                                                     * @function exists
-                                                                     * @description Verify if token ID exists 
-                                                                     * @returns {Integer} Token Id
-                                                                     */value: function () {var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref2) {var
+                                                                * @function
+                                                                * @description Verify if token ID exists
+                                                                * @returns {Integer} Token Id
+                                                                */value: function () {var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref2) {var
 				tokenID = _ref2.tokenID;return _regenerator2.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
 									this.params.contract.
 									getContract().
@@ -48,7 +45,7 @@ ERC721Standard = function (_IContract) {(0, _inherits3.default)(ERC721Standard, 
 
 
 		/**
-                                                                                                                                                                                                                     * @function getURITokenID
+                                                                                                                                                                                                                     * @function
                                                                                                                                                                                                                      * @description Verify what is the getURITokenID
                                                                                                                                                                                                                      * @returns {String} URI
                                                                                                                                                                                                                      */ }, { key: "getURITokenID", value: function () {var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref4) {var
@@ -59,7 +56,7 @@ ERC721Standard = function (_IContract) {(0, _inherits3.default)(ERC721Standard, 
 									call());case 2:return _context2.abrupt("return", _context2.sent);case 3:case "end":return _context2.stop();}}}, _callee2, this);}));function getURITokenID(_x2) {return _ref3.apply(this, arguments);}return getURITokenID;}()
 
 		/**
-                                                                                                                                                                                                                                         * @function baseURI
+                                                                                                                                                                                                                                         * @function
                                                                                                                                                                                                                                          * @description Verify what is the baseURI
                                                                                                                                                                                                                                          * @returns {String} URI
                                                                                                                                                                                                                                          */ }, { key: "baseURI", value: function () {var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {return _regenerator2.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
@@ -71,7 +68,7 @@ ERC721Standard = function (_IContract) {(0, _inherits3.default)(ERC721Standard, 
 
 
 		/**
-                                                                                                                                                                                                                         * @function setBaseTokenURI
+                                                                                                                                                                                                                         * @function
                                                                                                                                                                                                                          * @description Set Base Token URI
                                                                                                                                                                                                                            */ }, { key: "mint",
 
@@ -81,8 +78,8 @@ ERC721Standard = function (_IContract) {(0, _inherits3.default)(ERC721Standard, 
 
 
 		/**
-                                                                                                                                                                                                                                                 * @function mint
-                                                                                                                                                                                                                                                 * @description Mint created TokenID 
+                                                                                                                                                                                                                                                 * @function
+                                                                                                                                                                                                                                                 * @description Mint created TokenID
                                                                                                                                                                                                                                                  * @param {Address} to
                                                                                                                                                                                                                                                  * @param {Integer} tokenID
                                                                                                                                                                                                                                                 */value: function () {var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(_ref7) {var

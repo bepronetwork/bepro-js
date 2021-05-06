@@ -3,7 +3,7 @@ var _lodash = require('lodash');var _lodash2 = _interopRequireDefault(_lodash);f
 
 /**
                                                                                                                                                                               * Contract Object Interface
-                                                                                                                                                                              * @constructor IContract
+                                                                                                                                                                              * @class IContract
                                                                                                                                                                               * @param {Web3} web3
                                                                                                                                                                               * @param {Address} contractAddress ? (opt)
                                                                                                                                                                               * @param {ABI} abi
@@ -11,7 +11,12 @@ var _lodash = require('lodash');var _lodash2 = _interopRequireDefault(_lodash);f
                                                                                                                                                                               */var
 
 IContract = function () {
-	function IContract(_ref) {var web3 = _ref.web3,_ref$contractAddress = _ref.contractAddress,contractAddress = _ref$contractAddress === undefined ? null : _ref$contractAddress,abi = _ref.abi,acc = _ref.acc;(0, _classCallCheck3.default)(this, IContract);_initialiseProps.call(this);
+	function IContract(_ref)
+
+
+
+
+	{var web3 = _ref.web3,_ref$contractAddress = _ref.contractAddress,contractAddress = _ref$contractAddress === undefined ? null : _ref$contractAddress,abi = _ref.abi,acc = _ref.acc;(0, _classCallCheck3.default)(this, IContract);_initialiseProps.call(this);
 		try {
 			if (!abi) {
 				throw new Error('No ABI Interface provided');
@@ -112,7 +117,7 @@ IContract = function () {
 
 
 	/**
-    * @function deploy
+    * @function
     * @description Deploy the Contract
     */(0, _createClass3.default)(IContract, [{ key: 'setNewOwner',
 
@@ -125,7 +130,7 @@ IContract = function () {
 
 
 		/**
-                                                                    * @function setNewOwner
+                                                                    * @function
                                                                     * @description Set New Owner of the Contract
                                                                     * @param {string} address
                                                                     */value: function () {var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {var
@@ -134,27 +139,25 @@ IContract = function () {
 
 
 		/**
-                                                                                                                                                                                                                                                                                                              * @function owner
+                                                                                                                                                                                                                                                                                                              * @function
                                                                                                                                                                                                                                                                                                               * @description Get Owner of the Contract
                                                                                                                                                                                                                                                                                                               * @returns {string} address
                                                                                                                                                                                                                                                                                                               */ }, { key: 'owner', value: function () {var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {return _regenerator2.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:_context2.next = 2;return (
-
 
 									this.params.contract.getContract().methods.owner().call());case 2:return _context2.abrupt('return', _context2.sent);case 3:case 'end':return _context2.stop();}}}, _callee2, this);}));function owner() {return _ref4.apply(this, arguments);}return owner;}()
 
 
 		/**
-                                                                                                                                                                                                                                                                         * @function isPaused
+                                                                                                                                                                                                                                                                         * @function
                                                                                                                                                                                                                                                                          * @description Get Owner of the Contract
                                                                                                                                                                                                                                                                          * @returns {boolean}
                                                                                                                                                                                                                                                                          */ }, { key: 'isPaused', value: function () {var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {return _regenerator2.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
-
 
 									this.params.contract.getContract().methods.paused().call());case 2:return _context3.abrupt('return', _context3.sent);case 3:case 'end':return _context3.stop();}}}, _callee3, this);}));function isPaused() {return _ref5.apply(this, arguments);}return isPaused;}()
 
 
 		/**
-                                                                                                                                                                                                                                                                                * @function pauseContract
+                                                                                                                                                                                                                                                                                * @function
                                                                                                                                                                                                                                                                                 * @type admin
                                                                                                                                                                                                                                                                                 * @description Pause Contract
                                                                                                                                                                                                                                                                                 */ }, { key: 'pauseContract', value: function () {var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.next = 2;return (
@@ -163,7 +166,7 @@ IContract = function () {
 
 
 		/**
-                                                                                                                                                                                                                                                                                                 * @function unpauseContract
+                                                                                                                                                                                                                                                                                                 * @function
                                                                                                                                                                                                                                                                                                  * @type admin
                                                                                                                                                                                                                                                                                                  * @description Unpause Contract
                                                                                                                                                                                                                                                                                                  */ }, { key: 'unpauseContract', value: function () {var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {return _regenerator2.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:_context5.next = 2;return (
@@ -174,7 +177,7 @@ IContract = function () {
 		/* Optional */
 
 		/**
-                  * @function removeOtherERC20Tokens
+                  * @function
                   * @description Remove Tokens from other ERC20 Address (in case of accident)
                   * @param {Address} tokenAddress
                   * @param {Address} toAddress
@@ -186,7 +189,7 @@ IContract = function () {
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                                                * @function safeGuardAllTokens
+                                                                                                                                                                                                                                                                                                                                                * @function
                                                                                                                                                                                                                                                                                                                                                 * @description Remove all tokens for the sake of bug or problem in the smart contract, contract has to be paused first, only Admin
                                                                                                                                                                                                                                                                                                                                                 * @param {Address} toAddress
                                                                                                                                                                                                                                                                                                                                                 */ }, { key: 'safeGuardAllTokens', value: function () {var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7(_ref11) {var
@@ -195,7 +198,7 @@ IContract = function () {
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                                     * @function changeTokenAddress
+                                                                                                                                                                                                                                                                                                                                     * @function
                                                                                                                                                                                                                                                                                                                                      * @description Change Token Address of Application
                                                                                                                                                                                                                                                                                                                                      * @param {Address} newTokenAddress
                                                                                                                                                                                                                                                                                                                                      */ }, { key: 'changeTokenAddress', value: function () {var _ref12 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8(_ref13) {var
@@ -204,7 +207,7 @@ IContract = function () {
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                                           * @function getAddress
+                                                                                                                                                                                                                                                                                                                                           * @function
                                                                                                                                                                                                                                                                                                                                            * @description Get Balance of Contract
                                                                                                                                                                                                                                                                                                                                            * @param {Integer} Balance
                                                                                                                                                                                                                                                                                                                                            */ }, { key: 'getAddress', value: function getAddress()
@@ -213,7 +216,7 @@ IContract = function () {
 		}
 
 		/**
-     * @function getBalance
+     * @function
      * @description Get Balance of Contract
      * @param {Integer} Balance
      */ }, { key: 'getBalance', value: function () {var _ref14 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9() {var wei;return _regenerator2.default.wrap(function _callee9$(_context9) {while (1) {switch (_context9.prev = _context9.next) {case 0:_context9.next = 2;return (
@@ -223,7 +226,7 @@ IContract = function () {
 
 
 		/**
-                                                                                                                                                                                                      * @function getUserAddress
+                                                                                                                                                                                                      * @function
                                                                                                                                                                                                       * @description Get contract current user/sender address
                                                                                                                                                                                                       * @param {Address} User address
                                                                                                                                                                                                       */ }, { key: 'getUserAddress', value: function () {var _ref15 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10() {var accounts;return _regenerator2.default.wrap(function _callee10$(_context10) {while (1) {switch (_context10.prev = _context10.next) {case 0:if (!
@@ -236,7 +239,7 @@ IContract = function () {
 
 
 		/**
-                                                                                                                                                                                      * @function onlyOwner
+                                                                                                                                                                                      * @function
                                                                                                                                                                                       * @description Verify that current user/sender is admin, throws an error otherwise
                                                                                                                                                                                       * @throws {Error}
                                                                                                                                                                                       */ }, { key: 'onlyOwner', value: function () {var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11() {var adminAddress, userAddress, isAdmin;return _regenerator2.default.wrap(function _callee11$(_context11) {while (1) {switch (_context11.prev = _context11.next) {case 0:_context11.next = 2;return (
@@ -251,7 +254,7 @@ IContract = function () {
 
 
 		/**
-                                                                                                                                                                                                                    * @function whenNotPaused
+                                                                                                                                                                                                                    * @function
                                                                                                                                                                                                                     * @description Verify that contract is not paused before sending a transaction, throws an error otherwise
                                                                                                                                                                                                                     * @throws {Error}
                                                                                                                                                                                                                     */ }, { key: 'whenNotPaused', value: function () {var _ref17 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12() {var paused;return _regenerator2.default.wrap(function _callee12$(_context12) {while (1) {switch (_context12.prev = _context12.next) {case 0:_context12.next = 2;return (

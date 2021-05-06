@@ -8,7 +8,7 @@ var baseFeeAddress = "0x6714d41094a264bb4b8fcb74713b42cfee6b4f74";
 
 /**
                                                                     * ERC721Contract Object
-                                                                    * @constructor ERC721Contract
+                                                                    * @class ERC721Collectibles
                                                                     * @param {Web3} web3
                                                                     * @param {Address} contractAddress ? (opt)
                                                                     */var
@@ -19,7 +19,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 	}
 
 	/**
-     * @override 
+     * @private
      */(0, _createClass3.default)(ERC721Collectibles, [{ key: "purchaseToken",
 
 
@@ -41,17 +41,17 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                               * @function purchaseToken
-                                                                               * @description Get ERC20 Address of the Contract
-                                                                               * @returns {Address}
+                                                                                * @function
+                                                                                * @description Get ERC20 Address of the Contract
+                                                                                * @returns {Address}
                                                                                */value: function () {var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {return _regenerator2.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
 
 									this.params.contract.getContract().methods._purchaseToken().call());case 2:return _context.abrupt("return", _context.sent);case 3:case "end":return _context.stop();}}}, _callee, this);}));function purchaseToken() {return _ref.apply(this, arguments);}return purchaseToken;}()
 
 
 		/**
-                                                                                                                                                                                                                                                                                             * @function getPricePerPack
-                                                                                                                                                                                                                                                                                             * @description Get Price Per Pack 
+                                                                                                                                                                                                                                                                                             * @function
+                                                                                                                                                                                                                                                                                             * @description Get Price Per Pack
                                                                                                                                                                                                                                                                                              * @returns {Integer}
                                                                                                                                                                                                                                                                                             */ }, { key: "getPricePerPack", value: function () {var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {return _regenerator2.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:_context2.t0 =
 
@@ -59,8 +59,8 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                                                                                                                             * @function exists
-                                                                                                                                                                                                                                                                                                                                                                                                                             * @description Verify if token ID exists 
+                                                                                                                                                                                                                                                                                                                                                                                                                             * @function
+                                                                                                                                                                                                                                                                                                                                                                                                                             * @description Verify if token ID exists
                                                                                                                                                                                                                                                                                                                                                                                                                              * @returns {Integer} Token Id
                                                                                                                                                                                                                                                                                                                                                                                                                              */ }, { key: "exists", value: function () {var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(_ref4) {var
 				tokenID = _ref4.tokenID;return _regenerator2.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return (
@@ -71,9 +71,9 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                          * @function isLimited
+                                                                                                                                                                                                                          * @function
                                                                                                                                                                                                                           * @description Verify if it is limited
-                                                                                                                                                                                                                          * @returns {Bool} 
+                                                                                                                                                                                                                          * @returns {Bool}
                                                                                                                                                                                                                           */ }, { key: "isLimited", value: function () {var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.next = 2;return (
 
 									this.params.contract.
@@ -83,9 +83,9 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                              * @function currentTokenId
+                                                                                                                                                                                                                              * @function
                                                                                                                                                                                                                               * @description Verify what is the currentTokenId
-                                                                                                                                                                                                                              * @returns {Integer} Current Token Id 
+                                                                                                                                                                                                                              * @returns {Integer} Current Token Id
                                                                                                                                                                                                                               */ }, { key: "currentTokenId", value: function () {var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {return _regenerator2.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:_context5.t0 =
 
 
@@ -96,7 +96,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                     * @function getURITokenID
+                                                                                                                                                                                                                                                                                     * @function
                                                                                                                                                                                                                                                                                      * @description Verify what is the getURITokenID
                                                                                                                                                                                                                                                                                      * @returns {String} URI
                                                                                                                                                                                                                                                                                      */ }, { key: "getURITokenID", value: function () {var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(_ref8) {var
@@ -107,7 +107,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 									call());case 2:return _context6.abrupt("return", _context6.sent);case 3:case "end":return _context6.stop();}}}, _callee6, this);}));function getURITokenID(_x2) {return _ref7.apply(this, arguments);}return getURITokenID;}()
 
 		/**
-                                                                                                                                                                                                                                         * @function baseURI
+                                                                                                                                                                                                                                         * @function
                                                                                                                                                                                                                                          * @description Verify what is the baseURI
                                                                                                                                                                                                                                          * @returns {String} URI
                                                                                                                                                                                                                                          */ }, { key: "baseURI", value: function () {var _ref9 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7() {return _regenerator2.default.wrap(function _callee7$(_context7) {while (1) {switch (_context7.prev = _context7.next) {case 0:_context7.next = 2;return (
@@ -120,10 +120,10 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                          * @function getRegisteredIDs
+                                                                                                                                                                                                                          * @function
                                                                                                                                                                                                                           * @description Get Ids
                                                                                                                                                                                                                           * @param {Address} address
-                                                                                                                                                                                                                          * @returns {Integer | Array} ids 
+                                                                                                                                                                                                                          * @returns {Integer | Array} ids
                                                                                                                                                                                                                           */ }, { key: "getRegisteredIDs", value: function () {var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8(_ref11) {var
 				address = _ref11.address;var res;return _regenerator2.default.wrap(function _callee8$(_context8) {while (1) {switch (_context8.prev = _context8.next) {case 0:_context8.next = 2;return (
 									this.params.contract.
@@ -136,9 +136,9 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                           * @function isIDRegistered
+                                                                                                                                                                                                                           * @function
                                                                                                                                                                                                                            * @description Verify if ID is registered
-                                                                                                                                                                                                                           * @returns {Bool} 
+                                                                                                                                                                                                                           * @returns {Bool}
                                                                                                                                                                                                                            */ }, { key: "isIDRegistered", value: function () {var _ref12 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9(_ref13) {var
 				address = _ref13.address,tokenID = _ref13.tokenID;return _regenerator2.default.wrap(function _callee9$(_context9) {while (1) {switch (_context9.prev = _context9.next) {case 0:_context9.next = 2;return (
 									this.params.contract.
@@ -149,8 +149,8 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                            * @function pricePerPack
-                                                                                                                                                                                                                                            * @description Verify what is the current price per Pack 
+                                                                                                                                                                                                                                            * @function
+                                                                                                                                                                                                                                            * @description Verify what is the current price per Pack
                                                                                                                                                                                                                                             * @returns {Integer} Price per pack in tokens
                                                                                                                                                                                                                                             */ }, { key: "pricePerPack", value: function () {var _ref14 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10() {return _regenerator2.default.wrap(function _callee10$(_context10) {while (1) {switch (_context10.prev = _context10.next) {case 0:_context10.t0 =
 
@@ -162,7 +162,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                         * @function openedPacks
+                                                                                                                                                                                                                                                                                                                         * @function
                                                                                                                                                                                                                                                                                                                          * @description Verify how much opened packs exist
                                                                                                                                                                                                                                                                                                                          * @returns {Integer} packs
                                                                                                                                                                                                                                                                                                                          */ }, { key: "openedPacks", value: function () {var _ref15 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11() {return _regenerator2.default.wrap(function _callee11$(_context11) {while (1) {switch (_context11.prev = _context11.next) {case 0:_context11.t0 =
@@ -175,7 +175,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                      * @function approveERC20
+                                                                                                                                                                                                                                                                                      * @function
                                                                                                                                                                                                                                                                                       * @description Approve ERC20 Allowance
                                                                                                                                                                                                                                                                                         */
 
@@ -187,7 +187,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                           * @function setBaseTokenURI
+                                                                                                                                                                                                                                                                                           * @function
                                                                                                                                                                                                                                                                                            * @description Set Base Token URI
                                                                                                                                                                                                                                                                                              */
 
@@ -197,18 +197,18 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                                 * @function isApproved
+                                                                                                                                                                                                                                                                                                 * @function
                                                                                                                                                                                                                                                                                                  * @description Approve ERC20 Allowance
                                                                                                                                                                                                                                                                                                  * @param {Address} address
-                                                                                                                                                                                                                                                                                                 * @param {Integer} amount 
+                                                                                                                                                                                                                                                                                                 * @param {Integer} amount
                                                                                                                                                                                                                                                                                                    */ }, { key: "openPack",
 
 
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                             * @function openPack
-                                                                                                                                                                                                                                                                                                                             * @description open Pack of tokens 
+                                                                                                                                                                                                                                                                                                                             * @function
+                                                                                                                                                                                                                                                                                                                             * @description open Pack of tokens
                                                                                                                                                                                                                                                                                                                              * @param {Integer} amount Amount of packs to open
                                                                                                                                                                                                                                                                                                                             */value: function () {var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(_ref17) {var
 				amount = _ref17.amount;return _regenerator2.default.wrap(function _callee12$(_context12) {while (1) {switch (_context12.prev = _context12.next) {case 0:_context12.next = 2;return (
@@ -218,8 +218,8 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                          * @function mint
-                                                                                                                                                                                                                                                                                          * @description Mint created TokenID 
+                                                                                                                                                                                                                                                                                          * @function
+                                                                                                                                                                                                                                                                                          * @description Mint created TokenID
                                                                                                                                                                                                                                                                                           * @param {Address} to
                                                                                                                                                                                                                                                                                           * @param {Integer} tokenID
                                                                                                                                                                                                                                                                                          */ }, { key: "mint", value: function () {var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee13(_ref19) {var
@@ -230,9 +230,9 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                               * @function setPurchaseTokenAddress
+                                                                                                                                                                                                                                                                               * @function
                                                                                                                                                                                                                                                                                * @description set Purchase Token Address
-                                                                                                                                                                                                                                                                               * @param {Address} purchaseToken 
+                                                                                                                                                                                                                                                                               * @param {Address} purchaseToken
                                                                                                                                                                                                                                                                               */ }, { key: "setPurchaseTokenAddress", value: function () {var _ref20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee14(_ref21) {var
 				purchaseToken = _ref21.purchaseToken;return _regenerator2.default.wrap(function _callee14$(_context14) {while (1) {switch (_context14.prev = _context14.next) {case 0:_context14.next = 2;return (
 									this.__sendTx(
@@ -241,9 +241,9 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                                              * @function setStakeAddress
+                                                                                                                                                                                                                                                                                                                                              * @function
                                                                                                                                                                                                                                                                                                                                               * @description set Stake Address
-                                                                                                                                                                                                                                                                                                                                              * @param {Address} purchaseToken 
+                                                                                                                                                                                                                                                                                                                                              * @param {Address} purchaseToken
                                                                                                                                                                                                                                                                                                                                              */ }, { key: "setStakeAddress", value: function () {var _ref22 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(_ref23) {var
 				purchaseToken = _ref23.purchaseToken;return _regenerator2.default.wrap(function _callee15$(_context15) {while (1) {switch (_context15.prev = _context15.next) {case 0:_context15.next = 2;return (
 									this.__sendTx(
@@ -252,9 +252,9 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                      * @function setSwapBackAddress
+                                                                                                                                                                                                                                                                                                                      * @function
                                                                                                                                                                                                                                                                                                                       * @description set Fee Address
-                                                                                                                                                                                                                                                                                                                      * @param {Address} purchaseToken 
+                                                                                                                                                                                                                                                                                                                      * @param {Address} purchaseToken
                                                                                                                                                                                                                                                                                                                      */ }, { key: "setSwapBackAddress", value: function () {var _ref24 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee16(_ref25) {var
 				purchaseToken = _ref25.purchaseToken;return _regenerator2.default.wrap(function _callee16$(_context16) {while (1) {switch (_context16.prev = _context16.next) {case 0:_context16.next = 2;return (
 									this.__sendTx(
@@ -263,9 +263,9 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                               * @function setFeeAddress
+                                                                                                                                                                                                                                                                                                                               * @function
                                                                                                                                                                                                                                                                                                                                * @description set Fee Address
-                                                                                                                                                                                                                                                                                                                               * @param {Address} purchaseToken 
+                                                                                                                                                                                                                                                                                                                               * @param {Address} purchaseToken
                                                                                                                                                                                                                                                                                                                               */ }, { key: "setFeeAddress", value: function () {var _ref26 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(_ref27) {var
 				purchaseToken = _ref27.purchaseToken;return _regenerator2.default.wrap(function _callee17$(_context17) {while (1) {switch (_context17.prev = _context17.next) {case 0:_context17.next = 2;return (
 									this.__sendTx(
@@ -274,9 +274,9 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
 
 
 		/**
-                                                                                                                                                                                                                                                                                                                 * @function setPricePerPack
+                                                                                                                                                                                                                                                                                                                 * @function
                                                                                                                                                                                                                                                                                                                  * @description set Price per Pack
-                                                                                                                                                                                                                                                                                                                 * @param {Amount} newPrice 
+                                                                                                                                                                                                                                                                                                                 * @param {Amount} newPrice
                                                                                                                                                                                                                                                                                                                 */ }, { key: "setPricePerPack", value: function () {var _ref28 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(_ref29) {var
 				newPrice = _ref29.newPrice;var newPriceWithDecimals;return _regenerator2.default.wrap(function _callee18$(_context18) {while (1) {switch (_context18.prev = _context18.next) {case 0:
 								newPriceWithDecimals = _Numbers2.default.toSmartContractDecimals(
