@@ -1,12 +1,12 @@
-import _ from 'lodash';
-import dayjs from 'dayjs';
-import staking from '../interfaces';
-import ERC20Contract from './ERC20Contract';
-import IContract from './IContract';
-import Numbers from '../utils/Numbers';
+import { staking } from "../../interfaces";
+import ERC20Contract from "../ERC20/ERC20Contract";
+import IContract from "../IContract";
+import _ from "lodash";
+import Numbers from "../../utils/Numbers";
+
 /**
  * Staking Contract Object
- * @constructor StakingContract
+ * @class StakingContract
  * @param {Web3} web3
  * @param {Address} tokenAddress
  * @param {Address} contractAddress ? (opt)
@@ -14,9 +14,8 @@ import Numbers from '../utils/Numbers';
 
 class StakingContract extends IContract {
   constructor({ tokenAddress /* Token Address */, ...params }) {
-    const stakingAbi = staking.staking;
     try {
-      super({ ...params, abi: stakingAbi });
+      super({ ...params, abi: staking });
       if (tokenAddress) {
         this.params.ERC20Contract = new ERC20Contract({
           web3: params.web3,
@@ -30,65 +29,67 @@ class StakingContract extends IContract {
   }
 
   /**
-   * @function erc20
+   * @function
    * @description Get ERC20 Address of the Contract
    * @returns {Address}
    */
   async erc20() {
     return await this.__sendTx(
       this.params.contract.getContract().methods.erc20(),
-      true,
+      true
     );
   }
 
   /**
-   * @function getTokenAmount
+   * @function
    * @description Get Token Amount of ERC20 Address
    * @returns {Address}
    */
-  getTokenAmount = async ({ address }) => await this.getERC20Contract().getTokenAmount(address);
+  getTokenAmount = async ({ address }) => {
+    return await this.getERC20Contract().getTokenAmount(address);
+  };
 
   /**
-   * @function futureLockedTokens
+   * @function
    * @description Get All Tokens Locked for the APR
    * @returns {Integer}
    */
   async futureLockedTokens() {
-    const res = await this.__sendTx(
+    let res = await this.__sendTx(
       this.params.contract.getContract().methods.futureLockedTokens(),
-      true,
+      true
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
   }
 
   /**
-   * @function availableTokens
+   * @function
    * @description Get All Tokens Available for the Subscription Amount
    * @returns {Integer}
    */
   async availableTokens() {
-    const res = await this.__sendTx(
+    let res = await this.__sendTx(
       this.params.contract.getContract().methods.availableTokens(),
-      true,
+      true
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
   }
 
   /**
-   * @function heldTokens
+   * @function
    * @description Get All Tokens Held in Stake at that specific moment
    * @returns {Integer}
    */
   async heldTokens() {
-    const res = await this.__sendTx(
+    let res = await this.__sendTx(
       this.params.contract.getContract().methods.heldTokens(),
-      true,
+      true
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
   }
 
   /**
-   * @function getAPRAmount
+   * @function
    * @description Get APR Amount based on amount of timestamp, amount and APR of that product
    * @param {Integer} APR
    * @param {Date} startDate
@@ -96,10 +97,8 @@ class StakingContract extends IContract {
    * @param {Integer} amount Token Amount
    * @returns {Integer}
    */
-  getAPRAmount = async ({
-    APR, startDate, endDate, amount,
-  }) => {
-    const res = await this.__sendTx(
+  getAPRAmount = async ({ APR, startDate, endDate, amount }) => {
+    let res = await this.__sendTx(
       this.params.contract
         .getContract()
         .methods.getAPRAmount(
@@ -108,15 +107,15 @@ class StakingContract extends IContract {
           Numbers.timeToSmartContractTime(endDate),
           Numbers.toSmartContractDecimals(
             amount,
-            this.getERC20Contract().getDecimals(),
-          ),
+            this.getERC20Contract().getDecimals()
+          )
         ),
-      true,
+      true
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
   };
   /**
-   * @function createProduct
+   * @function
    * @description createProduct
    * @param {Date} startDate
    * @param {Date} endDate
@@ -142,30 +141,31 @@ class StakingContract extends IContract {
           Numbers.timeToSmartContractTime(endDate),
           Numbers.toSmartContractDecimals(
             totalMaxAmount,
-            this.getERC20Contract().getDecimals(),
+            this.getERC20Contract().getDecimals()
           ),
           Numbers.toSmartContractDecimals(
             individualMinimumAmount,
-            this.getERC20Contract().getDecimals(),
+            this.getERC20Contract().getDecimals()
           ),
           APR,
-          lockedUntilFinalization,
-        ),
+          lockedUntilFinalization
+        )
     );
   }
 
   /**
-   * @function getProducts
+   * @function
    * @description Get All Available Products
    * @returns {Array | Integer} ids
    */
-  getProducts = async () => await this.__sendTx(
-    this.params.contract.getContract().methods.getProductIds(),
-    true,
-  );
+  getProducts = async () =>
+    await this.__sendTx(
+      this.params.contract.getContract().methods.getProductIds(),
+      true
+    );
 
   /**
-   * @function getProduct
+   * @function
    * @description Get Subscription from product
    * @param {Integer} product_id
    * @returns {Date} createdAt
@@ -180,9 +180,9 @@ class StakingContract extends IContract {
    * @returns {Array | Integer} subscriptionIds
    */
   getProduct = async ({ product_id }) => {
-    const res = await this.__sendTx(
+    let res = await this.__sendTx(
       this.params.contract.getContract().methods.getProduct(product_id),
-      true,
+      true
     );
 
     return {
@@ -192,16 +192,16 @@ class StakingContract extends IContract {
       endDate: Numbers.fromSmartContractTimeToMinutes(res[2]),
       totalMaxAmount: Numbers.fromDecimals(
         res[3],
-        this.getERC20Contract().getDecimals(),
+        this.getERC20Contract().getDecimals()
       ),
       individualMinimumAmount: Numbers.fromDecimals(
         res[4],
-        this.getERC20Contract().getDecimals(),
+        this.getERC20Contract().getDecimals()
       ),
       APR: parseInt(res[5]),
       currentAmount: Numbers.fromDecimals(
         res[6],
-        this.getERC20Contract().getDecimals(),
+        this.getERC20Contract().getDecimals()
       ),
       lockedUntilFinalization: res[7],
       subscribers: res[8],
@@ -210,22 +210,22 @@ class StakingContract extends IContract {
   };
 
   /**
-   * @function approveERC20Transfer
+   * @function
    * @description Approve ERC20 Allowance for Transfer for Subscribe Product
    */
   approveERC20Transfer = async () => {
-    const totalMaxAmount = await this.getERC20Contract().totalSupply();
+    let totalMaxAmount = await this.getERC20Contract().totalSupply();
     return await this.getERC20Contract().approve({
       address: this.getAddress(),
       amount: Numbers.toSmartContractDecimals(
         totalMaxAmount,
-        this.getERC20Contract().getDecimals(),
+        this.getERC20Contract().getDecimals()
       ),
     });
   };
 
   /**
-   * @function subscribeProduct
+   * @function
    * @description Subscribe to a product Staking
    * @param {Integer} product_id
    * @param {Integer} amount
@@ -233,31 +233,31 @@ class StakingContract extends IContract {
    */
   subscribeProduct = async ({ address, product_id, amount }) => {
     /* Get Decimals of Amount */
-    const amountWithDecimals = Numbers.toSmartContractDecimals(
+    let amountWithDecimals = Numbers.toSmartContractDecimals(
       amount,
-      this.getERC20Contract().getDecimals(),
+      this.getERC20Contract().getDecimals()
     );
     /* Verify if transfer is approved for this amount */
-    const isApproved = await this.getERC20Contract().isApproved({
-      address,
+    let isApproved = await this.getERC20Contract().isApproved({
+      address: address,
       amount,
       spenderAddress: this.getAddress(),
     });
     if (!isApproved) {
       throw new Error(
-        "Has to Approve Token Transfer First, use the 'approve' Call",
+        "Has to Approve Token Transfer First, use the 'approve' Call"
       );
     }
 
     return await this.__sendTx(
       this.params.contract
         .getContract()
-        .methods.subscribeProduct(product_id, amountWithDecimals),
+        .methods.subscribeProduct(product_id, amountWithDecimals)
     );
   };
 
   /**
-   * @function getSubscription
+   * @function
    * @description Get Subscription from product
    * @param {Integer} product_id
    * @param {Integer} subscription_id
@@ -270,11 +270,11 @@ class StakingContract extends IContract {
    * @returns {Boolean} finalized
    */
   getSubscription = async ({ subscription_id, product_id }) => {
-    const res = await this.__sendTx(
+    let res = await this.__sendTx(
       this.params.contract
         .getContract()
         .methods.getSubscription(subscription_id, product_id),
-      true,
+      true
     );
 
     return {
@@ -284,46 +284,48 @@ class StakingContract extends IContract {
       endDate: Numbers.fromSmartContractTimeToMinutes(res[3]),
       amount: Numbers.fromDecimals(
         res[4],
-        this.getERC20Contract().getDecimals(),
+        this.getERC20Contract().getDecimals()
       ),
       subscriberAddress: res[5],
       APR: parseInt(res[6]),
       finalized: res[7],
       withdrawAmount: Numbers.fromDecimals(
         res[8],
-        this.getERC20Contract().getDecimals(),
+        this.getERC20Contract().getDecimals()
       ),
     };
   };
 
   /**
-   * @function withdrawSubscription
+   * @function
    * @description Withdraw Subscription to a product Staking
    * @param {Integer} product_id
    * @param {Integer} subscription_id
    */
-  withdrawSubscription = async ({ product_id, subscription_id }) => await this.__sendTx(
-    this.params.contract
-      .getContract()
-      .methods.withdrawSubscription(product_id, subscription_id),
-  );
+  withdrawSubscription = async ({ product_id, subscription_id }) => {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.withdrawSubscription(product_id, subscription_id)
+    );
+  };
 
   /**
-   * @function getMySubscriptions
+   * @function
    * @description Get Subscriptions by Address
    * @param {Address} address
    * @returns {Array | Integer} subscriptions_ids
    */
   getSubscriptionsByAddress = async ({ address }) => {
-    const res = await this.__sendTx(
+    let res = await this.__sendTx(
       this.params.contract.getContract().methods.getMySubscriptions(address),
-      true,
+      true
     );
-    return res.map(r => Numbers.fromExponential(r));
+    return res.map((r) => Numbers.fromExponential(r));
   };
 
   /**
-   * @function getAllSubscriptions
+   * @function
    * @description Get All Subscriptions done
    * @returns {Array | Subscription} subscriptions
    */
@@ -338,18 +340,20 @@ class StakingContract extends IContract {
           product_id: product,
         });
         return await Promise.all(
-          productObj.subscriptionIds.map(async subscription_id => this.getSubscription({
-            subscription_id,
-            product_id: product,
-          })),
+          productObj.subscriptionIds.map(async (subscription_id) => {
+            return this.getSubscription({
+              subscription_id: subscription_id,
+              product_id: product,
+            });
+          })
         );
-      }),
+      })
     );
     return subscriptions ? _.flatten(subscriptions) : [];
   };
 
   /**
-   * @function depositAPRTokensByAdmin
+   * @function
    * @description Transfer Tokens by the Admin to ensure APR Amount
    * @param {Integer} amount
    */
@@ -361,7 +365,7 @@ class StakingContract extends IContract {
   }
 
   /**
-   * @function getTotalNeededTokensForAPRbyAdmin
+   * @function
    * @description Get Total Amount of tokens needed to be deposited by Admin to ensure APR for all available Products
    * @return {Integer} Amount
    */
@@ -373,17 +377,17 @@ class StakingContract extends IContract {
         const productObj = await this.getProduct({
           product_id: product,
         });
-        const res = await this.getAPRAmount({
+        let res = await this.getAPRAmount({
           APR: productObj.APR,
           startDate: productObj.startDate,
           endDate: productObj.endDate,
           amount: productObj.totalMaxAmount,
         });
         return parseFloat(res);
-      }),
+      })
     );
     return Numbers.fromExponential(
-      allProducts.reduce((a, b) => a + b, 0),
+      allProducts.reduce((a, b) => a + b, 0)
     ).toString();
   };
 
@@ -393,7 +397,7 @@ class StakingContract extends IContract {
   __assert = async () => {
     if (!this.getAddress()) {
       throw new Error(
-        'Contract is not deployed, first deploy it and provide a contract address',
+        "Contract is not deployed, first deploy it and provide a contract address"
       );
     }
 
@@ -412,16 +416,16 @@ class StakingContract extends IContract {
   };
 
   /**
-   * @function deploy
+   * @function
    * @override
    * @description Deploy the Staking Contract
    */
   deploy = async ({ callback } = {}) => {
     if (!this.getERC20Contract()) {
-      throw new Error('No Token Address Provided');
+      throw new Error("No Token Address Provided");
     }
-    const params = [this.getERC20Contract().getAddress()];
-    const res = await this.__deploy(params, callback);
+    let params = [this.getERC20Contract().getAddress()];
+    let res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

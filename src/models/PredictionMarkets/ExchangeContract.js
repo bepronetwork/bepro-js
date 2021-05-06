@@ -1,11 +1,11 @@
-import _ from 'lodash';
-import { exchange } from '../interfaces';
-import Numbers from '../utils/Numbers';
-import IContract from './IContract';
+import { exchange } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
+import _ from "lodash";
+import IContract from "../IContract";
 
 /**
  * Exchange Contract Object
- * @constructor ExchangeContract
+ * @class ExchangeContract
  * @param {Web3} web3
  * @param {Address} tokenAddress
  * @param {Integer} decimals
@@ -19,33 +19,33 @@ class ExchangeContract extends IContract {
 
   /* Get Functions */
   /**
-   * @function getEvents
+   * @function
    * @description Get Events
    * @returns {Integer | Array} Get Events ID
    */
   async getEvents() {
-    const res = await this.params.contract
+    let res = await this.params.contract
       .getContract()
       .methods.getEvents()
       .call();
-    return res.map(id => Numbers.fromHex(id));
+    return res.map((id) => Numbers.fromHex(id));
   }
 
   /**
-   * @function getMyEvents
+   * @function
    * @description Get Events
    * @returns {Integer | Array} Get Events ID
    */
   async getMyEvents() {
-    const res = await this.__sendTx(
+    let res = await this.__sendTx(
       this.params.contract.getContract().methods.getMyEvents(),
-      true,
+      true
     );
-    return res.map(id => Numbers.fromHex(id));
+    return res.map((id) => Numbers.fromHex(id));
   }
 
   /**
-   * @function getEventData
+   * @function
    * @description Get EventData
    * @param {Integer} event_id
    * @returns {String} Event Name
@@ -54,9 +54,9 @@ class ExchangeContract extends IContract {
    * @returns {Boolean} Is Resolved
    */
   async getEventData({ event_id }) {
-    const r = await this.__sendTx(
+    let r = await this.__sendTx(
       this.params.contract.getContract().methods.getEventData(event_id),
-      true,
+      true
     );
 
     return {
@@ -68,7 +68,7 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function getMyEventHoldings
+   * @function
    * @description Get My Event Holdings
    * @param {Integer} event_id
    * @returns {Integer} 1 In Pool Balances
@@ -80,9 +80,9 @@ class ExchangeContract extends IContract {
    */
 
   async getMyEventHoldings({ event_id }) {
-    const r = await this.__sendTx(
+    let r = await this.__sendTx(
       this.params.contract.getContract().methods.getMyEventHoldings(event_id),
-      true,
+      true
     );
 
     return {
@@ -96,7 +96,7 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function getResultSpaceData
+   * @function
    * @description Get Result Space Data
    * @param {Integer} event_id
    * @param {Integer} resultSpace_id
@@ -113,11 +113,11 @@ class ExchangeContract extends IContract {
    */
 
   async getResultSpaceData({ event_id, resultSpace_id }) {
-    const r = await this.__sendTx(
+    let r = await this.__sendTx(
       this.params.contract
         .getContract()
         .methods.getResultSpaceData(event_id, resultSpace_id),
-      true,
+      true
     );
 
     return {
@@ -135,7 +135,7 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function isEventOpen
+   * @function
    * @description To see if Event is open
    * @returns {Boolean}
    */
@@ -147,7 +147,7 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function getFractionsCost
+   * @function
    * @description Get Fractions Cost
    * @param {Integer} event_id
    * @param {Integer} resultSpace_id
@@ -161,14 +161,14 @@ class ExchangeContract extends IContract {
         this.params.contract
           .getContract()
           .methods.getFractionsCost(event_id, resultSpace_id, fractions_amount),
-        true,
+        true
       ),
-      18,
+      18
     );
   }
 
   /**
-   * @function getSlipageOnBuy
+   * @function
    * @description Get Slipage on Buy
    * @param {Integer} event_id
    * @param {Integer} resultSpace_id
@@ -183,7 +183,7 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function getSlipageOnSell
+   * @function
    * @description Get Slipage on Sell
    * @param {Integer} event_id
    * @param {Integer} resultSpace_id
@@ -200,13 +200,13 @@ class ExchangeContract extends IContract {
   /* POST User Functions */
 
   /**
-   * @function createEvent
-   * @description Create an Event
-   * @param {Integer | Array} _resultSpaceIds
-   * @param {String} urlOracle
-   * @param {String} eventName
+	 * @function
+	 * @description Create an Event
+	 * @param {Integer | Array} _resultSpaceIds
+	 * @param {String} urlOracle
+	 * @param {String} eventName
 
-   */
+	 */
 
   createEvent = async ({
     resultSpaceIds,
@@ -215,59 +215,63 @@ class ExchangeContract extends IContract {
     ethAmount = 0,
   }) => {
     if (ethAmount == 0) {
-      throw new Error('Eth Amount has to be > 0');
+      throw new Error("Eth Amount has to be > 0");
     }
-    const ETHToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
+    let ETHToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
     return await this.__sendTx(
       this.params.contract
         .getContract()
         .methods.createEvent(resultSpaceIds, urlOracle, eventName),
       false,
-      ETHToWei,
+      ETHToWei
     );
   };
 
   /**
-   * @function resolveEvent
-   * @description Resolve Event
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
+	 * @function
+	 * @description Resolve Event
+	 * @param {Integer} event_id
+	 * @param {Integer} resultSpace_id
 
-   */
+	 */
 
-  resolveEvent = async ({ event_id, resultSpace_id }) => await this.__sendTx(
-    this.params.contract
-      .getContract()
-      .methods.resolveEvent(event_id, resultSpace_id),
-  );
+  resolveEvent = async ({ event_id, resultSpace_id }) => {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.resolveEvent(event_id, resultSpace_id)
+    );
+  };
 
   /**
-   * @function addLiquidity
+   * @function
    * @description Add Liquidity
    * @param {Integer} eventId
    */
 
   addLiquidity = async ({ event_id, ethAmount }) => {
-    const ETHToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
+    let ETHToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
     return await this.__sendTx(
       this.params.contract.getContract().methods.addLiquidity(event_id),
       false,
-      ETHToWei,
+      ETHToWei
     );
   };
 
   /**
-   * @function removeLiquidity
+   * @function
    * @description Remove Liquidity
    * @param {Integer} eventId
    */
 
-  removeLiquidity = async ({ event_id }) => await this.__sendTx(
-    this.params.contract.getContract().methods.removeLiquidity(event_id),
-  );
+  removeLiquidity = async ({ event_id }) => {
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.removeLiquidity(event_id)
+    );
+  };
 
   /**
-   * @function buy
+   * @function
    * @description Buy Fractions
    * @param {Integer} event_id
    * @param {Integer} resultSpace_id
@@ -276,84 +280,92 @@ class ExchangeContract extends IContract {
 
   buy = async ({ event_id, resultSpace_id, fractions_amount }) => {
     fractions_amount = Numbers.toSmartContractDecimals(fractions_amount, 7);
-    const ETHCost = await this.getFractionsCost({
+    let ETHCost = await this.getFractionsCost({
       event_id,
       resultSpace_id,
       fractions_amount,
     });
-    const ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
+    let ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
     return await this.__sendTx(
       this.params.contract
         .getContract()
         .methods.buy(event_id, resultSpace_id, fractions_amount),
       false,
-      ETHToWei,
+      ETHToWei
     );
   };
 
   /**
-   * @function sell
+   * @function
    * @description Sell Fractions
    * @param {Integer} event_id
    * @param {Integer} resultSpace_id
    * @param {Integer} fractions_amount
    */
 
-  sell = async ({ event_id, resultSpace_id, fractions_amount }) => await this.__sendTx(
-    this.params.contract
-      .getContract()
-      .methods.sell(event_id, resultSpace_id, fractions_amount),
-  );
+  sell = async ({ event_id, resultSpace_id, fractions_amount }) => {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.sell(event_id, resultSpace_id, fractions_amount)
+    );
+  };
 
   /**
-   * @function pullFractions
+   * @function
    * @description Take Fractions out of the pool
    * @param {Integer} event_id
    * @param {Integer} resultSpace_id
    * @param {Integer} fractions_amount
    */
 
-  pullFractions = async ({ event_id, resultSpace_id, fractions_amount }) => await this.__sendTx(
-    this.params.contract
-      .getContract()
-      .methods.pullFractions(event_id, resultSpaceId, fractions_amount),
-  );
+  pullFractions = async ({ event_id, resultSpace_id, fractions_amount }) => {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.pullFractions(event_id, resultSpaceId, fractions_amount)
+    );
+  };
 
   /**
-   * @function pushFractions
+   * @function
    * @description Move Fractions to the Pool
    * @param {Integer} eventId
    * @param {Integer} resultSpace_id
    * @param {Integer} fractions_amount
    */
 
-  pushFractions = async ({ event_id, resultSpace_id, fractions_amount }) => await this.__sendTx(
-    this.params.contract
-      .getContract()
-      .methods.pushFractions(event_id, resultSpace_id, fractions_amount),
-  );
+  pushFractions = async ({ event_id, resultSpace_id, fractions_amount }) => {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.pushFractions(event_id, resultSpace_id, fractions_amount)
+    );
+  };
 
   /**
-   * @function withdrawWins
+   * @function
    * @description Withdraw Wins on end of Event
    * @param {Integer} event_id
    * @param {Integer} resultSpace_id
    */
 
-  withdrawWins = async ({ event_id, resultSpace_id }) => await this.__sendTx(
-    this.params.contract
-      .getContract()
-      .methods.withdrawWins(event_id, resultSpace_id),
-  );
+  withdrawWins = async ({ event_id, resultSpace_id }) => {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.withdrawWins(event_id, resultSpace_id)
+    );
+  };
 
   /**
-  * @function deploy
-  * @description Deploy the Pool Contract
+	* @function
+	* @description Deploy the Pool Contract
 
-  */
+	*/
   deploy = async ({ callback }) => {
-    const params = [];
-    const res = await this.__deploy(params, callback);
+    let params = [];
+    let res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     this.__assert();
