@@ -25,17 +25,19 @@ context('ERC721 Collectibles', async () => {
     var erc721Contract, erc20Contract;
     var app;
     var tokensHeld, subscriptionId, withdrawTx, startDateSubscription, endDateSubscription;
-   
+	var userAddress;
+	
     before( async () =>  {
-        app = new Application({test : true, mainnet});
+        app = new Application({test : true, localtest: true, mainnet});
     });
 
     it('should start the Application', mochaAsync(async () => {
-        app = new Application({test : true, mainnet});
+        app = new Application({test : true, localtest: true, mainnet});
         expect(app).to.not.equal(null);
     }));
 
     it('should deploy Contract', mochaAsync(async () => {
+		userAddress = await app.getAddress();
         /* Create Contract */
         erc721Contract = app.getERC721Collectibles({});
         /* Deploy */
@@ -43,7 +45,8 @@ context('ERC721 Collectibles', async () => {
             name : 'Art | BEPRO', symbol : 'B.E.P.R.O', 
             limitedAmount : 100, 
             erc20Purchase : tokenAddress,
-            feeAddress : app.account.getAddress()
+            //feeAddress : app.account.getAddress()
+			feeAddress : userAddress //local test with ganache
         });
         await erc721Contract.__assert();
         contractAddress = erc721Contract.getAddress();
@@ -93,13 +96,13 @@ context('ERC721 Collectibles', async () => {
     }));
 
     it('should get the available token ids', mochaAsync(async () => {
-        tokensHeld = await erc721Contract.getRegisteredIDs({address : app.account.getAddress()});
+        tokensHeld = await erc721Contract.getRegisteredIDs({address : userAddress});
         expect(tokensHeld.length).to.equal(1);
         expect(tokensHeld[0]).to.equal(1000);
     }));
 
     it('should verify the available token id is not minted already', mochaAsync(async () => {
-        let res = await erc721Contract.isIDRegistered({address : app.account.getAddress(), tokenID : tokensHeld[0]});
+        let res = await erc721Contract.isIDRegistered({address : userAddress, tokenID : tokensHeld[0]});
         expect(res).to.equal(true);
         res = await erc721Contract.exists({tokenID : tokensHeld[0]});
         expect(res).to.equal(false);
@@ -114,7 +117,7 @@ context('ERC721 Collectibles', async () => {
     }));
 
     it('should verify the available token id is already', mochaAsync(async () => {
-        let res = await erc721Contract.isIDRegistered({address : app.account.getAddress(), tokenID : tokensHeld[0]});
+        let res = await erc721Contract.isIDRegistered({address : userAddress, tokenID : tokensHeld[0]});
         expect(res).to.equal(true);
         res = await erc721Contract.exists({tokenID : tokensHeld[0]});
         expect(res).to.equal(true);
@@ -123,7 +126,7 @@ context('ERC721 Collectibles', async () => {
     it('should open a pack', mochaAsync(async () => {
         /* Approve */
         await erc721Contract.approveERC20();
-        let isApproved = await erc721Contract.isApproved({ address : app.account.getAddress(),amount : 1000});
+        let isApproved = await erc721Contract.isApproved({ address : userAddress,amount : 1000});
         expect(isApproved).to.equal(true);
 
         /* Set Price for Pack */
@@ -150,8 +153,8 @@ context('ERC721 Collectibles', async () => {
     }));
 
     it('should get the available token ids', mochaAsync(async () => {
-        console.log("address", app.account.getAddress())
-        tokensHeld = await erc721Contract.getRegisteredIDs({address : app.account.getAddress()});
+        console.log("address", userAddress)
+        tokensHeld = await erc721Contract.getRegisteredIDs({address : userAddress});
         expect(tokensHeld.length).to.equal(2);
         expect(tokensHeld[0]).to.equal(1000);
         expect(tokensHeld[1]).to.equal(1001);
@@ -168,7 +171,7 @@ context('ERC721 Collectibles', async () => {
        
     it('shouldn´t mint a token id 3', mochaAsync(async () => {
         let res = await erc721Contract.mint({
-            to : app.account.getAddress(),
+            to : userAddress,
             tokenID : 1003
         });
         console.log("res", res)
@@ -178,7 +181,7 @@ context('ERC721 Collectibles', async () => {
     it('should be able to open a pack', mochaAsync(async () => {
         /* Approve */
         await erc721Contract.approveERC20();
-        let isApproved = await erc721Contract.isApproved({ address : app.account.getAddress(), amount : 1000});
+        let isApproved = await erc721Contract.isApproved({ address : userAddress, amount : 1000});
         expect(isApproved).to.equal(true);
 
         /* Set Price for Pack */

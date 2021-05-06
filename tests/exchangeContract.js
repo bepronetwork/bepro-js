@@ -17,11 +17,11 @@ context('Exchange Contract', async () => {
     var eventId;
    
     before( async () =>  {
-        app = new Application({test : true, mainnet : false});
+        app = new Application({test : true, localtest: true, mainnet : false});
     });
 
     it('should start the Application', mochaAsync(async () => {
-        app = new Application({test : true, mainnet : false});
+        app = new Application({test : true, localtest: true, mainnet : false});
         expect(app).to.not.equal(null);
     }));
 

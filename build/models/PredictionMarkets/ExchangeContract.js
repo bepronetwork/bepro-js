@@ -193,8 +193,8 @@ ExchangeContract = function (_IContract) {(0, _inherits3.default)(ExchangeContra
                              * @param {Integer | Array} _resultSpaceIds
                              * @param {String} urlOracle
                              * @param {String} eventName
-                            	 */
-
+                            
+                             */
 
 
 
@@ -210,27 +210,12 @@ ExchangeContract = function (_IContract) {(0, _inherits3.default)(ExchangeContra
 
 
 		/**
-                                  * @function resolveEvent
-                                  * @description Resolve Event
-                                  * @param {Integer} event_id
-                                  * @param {Integer} resultSpace_id
-                                 	 */
-
-
-
-
-
-
-
-
-		/**
-                                       * @function addLiquidity
-                                       * @description Add Liquidity
-                                       * @param {Integer} eventId
-                                       */
-
-
-
+                                 * @function resolveEvent
+                                 * @description Resolve Event
+                                 * @param {Integer} event_id
+                                 * @param {Integer} resultSpace_id
+                                
+                                 */
 
 
 
@@ -239,27 +224,10 @@ ExchangeContract = function (_IContract) {(0, _inherits3.default)(ExchangeContra
 
 
 		/**
-                                           * @function removeLiquidity
-                                           * @description Remove Liquidity
-                                           * @param {Integer} eventId
-                                           */
-
-
-
-
-
-
-
-
-		/**
-                                               * @function buy
-                                               * @description Buy Fractions
-                                               * @param {Integer} event_id
-                                               * @param {Integer} resultSpace_id
-                                               * @param {Integer} fractions_amount
-                                               */
-
-
+                                     * @function addLiquidity
+                                     * @description Add Liquidity
+                                     * @param {Integer} eventId
+                                     */
 
 
 
@@ -271,40 +239,10 @@ ExchangeContract = function (_IContract) {(0, _inherits3.default)(ExchangeContra
 
 
 		/**
-                                                   * @function sell
-                                                   * @description Sell Fractions
-                                                   * @param {Integer} event_id
-                                                   * @param {Integer} resultSpace_id
-                                                   * @param {Integer} fractions_amount
-                                                   */
-
-
-
-
-
-
-
-		/**
-                                                       * @function pullFractions
-                                                       * @description Take Fractions out of the pool
-                                                       * @param {Integer} event_id
-                                                       * @param {Integer} resultSpace_id
-                                                       * @param {Integer} fractions_amount
-                                                       */
-
-
-
-
-
-
-
-		/**
-                                                           * @function pushFractions
-                                                           * @description Move Fractions to the Pool
-                                                           * @param {Integer} eventId
-                                                           * @param {Integer} resultSpace_id
-                                                           * @param {Integer} fractions_amount
-                                                           */
+                                         * @function removeLiquidity
+                                         * @description Remove Liquidity
+                                         * @param {Integer} eventId
+                                         */
 
 
 
@@ -314,11 +252,17 @@ ExchangeContract = function (_IContract) {(0, _inherits3.default)(ExchangeContra
 
 
 		/**
-                                                               * @function withdrawWins
-                                                               * @description Withdraw Wins on end of Event
-                                                               * @param {Integer} event_id
-                                                               * @param {Integer} resultSpace_id
-                                                               */
+                                             * @function buy
+                                             * @description Buy Fractions
+                                             * @param {Integer} event_id
+                                             * @param {Integer} resultSpace_id
+                                             * @param {Integer} fractions_amount
+                                             */
+
+
+
+
+
 
 
 
@@ -327,10 +271,66 @@ ExchangeContract = function (_IContract) {(0, _inherits3.default)(ExchangeContra
 
 
 		/**
-                                                                  * @function deploy
-                                                                  * @description Deploy the Pool Contract
-                                                                  	*/ }]);return ExchangeContract;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.createEvent = function () {var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10(_ref17) {var resultSpaceIds = _ref17.resultSpaceIds,urlOracle = _ref17.urlOracle,eventName = _ref17.eventName,_ref17$ethAmount = _ref17.ethAmount,ethAmount = _ref17$ethAmount === undefined ? 0 : _ref17$ethAmount;var ETHToWei;return _regenerator2.default.wrap(function _callee10$(_context10) {while (1) {switch (_context10.prev = _context10.next) {case 0:if (!(ethAmount == 0)) {_context10.next = 2;break;}throw new Error("Eth Amount has to be > 0");case 2:ETHToWei = _Numbers2.default.toSmartContractDecimals(ethAmount, 18);_context10.next = 5;return _this2.__sendTx(_this2.params.contract.getContract().methods.createEvent(resultSpaceIds, urlOracle, eventName), false, ETHToWei);case 5:return _context10.abrupt("return", _context10.sent);case 6:case "end":return _context10.stop();}}}, _callee10, _this2);}));return function (_x7) {return _ref16.apply(this, arguments);};}();this.resolveEvent = function () {var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11(_ref19) {var event_id = _ref19.event_id,resultSpace_id = _ref19.resultSpace_id;return _regenerator2.default.wrap(function _callee11$(_context11) {while (1) {switch (_context11.prev = _context11.next) {case 0:_context11.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.resolveEvent(event_id, resultSpace_id));case 2:return _context11.abrupt("return", _context11.sent);case 3:case "end":return _context11.stop();}}}, _callee11, _this2);}));return function (_x8) {return _ref18.apply(this, arguments);};}();this.addLiquidity = function () {var _ref20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(_ref21) {var event_id = _ref21.event_id,ethAmount = _ref21.ethAmount;var ETHToWei;return _regenerator2.default.wrap(function _callee12$(_context12) {while (1) {switch (_context12.prev = _context12.next) {case 0:ETHToWei = _Numbers2.default.toSmartContractDecimals(ethAmount, 18);_context12.next = 3;return _this2.__sendTx(_this2.params.contract.getContract().methods.addLiquidity(event_id), false, ETHToWei);case 3:return _context12.abrupt("return", _context12.sent);case 4:case "end":return _context12.stop();}}}, _callee12, _this2);}));return function (_x9) {return _ref20.apply(this, arguments);};}();this.removeLiquidity = function () {var _ref22 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee13(_ref23) {var event_id = _ref23.event_id;return _regenerator2.default.wrap(function _callee13$(_context13) {while (1) {switch (_context13.prev = _context13.next) {case 0:_context13.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.removeLiquidity(event_id));case 2:return _context13.abrupt("return", _context13.sent);case 3:case "end":return _context13.stop();}}}, _callee13, _this2);}));return function (_x10) {return _ref22.apply(this, arguments);};}();this.buy = function () {var _ref24 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee14(_ref25) {var event_id = _ref25.event_id,resultSpace_id = _ref25.resultSpace_id,fractions_amount = _ref25.fractions_amount;var ETHCost, ETHToWei;return _regenerator2.default.wrap(function _callee14$(_context14) {while (1) {switch (_context14.prev = _context14.next) {case 0:fractions_amount = _Numbers2.default.toSmartContractDecimals(fractions_amount, 7);_context14.next = 3;return _this2.getFractionsCost({ event_id: event_id, resultSpace_id: resultSpace_id, fractions_amount: fractions_amount });case 3:ETHCost = _context14.sent;ETHToWei = _Numbers2.default.toSmartContractDecimals(ETHCost, 18);_context14.next = 7;return _this2.__sendTx(_this2.params.contract.getContract().methods.buy(event_id, resultSpace_id, fractions_amount), false, ETHToWei);case 7:return _context14.abrupt("return", _context14.sent);case 8:case "end":return _context14.stop();}}}, _callee14, _this2);}));return function (_x11) {return _ref24.apply(this, arguments);};}();this.sell = function () {var _ref26 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(_ref27) {var event_id = _ref27.event_id,resultSpace_id = _ref27.resultSpace_id,fractions_amount = _ref27.fractions_amount;return _regenerator2.default.wrap(function _callee15$(_context15) {while (1) {switch (_context15.prev = _context15.next) {case 0:_context15.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.sell(event_id, resultSpace_id, fractions_amount));case 2:return _context15.abrupt("return", _context15.sent);case 3:case "end":return _context15.stop();}}}, _callee15, _this2);}));return function (_x12) {return _ref26.apply(this, arguments);};}();this.pullFractions = function () {var _ref28 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee16(_ref29) {var event_id = _ref29.event_id,resultSpace_id = _ref29.resultSpace_id,fractions_amount = _ref29.fractions_amount;return _regenerator2.default.wrap(function _callee16$(_context16) {while (1) {switch (_context16.prev = _context16.next) {case 0:_context16.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.pullFractions(event_id, resultSpaceId, fractions_amount));case 2:return _context16.abrupt("return", _context16.sent);case 3:case "end":return _context16.stop();}}}, _callee16, _this2);}));return function (_x13) {return _ref28.apply(this, arguments);};}();this.pushFractions = function () {var _ref30 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(_ref31) {var event_id = _ref31.event_id,resultSpace_id = _ref31.resultSpace_id,fractions_amount = _ref31.fractions_amount;return _regenerator2.default.wrap(function _callee17$(_context17) {while (1) {switch (_context17.prev = _context17.next) {case 0:_context17.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.pushFractions(event_id, resultSpace_id, fractions_amount));case 2:return _context17.abrupt("return", _context17.sent);case 3:case "end":return _context17.stop();}}}, _callee17, _this2);}));return function (_x14) {return _ref30.apply(this, arguments);};}();this.withdrawWins = function () {var _ref32 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(_ref33) {var event_id = _ref33.event_id,resultSpace_id = _ref33.resultSpace_id;return _regenerator2.default.wrap(function _callee18$(_context18) {while (1) {switch (_context18.prev = _context18.next) {case 0:_context18.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.withdrawWins(event_id, resultSpace_id));case 2:return _context18.abrupt("return", _context18.sent);case 3:case "end":return _context18.stop();}}}, _callee18, _this2);}));return function (_x15) {return _ref32.apply(this, arguments);};}();this.
+                                                 * @function sell
+                                                 * @description Sell Fractions
+                                                 * @param {Integer} event_id
+                                                 * @param {Integer} resultSpace_id
+                                                 * @param {Integer} fractions_amount
+                                                 */
 
+
+
+
+
+
+
+		/**
+                                                     * @function pullFractions
+                                                     * @description Take Fractions out of the pool
+                                                     * @param {Integer} event_id
+                                                     * @param {Integer} resultSpace_id
+                                                     * @param {Integer} fractions_amount
+                                                     */
+
+
+
+
+
+
+
+		/**
+                                                         * @function pushFractions
+                                                         * @description Move Fractions to the Pool
+                                                         * @param {Integer} eventId
+                                                         * @param {Integer} resultSpace_id
+                                                         * @param {Integer} fractions_amount
+                                                         */
+
+
+
+
+
+
+
+
+		/**
+                                                             * @function withdrawWins
+                                                             * @description Withdraw Wins on end of Event
+                                                             * @param {Integer} event_id
+                                                             * @param {Integer} resultSpace_id
+                                                             */
+
+
+
+
+
+
+
+		/**
+                                                                * @function deploy
+                                                                * @description Deploy the Pool Contract
+                                                                
+                                                                */ }]);return ExchangeContract;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.createEvent = function () {var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10(_ref17) {var resultSpaceIds = _ref17.resultSpaceIds,urlOracle = _ref17.urlOracle,eventName = _ref17.eventName,_ref17$ethAmount = _ref17.ethAmount,ethAmount = _ref17$ethAmount === undefined ? 0 : _ref17$ethAmount;var ETHToWei;return _regenerator2.default.wrap(function _callee10$(_context10) {while (1) {switch (_context10.prev = _context10.next) {case 0:if (!(ethAmount == 0)) {_context10.next = 2;break;}throw new Error("Eth Amount has to be > 0");case 2:ETHToWei = _Numbers2.default.toSmartContractDecimals(ethAmount, 18);_context10.next = 5;return _this2.__sendTx(_this2.params.contract.getContract().methods.createEvent(resultSpaceIds, urlOracle, eventName), false, ETHToWei);case 5:return _context10.abrupt("return", _context10.sent);case 6:case "end":return _context10.stop();}}}, _callee10, _this2);}));return function (_x7) {return _ref16.apply(this, arguments);};}();this.resolveEvent = function () {var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11(_ref19) {var event_id = _ref19.event_id,resultSpace_id = _ref19.resultSpace_id;return _regenerator2.default.wrap(function _callee11$(_context11) {while (1) {switch (_context11.prev = _context11.next) {case 0:_context11.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.resolveEvent(event_id, resultSpace_id));case 2:return _context11.abrupt("return", _context11.sent);case 3:case "end":return _context11.stop();}}}, _callee11, _this2);}));return function (_x8) {return _ref18.apply(this, arguments);};}();this.addLiquidity = function () {var _ref20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(_ref21) {var event_id = _ref21.event_id,ethAmount = _ref21.ethAmount;var ETHToWei;return _regenerator2.default.wrap(function _callee12$(_context12) {while (1) {switch (_context12.prev = _context12.next) {case 0:ETHToWei = _Numbers2.default.toSmartContractDecimals(ethAmount, 18);_context12.next = 3;return _this2.__sendTx(_this2.params.contract.getContract().methods.addLiquidity(event_id), false, ETHToWei);case 3:return _context12.abrupt("return", _context12.sent);case 4:case "end":return _context12.stop();}}}, _callee12, _this2);}));return function (_x9) {return _ref20.apply(this, arguments);};}();this.removeLiquidity = function () {var _ref22 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee13(_ref23) {var event_id = _ref23.event_id;return _regenerator2.default.wrap(function _callee13$(_context13) {while (1) {switch (_context13.prev = _context13.next) {case 0:_context13.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.removeLiquidity(event_id));case 2:return _context13.abrupt("return", _context13.sent);case 3:case "end":return _context13.stop();}}}, _callee13, _this2);}));return function (_x10) {return _ref22.apply(this, arguments);};}();this.buy = function () {var _ref24 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee14(_ref25) {var event_id = _ref25.event_id,resultSpace_id = _ref25.resultSpace_id,fractions_amount = _ref25.fractions_amount;var ETHCost, ETHToWei;return _regenerator2.default.wrap(function _callee14$(_context14) {while (1) {switch (_context14.prev = _context14.next) {case 0:fractions_amount = _Numbers2.default.toSmartContractDecimals(fractions_amount, 7);_context14.next = 3;return _this2.getFractionsCost({ event_id: event_id, resultSpace_id: resultSpace_id, fractions_amount: fractions_amount });case 3:ETHCost = _context14.sent;ETHToWei = _Numbers2.default.toSmartContractDecimals(ETHCost, 18);_context14.next = 7;return _this2.__sendTx(_this2.params.contract.getContract().methods.buy(event_id, resultSpace_id, fractions_amount), false, ETHToWei);case 7:return _context14.abrupt("return", _context14.sent);case 8:case "end":return _context14.stop();}}}, _callee14, _this2);}));return function (_x11) {return _ref24.apply(this, arguments);};}();this.sell = function () {var _ref26 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(_ref27) {var event_id = _ref27.event_id,resultSpace_id = _ref27.resultSpace_id,fractions_amount = _ref27.fractions_amount;return _regenerator2.default.wrap(function _callee15$(_context15) {while (1) {switch (_context15.prev = _context15.next) {case 0:_context15.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.sell(event_id, resultSpace_id, fractions_amount));case 2:return _context15.abrupt("return", _context15.sent);case 3:case "end":return _context15.stop();}}}, _callee15, _this2);}));return function (_x12) {return _ref26.apply(this, arguments);};}();this.pullFractions = function () {var _ref28 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee16(_ref29) {var event_id = _ref29.event_id,resultSpace_id = _ref29.resultSpace_id,fractions_amount = _ref29.fractions_amount;return _regenerator2.default.wrap(function _callee16$(_context16) {while (1) {switch (_context16.prev = _context16.next) {case 0:_context16.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.pullFractions(event_id, resultSpaceId, fractions_amount));case 2:return _context16.abrupt("return", _context16.sent);case 3:case "end":return _context16.stop();}}}, _callee16, _this2);}));return function (_x13) {return _ref28.apply(this, arguments);};}();this.pushFractions = function () {var _ref30 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(_ref31) {var event_id = _ref31.event_id,resultSpace_id = _ref31.resultSpace_id,fractions_amount = _ref31.fractions_amount;return _regenerator2.default.wrap(function _callee17$(_context17) {while (1) {switch (_context17.prev = _context17.next) {case 0:_context17.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.pushFractions(event_id, resultSpace_id, fractions_amount));case 2:return _context17.abrupt("return", _context17.sent);case 3:case "end":return _context17.stop();}}}, _callee17, _this2);}));return function (_x14) {return _ref30.apply(this, arguments);};}();this.withdrawWins = function () {var _ref32 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee18(_ref33) {var event_id = _ref33.event_id,resultSpace_id = _ref33.resultSpace_id;return _regenerator2.default.wrap(function _callee18$(_context18) {while (1) {switch (_context18.prev = _context18.next) {case 0:_context18.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.withdrawWins(event_id, resultSpace_id));case 2:return _context18.abrupt("return", _context18.sent);case 3:case "end":return _context18.stop();}}}, _callee18, _this2);}));return function (_x15) {return _ref32.apply(this, arguments);};}();this.
 	deploy = function () {var _ref34 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee19(_ref35) {var callback = _ref35.callback;var params, res;return _regenerator2.default.wrap(function _callee19$(_context19) {while (1) {switch (_context19.prev = _context19.next) {case 0:
 							params = [];_context19.next = 3;return (
 								_this2.__deploy(params, callback));case 3:res = _context19.sent;
