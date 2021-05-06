@@ -49,9 +49,20 @@ contract OpenerRealFvr is  Ownable, ERC721 {
   
     constructor (string memory name, string memory symbol, ERC20 _purchaseToken) public ERC721(name, symbol) {}
 
-    function exists(uint256 tokenId) public view returns (bool) {
-        return _exists(tokenId);
+    function _distributePackShares(address from, uint256 packId, uint256 amount) internal {
+        //transfer of fee share
+        Pack memory pack = packs[packId];
+
+        for(uint i = 0; i < pack.saleDistributionAddresses.length; i++){
+            //transfer of stake share
+            _purchaseToken.transferFrom(
+                from,
+                pack.saleDistributionAddresses[i],
+                (pack.saleDistributionAmounts[i] * amount) / 100
+            );
+        }
     }
+
 
     function setTokenURI(uint256 tokenId, string memory uri) public onlyOwner {
         _setTokenURI(tokenId, uri);
@@ -61,16 +72,25 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         _setBaseURI(baseURI);
     }
 
-    function mint(uint256 tokenIdToMint) public {
-        require(registeredIDs[msg.sender][tokenIdToMint], "Token was not registered or not the rightful owner");
-        require(!alreadyMinted[tokenIdToMint], "Already minted");
 
-        alreadyMinted[tokenIdToMint] = true;
-        _safeMint(msg.sender, tokenIdToMint);
+    function exists(uint256 tokenId) public view returns (bool) {
+        return _exists(tokenId);
     }
-
+    
     function getRegisteredIDs(address _address) public view returns(uint256[] memory) {
         return registeredIDsArray[_address];
+    }
+
+    function getPackbyId(uint256 _packId) public onlyOwner returns (uint256, uint256, uint256, uint256, string memory, string memory, string memory, address, 
+        address[] memory, uint256[] memory)  {
+        Pack memory pack = packs[_packId];
+        return (
+            pack.packId, pack.packNumber, pack.initialNFTId, pack.price, pack.serie, pack.drop, pack.packType, pack.buyer,
+            pack.saleDistributionAddresses, pack.saleDistributionAmounts);
+    }
+
+    function getPackPriceInFVR(uint256 packId) public returns (uint256) {
+        return packs[packId].price.mul(10**_purchaseToken.decimals()).div(_realFvrTokenPriceUSD);
     }
 
     function buyPack(uint256 packId) public {
@@ -98,20 +118,6 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
         emit PackOpened(from, packId);
 
-    }
-
-    function _distributePackShares(address from, uint256 packId, uint256 amount) internal {
-        //transfer of fee share
-        Pack memory pack = packs[packId];
-
-        for(uint i = 0; i < pack.saleDistributionAddresses.length; i++){
-            //transfer of stake share
-            _purchaseToken.transferFrom(
-                from,
-                pack.saleDistributionAddresses[i],
-                (pack.saleDistributionAmounts[i] * amount) / 100
-            );
-        }
     }
 
     function createPack(uint256 packNumber, uint256 nftAmount, uint256 price /* 1 = ($0.000001) */, 
@@ -174,16 +180,12 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         emit PackDelete(packId);
     }
 
-    function getPackbyId(uint256 _packId) public onlyOwner returns (uint256, uint256, uint256, uint256, string memory, string memory, string memory, address, 
-        address[] memory, uint256[] memory)  {
-        Pack memory pack = packs[_packId];
-        return (
-            pack.packId, pack.packNumber, pack.initialNFTId, pack.price, pack.serie, pack.drop, pack.packType, pack.buyer,
-            pack.saleDistributionAddresses, pack.saleDistributionAmounts);
-    }
+    function mint(uint256 tokenIdToMint) public {
+        require(registeredIDs[msg.sender][tokenIdToMint], "Token was not registered or not the rightful owner");
+        require(!alreadyMinted[tokenIdToMint], "Already minted");
 
-    function getPackPriceInFVR(uint256 packId) public returns (uint256) {
-        return packs[packId].price.mul(10**_purchaseToken.decimals()).div(_realFvrTokenPriceUSD);
+        alreadyMinted[tokenIdToMint] = true;
+        _safeMint(msg.sender, tokenIdToMint);
     }
 
     function setPurchaseTokenAddress(ERC20 purchaseToken) public onlyOwner {
@@ -200,31 +202,5 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
     function unlock() public onlyOwner {
         _closed = false;
-    }
-}
-
-// ERC721Standard made for a simple structure, owner generates himself the NFT he wants (direct minting)
-contract ERC721Standard is ERC721, Ownable {
-
-    constructor (string memory name, string memory symbol) public ERC721(name, symbol) { }
-
-    function exists(uint256 tokenId) public view returns (bool) {
-        return _exists(tokenId);
-    }
-
-    function setTokenURI(uint256 tokenId, string memory uri) public onlyOwner {
-        _setTokenURI(tokenId, uri);
-    }
-
-    function setBaseURI(string memory baseURI) public onlyOwner {
-        _setBaseURI(baseURI);
-    }
-
-    function mint(address to, uint256 tokenId) public onlyOwner {
-        _safeMint(to, tokenId);
-    }
-
-    function mint(address to, uint256 tokenId, bytes memory _data) public onlyOwner {
-        _safeMint(to, tokenId, _data);
     }
 }
