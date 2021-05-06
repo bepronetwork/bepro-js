@@ -46,7 +46,7 @@ jobs:
       - run: mkdir ~/reports
       - run:
           name: tests
-          command: npm run test:truffle
+          command: npm run test
           environment:
             MOCHA_FILE: ~/reports/results.xml
           when: always
@@ -58,5 +58,4 @@ jobs:
 workflows:
   code-checks:
     jobs:
-      - tests:
-          filters: *feature_filter
+      - tests
