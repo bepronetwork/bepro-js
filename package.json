@@ -72,6 +72,7 @@
         "should": "^7.1.0",
         "supertest": "^1.0.0",
         "truffle": "5.1.7",
+        "ganache-cli": "^6.12.2",
         "http-server": "^0.12.3",
         "jsdoc": "^3.6.6"
     },
