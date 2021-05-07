@@ -4,12 +4,9 @@ import { Application } from "..";
 import moment from "moment";
 import delay from "delay";
 import Numbers from "../src/utils/Numbers";
-var userPrivateKey =
-  "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
-const tokenAddress = "0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2";
+
 import { deployed_tokenAddress } from "./erc20Contract";
 const expect = chai.expect;
-const ethAmount = 0.1;
 var contractAddress = "0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64";
 var totalMaxAmount = 100;
 var individualMinimumAmount = 10;
@@ -281,17 +278,13 @@ context("Staking Contract", async () => {
   it(
     "should withdraw Subscription",
     mochaAsync(async () => {
-      setTimeout(async () => {
-        console.log(new Date());
-        let res = await stakingContract.withdrawSubscription({
-          subscription_id: subscriptionId,
-          product_id: productId,
-        });
-        withdrawTx = res;
-        console.log("withdrawTx", res);
-        expect(res).to.not.equal(false);
-        done();
-      }, 1000);
+      await delay(1*60*1000);
+      let res = await stakingContract.withdrawSubscription({
+        subscription_id: subscriptionId,
+        product_id: productId,
+      });
+      withdrawTx = res;
+      expect(res).to.not.equal(false);
     })
   );
 
@@ -302,7 +295,6 @@ context("Staking Contract", async () => {
         subscription_id: subscriptionId,
         product_id: productId,
       });
-      console.log("r", res);
       expect(res.endDate).to.not.equal(false);
       expect(res.finalized).to.equal(true);
 
@@ -312,10 +304,8 @@ context("Staking Contract", async () => {
         endDate: res.endDate,
         amount: individualMinimumAmount,
       });
-      console.log("res", res.withdrawAmount, individualMinimumAmount, apr);
-
       expect(res.withdrawAmount).to.equal(
-        Number(apr) + Number(individualMinimumAmount)
+        String(Number(apr) + Number(individualMinimumAmount)).toString()
       );
     })
   );

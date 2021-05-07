@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/ERC721/ERC721Standard.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/ERC721/ERC721Standard.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { erc721standard } from "../../interfaces";
+import _ from "lodash";
+import IContract from "../IContract";
+import ERC20Contract from "../ERC20/ERC20Contract";
+/**
+ * ERC721Contract Object
+ * @class ERC721Contract
+ * @param {Web3} web3
+ * @param {Address} contractAddress ? (opt)
+ */
+
+class ERC721Standard extends IContract {
+  constructor(params) {
+    super({ abi: erc721standard, ...params });
+  }
+
+  __assert = async () => {
+    if (!this.getAddress()) {
+      throw new Error(
+        "Contract is not deployed, first deploy it and provide a contract address"
+      );
+    }
+    /* Use ABI */
+    this.params.contract.use(erc721collectibles, this.getAddress());
+
+    /* Set Token Address Contract for easy access */
+    this.params.ERC20Contract = new ERC20Contract({
+      web3: this.web3,
+      contractAddress: await this.purchaseToken(),
+      acc: this.acc,
+    });
+
+    /* Assert Token Contract */
+    await this.params.ERC20Contract.__assert();
+  };
+
+  /**
+   * @function
+   * @description Verify if token ID exists
+   * @returns {Integer} Token Id
+   */
+  async exists({ tokenID }) {
+    return await this.params.contract
+      .getContract()
+      .methods.exists(tokenID)
+      .call();
+  }
+
+  /**
+   * @function
+   * @description Verify what is the getURITokenID
+   * @returns {String} URI
+   */
+  async getURITokenID({ tokenID }) {
+    return await this.params.contract
+      .getContract()
+      .methods.tokenURI(tokenID)
+      .call();
+  }
+  /**
+   * @function
+   * @description Verify what is the baseURI
+   * @returns {String} URI
+   */
+  async baseURI() {
+    return await this.params.contract.getContract().methods.baseURI().call();
+  }
+
+  /**
+   * @function
+   * @description Set Base Token URI
+   */
+  setBaseTokenURI = async ({ URI }) => {
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.setBaseURI(URI)
+    );
+  };
+
+  /**
+   * @function
+   * @description Mint created TokenID
+   * @param {Address} to
+   * @param {Integer} tokenID
+   */
+  async mint({ tokenID }) {
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.mint(tokenID)
+    );
+  }
+
+  deploy = async ({ name, symbol, callback }) => {
+    if (!name) {
+      throw new Error("Please provide a name");
+    }
+
+    if (!symbol) {
+      throw new Error("Please provide a symbol");
+    }
+    let params = [name, symbol];
+    let res = await this.__deploy(params, callback);
+    this.params.contractAddress = res.contractAddress;
+    /* Call to Backend API */
+    await this.__assert();
+    return res;
+  };
+
+  getERC20Contract = () => this.params.ERC20Contract;
+}
+
+export default ERC721Standard;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Documentation</a></h2><div class="category"><h2>Main</h2><h3>Classes </h3><ul><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getAddress">getAddress</a></li><li><a href="global.html#getERC20Contract">getERC20Contract</a></li><li><a href="global.html#getERC20TokenLock">getERC20TokenLock</a></li><li><a href="global.html#getERC721Collectibles">getERC721Collectibles</a></li><li><a href="global.html#getETHBalance">getETHBalance</a></li><li><a href="global.html#getETHNetwork">getETHNetwork</a></li><li><a href="global.html#getExchangeContract">getExchangeContract</a></li><li><a href="global.html#getOpenRealFvrContract">getOpenRealFvrContract</a></li><li><a href="global.html#getStakingContract">getStakingContract</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#start">start</a></li></ul></div>
+    
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 07 2021 12:52:25 GMT+0100 (WEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

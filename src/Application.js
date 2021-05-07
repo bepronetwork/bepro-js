@@ -5,6 +5,7 @@ import {
   StakingContract,
   ERC20TokenLock,
   ERC721Collectibles,
+  OpenerRealFvr
 } from "./models/index";
 import Account from "./utils/Account";
 
@@ -27,232 +28,228 @@ const networksEnum = Object.freeze({
 });
 
 export default class Application {
-  constructor({
-    test = false,
-    localtest = false, //ganache local blockchain
-    mainnet = true,
-    opt = {
-      web3Connection: ETH_URL_MAINNET,
-    },
-  }) {
-    this.test = test;
-    this.localtest = localtest;
-    this.opt = opt;
-    this.mainnet = mainnet;
-    if (this.test) {
-      this.start();
-      this.login();
-      if (!this.localtest) {
-        this.account = new Account(
-          this.web3,
-          this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY)
-        );
-        console.log("My address: " + this.account.getAddress());
-      }
-      ///this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(LOCAL_TEST_PRIVATE_KEY));
-    }
-  }
+	constructor({
+		test = false,
+		localtest = false, //ganache local blockchain
+		mainnet = true,
+		opt = {
+			web3Connection: ETH_URL_MAINNET,
+		},
+	}) {
+		this.test = test;
+		this.localtest = localtest;
+		this.opt = opt;
+		this.mainnet = mainnet;
+		if (this.test) {
+			this.start();
+			this.login();
+			if(!this.localtest) {
+				this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
+				console.log('My address: ' + this.account.getAddress())
+			}
+			///this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(LOCAL_TEST_PRIVATE_KEY));
+		}
+	}
 
-  /****** */
-  /*** CORE */
-  /****** */
+	/****** */
+	/*** CORE */
+	/****** */
 
-  /**
-   * @name start
-   * @description Start the Application
-   */
-  start = () => {
-    //this.web3 = new Web3(
-    //	new Web3.providers.HttpProvider(this.mainnet == true ? this.opt.web3Connection : ETH_URL_TESTNET)
-    //);
-    if (this.mainnet)
-      this.web3 = new Web3(
-        new Web3.providers.HttpProvider(this.opt.web3Connection)
-      );
-    else if (this.test && this.localtest)
-      this.web3 = new Web3(
-        new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST),
-        //NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
-        null,
-        { transactionConfirmationBlocks: 1 }
-      );
-    //if (this.test)
-    else this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL_TESTNET));
-    if (typeof window !== "undefined") {
-      window.web3 = this.web3;
-    } else {
-      if (!this.test) {
-        throw new Error(
-          "Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet"
-        );
-      }
-    }
-  };
+	/**
+	 * @name start
+	 * @description Start the Application
+	 */
+	start = () => {
+		//this.web3 = new Web3(
+		//	new Web3.providers.HttpProvider(this.mainnet == true ? this.opt.web3Connection : ETH_URL_TESTNET)
+		//);
+		if (this.mainnet)
+			this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
+		else if (this.test && this.localtest)
+			this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST)
+			//NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
+			, null, { transactionConfirmationBlocks: 1 }
+			);
+		else //if (this.test)
+			this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL_TESTNET));
+		if (typeof window !== 'undefined') {
+			window.web3 = this.web3;
+		} else {
+			if (!this.test) {
+				throw new Error('Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet');
+			}
+		}
+	};
 
-  /**
-   * @name login
-   * @description Login with Metamask or a web3 provider
-   */
-  login = async () => {
-    try {
-      if (typeof window === "undefined") {
-        return false;
-      }
-      if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
-        this.web3 = window.web3;
-        await window.ethereum.enable();
-        return true;
-      }
-      return false;
-    } catch (err) {
-      throw err;
-    }
-  };
+	/**
+	 * @name login
+	 * @description Login with Metamask or a web3 provider
+	 */
+	login = async () => {
+		try {
+			if (typeof window === 'undefined') {
+				return false;
+			}
+			if (window.ethereum) {
+				window.web3 = new Web3(window.ethereum);
+				this.web3 = window.web3;
+				await window.ethereum.enable();
+				return true;
+			}
+			return false;
+		} catch (err) {
+			throw err;
+		}
+	};
+	
+	
+	
+	/****** */
+	/** GETTERS */
+	/****** */
 
-  /****** */
-  /** GETTERS */
-  /****** */
+	/**
+	 * @name getExchangeContract
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a Exchange Contract
+	 */
+	getExchangeContract = ({ contractAddress = null } = {}) => {
+		try {
+			return new ExchangeContract({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				acc: (this.test && !this.localtest) ? this.account : null,
+			});
+		} catch (err) {
+			throw err;
+		}
+	};
 
-  /**
-   * @name getExchangeContract
-   * @param {Address} ContractAddress (Opt) If it is deployed
-   * @description Create a Exchange Contract
-   */
-  getExchangeContract = ({ contractAddress = null } = {}) => {
-    try {
-      return new ExchangeContract({
-        web3: this.web3,
-        contractAddress: contractAddress,
-        acc: this.test && !this.localtest ? this.account : null,
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
+	/****** */
+	/** GETTERS */
+	/****** */
 
-  /**
-   * @name getStakingContract
-   * @param {Address} ContractAddress (Opt) If it is deployed
-   * @description Create a Staking Contract
-   */
-  getStakingContract = ({
-    contractAddress = null,
-    tokenAddress = null,
-  } = {}) => {
-    try {
-      return new StakingContract({
-        web3: this.web3,
-        contractAddress: contractAddress,
-        tokenAddress,
-        acc: this.test && !this.localtest ? this.account : null,
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
+	/**
+	 * @name getOpenRealFvrContract
+	 * @param {Address} contractAddress (Opt) If it is deployed
+	 * @param {Address} tokenAddress (Opt) If it is deployed
+	 * @description Create a Exchange Contract
+	 */
+	 getOpenRealFvrContract = ({ contractAddress = null,  tokenAddress = null} = {}) => {
+		try {
+			return new OpenerRealFvr({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				tokenAddress,
+				acc: (this.test && !this.localtest) ? this.account : null,
+			});
+		} catch (err) {
+			throw err;
+		}
+	};
 
-  /**
-   * @name getERC20TokenLock
-   * @param {Address} ContractAddress (Opt) If it is deployed
-   * @description Create a ERC20TokenLock Contract
-   */
-  getERC20TokenLock = ({
-    contractAddress = null,
-    tokenAddress = null,
-  } = {}) => {
-    try {
-      return new ERC20TokenLock({
-        web3: this.web3,
-        contractAddress: contractAddress,
-        tokenAddress,
-        acc: this.test && !this.localtest ? this.account : null,
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
+	/**
+	 * @name getStakingContract
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a Staking Contract
+	 */
+	getStakingContract = ({ contractAddress = null, tokenAddress = null } = {}) => {
+		try {
+			return new StakingContract({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				tokenAddress,
+				acc: (this.test && !this.localtest) ? this.account : null,
+			});
+		} catch (err) {
+			throw err;
+		}
+	};
 
-  /**
-   * @name getERC721Collectibles
-   * @param {Address} ContractAddress (Opt) If it is deployed
-   * @param {Integer} CustomID
-   * @description Create a ERC721Collectibles Contract
-   */
-  getERC721Collectibles = ({ customID = 1, contractAddress = null } = {}) => {
-    try {
-      switch (customID) {
-        case 0: {
-          return new ERC721Collectibles({
-            web3: this.web3,
-            contractAddress: contractAddress,
-            acc: this.test && !this.localtest ? this.account : null,
-          });
-        }
-        case 1: {
-          return new ERC721Collectibles({
-            web3: this.web3,
-            contractAddress: contractAddress,
-            acc: this.test && !this.localtest ? this.account : null,
-          });
-        }
-      }
-    } catch (err) {
-      throw err;
-    }
-  };
+	/**
+	 * @name getERC20TokenLock
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a ERC20TokenLock Contract
+	 */
+	getERC20TokenLock = ({ contractAddress = null, tokenAddress = null } = {}) => {
+		try {
+			return new ERC20TokenLock({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				tokenAddress,
+				acc: (this.test && !this.localtest) ? this.account : null,
+			});
+		} catch (err) {
+			throw err;
+		}
+	};
 
-  /**
-   * @name getERC20Contract
-   * @param {Address} ContractAddress (Opt) If it is deployed
-   * @description Create a ERC20 Contract
-   */
-  getERC20Contract = ({ contractAddress = null }) => {
-    try {
-      return new ERC20Contract({
-        web3: this.web3,
-        contractAddress: contractAddress,
-        acc: this.test && !this.localtest ? this.account : null,
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
+	/**
+     * @name getERC721Collectibles
+     * @param {Address} ContractAddress (Opt) If it is deployed
+     * @description Create a ERC721Collectibles Contract
+     */
+	getERC721Collectibles = ({contractAddress=null}={}) => {
+		try{
+			return new ERC721Collectibles({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				acc : (this.test && !this.localtest) ? this.account : null
+			});	
+		}catch(err){
+			throw err;
+		}
+    };
 
-  /******* */
-  /** UTILS */
-  /******* */
+	/**
+	 * @name getERC20Contract
+	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @description Create a ERC20 Contract
+	 */
+	getERC20Contract = ({ contractAddress = null }) => {
+		try {
+			return new ERC20Contract({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				acc: (this.test && !this.localtest) ? this.account : null,
+			});
+		} catch (err) {
+			throw err;
+		}
+	};
 
-  /**
-   * @name getETHNetwork
-   * @description Access current ETH Network used
-   * @returns {String} Eth Network
-   */
-  getETHNetwork = async () => {
-    const netId = await this.web3.eth.net.getId();
-    const networkName = networksEnum.hasOwnProperty(netId)
-      ? networksEnum[netId]
-      : "Unknown";
-    return networkName;
-  };
+	/******* */
+	/** UTILS */
+	/******* */
 
-  /**
-   * @name getAddress
-   * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
-   * @returns {Address} Address
-   */
-  getAddress = async () => {
-    const accounts = await this.web3.eth.getAccounts();
-    return accounts[0];
-  };
+	/**
+	 * @name getETHNetwork
+	 * @description Access current ETH Network used
+	 * @returns {String} Eth Network
+	 */
+	getETHNetwork = async () => {
+		const netId = await this.web3.eth.net.getId();
+		const networkName = networksEnum.hasOwnProperty(netId) ? networksEnum[netId] : 'Unknown';
+		return networkName;
+	};
 
-  /**
-   * @name getETHBalance
-   * @description Access current ETH Balance Available for the Injected Web3 Address
-   * @returns {Integer} Balance
-   */
-  getETHBalance = async () => {
-    let wei = await this.web3.eth.getBalance(await this.getAddress());
-    return this.web3.utils.fromWei(wei, "ether");
-  };
+	/**
+	 * @name getAddress
+	 * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
+	 * @returns {Address} Address
+	 */
+	getAddress = async () => {
+		const accounts = await this.web3.eth.getAccounts();
+		return accounts[0];
+	};
+
+	/**
+	 * @name getETHBalance
+	 * @description Access current ETH Balance Available for the Injected Web3 Address
+	 * @returns {Integer} Balance
+	 */
+	getETHBalance = async () => {
+		let wei = await this.web3.eth.getBalance(await this.getAddress());
+		return this.web3.utils.fromWei(wei, 'ether');
+	};
 }

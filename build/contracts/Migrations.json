@@ -17,7 +17,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -30,7 +31,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -59,15 +61,15 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"last_completed_migration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"completed\",\"type\":\"uint256\"}],\"name\":\"setCompleted\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"new_address\",\"type\":\"address\"}],\"name\":\"upgrade\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/marcin.wotjala/Workspace/experiments/crypto/bepro-js/contracts/Migrations.sol\":\"Migrations\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/marcin.wotjala/Workspace/experiments/crypto/bepro-js/contracts/Migrations.sol\":{\"keccak256\":\"0xbbe88bc3edcaf7f302be52dbbd8be3f891d9a5357b7ce4c2093ae07ffeb68b5c\",\"urls\":[\"bzz-raw://9fb0ac1487e7969a2e50a91588ab7c5ae4e4ebd1c3eae76beee0a04b1e46add5\",\"dweb:/ipfs/QmYpg2QMhmDiyfmWTWFCdaJQv7Efsp3rNbpXpH13kHM4ec\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506102f1806100606000396000f3fe608060405234801561001057600080fd5b5060043610610069576000357c0100000000000000000000000000000000000000000000000000000000900480630900f0101461006e578063445df0ac146100b25780638da5cb5b146100d0578063fdacd5761461011a575b600080fd5b6100b06004803603602081101561008457600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610148565b005b6100ba610230565b6040518082815260200191505060405180910390f35b6100d8610236565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101466004803603602081101561013057600080fd5b810190808035906020019092919050505061025b565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561022d5760008190508073ffffffffffffffffffffffffffffffffffffffff1663fdacd5766001546040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561021357600080fd5b505af1158015610227573d6000803e3d6000fd5b50505050505b50565b60015481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614156102b857806001819055505b5056fea2646970667358221220c45ccb13a56ad1f07e216f354a336de10879a5f16307c843cedf48db2411125c64736f6c63430006020033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b5060043610610069576000357c0100000000000000000000000000000000000000000000000000000000900480630900f0101461006e578063445df0ac146100b25780638da5cb5b146100d0578063fdacd5761461011a575b600080fd5b6100b06004803603602081101561008457600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610148565b005b6100ba610230565b6040518082815260200191505060405180910390f35b6100d8610236565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101466004803603602081101561013057600080fd5b810190808035906020019092919050505061025b565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561022d5760008190508073ffffffffffffffffffffffffffffffffffffffff1663fdacd5766001546040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561021357600080fd5b505af1158015610227573d6000803e3d6000fd5b50505050505b50565b60015481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614156102b857806001819055505b5056fea2646970667358221220c45ccb13a56ad1f07e216f354a336de10879a5f16307c843cedf48db2411125c64736f6c63430006020033",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"last_completed_migration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"completed\",\"type\":\"uint256\"}],\"name\":\"setCompleted\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"new_address\",\"type\":\"address\"}],\"name\":\"upgrade\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/ruipedro/Desktop/projects/Bepro/@bepro-js/contracts/Migrations.sol\":\"Migrations\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/ruipedro/Desktop/projects/Bepro/@bepro-js/contracts/Migrations.sol\":{\"keccak256\":\"0xbbe88bc3edcaf7f302be52dbbd8be3f891d9a5357b7ce4c2093ae07ffeb68b5c\",\"urls\":[\"bzz-raw://9fb0ac1487e7969a2e50a91588ab7c5ae4e4ebd1c3eae76beee0a04b1e46add5\",\"dweb:/ipfs/QmYpg2QMhmDiyfmWTWFCdaJQv7Efsp3rNbpXpH13kHM4ec\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506102f1806100606000396000f3fe608060405234801561001057600080fd5b5060043610610069576000357c0100000000000000000000000000000000000000000000000000000000900480630900f0101461006e578063445df0ac146100b25780638da5cb5b146100d0578063fdacd5761461011a575b600080fd5b6100b06004803603602081101561008457600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610148565b005b6100ba610230565b6040518082815260200191505060405180910390f35b6100d8610236565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101466004803603602081101561013057600080fd5b810190808035906020019092919050505061025b565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561022d5760008190508073ffffffffffffffffffffffffffffffffffffffff1663fdacd5766001546040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561021357600080fd5b505af1158015610227573d6000803e3d6000fd5b50505050505b50565b60015481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614156102b857806001819055505b5056fea264697066735822122053f03061afe1c9c7ba798e32c49e7ef32cb331543ee90a1b9cb8b2bcc511216264736f6c63430006020033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b5060043610610069576000357c0100000000000000000000000000000000000000000000000000000000900480630900f0101461006e578063445df0ac146100b25780638da5cb5b146100d0578063fdacd5761461011a575b600080fd5b6100b06004803603602081101561008457600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610148565b005b6100ba610230565b6040518082815260200191505060405180910390f35b6100d8610236565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6101466004803603602081101561013057600080fd5b810190808035906020019092919050505061025b565b005b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561022d5760008190508073ffffffffffffffffffffffffffffffffffffffff1663fdacd5766001546040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050600060405180830381600087803b15801561021357600080fd5b505af1158015610227573d6000803e3d6000fd5b50505050505b50565b60015481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614156102b857806001819055505b5056fea264697066735822122053f03061afe1c9c7ba798e32c49e7ef32cb331543ee90a1b9cb8b2bcc511216264736f6c63430006020033",
   "sourceMap": "26:464:5:-:0;;;113:47;8:9:-1;5:2;;;30:1;27;20:12;5:2;113:47:5;146:10;138:5;;:18;;;;;;;;;;;;;;;;;;26:464;;;;;;",
   "deployedSourceMap": "26:464:5:-:0;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;26:464:5;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;328:160;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;328:160:5;;;;;;;;;;;;;;;;;;;:::i;:::-;;72:36;;;:::i;:::-;;;;;;;;;;;;;;;;;;;49:20;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;224:100;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;224:100:5;;;;;;;;;;;;;;;;;:::i;:::-;;328:160;208:5;;;;;;;;;;;194:19;;:10;:19;;;190:26;;;388:19:::1;421:11;388:45;;437:8;:21;;;459:24;;437:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27::::0;20:12:::1;5:2;437:47:5;;;;8:9:-1;5:2;;;45:16;42:1;39::::0;24:38:::1;77:16;74:1;67:27;5:2;437:47:5;;;;215:1;190:26:::0;328:160;:::o;72:36::-;;;;:::o;49:20::-;;;;;;;;;;;;;:::o;224:100::-;208:5;;;;;;;;;;;194:19;;:10;:19;;;190:26;;;311:9:::1;284:24;:36;;;;190:26:::0;224:100;:::o",
   "source": "pragma solidity >=0.6.0;\n\ncontract Migrations {\n\taddress public owner;\n\tuint public last_completed_migration;\n\t\n\tconstructor() public {\n\t\towner = msg.sender;\n\t}\n\t\n\tmodifier restricted() {\n\t\tif (msg.sender == owner) _;\n\t}\n\t\n\tfunction setCompleted(uint completed) public restricted {\n\t\tlast_completed_migration = completed;\n\t}\n\t\n\tfunction upgrade(address new_address) public restricted {\n\t\tMigrations upgraded = Migrations(new_address);\n\t\tupgraded.setCompleted(last_completed_migration);\n\t}\n}\n",
-  "sourcePath": "/Users/marcin.wotjala/Workspace/experiments/crypto/bepro-js/contracts/Migrations.sol",
+  "sourcePath": "/Users/ruipedro/Desktop/projects/Bepro/@bepro-js/contracts/Migrations.sol",
   "ast": {
-    "absolutePath": "/Users/marcin.wotjala/Workspace/experiments/crypto/bepro-js/contracts/Migrations.sol",
+    "absolutePath": "/Users/ruipedro/Desktop/projects/Bepro/@bepro-js/contracts/Migrations.sol",
     "exportedSymbols": {
       "Migrations": [
         3802
@@ -730,7 +732,7 @@
     "src": "0:491:5"
   },
   "legacyAST": {
-    "absolutePath": "/Users/marcin.wotjala/Workspace/experiments/crypto/bepro-js/contracts/Migrations.sol",
+    "absolutePath": "/Users/ruipedro/Desktop/projects/Bepro/@bepro-js/contracts/Migrations.sol",
     "exportedSymbols": {
       "Migrations": [
         3802
@@ -1397,15 +1399,16 @@
     "version": "0.6.2+commit.bacdbe57.Emscripten.clang"
   },
   "networks": {
-    "5777": {
+    "1620380679918": {
       "events": {},
       "links": {},
-      "address": "0xd0798318F8f9f7F3eAf690cDC31bbE7E89e03CD7",
-      "transactionHash": "0xb6ce868ea9ab05d1d5b84ed916685938b76b7826c4a97f31bd879ecc05757631"
+      "address": "0x17DF4B2eb2204A8b5e37AeE1687D44b5ADbdD25D",
+      "transactionHash": "0x3b24171980976389271e36d84e4134bd1a51903cbf8f430ba64b74caf726ce96"
     }
   },
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-05-06T10:29:52.543Z",
+  "updatedAt": "2021-05-07T09:45:01.660Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },
