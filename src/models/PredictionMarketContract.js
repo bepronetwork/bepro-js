@@ -180,12 +180,12 @@ class PredictionMarketContract extends IContract {
 	 */
 	async getMyPortfolio() {
 		const marketIds = await this.getMarkets();
+		const events = await this.getMyActions();
 
 		// TODO: improve this (avoid looping through all markets)
 		return await marketIds.reduce(async (obj, marketId) => {
 			const marketShares = await this.getContract().methods.myMarketShares(marketId).call();
 			const claimStatus = await this.getContract().methods.myClaimStatus(marketId).call();
-			const events = await this.getMyActions();
 
 			const portfolio = {
 				liquidity: {
@@ -267,6 +267,24 @@ class PredictionMarketContract extends IContract {
 			),
 			18
 		);
+	}
+
+	/**
+	 * @function getMarketPrices
+	 * @description Get Market Price
+	 * @param {Integer} marketId
+	 * @return {Object} prices
+	 */
+	async getMarketPrices({marketId}) {
+		const marketPrices = await this.getContract().methods.getMarketPrices(marketId).call();
+
+		return {
+			liquidity: Numbers.fromDecimalsNumber(marketPrices[0], 18),
+			outcomes: {
+				0: Numbers.fromDecimalsNumber(marketPrices[1], 18),
+				1: Numbers.fromDecimalsNumber(marketPrices[2], 18)
+			}
+		};
 	}
 
 	/* POST User Functions */
