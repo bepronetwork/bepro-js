@@ -7,11 +7,9 @@ var _ERC20Contract = require("../../ERC20/ERC20Contract");var _ERC20Contract2 = 
 /**
                                                                                                                                                                                                                       * OpenerRealFvr Object
                                                                                                                                                                                                                       * @class OpenerRealFvr
-                                                                                                                                                                                                                      * @param params.web3 {Web3}
-                                                                                                                                                                                                                      * @param params.contractAddress {Address}
-                                                                                                                                                                                                                      * @param params.acc {*}
-                                                                                                                                                                                                                      * @param params.tokenAddress {*}
-                                                                                                                                                                                                                      * @param params.abi {realFvr}
+                                                                                                                                                                                                                      * @param {Object} params Parameters
+                                                                                                                                                                                                                      * @param {Address} params.contractAddress Contract Address (If Deployed)
+                                                                                                                                                                                                                      * @param {Address} params.tokenAddress Token Purchase Address
                                                                                                                                                                                                                       */var
 OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _IContract);
   function OpenerRealFvr(params) {(0, _classCallCheck3.default)(this, OpenerRealFvr);var _this = (0, _possibleConstructorReturn3.default)(this, (OpenerRealFvr.__proto__ || (0, _getPrototypeOf2.default)(OpenerRealFvr)).call(this, (0, _extends3.default)({
@@ -38,17 +36,19 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
-    * @description Buy Pack 
-    * @param {Integer} packId Pack Id Integer
-    * @returns {TransactionObject} Success the Tx Object if operation was successful
+     * @function
+    * @description Buy Pack
+     * @param {Integer} packId Pack Id
+     * @returns {Transaction} Transaction
     */
 
 
 
 
   /**
+        * @function
         * @description Offer Pack 
-        * @param {Integer} packId Pack Id Integer
+        * @param {Integer} packId Pack Id
         * @param {Address} receivingAddress Pack Id Integer
         * @returns {TransactionObject} Success the Tx Object if operation was successful
        */
@@ -57,6 +57,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+           * @function
           * @description Create Pack 
           * @param {Integer} packNumber Pack Number
           * @param {Integer} nftAmount Amount of NFTs/Tokens
@@ -85,6 +86,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+              * @function
              * @description Edit Pack Info 
              * @param {Integer} packId Pack Number
              * @param {Date} saleStart Time of Start of the Sale
@@ -106,6 +108,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                 * @function
                  * @description Delete Pack 
                  * @param {Integer} packId Pack Id Integer
                  * @returns {TransactionObject} Success the Tx Object if operation was successful
@@ -115,6 +118,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                    * @function
                     * @description Mint Token Id (After buying a pack)
                     * @param {Integer} tokenId Token ID
                     * @returns {TransactionObject} Success the Tx Object if operation was successful
@@ -124,6 +128,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                       * @function
                        * @description Set Purchase Token 
                        * @param {Address} address Token Address
                        * @returns {TransactionObject} Success the Tx Object if operation was successful
@@ -133,6 +138,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                          * @function
                           * @description Lock the Contract
                           * @returns {TransactionObject} Success the Tx Object if operation was successful
                          */
@@ -141,6 +147,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                             * @function
                              * @description Unlock the Contract
                              * @returns {TransactionObject} Success the Tx Object if operation was successful
                             */
@@ -149,6 +156,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                                * @function
                                 * @description Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
                                 * @param {Address} address Token Address
                                 * @returns {TransactionObject} Success the Tx Object if operation was successful
@@ -158,6 +166,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                                   * @function
                                    * @description Set Base Id URI
                                    * @param {String} uri URI of the Token Id Metadata JSON
                                    * @returns {TransactionObject} Success the Tx Object if operation was successful
@@ -167,6 +176,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                                      * @function
                                       * @description Set Specific Token Id URI
                                       * @param {Integer} tokenId Token ID
                                       * @param {String} uri URI of the Token Id Metadata JSON
@@ -280,6 +290,7 @@ OpenerRealFvr = function (_IContract) {(0, _inherits3.default)(OpenerRealFvr, _I
 
 
   /**
+                                                               * @function
                                                               * @description User deploys the contract
                                                               * @param {String} name Name of the Contract
                                                               * @param {String} symbol Symbol of the Contract
