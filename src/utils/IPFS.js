@@ -1,14 +1,10 @@
-const IPFS = require('ipfs')
+const IPFS = require("ipfs");
 const node = new IPFS();
 
-class DexStorage{
+class DexStorage {
+  constructor() {}
 
-    constructor(){}
-
-    start = () => {
-
-    }
+  start = () => {};
 }
-
 
 export default DexStorage;
