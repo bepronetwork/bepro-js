@@ -21,7 +21,8 @@
         "build": "babel ./src --out-dir lib --copy-files -d ./build",
         "compile": "truffle compile",
         "clean:contracts": "rimraf build/contracts && truffle compile",
-        "jsdoc:build": "jsdoc -t ./docs-template/ src -r -c ./docs-template/jsdoc.json",
+        "jsdoc": "npm run jsdoc:build && npm run jsdoc:serve",
+        "jsdoc:build": "jsdoc -t ./docs-template/ src -r -c ./docs-template/jsdoc.json --verbose",
         "jsdoc:serve": "http-server ./docs/ -o"
     },
     "dependencies": {
@@ -43,6 +44,7 @@
         "execution-time": "^1.4.1",
         "express": "^4.17.1",
         "fs": "0.0.1-security",
+        "jsdoc-template": "^1.2.0",
         "left-pad": "^1.3.0",
         "lodash": "^4.17.10",
         "mocha": "^5.1.1",
