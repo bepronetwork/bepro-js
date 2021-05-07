@@ -1,8 +1,8 @@
-import { openerRealFvr } from "../../interfaces";
-import Numbers from "../../utils/Numbers";
+import { openerRealFvr } from "../../../interfaces";
+import Numbers from "../../../utils/Numbers";
 import _ from "lodash";
-import IContract from '../IContract';
-import ERC20Contract from '../ERC20/ERC20Contract';
+import IContract from '../../IContract';
+import ERC20Contract from '../../ERC20/ERC20Contract';
 
 /**
  * OpenerRealFvr Object
