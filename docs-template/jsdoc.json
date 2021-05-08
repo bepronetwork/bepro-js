@@ -1,29 +1,34 @@
 {
-    "tags": {
-        "allowUnknownTags": true,
-        "dictionaries": ["jsdoc"]
-    },
-    "source": {
-        "include": ["package.json", "README.md"],
-        "includePattern": ".js$",
-        "excludePattern": "(node_modules/|docs)"
-    },
     "plugins": [
-        "plugins/markdown"
+        "category"
     ],
-    "templates": {
-        "referenceTitle": "Bepro Network",
-        "disableSort": false,
-        "collapse": true,
-        "resources": {
-            "google": "https://www.bepro.network/"
-        }
-    },
     "opts": {
-        "destination": "./docs/",
         "encoding": "utf8",
-        "private": true,
+        "destination": "docs/",
         "recurse": true,
-        "template": "./node_modules/jsdoc-template"
+        "readme": "README.md"
+    },
+    "templates": {
+        "default": {
+            "useLongnameInNav": false,
+            "outputSourceFiles": true
+        },
+        "staticFiles": {
+            "include": [
+                "./static"
+            ]
+        },
+        "bepro": {
+            "name": "bepro-js documentation",
+            "logo": "images/logo.png",
+            "style": "style.css",
+            "analyticsTracking": "",
+            "navLinks": [
+                {
+                    "label": "Github",
+                    "href": "https://github.com/bepronetwork/bepro-js"
+                }
+            ]
+        }
     }
 }
