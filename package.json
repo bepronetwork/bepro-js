@@ -21,7 +21,7 @@
         "build": "babel ./src --out-dir lib --copy-files -d ./build",
         "compile": "truffle compile",
         "clean:contracts": "rimraf build/contracts && truffle compile",
-        "jsdoc": "npm run jsdoc:build && npm run jsdoc:serve",
+        "docs": "npm run build && npm run jsdoc:build && npm run jsdoc:serve",
         "jsdoc:build": "jsdoc -t ./docs-template/ src -r -c ./docs-template/jsdoc.json --verbose",
         "jsdoc:serve": "http-server ./docs/ -o"
     },
