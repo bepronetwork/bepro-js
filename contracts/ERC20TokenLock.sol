@@ -26,7 +26,6 @@ contract ERC20TokenLock is Pausable, Ownable {
         uint256 amount;
     }
 	
-	
 	// set maxAmountToLock event
 	event MaxAmountToLockChanged(address admin, uint256 oldValue, uint256 newValue);
 	
