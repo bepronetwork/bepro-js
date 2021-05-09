@@ -65,8 +65,6 @@
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-prettier": "3.1.0",
         "gitbook-cli": "^2.3.2",
-        "http-server": "^0.12.3",
-        "jsdoc": "^3.6.6",
         "jsdoc-babel": "^0.5.0",
         "jsdoc-md": "^8.0.0",
         "jsdoc-to-markdown": "^6.0.1",
