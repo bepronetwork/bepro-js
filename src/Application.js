@@ -20,14 +20,27 @@ const TEST_PRIVATE_KEY =
 //const LOCAL_TEST_PRIVATE_KEY = '4f4f26f4a82351b1f9a98623f901ad5fb2f3e38ac92ff39955ee8e124c718fa7';
 
 const networksEnum = Object.freeze({
-  1: "Main",
-  2: "Morden",
-  3: "Ropsten",
-  4: "Rinkeby",
-  42: "Kovan",
+	1: "Ethereum Main",
+	2: "Morden",
+	3: "Ropsten",
+	4: "Rinkeby",
+	56: "BSC Main",
+	97: "BSC Test",
+	42: "Kovan",
 });
 
-export default class Application {
+
+/**
+ * Application Object
+ * @class Application
+ * @param {Object} params Parameters
+ * @param {Bool} params.test Default : False
+ * @param {Bool} params.localtest Default : False
+ * @param {Bool} params.mainnet Default : True (If Ethereum Mainnet)
+ * @param {Object} params.opt Optional Chain Web3 Connection Object (Default ETH)
+ * @param {String} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
+ */
+class Application {
 	constructor({
 		test = false,
 		localtest = false, //ganache local blockchain
@@ -51,13 +64,9 @@ export default class Application {
 		}
 	}
 
-	/****** */
-	/*** CORE */
-	/****** */
-
 	/**
-	 * @name start
-	 * @description Start the Application
+	 * @function
+	 * @description Connect to Web3 injected in the constructor
 	 */
 	start = () => {
 		//this.web3 = new Web3(
@@ -82,8 +91,8 @@ export default class Application {
 	};
 
 	/**
-	 * @name login
-	 * @description Login with Metamask or a web3 provider
+	 * @function
+	 * @description Login with Metamask/Web3 Wallet - substitutes start()
 	 */
 	login = async () => {
 		try {
@@ -103,15 +112,12 @@ export default class Application {
 	};
 	
 	
-	
-	/****** */
-	/** GETTERS */
-	/****** */
-
 	/**
-	 * @name getExchangeContract
-	 * @param {Address} ContractAddress (Opt) If it is deployed
+	 * @function
 	 * @description Create a Exchange Contract
+	 * @param {Object} params
+	 * @param {Address} params.ContractAddress (Opt) If it is deployed
+	 * @return {ExchangeContract} ExchangeContract
 	 */
 	getExchangeContract = ({ contractAddress = null } = {}) => {
 		try {
@@ -125,15 +131,13 @@ export default class Application {
 		}
 	};
 
-	/****** */
-	/** GETTERS */
-	/****** */
-
 	/**
-	 * @name getOpenRealFvrContract
-	 * @param {Address} contractAddress (Opt) If it is deployed
-	 * @param {Address} tokenAddress (Opt) If it is deployed
-	 * @description Create a Exchange Contract
+	 * @function
+	 * @description Create a OpenerRealFvr Object
+	 * @param {Object} params
+	 * @param {Address} params.contractAddress (Opt) If it is deployed
+	 * @param {Address} params.tokenAddress (Opt) If it is deployed
+	 * @return {OpenerRealFvr} OpenerRealFvr
 	 */
 	 getOpenRealFvrContract = ({ contractAddress = null,  tokenAddress = null} = {}) => {
 		try {
@@ -149,9 +153,12 @@ export default class Application {
 	};
 
 	/**
-	 * @name getStakingContract
-	 * @param {Address} ContractAddress (Opt) If it is deployed
-	 * @description Create a Staking Contract
+	 * @function
+	 * @description Create a StakingContract Object
+	 * @param {Object} params
+	 * @param {Address} params.contractAddress (Opt) If it is deployed
+	 * @param {Address} params.tokenAddress (Opt) If it is deployed
+	 * @return {StakingContract} StakingContract
 	 */
 	getStakingContract = ({ contractAddress = null, tokenAddress = null } = {}) => {
 		try {
@@ -167,9 +174,12 @@ export default class Application {
 	};
 
 	/**
-	 * @name getERC20TokenLock
-	 * @param {Address} ContractAddress (Opt) If it is deployed
-	 * @description Create a ERC20TokenLock Contract
+	 * @function
+	 * @description Create a ERC20TokenLock Object
+	 * @param {Object} params
+	 * @param {Address} params.contractAddress (Opt) If it is deployed
+	 * @param {Address} params.tokenAddress (Opt) If it is deployed
+	 * @return {ERC20TokenLock} ERC20TokenLock
 	 */
 	getERC20TokenLock = ({ contractAddress = null, tokenAddress = null } = {}) => {
 		try {
@@ -185,10 +195,12 @@ export default class Application {
 	};
 
 	/**
-     * @name getERC721Collectibles
-     * @param {Address} ContractAddress (Opt) If it is deployed
-     * @description Create a ERC721Collectibles Contract
-     */
+	 * @function
+	 * @description Create a ERC721Collectibles Object
+	 * @param {Object} params
+	 * @param {Address} params.contractAddress (Opt) If it is deployed
+	 * @return {ERC721Collectibles} ERC721Collectibles
+	 */
 	getERC721Collectibles = ({contractAddress=null}={}) => {
 		try{
 			return new ERC721Collectibles({
@@ -202,9 +214,11 @@ export default class Application {
     };
 
 	/**
-	 * @name getERC20Contract
-	 * @param {Address} ContractAddress (Opt) If it is deployed
-	 * @description Create a ERC20 Contract
+	 * @function
+	 * @description Create a ERC20Contract Object
+	 * @param {Object} params
+	 * @param {Address} params.contractAddress (Opt) If it is deployed
+	 * @return {ERC20Contract} ERC20Contract
 	 */
 	getERC20Contract = ({ contractAddress = null }) => {
 		try {
@@ -223,9 +237,9 @@ export default class Application {
 	/******* */
 
 	/**
-	 * @name getETHNetwork
-	 * @description Access current ETH Network used
-	 * @returns {String} Eth Network
+	 * @function
+	 * @description Get ETH Network
+	 * @return {String} Network Name (Ex : Kovan)
 	 */
 	getETHNetwork = async () => {
 		const netId = await this.web3.eth.net.getId();
@@ -234,22 +248,25 @@ export default class Application {
 	};
 
 	/**
-	 * @name getAddress
-	 * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
-	 * @returns {Address} Address
+	 * @function
+	 * @description Get Address connected via login()
+	 * @return {Address} Address in Use
 	 */
 	getAddress = async () => {
 		const accounts = await this.web3.eth.getAccounts();
 		return accounts[0];
 	};
 
+	
 	/**
-	 * @name getETHBalance
-	 * @description Access current ETH Balance Available for the Injected Web3 Address
-	 * @returns {Integer} Balance
+	 * @function
+	 * @description Get ETH Balance of Address connected via login()
+	 * @return {Integer} ETH Balance
 	 */
 	getETHBalance = async () => {
 		let wei = await this.web3.eth.getBalance(await this.getAddress());
 		return this.web3.utils.fromWei(wei, 'ether');
 	};
 }
+
+export default Application;

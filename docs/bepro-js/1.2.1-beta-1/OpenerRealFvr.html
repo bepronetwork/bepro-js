@@ -265,7 +265,7 @@
     
 
     
-    <h4 class="name" id="buyPack"><span class="attributes"></span>buyPack<span class="signature">(packId)</span><span class="type-signature"> &rarr; {Transaction}</span></h4>
+    <h4 class="name" id="buyPack"><span class="attributes"></span>buyPack<span class="signature">(params)</span><span class="type-signature"> &rarr; {Transaction}</span></h4>
     
 
     
@@ -309,6 +309,48 @@
 
         <tr>
             
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
                 <td class="name"><code>packId</code></td>
             
 
@@ -326,6 +368,13 @@
             
 
             <td class="description last"><p>Pack Id</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -407,6 +456,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -419,7 +474,7 @@
     
 
     
-    <h4 class="name" id="createPack"><span class="attributes"></span>createPack<span class="signature">(packNumber,nftAmount,price,serie,packType,drop,saleStart,saleDistributionAddresses,saleDistributionAmounts)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    <h4 class="name" id="createPack"><span class="attributes"></span>createPack<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
     
 
     
@@ -440,6 +495,48 @@
 
     <h5>Parameters:</h5>
     
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -670,154 +767,7 @@
     </tbody>
 </table>
 
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Success the Tx Object if operation was successful</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">TransactionObject</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="deletePackById"><span class="attributes"></span>deletePackById<span class="signature">(packId)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Delete Pack</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>packId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Integer</span>
-
-
-            
             </td>
-
-            
-
-            
-
-            <td class="description last"><p>Pack Id Integer</p></td>
         </tr>
 
     
@@ -899,6 +849,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -911,7 +867,216 @@
     
 
     
-    <h4 class="name" id="deploy"><span class="attributes"></span>deploy<span class="signature">(name,symbol,tokenAddress)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    <h4 class="name" id="deletePackById"><span class="attributes"></span>deletePackById<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Delete Pack</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>packId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Pack Id Integer</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Success the Tx Object if operation was successful</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">TransactionObject</span>
+
+
+    </dd>
+</dl>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="deploy"><span class="attributes"></span>deploy<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
     
 
     
@@ -932,6 +1097,48 @@
 
     <h5>Parameters:</h5>
     
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -1024,6 +1231,13 @@
     </tbody>
 </table>
 
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -1099,6 +1313,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -1111,7 +1331,7 @@
     
 
     
-    <h4 class="name" id="editPackInfo"><span class="attributes"></span>editPackInfo<span class="signature">(packId,saleStart,serie,packType,drop,price)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    <h4 class="name" id="editPackInfo"><span class="attributes"></span>editPackInfo<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
     
 
     
@@ -1132,6 +1352,48 @@
 
     <h5>Parameters:</h5>
     
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -1293,6 +1555,13 @@
     </tbody>
 </table>
 
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -1368,6 +1637,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -1380,7 +1655,7 @@
     
 
     
-    <h4 class="name" id="exists"><span class="attributes"></span>exists<span class="signature">(tokenId)</span><span class="type-signature"> &rarr; {Bool}</span></h4>
+    <h4 class="name" id="exists"><span class="attributes"></span>exists<span class="signature">(params)</span><span class="type-signature"> &rarr; {Bool}</span></h4>
     
 
     
@@ -1424,6 +1699,48 @@
 
         <tr>
             
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
                 <td class="name"><code>tokenId</code></td>
             
 
@@ -1441,6 +1758,13 @@
             
 
             <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -1521,6 +1845,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 
     
 
@@ -1627,6 +1957,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -1731,6 +2067,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 
     
 
@@ -1837,6 +2179,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -1849,7 +2197,7 @@
     
 
     
-    <h4 class="name" id="getPackbyId"><span class="attributes"></span>getPackbyId<span class="signature">(packId)</span><span class="type-signature"> &rarr; {Integer|Integer|Integer|String|String|String|Address|Array,Address|Array,Integer}</span></h4>
+    <h4 class="name" id="getPackbyId"><span class="attributes"></span>getPackbyId<span class="signature">(params)</span><span class="type-signature"> &rarr; {Integer|Integer|Integer|String|String|String|Address|Array,Address|Array,Integer}</span></h4>
     
 
     
@@ -1893,6 +2241,48 @@
 
         <tr>
             
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
                 <td class="name"><code>packId</code></td>
             
 
@@ -1910,6 +2300,13 @@
             
 
             <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -1990,6 +2387,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     
         <li>
@@ -2010,6 +2413,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     
         <li>
@@ -2030,6 +2439,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     
         <li>
@@ -2050,6 +2465,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     
         <li>
@@ -2070,6 +2491,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     
         <li>
@@ -2090,6 +2517,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     
         <li>
@@ -2110,6 +2543,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     
         <li>
@@ -2133,6 +2572,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     
         <li>
@@ -2156,6 +2601,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 </li>
     </ul>
 
@@ -2169,7 +2620,7 @@
     
 
     
-    <h4 class="name" id="getPackPriceInFVR"><span class="attributes"></span>getPackPriceInFVR<span class="signature">(packId)</span><span class="type-signature"> &rarr; {Integer}</span></h4>
+    <h4 class="name" id="getPackPriceInFVR"><span class="attributes"></span>getPackPriceInFVR<span class="signature">(params)</span><span class="type-signature"> &rarr; {Integer}</span></h4>
     
 
     
@@ -2213,6 +2664,48 @@
 
         <tr>
             
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
                 <td class="name"><code>packId</code></td>
             
 
@@ -2230,6 +2723,13 @@
             
 
             <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -2310,6 +2810,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 
     
 
@@ -2419,6 +2925,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -2524,6 +3036,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -2536,7 +3054,7 @@
     
 
     
-    <h4 class="name" id="mint"><span class="attributes"></span>mint<span class="signature">(tokenId)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    <h4 class="name" id="mint"><span class="attributes"></span>mint<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
     
 
     
@@ -2580,6 +3098,48 @@
 
         <tr>
             
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
                 <td class="name"><code>tokenId</code></td>
             
 
@@ -2597,6 +3157,13 @@
             
 
             <td class="description last"><p>Token ID</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -2678,6 +3245,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -2690,7 +3263,7 @@
     
 
     
-    <h4 class="name" id="offerPack"><span class="attributes"></span>offerPack<span class="signature">(packId,receivingAddress)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    <h4 class="name" id="offerPack"><span class="attributes"></span>offerPack<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
     
 
     
@@ -2711,6 +3284,48 @@
 
     <h5>Parameters:</h5>
     
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -2780,6 +3395,13 @@
     </tbody>
 </table>
 
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -2855,6 +3477,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -2867,7 +3495,7 @@
     
 
     
-    <h4 class="name" id="setBaseURI"><span class="attributes"></span>setBaseURI<span class="signature">(uri)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    <h4 class="name" id="setBaseURI"><span class="attributes"></span>setBaseURI<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
     
 
     
@@ -2888,6 +3516,48 @@
 
     <h5>Parameters:</h5>
     
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -2934,6 +3604,13 @@
     </tbody>
 </table>
 
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -3009,6 +3686,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -3021,7 +3704,7 @@
     
 
     
-    <h4 class="name" id="setPurchaseTokenAddress"><span class="attributes"></span>setPurchaseTokenAddress<span class="signature">(address)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    <h4 class="name" id="setPurchaseTokenAddress"><span class="attributes"></span>setPurchaseTokenAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
     
 
     
@@ -3065,13 +3748,13 @@
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>params</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Address</span>
+<span class="param-type">Object</span>
 
 
             
@@ -3081,121 +3764,9 @@
 
             
 
-            <td class="description last"><p>Token Address</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Success the Tx Object if operation was successful</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">TransactionObject</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="setTokenPriceInUSD"><span class="attributes"></span>setTokenPriceInUSD<span class="signature">(address)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Set Token Price of Real Fvr in USD --&gt; 1*10**18 as input means 1 Real Fvr = $0.000001</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -3242,6 +3813,13 @@
     </tbody>
 </table>
 
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -3317,6 +3895,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -3329,7 +3913,216 @@
     
 
     
-    <h4 class="name" id="setTokenURI"><span class="attributes"></span>setTokenURI<span class="signature">(tokenId,uri)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    <h4 class="name" id="setTokenPriceInUSD"><span class="attributes"></span>setTokenPriceInUSD<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set Token Price of Real Fvr in USD --&gt; 1*10**18 as input means 1 Real Fvr = $0.000001</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>address</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Address</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Token Address</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Success the Tx Object if operation was successful</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">TransactionObject</span>
+
+
+    </dd>
+</dl>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setTokenURI"><span class="attributes"></span>setTokenURI<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span></h4>
     
 
     
@@ -3350,6 +4143,48 @@
 
     <h5>Parameters:</h5>
     
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameters</p>
+                <h6>Properties</h6>
+                
 
 <table class="params">
     <thead>
@@ -3419,6 +4254,13 @@
     </tbody>
 </table>
 
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
 
 
 
@@ -3493,6 +4335,12 @@
 
     </dd>
 </dl>
+
+
+
+
+
+
 
     
 
@@ -3599,6 +4447,12 @@
     </dd>
 </dl>
 
+
+
+
+
+
+
     
 
 
@@ -3621,14 +4475,14 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Documentation</a></h2><div class="category"><h2>Main</h2><h3>Classes </h3><ul><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getAddress">getAddress</a></li><li><a href="global.html#getERC20Contract">getERC20Contract</a></li><li><a href="global.html#getERC20TokenLock">getERC20TokenLock</a></li><li><a href="global.html#getERC721Collectibles">getERC721Collectibles</a></li><li><a href="global.html#getETHBalance">getETHBalance</a></li><li><a href="global.html#getETHNetwork">getETHNetwork</a></li><li><a href="global.html#getExchangeContract">getExchangeContract</a></li><li><a href="global.html#getOpenRealFvrContract">getOpenRealFvrContract</a></li><li><a href="global.html#getStakingContract">getStakingContract</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#start">start</a></li></ul></div>
+    <h2><a href="index.html">Documentation</a></h2><div class="category"><h2>Main</h2><h3>Classes </h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul><h3><a href="global.html">Global</a></h3></div>
     
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 07 2021 18:11:04 GMT+0100 (WEST)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun May 09 2021 14:05:08 GMT+0100 (WEST)
 </footer>
 
 <script> prettyPrint(); </script>

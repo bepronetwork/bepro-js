@@ -38,7 +38,8 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
 	 * @description Buy Pack
-   * @param {Integer} packId Pack Id
+   * @param {Object} params Parameters
+   * @param {Integer} params.packId Pack Id
    * @returns {Transaction} Transaction
 	 */
    buyPack = async ({packId}) => {
@@ -48,8 +49,9 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Offer Pack 
-   * @param {Integer} packId Pack Id
-   * @param {Address} receivingAddress Pack Id Integer
+   * @param {Object} params Parameters
+   * @param {Integer} params.packId Pack Id
+   * @param {Address} params.receivingAddress Pack Id Integer
    * @returns {TransactionObject} Success the Tx Object if operation was successful
   */
   offerPack = async ({packId, receivingAddress}) => {
@@ -59,15 +61,16 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
 	 * @description Create Pack 
-	 * @param {Integer} packNumber Pack Number
-	 * @param {Integer} nftAmount Amount of NFTs/Tokens
-	 * @param {Integer} price Price of Pack
-	 * @param {String} serie Serie of Pack
-	 * @param {String} packType Pack Type
-	 * @param {String} drop Pack Drop
-	 * @param {Date} saleStart Start Date
-	 * @param {Address} saleDistributionAddresses Revenue Addresses of the First Purchase
-	 * @param {Integer} saleDistributionAmounts Revenue Amounts of the First Purchase
+   * @param {Object} params Parameters
+	 * @param {Integer} params.packNumber Pack Number
+	 * @param {Integer} params.nftAmount Amount of NFTs/Tokens
+	 * @param {Integer} params.price Price of Pack
+	 * @param {String} params.serie Serie of Pack
+	 * @param {String} params.packType Pack Type
+	 * @param {String} params.drop Pack Drop
+	 * @param {Date} params.saleStart Start Date
+	 * @param {Address} params.saleDistributionAddresses Revenue Addresses of the First Purchase
+	 * @param {Integer} params.saleDistributionAmounts Revenue Amounts of the First Purchase
 	 * @returns {TransactionObject} Success the Tx Object if operation was successful
 	 */
    createPack = async ({packNumber, nftAmount, price, serie, packType, drop, 
@@ -88,12 +91,13 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
 	 * @description Edit Pack Info 
-	 * @param {Integer} packId Pack Number
-	 * @param {Date} saleStart Time of Start of the Sale
-	 * @param {String} serie Serie of Pack
-	 * @param {String} packType Pack Type
-	 * @param {String} drop Pack Drop
-	 * @param {Integer} price Pack Price
+   * @param {Object} params Parameters
+	 * @param {Integer} params.packId Pack Number
+	 * @param {Date} params.saleStart Time of Start of the Sale
+	 * @param {String} params.serie Serie of Pack
+	 * @param {String} params.packType Pack Type
+	 * @param {String} params.drop Pack Drop
+	 * @param {Integer} params.price Pack Price
 	 * @returns {TransactionObject} Success the Tx Object if operation was successful
 	 */
   editPackInfo = async ({packId, saleStart, price, serie, packType, drop}) => {
@@ -109,8 +113,9 @@ class OpenerRealFvr extends IContract {
 
   /**
    * @function
-   * @description Delete Pack 
-   * @param {Integer} packId Pack Id Integer
+   * @description Delete Pack
+   * @param {Object} params Parameters 
+   * @param {Integer} params.packId Pack Id Integer
    * @returns {TransactionObject} Success the Tx Object if operation was successful
   */
    deletePackById = async ({packId}) => {
@@ -120,7 +125,8 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Mint Token Id (After buying a pack)
-   * @param {Integer} tokenId Token ID
+   * @param {Object} params Parameters
+   * @param {Integer} params.tokenId Token ID
    * @returns {TransactionObject} Success the Tx Object if operation was successful
   */
   mint = async ({tokenId}) => {
@@ -130,7 +136,8 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Set Purchase Token 
-   * @param {Address} address Token Address
+   * @param {Object} params Parameters
+   * @param {Address} params.address Token Address
    * @returns {TransactionObject} Success the Tx Object if operation was successful
   */
    setPurchaseTokenAddress = async ({address}) => {
@@ -158,7 +165,8 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
-   * @param {Address} address Token Address
+   * @param {Object} params Parameters
+   * @param {Address} params.address Token Address
    * @returns {TransactionObject} Success the Tx Object if operation was successful
   */
    setTokenPriceInUSD = async ({address}) => {
@@ -168,7 +176,8 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Set Base Id URI
-   * @param {String} uri URI of the Token Id Metadata JSON
+   * @param {Object} params Parameters
+   * @param {String} params.uri URI of the Token Id Metadata JSON
    * @returns {TransactionObject} Success the Tx Object if operation was successful
   */
    setBaseURI = async ({uri}) => {
@@ -178,8 +187,9 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Set Specific Token Id URI
-   * @param {Integer} tokenId Token ID
-   * @param {String} uri URI of the Token Id Metadata JSON
+   * @param {Object} params Parameters
+   * @param {Integer} params.tokenId Token ID
+   * @param {String} params.uri URI of the Token Id Metadata JSON
    * @returns {TransactionObject} Success the Tx Object if operation was successful
   */
    setTokenURI = async ({tokenId, uri}) => {
@@ -189,7 +199,8 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Get Pack If Information
-   * @param {Integer} packId
+   * @param {Object} params Parameters
+   * @param {Integer} params.packId
    * @returns {Integer} packId
    * @returns {Integer} packNumber
    * @returns {Integer} price
@@ -235,7 +246,8 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Verify if a Token was already minted
-   * @param {Integer} tokenId 
+   * @param {Object} params Parameters
+   * @param {Integer} params.tokenId 
    * @returns {Bool} wasMinted
   */
    exists = async ({tokenId}) => {
@@ -247,7 +259,8 @@ class OpenerRealFvr extends IContract {
    /**
    * @function
    * @description Get Cost in Fvr Tokens of the Pack
-   * @param {Integer} packId 
+   * @param {Object} params Parameters
+   * @param {Integer} params.packId 
    * @returns {Integer} Price in Real Fvr Tokens
   */
   getPackPriceInFVR = async ({packId}) => {
@@ -292,9 +305,10 @@ class OpenerRealFvr extends IContract {
 	/**
    * @function
 	 * @description User deploys the contract
-	 * @param {String} name Name of the Contract
-	 * @param {String} symbol Symbol of the Contract
-	 * @param {Address} tokenAddress token Address of the purchase Token in use
+   * @param {Object} params Parameters
+	 * @param {String} params.name Name of the Contract
+	 * @param {String} params.symbol Symbol of the Contract
+	 * @param {Address} params.tokenAddress token Address of the purchase Token in use
 	 * @returns {Boolean} Success the Tx Object if operation was successful
 	 */
   deploy = async ({name, symbol, tokenAddress, callback}) => {
