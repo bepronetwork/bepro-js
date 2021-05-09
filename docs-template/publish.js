@@ -411,7 +411,7 @@ exports.publish = (taffyData, opts, tutorials) => {
 
   packageInfo = (find({kind: `package`}) || [])[0];
   if ((packageInfo || {}).name)
-    outdir = path.join(outdir, packageInfo.name, /* packageInfo.version || */``);
+    outdir = path.join(outdir, /*packageInfo.name, *//* packageInfo.version || */``);
 
   fs.mkPath(outdir);
 

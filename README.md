@@ -2,6 +2,8 @@
 
 bepro-js is package to integrate BEPRO On-Chain products
 
+
+
 ## Installation
 
 bepro-js is available as [npm package](https://www.npmjs.com/package/bepro-js).
@@ -54,6 +56,8 @@ $ nvm use default
 Now, your work directory is able to install and run bepro-js.
 
 ## Usage
+
+https://bepronetwork.github.io/bepro-js/
 
 ```javascript
 
