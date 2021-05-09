@@ -195,6 +195,7 @@ class ERC20TokenLock extends IContract {
   };
 
   /**
+   * @function
    * @description User locks his tokens until specified end date.
    * @param {Object} params
    * @param {Address} params.address User Address 
