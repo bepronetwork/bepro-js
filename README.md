@@ -56,21 +56,30 @@ Now, your work directory is able to install and run bepro-js.
 ## Usage
 
 ```javascript
+
+/* Note :  WEB3_LINK should be get from Infura/Quicknode or any other Web3 Provider - ETH, BSC, Moonbeam and others are supported */
+
 import moment from 'moment';
 import Application from 'bepro-js';
 
-/* Test Version */
-let app = new Application({test : true});
+/* 1 - Instantiate the App with the Infura/Web3 Connection */
+let app = new Application({opt : {web3Connection : 'WEB3_LINK'}});
 
-/* Generate a Staking Platform */
+/* 2 - Connect the App to the Metamask Web3 Injected wallet*/
+await app.login();
+/* or instantiate with the provided web3Connection */
+await app.start()
+
+/* 3 - Generate a Object (Staking, ERC20 etc..) */
 let staking = app.getStakingContract({contractAddress : /* Contract Address (optional) */});
 
-/* Assert all data */
+/* 4 - Assert all object data */
 await staking.__assert();
-/* or */
-
-/* Deploy The Contract */
+/* or deploy the contract*/
 await staking.deploy();
+
+/* 5 - Access other Methods */
+await staking.availableTokens();
 
 ```
 ## License
@@ -80,8 +89,3 @@ await staking.deploy();
 ## Notes
 
 The usage of ETH in all methods or params means using the native currency of that blockchain, example BSC in Binance Chain would still be nominated as ETH
-```javascript 
-
-isETHTrade() is also used to verify if the sale is done in BSC for Binance Chain
-
-```

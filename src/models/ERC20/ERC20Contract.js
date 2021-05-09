@@ -33,11 +33,12 @@ class ERC20Contract extends IContract {
   /**
    * @function
 	 * @description Transfer Tokens
-   * @param {Address} toAddress To Address
-   * @param {Integer} tokenAmount Amount of Tokens
+   * @param {Object} params Parameters
+   * @param {Address} params.toAddress To Address
+   * @param {Integer} params.tokenAmount Amount of Tokens
    * @returns {Transaction} Transaction
 	 */
-  async transferTokenAmount({ toAddress, tokenAmount }) {
+  transferTokenAmount = async ({ toAddress, tokenAmount }) => {
     let amountWithDecimals = Numbers.toSmartContractDecimals(
       tokenAmount,
       this.getDecimals()
@@ -55,7 +56,7 @@ class ERC20Contract extends IContract {
    * @param {Address} address User Address
    * @returns {Transaction} Transaction
 	 */
-  async getTokenAmount(address) {
+  getTokenAmount = async (address) => {
     return Numbers.fromDecimals(
       await this.getContract().methods.balanceOf(address).call(),
       this.getDecimals()
@@ -67,7 +68,7 @@ class ERC20Contract extends IContract {
 	 * @description Get Total Supply of Token
    * @returns {Integer} Total supply
 	 */
-  async totalSupply() {
+  totalSupply = async () =>  {
     return Numbers.fromDecimals(
       await this.getContract().methods.totalSupply().call(),
       this.getDecimals()
@@ -88,19 +89,20 @@ class ERC20Contract extends IContract {
     return this.params.decimals;
   }
 
-  async getDecimalsAsync() {
+  getDecimalsAsync = async () =>  {
     return await this.getContract().methods.decimals().call();
   }
 
   /**
    * @function
 	 * @description Verify if Spender is Approved to use tokens
-   * @param {Address} address Sender Address
-   * @param {Integer} amount Amount of Tokens
-   * @param {Address} spenderAddress Spender Address
+   * @param {Object} params Parameters
+   * @param {Address} params.address Sender Address
+   * @param {Integer} params.amount Amount of Tokens
+   * @param {Address} params.spenderAddress Spender Address
    * @returns {Bool} isApproved
 	 */
-  async isApproved({ address, amount, spenderAddress }) {
+  isApproved = async ({ address, amount, spenderAddress }) =>  {
     try {
       let approvedAmount = Numbers.fromDecimals(
         await this.getContract()
@@ -117,11 +119,12 @@ class ERC20Contract extends IContract {
   /**
    * @function
 	 * @description Approve tokens to be used by another address/contract
-   * @param {Address} address Spender Address/Contract
-   * @param {Integer} amount Amount of Tokens
+   * @param {Object} params Parameters
+   * @param {Address} params.address Spender Address/Contract
+   * @param {Integer} params.amount Amount of Tokens
    * @returns {Transaction} Transaction
 	 */
-  async approve({ address, amount, callback }) {
+  approve = async ({ address, amount, callback }) => {
     try {
       let amountWithDecimals = Numbers.toSmartContractDecimals(
         amount,
@@ -144,10 +147,11 @@ class ERC20Contract extends IContract {
   /**
    * @function
 	 * @description Deploy ERC20 Token
-   * @param {String} name Name of token
-   * @param {String} symbol Symbol of token
-   * @param {Integer} cap Max supply of Token (ex : 100M)
-   * @param {Address} distributionAddress Where tokens should be sent to initially
+   * @param {Object} params Parameters
+   * @param {String} params.name Name of token
+   * @param {String} params.symbol Symbol of token
+   * @param {Integer} params.cap Max supply of Token (ex : 100M)
+   * @param {Address} params.distributionAddress Where tokens should be sent to initially
    * @returns {Transaction} Transaction
 	 */
   deploy = async ({ name, symbol, cap, distributionAddress, callback }) => {
