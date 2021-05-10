@@ -1707,7 +1707,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-05-07T09:44:57.266Z",
+  "updatedAt": "2021-05-09T18:56:14.418Z",
   "devdoc": {
     "details": "Mintable token with a token cap.",
     "methods": {

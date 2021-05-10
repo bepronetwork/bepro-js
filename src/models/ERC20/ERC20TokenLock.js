@@ -47,7 +47,9 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Get Token Amount of ERC20 Address
-	 * @returns {Address}
+	 * @param {Object} params
+	 * @param {Address} params.address
+	 * @returns {Integer} Token Amount
 	 */
 	getTokenAmount = async ({ address }) => {
 		return await this.getERC20Contract().getTokenAmount(address);
@@ -56,7 +58,7 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Get All Tokens staked/locked at that specific moment
-	 * @returns {Integer}
+	 * @returns {Integer} Token Amount
 	 */
 	async totalAmountStaked() {
 		let res = await this.params.contract.getContract().methods.totalAmountStaked().call();
@@ -66,7 +68,7 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Get minimum amount of tokens to lock per user
-	 * @returns {Integer}
+	 * @returns {Integer} Minimum Amount
 	 */
 	async minAmountToLock() {
 		let res = await this.params.contract.getContract().methods.minAmountToLock().call();
@@ -76,7 +78,7 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Get maximum amount of tokens to lock per user
-	 * @returns {Integer}
+	 * @returns {Integer} Maximum Amount
 	 */
 	async maxAmountToLock() {
 		let res = await this.params.contract.getContract().methods.maxAmountToLock().call();
@@ -86,7 +88,9 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Check if locked tokens release date has come and user can withdraw them
-	 * @returns {Boolean}
+	 * @param {Object} params
+	 * @param {Address} params.address
+	 * @returns {Boolean} canRelease
 	 */
 	canRelease = async ({ address }) => {
 		return await this.params.contract.getContract().methods.canRelease(address).call();
@@ -95,6 +99,8 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Get locked tokens amount for a given address
+	 * @param {Object} params
+	 * @param {Address} params.address
 	 * @returns {Integer} amount Locked token amount
 	 */
 	getLockedTokens = async ({ address }) => {
@@ -105,6 +111,8 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Get locked tokens info for a given address
+	 * @param {Object} params
+	 * @param {Address} params.address
 	 * @returns {Date} startDate
 	 * @returns {Date} endDate
 	 * @returns {Integer} amount Token amount
@@ -122,7 +130,8 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Admin sets maximum amount of tokens to lock per user
-	 * @param {Integer} tokenAmount Maximum tokens amount
+	 * @param {Object} params
+	 * @param {Address} params.tokenAmount Amount of Tokens
 	 * @returns {Boolean} Success True if operation was successful
 	 */
 	setMaxAmountToLock = async ({ tokenAmount }) => {
@@ -137,7 +146,8 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description Admin sets minimum amount of tokens to lock per user
-	 * @param {Integer} tokenAmount Minimum tokens amount
+	 * @param {Object} params
+	 * @param {Integer} params.tokenAmount Minimum tokens amount
 	 * @returns {Boolean} Success True if operation was successful
 	 */
 	setMinAmountToLock = async ({ tokenAmount }) => {
@@ -151,8 +161,10 @@ class ERC20TokenLock extends IContract {
 
 	/**
 	 * @description User locks his tokens until specified end date.
-	 * @param {Integer} amount Tokens amount to be locked
-	 * @param {Date} endDate Lock tokens until this end date
+	 * @param {Object} params
+	 * @param {Address} params.address User Address 
+	 * @param {Integer} params.amount Tokens amount to be locked
+	 * @param {Date} params.endDate Lock tokens until this end date
 	 * @returns {Boolean} Success True if operation was successful
 	 * REQUIREMENTS:
 	 *	user must have approved this contract to spend the tokens "amount" he wants to lock before calling this function.
@@ -195,6 +207,8 @@ class ERC20TokenLock extends IContract {
 	/**
 	 * @function
 	 * @description User withdraws his locked tokens after specified end date
+	 * @param {Object} params
+	 * @param {Address} params.address User Address 
 	 * @return {Boolean} Success True if operation was successful
 	 */
 	release = async ({ address }) => {

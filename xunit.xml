@@ -1,34 +1,34 @@
-<testsuite name="Mocha Tests" tests="32" failures="0" errors="0" skipped="0" timestamp="Fri, 07 May 2021 10:06:07 GMT" time="76.091">
-<testcase classname="Unit Tests ERC20" name="should start the Application" time="0.001"/>
+<testsuite name="Mocha Tests" tests="32" failures="0" errors="0" skipped="0" timestamp="Sun, 09 May 2021 18:57:38 GMT" time="76.173">
+<testcase classname="Unit Tests ERC20" name="should start the Application" time="0.002"/>
 <testcase classname="Unit Tests ERC20" name="should deploy a ERC20 contract" time="1.149"/>
 <testcase classname="Unit Tests ERC20TokenLock Contract" name="should start the Application" time="0.001"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should deploy ERC20TokenLock Contract" time="1.089"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="ERC20TokenLock Contract should have initial variables expected values" time="0.144"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set max tokens to lock per user" time="1.074"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set min tokens to lock per user" time="1.072"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should lock user tokens" time="2.215"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should get totalAmountStaked == 1000" time="0.014"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should deploy ERC20TokenLock Contract" time="1.223"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="ERC20TokenLock Contract should have initial variables expected values" time="0.073"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set max tokens to lock per user" time="1.072"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set min tokens to lock per user" time="1.069"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should lock user tokens" time="2.269"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should get totalAmountStaked == 1000" time="0.016"/>
 <testcase classname="Unit Tests ERC20TokenLock Contract" name="should fail to release tokens before release date" time="0.019"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should release and withdraw unlocked tokens" time="0"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set min tokens to lock to zero" time="1.117"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set max tokens to lock to zero" time="1.074"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should release and withdraw unlocked tokens" time="0.001"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set min tokens to lock to zero" time="1.073"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set max tokens to lock to zero" time="1.071"/>
 <testcase classname="Unit Tests Staking Contract" name="should start the Application" time="0.004"/>
-<testcase classname="Unit Tests Staking Contract" name="should deploy Staking Contract" time="1.125"/>
+<testcase classname="Unit Tests Staking Contract" name="should deploy Staking Contract" time="1.113"/>
 <testcase classname="Unit Tests Staking Contract" name="should create a Product" time="1.073"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Product Data" time="0.023"/>
-<testcase classname="Unit Tests Staking Contract" name="should get APR Data" time="0.067"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == 0" time="0.02"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == 0" time="0.02"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Future Locked Tokens == 0" time="0.012"/>
-<testcase classname="Unit Tests Staking Contract" name="should get tokens needed for APR == totalNeededAPR" time="0.05"/>
-<testcase classname="Unit Tests Staking Contract" name="should fund with tokens needed for APR" time="1.092"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == APR Needed for 1 subscription with min Amount" time="0.121"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == APR Needed for 1 subscription with min Amount" time="0.07"/>
-<testcase classname="Unit Tests Staking Contract" name="should get subscribe to product Data &#x26; APR Right" time="2.177"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Product Data" time="0.027"/>
+<testcase classname="Unit Tests Staking Contract" name="should get APR Data" time="0.066"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == 0" time="0.016"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == 0" time="0.017"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Future Locked Tokens == 0" time="0.014"/>
+<testcase classname="Unit Tests Staking Contract" name="should get tokens needed for APR == totalNeededAPR" time="0.051"/>
+<testcase classname="Unit Tests Staking Contract" name="should fund with tokens needed for APR" time="1.14"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == APR Needed for 1 subscription with min Amount" time="0.067"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == APR Needed for 1 subscription with min Amount" time="0.064"/>
+<testcase classname="Unit Tests Staking Contract" name="should get subscribe to product Data &#x26; APR Right" time="2.168"/>
 <testcase classname="Unit Tests Staking Contract" name="should get Subscription Data Right" time="0.023"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == APR Amount + indivualAmount" time="0.019"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Future Locked Tokens == APR Amount" time="0.012"/>
-<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == 0 (all used)" time="0.015"/>
-<testcase classname="Unit Tests Staking Contract" name="should withdraw Subscription" time="61.104"/>
-<testcase classname="Unit Tests Staking Contract" name="should confirm Subscription Data after Withdraw" time="0.043"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == APR Amount + indivualAmount" time="0.02"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Future Locked Tokens == APR Amount" time="0.015"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == 0 (all used)" time="0.016"/>
+<testcase classname="Unit Tests Staking Contract" name="should withdraw Subscription" time="61.115"/>
+<testcase classname="Unit Tests Staking Contract" name="should confirm Subscription Data after Withdraw" time="0.046"/>
 </testsuite>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: ERC20TokenLock</title>
+    <title>JSDoc: Application</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">ERC20TokenLock</h1>
+    <h1 class="page-title">Application</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="attributes"></span></span>ERC20TokenLock<span class="signature">(params)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="attributes"></span></span>Application<span class="signature">(params)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -41,7 +41,7 @@
     
 
     
-    <h4 class="name" id="ERC20TokenLock"><span class="attributes"></span>new ERC20TokenLock<span class="signature">(params)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Application"><span class="attributes"></span>new Application<span class="signature">(params)</span><span class="type-signature"></span></h4>
     
 
     
@@ -49,7 +49,7 @@
 
 
 <div class="description">
-    <p>ERC20 Token Lock Contract Object</p>
+    <p>Application Object</p>
 </div>
 
 
@@ -101,7 +101,7 @@
 
             
 
-            <td class="description last">
+            <td class="description last"><p>Parameters</p>
                 <h6>Properties</h6>
                 
 
@@ -127,13 +127,13 @@
 
         <tr>
             
-                <td class="name"><code>tokenAddress</code></td>
+                <td class="name"><code>test</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Address</span>
+<span class="param-type">Bool</span>
 
 
             
@@ -143,20 +143,20 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Default : False</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>contractAddress</code></td>
+                <td class="name"><code>localtest</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Address</span>
+<span class="param-type">Bool</span>
 
 
             
@@ -166,7 +166,102 @@
 
             
 
-            <td class="description last"><p>? (opt)</p></td>
+            <td class="description last"><p>Default : False</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mainnet</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Bool</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Default : True (If Ethereum Mainnet)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional Chain Web3 Connection Object (Default ETH)</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>web3Connection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -265,7 +360,7 @@
     
 
     
-    <h4 class="name" id="approveERC20Transfer"><span class="attributes"></span>approveERC20Transfer<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    <h4 class="name" id="getAddress"><span class="attributes"></span>getAddress<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span></h4>
     
 
     
@@ -273,7 +368,7 @@
 
 
 <div class="description">
-    <p>Approve this contract to transfer tokens of the ERC20 token contract on behalf of user</p>
+    <p>Get Address connected via login()</p>
 </div>
 
 
@@ -341,7 +436,7 @@
 
         
 <div class="param-desc">
-    <p>Success True if operation was successful</p>
+    <p>Address in Use</p>
 </div>
 
 
@@ -352,7 +447,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">Address</span>
 
 
     </dd>
@@ -376,7 +471,7 @@
     
 
     
-    <h4 class="name" id="canRelease"><span class="attributes"></span>canRelease<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    <h4 class="name" id="getERC20Contract"><span class="attributes"></span>getERC20Contract<span class="signature">(params)</span><span class="type-signature"> &rarr; {ERC20Contract}</span></h4>
     
 
     
@@ -384,7 +479,7 @@
 
 
 <div class="description">
-    <p>Check if locked tokens release date has come and user can withdraw them</p>
+    <p>Create a ERC20Contract Object</p>
 </div>
 
 
@@ -462,7 +557,7 @@
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>contractAddress</code></td>
             
 
             <td class="type">
@@ -478,7 +573,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
         </tr>
 
     
@@ -550,7 +645,7 @@
 
         
 <div class="param-desc">
-    <p>canRelease</p>
+    <p>ERC20Contract</p>
 </div>
 
 
@@ -561,7 +656,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Boolean</span>
+<span class="param-type"><a href="ERC20Contract.html">ERC20Contract</a></span>
 
 
     </dd>
@@ -585,7 +680,7 @@
     
 
     
-    <h4 class="name" id="deploy"><span class="attributes"></span>deploy<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getERC20TokenLock"><span class="attributes"></span>getERC20TokenLock<span class="signature">(params)</span><span class="type-signature"> &rarr; {ERC20TokenLock}</span></h4>
     
 
     
@@ -593,197 +688,7 @@
 
 
 <div class="description">
-    <p>Deploy the ERC20 Token Lock Contract</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="erc20"><span class="attributes"><span class="">(async)</span></span>erc20<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Get ERC20 Address of the Token Contract managed</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Address</span>
-
-
-    </dd>
-</dl>
-
-
-
-
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="getLockedTokens"><span class="attributes"></span>getLockedTokens<span class="signature">(params)</span><span class="type-signature"> &rarr; {Integer}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Get locked tokens amount for a given address</p>
+    <p>Create a ERC20TokenLock Object</p>
 </div>
 
 
@@ -861,7 +766,7 @@
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>contractAddress</code></td>
             
 
             <td class="type">
@@ -877,7 +782,30 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tokenAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Address</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
         </tr>
 
     
@@ -949,7 +877,7 @@
 
         
 <div class="param-desc">
-    <p>amount Locked token amount</p>
+    <p>ERC20TokenLock</p>
 </div>
 
 
@@ -960,7 +888,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Integer</span>
+<span class="param-type"><a href="ERC20TokenLock.html">ERC20TokenLock</a></span>
 
 
     </dd>
@@ -984,7 +912,7 @@
     
 
     
-    <h4 class="name" id="getLockedTokensInfo"><span class="attributes"></span>getLockedTokensInfo<span class="signature">(params)</span><span class="type-signature"> &rarr; {Date|Date|Integer}</span></h4>
+    <h4 class="name" id="getERC721Collectibles"><span class="attributes"></span>getERC721Collectibles<span class="signature">(params)</span><span class="type-signature"> &rarr; {ERC721Collectibles}</span></h4>
     
 
     
@@ -992,7 +920,7 @@
 
 
 <div class="description">
-    <p>Get locked tokens info for a given address</p>
+    <p>Create a ERC721Collectibles Object</p>
 </div>
 
 
@@ -1070,7 +998,7 @@
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>contractAddress</code></td>
             
 
             <td class="type">
@@ -1086,7 +1014,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
         </tr>
 
     
@@ -1155,10 +1083,10 @@
 
 
 <h5>Returns:</h5>
-<ul>
-        <li>
+
+        
 <div class="param-desc">
-    <p>startDate</p>
+    <p>ERC721Collectibles</p>
 </div>
 
 
@@ -1169,7 +1097,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Date</span>
+<span class="param-type"><a href="ERC721Collectibles.html">ERC721Collectibles</a></span>
 
 
     </dd>
@@ -1180,25 +1108,75 @@
 
 
 
-</li>
+
     
-        <li>
-<div class="param-desc">
-    <p>endDate</p>
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getETHBalance"><span class="attributes"></span>getETHBalance<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get ETH Balance of Address connected via login()</p>
 </div>
 
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Date</span>
 
 
-    </dd>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 </dl>
 
 
@@ -1206,11 +1184,20 @@
 
 
 
-</li>
-    
-        <li>
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
-    <p>amount Token amount</p>
+    <p>ETH Balance</p>
 </div>
 
 
@@ -1232,8 +1219,8 @@
 
 
 
-</li>
-    </ul>
+
+    
 
 
 
@@ -1245,7 +1232,7 @@
     
 
     
-    <h4 class="name" id="getTokenAmount"><span class="attributes"></span>getTokenAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Integer}</span></h4>
+    <h4 class="name" id="getETHNetwork"><span class="attributes"></span>getETHNetwork<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
     
 
     
@@ -1253,7 +1240,118 @@
 
 
 <div class="description">
-    <p>Get Token Amount of ERC20 Address</p>
+    <p>Get ETH Network</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Network Name (Ex : Kovan)</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getExchangeContract"><span class="attributes"></span>getExchangeContract<span class="signature">(params)</span><span class="type-signature"> &rarr; {ExchangeContract}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create a Exchange Contract</p>
 </div>
 
 
@@ -1331,7 +1429,7 @@
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>ContractAddress</code></td>
             
 
             <td class="type">
@@ -1347,7 +1445,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
         </tr>
 
     
@@ -1419,7 +1517,7 @@
 
         
 <div class="param-desc">
-    <p>Token Amount</p>
+    <p>ExchangeContract</p>
 </div>
 
 
@@ -1430,7 +1528,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Integer</span>
+<span class="param-type"><a href="ExchangeContract.html">ExchangeContract</a></span>
 
 
     </dd>
@@ -1454,7 +1552,7 @@
     
 
     
-    <h4 class="name" id="lock"><span class="attributes"></span>lock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    <h4 class="name" id="getOpenRealFvrContract"><span class="attributes"></span>getOpenRealFvrContract<span class="signature">(params)</span><span class="type-signature"> &rarr; {OpenerRealFvr}</span></h4>
     
 
     
@@ -1462,7 +1560,7 @@
 
 
 <div class="description">
-    <p>User locks his tokens until specified end date.</p>
+    <p>Create a OpenerRealFvr Object</p>
 </div>
 
 
@@ -1540,7 +1638,7 @@
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>contractAddress</code></td>
             
 
             <td class="type">
@@ -1556,20 +1654,20 @@
 
             
 
-            <td class="description last"><p>User Address</p></td>
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>amount</code></td>
+                <td class="name"><code>tokenAddress</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Integer</span>
+<span class="param-type">Address</span>
 
 
             
@@ -1579,30 +1677,7 @@
 
             
 
-            <td class="description last"><p>Tokens amount to be locked</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>endDate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Date</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Lock tokens until this end date</p></td>
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
         </tr>
 
     
@@ -1674,9 +1749,7 @@
 
         
 <div class="param-desc">
-    <p>Success True if operation was successful
-REQUIREMENTS:
-user must have approved this contract to spend the tokens &quot;amount&quot; he wants to lock before calling this function.</p>
+    <p>OpenerRealFvr</p>
 </div>
 
 
@@ -1687,7 +1760,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     </dt>
     <dd>
         
-<span class="param-type">Boolean</span>
+<span class="param-type"><a href="OpenerRealFvr.html">OpenerRealFvr</a></span>
 
 
     </dd>
@@ -1711,7 +1784,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     
 
     
-    <h4 class="name" id="maxAmountToLock"><span class="attributes"><span class="">(async)</span></span>maxAmountToLock<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span></h4>
+    <h4 class="name" id="getStakingContract"><span class="attributes"></span>getStakingContract<span class="signature">(params)</span><span class="type-signature"> &rarr; {StakingContract}</span></h4>
     
 
     
@@ -1719,229 +1792,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
 
 <div class="description">
-    <p>Get maximum amount of tokens to lock per user</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Maximum Amount</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Integer</span>
-
-
-    </dd>
-</dl>
-
-
-
-
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="minAmountToLock"><span class="attributes"><span class="">(async)</span></span>minAmountToLock<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Get minimum amount of tokens to lock per user</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Minimum Amount</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Integer</span>
-
-
-    </dd>
-</dl>
-
-
-
-
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="release"><span class="attributes"></span>release<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>User withdraws his locked tokens after specified end date</p>
+    <p>Create a StakingContract Object</p>
 </div>
 
 
@@ -2019,7 +1870,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>contractAddress</code></td>
             
 
             <td class="type">
@@ -2035,200 +1886,14 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
             
 
-            <td class="description last"><p>User Address</p></td>
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
         </tr>
 
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Success True if operation was successful</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-    </dd>
-</dl>
-
-
-
-
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="setMaxAmountToLock"><span class="attributes"></span>setMaxAmountToLock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Admin sets maximum amount of tokens to lock per user</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>params</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>tokenAmount</code></td>
+                <td class="name"><code>tokenAddress</code></td>
             
 
             <td class="type">
@@ -2244,7 +1909,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
             
 
-            <td class="description last"><p>Amount of Tokens</p></td>
+            <td class="description last"><p>(Opt) If it is deployed</p></td>
         </tr>
 
     
@@ -2316,7 +1981,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
         
 <div class="param-desc">
-    <p>Success True if operation was successful</p>
+    <p>StakingContract</p>
 </div>
 
 
@@ -2327,7 +1992,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     </dt>
     <dd>
         
-<span class="param-type">Boolean</span>
+<span class="param-type"><a href="StakingContract.html">StakingContract</a></span>
 
 
     </dd>
@@ -2351,7 +2016,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     
 
     
-    <h4 class="name" id="setMinAmountToLock"><span class="attributes"></span>setMinAmountToLock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    <h4 class="name" id="login"><span class="attributes"></span>login<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -2359,7 +2024,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
 
 <div class="description">
-    <p>Admin sets minimum amount of tokens to lock per user</p>
+    <p>Login with Metamask/Web3 Wallet - substitutes start()</p>
 </div>
 
 
@@ -2368,104 +2033,6 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>params</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>tokenAmount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Integer</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Minimum tokens amount</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -2521,34 +2088,6 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Success True if operation was successful</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-    </dd>
-</dl>
-
-
-
-
-
-
-
-    
 
 
 
@@ -2560,7 +2099,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     
 
     
-    <h4 class="name" id="totalAmountStaked"><span class="attributes"><span class="">(async)</span></span>totalAmountStaked<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span></h4>
+    <h4 class="name" id="start"><span class="attributes"></span>start<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -2568,7 +2107,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
 
 <div class="description">
-    <p>Get All Tokens staked/locked at that specific moment</p>
+    <p>Connect to Web3 injected in the constructor</p>
 </div>
 
 
@@ -2632,34 +2171,6 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>Token Amount</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Integer</span>
-
-
-    </dd>
-</dl>
-
-
-
-
-
-
-
-    
 
 
 
