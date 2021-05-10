@@ -41,29 +41,6 @@ class ERC721Collectibles extends IContract{
         await this.params.ERC20Contract.__assert();
 	}
 
-
-	/**
-	 * @function
-	 * @description Get ERC20 Address of the Contract
-	 * @returns {Address}
-	*/
-	async purchaseToken() {
-		return await this.params.contract.getContract().methods._purchaseToken().call();
-    }
-    /* Use ABI */
-    this.params.contract.use(erc721collectibles, this.getAddress());
-
-    /* Set Token Address Contract for easy access */
-    this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
-      contractAddress: await this.purchaseToken(),
-      acc: this.acc,
-    });
-
-    /* Assert Token Contract */
-    await this.params.ERC20Contract.__assert();
-  };
-
   /**
    * @function
    * @description Get ERC20 Address of the Contract

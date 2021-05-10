@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import Contract from "../utils/Contract";
-import _ from "lodash";
-=======
 import Contract from '../utils/Contract';
 import _ from 'lodash';
 import Web3Connection from '../Web3Connection';
->>>>>>> 1b185b6 ([REFACTORY + UPDATE])
 
 /**
  * Contract Object Interface
@@ -19,43 +14,6 @@ import Web3Connection from '../Web3Connection';
  */
 
 class IContract {
-<<<<<<< HEAD
-  constructor({
-    web3,
-    contractAddress = null /* If not deployed */,
-    abi,
-    acc,
-  }) {
-    try {
-      if (!abi) {
-        throw new Error("No ABI Interface provided");
-      }
-      if (!web3) {
-        throw new Error("Please provide a valid web3 provider");
-      }
-
-      this.web3 = web3;
-
-      if (acc) {
-        this.acc = acc;
-      }
-      this.params = {
-        web3: web3,
-        abi: abi,
-        contractAddress: contractAddress,
-        contract: new Contract(web3, abi, contractAddress),
-      };
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  __init__ = async () => {
-    try {
-      if (!this.getAddress()) {
-        throw new Error("Please add a Contract Address");
-      }
-=======
 	constructor({
 	web3Connection = null, //Web3Connection if exists, otherwise create one from the rest of params
 	contractAddress = null, // If not deployed
@@ -92,13 +50,12 @@ class IContract {
 			if (!this.getAddress()) {
 				throw new Error('Please add a Contract Address');
 			}
->>>>>>> 1b185b6 ([REFACTORY + UPDATE])
-
-      await this.__assert();
-    } catch (err) {
-      throw err;
-    }
-  };
+			
+			await this.__assert();
+		} catch (err) {
+			throw err;
+		}
+	};
 
   __metamaskCall = async ({ f, acc, value, callback = () => {} }) => {
     return new Promise((resolve, reject) => {
@@ -198,7 +155,6 @@ class IContract {
     );
   }
 
-<<<<<<< HEAD
   /**
    * @function
    * @description Get Owner of the Contract
@@ -207,16 +163,6 @@ class IContract {
   async owner() {
     return await this.params.contract.getContract().methods.owner().call();
   }
-=======
-	/**
-	 * @function
-	 * @description Get Owner of the Contract
-	 * @returns {string} address
-	 */
-	async owner() {
-		return await this.params.contract.getContract().methods.owner().call();
-	}
->>>>>>> 1b185b6 ([REFACTORY + UPDATE])
 
   /**
    * @function

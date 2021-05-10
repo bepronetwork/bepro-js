@@ -354,20 +354,7 @@ class StakingContract extends IContract {
     );
     return subscriptions ? _.flatten(subscriptions) : [];
   };
-
-        /* Set Token Address Contract for easy access */
-        this.params.ERC20Contract = new ERC20Contract({
-            web3Connection: this.web3Connection,
-            contractAddress: await this.erc20(),
-        });
-        return parseFloat(res);
-      })
-    );
-    return Numbers.fromExponential(
-      allProducts.reduce((a, b) => a + b, 0)
-    ).toString();
-  };
-
+  
   /**
    * @override
    */
@@ -380,13 +367,12 @@ class StakingContract extends IContract {
 
     /* Use ABI */
     this.params.contract.use(staking, this.getAddress());
-
-    /* Set Token Address Contract for easy access */
-    this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
-      contractAddress: await this.erc20(),
-      acc: this.acc,
-    });
+	
+	/* Set Token Address Contract for easy access */
+	this.params.ERC20Contract = new ERC20Contract({
+		web3Connection: this.web3Connection,
+		contractAddress: await this.erc20(),
+	});
 
     /* Assert Token Contract */
     await this.params.ERC20Contract.__assert();
