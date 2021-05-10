@@ -7,19 +7,18 @@ import Numbers from "../../utils/Numbers";
 /**
  * Staking Contract Object
  * @class StakingContract
- * @param {Web3} web3
- * @param {Address} tokenAddress
- * @param {Address} contractAddress ? (opt)
+ * @param {Object} params
+ * @param {Address} params.tokenAddress
  */
 
 class StakingContract extends IContract {
-  constructor({ tokenAddress /* Token Address */, ...params }) {
+  constructor(params={}) {
     try {
       super({ ...params, abi: staking });
-      if (tokenAddress) {
+      if (params.tokenAddress) {
         this.params.ERC20Contract = new ERC20Contract({
           web3: params.web3,
-          contractAddress: tokenAddress,
+          contractAddress: params.tokenAddress,
           acc: params.acc,
         });
       }

@@ -14,7 +14,7 @@ const baseFeeAddress = "0x6714d41094a264bb4b8fcb74713b42cfee6b4f74";
  */
 
 class ERC721Collectibles extends IContract {
-  constructor(params) {
+  constructor(params={}) {
     super({ abi: erc721collectibles, ...params });
   }
 

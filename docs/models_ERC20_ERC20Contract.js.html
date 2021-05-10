@@ -115,7 +115,7 @@ import IContract from "../IContract";
  * @param {Address} params.contractAddress Optional/If Existent
  */
 class ERC20Contract extends IContract {
-  constructor(params) {
+  constructor(params={}) {
     super({ abi: ierc20, ...params });
   }
 

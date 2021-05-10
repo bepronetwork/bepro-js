@@ -12,7 +12,7 @@ import ERC20Contract from '../../ERC20/ERC20Contract';
  * @param {Address} params.tokenAddress Token Purchase Address
  */
 class OpenerRealFvr extends IContract {
-  constructor(params) {
+  constructor(params={}) {
     super({abi: openerRealFvr, ...params});
   }
 

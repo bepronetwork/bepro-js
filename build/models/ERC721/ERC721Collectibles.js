@@ -14,7 +14,7 @@ var baseFeeAddress = "0x6714d41094a264bb4b8fcb74713b42cfee6b4f74";
                                                                     */var
 
 ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collectibles, _IContract);
-  function ERC721Collectibles(params) {(0, _classCallCheck3.default)(this, ERC721Collectibles);var _this = (0, _possibleConstructorReturn3.default)(this, (ERC721Collectibles.__proto__ || (0, _getPrototypeOf2.default)(ERC721Collectibles)).call(this, (0, _extends3.default)({
+  function ERC721Collectibles() {var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};(0, _classCallCheck3.default)(this, ERC721Collectibles);var _this = (0, _possibleConstructorReturn3.default)(this, (ERC721Collectibles.__proto__ || (0, _getPrototypeOf2.default)(ERC721Collectibles)).call(this, (0, _extends3.default)({
       abi: _interfaces.erc721collectibles }, params)));_initialiseProps.call(_this);return _this;
   }
 
@@ -74,14 +74,14 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                   this.params.contract.
                   getContract().
                   methods.exists(tokenID).
-                  call());case 2:return _context3.abrupt("return", _context3.sent);case 3:case "end":return _context3.stop();}}}, _callee3, this);}));function exists(_x) {return _ref3.apply(this, arguments);}return exists;}()
+                  call());case 2:return _context3.abrupt("return", _context3.sent);case 3:case "end":return _context3.stop();}}}, _callee3, this);}));function exists(_x2) {return _ref3.apply(this, arguments);}return exists;}()
 
 
     /**
-                                                                                                                                                                                                                                   * @function
-                                                                                                                                                                                                                                   * @description Verify if it is limited
-                                                                                                                                                                                                                                   * @returns {Bool}
-                                                                                                                                                                                                                                   */ }, { key: "isLimited", value: function () {var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.next = 2;return (
+                                                                                                                                                                                                                                    * @function
+                                                                                                                                                                                                                                    * @description Verify if it is limited
+                                                                                                                                                                                                                                    * @returns {Bool}
+                                                                                                                                                                                                                                    */ }, { key: "isLimited", value: function () {var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.next = 2;return (
 
                   this.params.contract.getContract().methods._isLimited().call());case 2:return _context4.abrupt("return", _context4.sent);case 3:case "end":return _context4.stop();}}}, _callee4, this);}));function isLimited() {return _ref5.apply(this, arguments);}return isLimited;}()
 
@@ -107,7 +107,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                   this.params.contract.
                   getContract().
                   methods.tokenURI(tokenID).
-                  call());case 2:return _context6.abrupt("return", _context6.sent);case 3:case "end":return _context6.stop();}}}, _callee6, this);}));function getURITokenID(_x2) {return _ref7.apply(this, arguments);}return getURITokenID;}()
+                  call());case 2:return _context6.abrupt("return", _context6.sent);case 3:case "end":return _context6.stop();}}}, _callee6, this);}));function getURITokenID(_x3) {return _ref7.apply(this, arguments);}return getURITokenID;}()
 
     /**
                                                                                                                                                                                                                                                   * @function
@@ -130,7 +130,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                   methods.getRegisteredIDs(address).
                   call());case 2:res = _context8.sent;return _context8.abrupt("return",
 
-                res.map(function (r) {return parseInt(r);}));case 4:case "end":return _context8.stop();}}}, _callee8, this);}));function getRegisteredIDs(_x3) {return _ref10.apply(this, arguments);}return getRegisteredIDs;}()
+                res.map(function (r) {return parseInt(r);}));case 4:case "end":return _context8.stop();}}}, _callee8, this);}));function getRegisteredIDs(_x4) {return _ref10.apply(this, arguments);}return getRegisteredIDs;}()
 
 
     /**
@@ -142,7 +142,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                   this.params.contract.
                   getContract().
                   methods.registeredIDs(address, tokenID).
-                  call());case 2:return _context9.abrupt("return", _context9.sent);case 3:case "end":return _context9.stop();}}}, _callee9, this);}));function isIDRegistered(_x4) {return _ref12.apply(this, arguments);}return isIDRegistered;}()
+                  call());case 2:return _context9.abrupt("return", _context9.sent);case 3:case "end":return _context9.stop();}}}, _callee9, this);}));function isIDRegistered(_x5) {return _ref12.apply(this, arguments);}return isIDRegistered;}()
 
 
     /**
@@ -213,7 +213,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                                                                                                                                                                                                                                                                                                                                                                                               */value: function () {var _ref16 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(_ref17) {var
         amount = _ref17.amount;return _regenerator2.default.wrap(function _callee12$(_context12) {while (1) {switch (_context12.prev = _context12.next) {case 0:_context12.next = 2;return (
                   this.__sendTx(
-                  this.params.contract.getContract().methods.openPack(amount)));case 2:return _context12.abrupt("return", _context12.sent);case 3:case "end":return _context12.stop();}}}, _callee12, this);}));function openPack(_x5) {return _ref16.apply(this, arguments);}return openPack;}()
+                  this.params.contract.getContract().methods.openPack(amount)));case 2:return _context12.abrupt("return", _context12.sent);case 3:case "end":return _context12.stop();}}}, _callee12, this);}));function openPack(_x6) {return _ref16.apply(this, arguments);}return openPack;}()
 
 
 
@@ -225,7 +225,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                                                                                                                                                                                                                                                                                                    */ }, { key: "mint", value: function () {var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee13(_ref19) {var
         tokenID = _ref19.tokenID;return _regenerator2.default.wrap(function _callee13$(_context13) {while (1) {switch (_context13.prev = _context13.next) {case 0:_context13.next = 2;return (
                   this.__sendTx(
-                  this.params.contract.getContract().methods.mint(tokenID)));case 2:return _context13.abrupt("return", _context13.sent);case 3:case "end":return _context13.stop();}}}, _callee13, this);}));function mint(_x6) {return _ref18.apply(this, arguments);}return mint;}()
+                  this.params.contract.getContract().methods.mint(tokenID)));case 2:return _context13.abrupt("return", _context13.sent);case 3:case "end":return _context13.stop();}}}, _callee13, this);}));function mint(_x7) {return _ref18.apply(this, arguments);}return mint;}()
 
 
 
@@ -238,7 +238,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                   this.__sendTx(
                   this.params.contract.
                   getContract().
-                  methods.setPurchaseTokenAddress(purchaseToken)));case 2:return _context14.abrupt("return", _context14.sent);case 3:case "end":return _context14.stop();}}}, _callee14, this);}));function setPurchaseTokenAddress(_x7) {return _ref20.apply(this, arguments);}return setPurchaseTokenAddress;}()
+                  methods.setPurchaseTokenAddress(purchaseToken)));case 2:return _context14.abrupt("return", _context14.sent);case 3:case "end":return _context14.stop();}}}, _callee14, this);}));function setPurchaseTokenAddress(_x8) {return _ref20.apply(this, arguments);}return setPurchaseTokenAddress;}()
 
 
 
@@ -249,7 +249,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                                                                                                                                                                                                                                                                                                                     */ }, { key: "setStakeAddress", value: function () {var _ref22 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee15(_ref23) {var
         purchaseToken = _ref23.purchaseToken;return _regenerator2.default.wrap(function _callee15$(_context15) {while (1) {switch (_context15.prev = _context15.next) {case 0:_context15.next = 2;return (
                   this.__sendTx(
-                  this.params.contract.getContract().methods.setStakeAddress(purchaseToken)));case 2:return _context15.abrupt("return", _context15.sent);case 3:case "end":return _context15.stop();}}}, _callee15, this);}));function setStakeAddress(_x8) {return _ref22.apply(this, arguments);}return setStakeAddress;}()
+                  this.params.contract.getContract().methods.setStakeAddress(purchaseToken)));case 2:return _context15.abrupt("return", _context15.sent);case 3:case "end":return _context15.stop();}}}, _callee15, this);}));function setStakeAddress(_x9) {return _ref22.apply(this, arguments);}return setStakeAddress;}()
 
 
 
@@ -262,18 +262,18 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                   this.__sendTx(
                   this.params.contract.
                   getContract().
-                  methods.setSwapBackAddress(purchaseToken)));case 2:return _context16.abrupt("return", _context16.sent);case 3:case "end":return _context16.stop();}}}, _callee16, this);}));function setSwapBackAddress(_x9) {return _ref24.apply(this, arguments);}return setSwapBackAddress;}()
+                  methods.setSwapBackAddress(purchaseToken)));case 2:return _context16.abrupt("return", _context16.sent);case 3:case "end":return _context16.stop();}}}, _callee16, this);}));function setSwapBackAddress(_x10) {return _ref24.apply(this, arguments);}return setSwapBackAddress;}()
 
 
 
     /**
-                                                                                                                                                                                                                                                                                                     * @function
-                                                                                                                                                                                                                                                                                                     * @description set Fee Address
-                                                                                                                                                                                                                                                                                                     * @param {Address} purchaseToken
-                                                                                                                                                                                                                                                                                                     */ }, { key: "setFeeAddress", value: function () {var _ref26 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(_ref27) {var
+                                                                                                                                                                                                                                                                                                      * @function
+                                                                                                                                                                                                                                                                                                      * @description set Fee Address
+                                                                                                                                                                                                                                                                                                      * @param {Address} purchaseToken
+                                                                                                                                                                                                                                                                                                      */ }, { key: "setFeeAddress", value: function () {var _ref26 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee17(_ref27) {var
         purchaseToken = _ref27.purchaseToken;return _regenerator2.default.wrap(function _callee17$(_context17) {while (1) {switch (_context17.prev = _context17.next) {case 0:_context17.next = 2;return (
                   this.__sendTx(
-                  this.params.contract.getContract().methods.setFeeAddress(purchaseToken)));case 2:return _context17.abrupt("return", _context17.sent);case 3:case "end":return _context17.stop();}}}, _callee17, this);}));function setFeeAddress(_x10) {return _ref26.apply(this, arguments);}return setFeeAddress;}()
+                  this.params.contract.getContract().methods.setFeeAddress(purchaseToken)));case 2:return _context17.abrupt("return", _context17.sent);case 3:case "end":return _context17.stop();}}}, _callee17, this);}));function setFeeAddress(_x11) {return _ref26.apply(this, arguments);}return setFeeAddress;}()
 
 
 
@@ -287,7 +287,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
                   this.__sendTx(
                   this.params.contract.
                   getContract().
-                  methods.setPricePerPack(newPriceWithDecimals)));case 3:return _context18.abrupt("return", _context18.sent);case 4:case "end":return _context18.stop();}}}, _callee18, this);}));function setPricePerPack(_x11) {return _ref28.apply(this, arguments);}return setPricePerPack;}() }]);return ERC721Collectibles;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.__assert = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee19() {return _regenerator2.default.wrap(function _callee19$(_context19) {while (1) {switch (_context19.prev = _context19.next) {case 0:if (_this2.getAddress()) {_context19.next = 2;break;}throw new Error("Contract is not deployed, first deploy it and provide a contract address");case 2: /* Use ABI */_this2.params.contract.use(_interfaces.erc721collectibles, _this2.getAddress()); /* Set Token Address Contract for easy access */_context19.t0 = _ERC20Contract2.default;_context19.t1 = _this2.web3;_context19.next = 7;return _this2.purchaseToken();case 7:_context19.t2 = _context19.sent;_context19.t3 = _this2.acc;_context19.t4 = { web3: _context19.t1, contractAddress: _context19.t2, acc: _context19.t3 };_this2.params.ERC20Contract = new _context19.t0(_context19.t4);_context19.next = 13;return _this2.params.ERC20Contract.__assert();case 13:case "end":return _context19.stop();}}}, _callee19, _this2);}));this.approveERC20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee20() {var totalMaxAmount;return _regenerator2.default.wrap(function _callee20$(_context20) {while (1) {switch (_context20.prev = _context20.next) {case 0:_context20.next = 2;return _this2.getERC20Contract().totalSupply();case 2:totalMaxAmount = _context20.sent;_context20.next = 5;return _this2.getERC20Contract().approve({ address: _this2.getAddress(), amount: totalMaxAmount });case 5:return _context20.abrupt("return", _context20.sent);case 6:case "end":return _context20.stop();}}}, _callee20, _this2);}));this.setBaseTokenURI = function () {var _ref32 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee21(_ref33) {var URI = _ref33.URI;return _regenerator2.default.wrap(function _callee21$(_context21) {while (1) {switch (_context21.prev = _context21.next) {case 0:_context21.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.setBaseURI(URI));case 2:return _context21.abrupt("return", _context21.sent);case 3:case "end":return _context21.stop();}}}, _callee21, _this2);}));return function (_x12) {return _ref32.apply(this, arguments);};}();this.isApproved = function () {var _ref34 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee22(_ref35) {var address = _ref35.address,amount = _ref35.amount;return _regenerator2.default.wrap(function _callee22$(_context22) {while (1) {switch (_context22.prev = _context22.next) {case 0:_context22.next = 2;return _this2.getERC20Contract().isApproved({ address: address, amount: amount, spenderAddress: _this2.getAddress() });case 2:return _context22.abrupt("return", _context22.sent);case 3:case "end":return _context22.stop();}}}, _callee22, _this2);}));return function (_x13) {return _ref34.apply(this, arguments);};}();this.
+                  methods.setPricePerPack(newPriceWithDecimals)));case 3:return _context18.abrupt("return", _context18.sent);case 4:case "end":return _context18.stop();}}}, _callee18, this);}));function setPricePerPack(_x12) {return _ref28.apply(this, arguments);}return setPricePerPack;}() }]);return ERC721Collectibles;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.__assert = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee19() {return _regenerator2.default.wrap(function _callee19$(_context19) {while (1) {switch (_context19.prev = _context19.next) {case 0:if (_this2.getAddress()) {_context19.next = 2;break;}throw new Error("Contract is not deployed, first deploy it and provide a contract address");case 2: /* Use ABI */_this2.params.contract.use(_interfaces.erc721collectibles, _this2.getAddress()); /* Set Token Address Contract for easy access */_context19.t0 = _ERC20Contract2.default;_context19.t1 = _this2.web3;_context19.next = 7;return _this2.purchaseToken();case 7:_context19.t2 = _context19.sent;_context19.t3 = _this2.acc;_context19.t4 = { web3: _context19.t1, contractAddress: _context19.t2, acc: _context19.t3 };_this2.params.ERC20Contract = new _context19.t0(_context19.t4);_context19.next = 13;return _this2.params.ERC20Contract.__assert();case 13:case "end":return _context19.stop();}}}, _callee19, _this2);}));this.approveERC20 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee20() {var totalMaxAmount;return _regenerator2.default.wrap(function _callee20$(_context20) {while (1) {switch (_context20.prev = _context20.next) {case 0:_context20.next = 2;return _this2.getERC20Contract().totalSupply();case 2:totalMaxAmount = _context20.sent;_context20.next = 5;return _this2.getERC20Contract().approve({ address: _this2.getAddress(), amount: totalMaxAmount });case 5:return _context20.abrupt("return", _context20.sent);case 6:case "end":return _context20.stop();}}}, _callee20, _this2);}));this.setBaseTokenURI = function () {var _ref32 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee21(_ref33) {var URI = _ref33.URI;return _regenerator2.default.wrap(function _callee21$(_context21) {while (1) {switch (_context21.prev = _context21.next) {case 0:_context21.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.setBaseURI(URI));case 2:return _context21.abrupt("return", _context21.sent);case 3:case "end":return _context21.stop();}}}, _callee21, _this2);}));return function (_x13) {return _ref32.apply(this, arguments);};}();this.isApproved = function () {var _ref34 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee22(_ref35) {var address = _ref35.address,amount = _ref35.amount;return _regenerator2.default.wrap(function _callee22$(_context22) {while (1) {switch (_context22.prev = _context22.next) {case 0:_context22.next = 2;return _this2.getERC20Contract().isApproved({ address: address, amount: amount, spenderAddress: _this2.getAddress() });case 2:return _context22.abrupt("return", _context22.sent);case 3:case "end":return _context22.stop();}}}, _callee22, _this2);}));return function (_x14) {return _ref34.apply(this, arguments);};}();this.
 
 
 
@@ -324,7 +324,7 @@ ERC721Collectibles = function (_IContract) {(0, _inherits3.default)(ERC721Collec
               _this2.params.contractAddress = res.contractAddress;
               /* Call to Backend API */_context23.next = 13;return (
                 _this2.__assert());case 13:return _context23.abrupt("return",
-              res);case 14:case "end":return _context23.stop();}}}, _callee23, _this2);}));return function (_x14) {return _ref36.apply(this, arguments);};}();this.
+              res);case 14:case "end":return _context23.stop();}}}, _callee23, _this2);}));return function (_x15) {return _ref36.apply(this, arguments);};}();this.
 
 
   getERC20Contract = function () {return _this2.params.ERC20Contract;};};exports.default =

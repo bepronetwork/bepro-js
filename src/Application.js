@@ -37,8 +37,9 @@ const networksEnum = Object.freeze({
  * @param {Bool} params.test Default : False
  * @param {Bool} params.localtest Default : False
  * @param {Bool} params.mainnet Default : True (If Ethereum Mainnet)
- * @param {Object} params.opt Optional Chain Web3 Connection Object (Default ETH)
+ * @param {Object} params.opt Optional Chain Connection Object (Default ETH)
  * @param {String} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
+ * @param {String} params.opt.privateKey Private key (0x....) used for server side use
  */
 class Application {
 	constructor({
@@ -47,6 +48,7 @@ class Application {
 		mainnet = true,
 		opt = {
 			web3Connection: ETH_URL_MAINNET,
+			privateKey : TEST_PRIVATE_KEY
 		},
 	}) {
 		this.test = test;
@@ -57,7 +59,7 @@ class Application {
 			this.start();
 			this.login();
 			if(!this.localtest) {
-				this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
+				this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(opt.privateKey));
 				console.log('My address: ' + this.account.getAddress())
 			}
 			///this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(LOCAL_TEST_PRIVATE_KEY));

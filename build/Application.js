@@ -37,8 +37,9 @@ var networksEnum = (0, _freeze2.default)({
                   * @param {Bool} params.test Default : False
                   * @param {Bool} params.localtest Default : False
                   * @param {Bool} params.mainnet Default : True (If Ethereum Mainnet)
-                  * @param {Object} params.opt Optional Chain Web3 Connection Object (Default ETH)
+                  * @param {Object} params.opt Optional Chain Connection Object (Default ETH)
                   * @param {String} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
+                  * @param {String} params.opt.privateKey Private key (0x....) used for server side use
                   */var
 Application =
 function Application(_ref)
@@ -48,7 +49,8 @@ function Application(_ref)
 
 
 
-{var _this = this;var _ref$test = _ref.test,test = _ref$test === undefined ? false : _ref$test,_ref$localtest = _ref.localtest,localtest = _ref$localtest === undefined ? false : _ref$localtest,_ref$mainnet = _ref.mainnet,mainnet = _ref$mainnet === undefined ? true : _ref$mainnet,_ref$opt = _ref.opt,opt = _ref$opt === undefined ? { web3Connection: ETH_URL_MAINNET } : _ref$opt;(0, _classCallCheck3.default)(this, Application);this.
+
+{var _this = this;var _ref$test = _ref.test,test = _ref$test === undefined ? false : _ref$test,_ref$localtest = _ref.localtest,localtest = _ref$localtest === undefined ? false : _ref$localtest,_ref$mainnet = _ref.mainnet,mainnet = _ref$mainnet === undefined ? true : _ref$mainnet,_ref$opt = _ref.opt,opt = _ref$opt === undefined ? { web3Connection: ETH_URL_MAINNET, privateKey: TEST_PRIVATE_KEY } : _ref$opt;(0, _classCallCheck3.default)(this, Application);this.
 
 
 
@@ -265,7 +267,7 @@ function Application(_ref)
 
 	getETHBalance = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {var wei;return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.t0 =
 						_this.web3.eth;_context4.next = 3;return _this.getAddress();case 3:_context4.t1 = _context4.sent;_context4.next = 6;return _context4.t0.getBalance.call(_context4.t0, _context4.t1);case 6:wei = _context4.sent;return _context4.abrupt("return",
-						_this.web3.utils.fromWei(wei, 'ether'));case 8:case "end":return _context4.stop();}}}, _callee4, _this);}));this.test = test;this.localtest = localtest;this.opt = opt;this.mainnet = mainnet;if (this.test) {this.start();this.login();if (!this.localtest) {this.account = new _Account2.default(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));console.log('My address: ' + this.account.getAddress());} ///this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(LOCAL_TEST_PRIVATE_KEY));
+						_this.web3.utils.fromWei(wei, 'ether'));case 8:case "end":return _context4.stop();}}}, _callee4, _this);}));this.test = test;this.localtest = localtest;this.opt = opt;this.mainnet = mainnet;if (this.test) {this.start();this.login();if (!this.localtest) {this.account = new _Account2.default(this.web3, this.web3.eth.accounts.privateKeyToAccount(opt.privateKey));console.log('My address: ' + this.account.getAddress());} ///this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(LOCAL_TEST_PRIVATE_KEY));
 	}} /**
      * @function
      * @description Connect to Web3 injected in the constructor

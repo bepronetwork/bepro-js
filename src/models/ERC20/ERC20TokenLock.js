@@ -16,19 +16,21 @@ var assert = require("assert");
  */
 
 class ERC20TokenLock extends IContract {
-  constructor({ tokenAddress /* Token Address */, ...params }) {
+  constructor(params={}) {
     try {
       super({ ...params, abi: tokenlock });
-      console.log("ERC20TokenLock.ctor.tokenAddress: " + tokenAddress);
+      console.log("ERC20TokenLock.ctor.tokenAddress: " + params.tokenAddress);
       console.log(
         "ERC20TokenLock.ctor.contractAddress: " + params.contractAddress
       );
-      if (tokenAddress) {
+      if (params.tokenAddress) {
         this.params.ERC20Contract = new ERC20Contract({
           web3: params.web3,
-          contractAddress: tokenAddress,
+          contractAddress: params.tokenAddress,
           acc: params.acc,
         });
+      }else{
+        throw new Error("Please provide an ERC20 Address in 'tokenAddress'");
       }
     } catch (err) {
       throw err;
