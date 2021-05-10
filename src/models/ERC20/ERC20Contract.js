@@ -4,9 +4,11 @@ import IContract from "../IContract";
 
 /**
  * @class ERC20Contract
- * @param params.web3 {Web3}
- * @param params.contractAddress {Address}
- * @param params.acc {*}
+ * @param {Boolean} params.mainnet
+ * @param {Boolean} params.test
+ * @param {Boolean} params.localtest, ganache local blockchain
+ * @param {Web3Connection} params.web3Connection ? (opt), created from above params
+ * @param {Address} params.contractAddress ? (opt)
  */
 class ERC20Contract extends IContract {
   constructor(params) {

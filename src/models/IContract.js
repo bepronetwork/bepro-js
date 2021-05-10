@@ -1,16 +1,25 @@
+<<<<<<< HEAD
 import Contract from "../utils/Contract";
 import _ from "lodash";
+=======
+import Contract from '../utils/Contract';
+import _ from 'lodash';
+import Web3Connection from '../Web3Connection';
+>>>>>>> 1b185b6 ([REFACTORY + UPDATE])
 
 /**
  * Contract Object Interface
  * @class IContract
- * @param {Web3} web3
+ * @param {boolean} params.mainnet
+ * @param {boolean} params.test
+ * @param {boolean} params.localtest, ganache local blockchain
+ * @param {Web3Connection} web3Connection ? (opt), created from above params
  * @param {Address} contractAddress ? (opt)
  * @param {ABI} abi
- * @param {Account} acc ? (opt)
  */
 
 class IContract {
+<<<<<<< HEAD
   constructor({
     web3,
     contractAddress = null /* If not deployed */,
@@ -46,6 +55,44 @@ class IContract {
       if (!this.getAddress()) {
         throw new Error("Please add a Contract Address");
       }
+=======
+	constructor({
+	web3Connection = null, //Web3Connection if exists, otherwise create one from the rest of params
+	contractAddress = null, // If not deployed
+    abi,
+	...params
+  }) {
+		try {
+			if (!abi) {
+				throw new Error('No ABI Interface provided');
+			}
+			
+			this.web3Connection = (!web3Connection) ? (new Web3Connection(params)) : web3Connection;
+			this.web3 = this.web3Connection.web3;
+			this.acc = this.web3Connection.account;
+			
+			if (!this.web3) {
+				throw new Error('Please provide a valid web3 provider');
+			}
+			
+			this.params = {
+				web3Connection: this.web3Connection,
+				web3: this.web3,
+				abi: abi,
+				contractAddress: contractAddress,
+				contract: new Contract(this.web3, abi, contractAddress),
+			};
+		} catch (err) {
+			throw err;
+		}
+	}
+	
+	__init__ = async () => {
+		try {
+			if (!this.getAddress()) {
+				throw new Error('Please add a Contract Address');
+			}
+>>>>>>> 1b185b6 ([REFACTORY + UPDATE])
 
       await this.__assert();
     } catch (err) {
@@ -151,6 +198,7 @@ class IContract {
     );
   }
 
+<<<<<<< HEAD
   /**
    * @function
    * @description Get Owner of the Contract
@@ -159,6 +207,16 @@ class IContract {
   async owner() {
     return await this.params.contract.getContract().methods.owner().call();
   }
+=======
+	/**
+	 * @function
+	 * @description Get Owner of the Contract
+	 * @returns {string} address
+	 */
+	async owner() {
+		return await this.params.contract.getContract().methods.owner().call();
+	}
+>>>>>>> 1b185b6 ([REFACTORY + UPDATE])
 
   /**
    * @function

@@ -7,27 +7,30 @@ import Numbers from "../../utils/Numbers";
 /**
  * Staking Contract Object
  * @class StakingContract
- * @param {Web3} web3
+ * @param {Boolean} params.mainnet
+ * @param {Boolean} params.test
+ * @param {Boolean} params.localtest, ganache local blockchain
+ * @param {Web3Connection} params.web3Connection ? (opt), created from above params
  * @param {Address} tokenAddress
  * @param {Address} contractAddress ? (opt)
  */
 
 class StakingContract extends IContract {
-  constructor({ tokenAddress /* Token Address */, ...params }) {
-    try {
-      super({ ...params, abi: staking });
-      if (tokenAddress) {
-        this.params.ERC20Contract = new ERC20Contract({
-          web3: params.web3,
-          contractAddress: tokenAddress,
-          acc: params.acc,
-        });
-      }
-    } catch (err) {
-      throw err;
-    }
-  }
+	constructor({tokenAddress /* Token Address */, ...params}) {
+		try {
+            super({...params, abi : staking});
+            if(tokenAddress){
+                this.params.ERC20Contract = new ERC20Contract({
+					web3Connection: this.web3Connection,
+                    contractAddress: tokenAddress,
+                });
+            }
 
+		} catch (err) {
+			throw err;
+		}
+    }
+    
   /**
    * @function
    * @description Get ERC20 Address of the Contract
@@ -39,7 +42,7 @@ class StakingContract extends IContract {
       true
     );
   }
-
+  
   /**
    * @function
    * @description Get Token Amount of ERC20 Address
@@ -352,36 +355,10 @@ class StakingContract extends IContract {
     return subscriptions ? _.flatten(subscriptions) : [];
   };
 
-  /**
-   * @function
-   * @description Transfer Tokens by the Admin to ensure APR Amount
-   * @param {Integer} amount
-   */
-  async depositAPRTokensByAdmin({ amount }) {
-    return await this.getERC20Contract().transferTokenAmount({
-      toAddress: this.getAddress(),
-      tokenAmount: amount,
-    });
-  }
-
-  /**
-   * @function
-   * @description Get Total Amount of tokens needed to be deposited by Admin to ensure APR for all available Products
-   * @return {Integer} Amount
-   */
-  getTotalNeededTokensForAPRbyAdmin = async () => {
-    const products = await this.getProducts();
-
-    const allProducts = await Promise.all(
-      products.map(async (product) => {
-        const productObj = await this.getProduct({
-          product_id: product,
-        });
-        let res = await this.getAPRAmount({
-          APR: productObj.APR,
-          startDate: productObj.startDate,
-          endDate: productObj.endDate,
-          amount: productObj.totalMaxAmount,
+        /* Set Token Address Contract for easy access */
+        this.params.ERC20Contract = new ERC20Contract({
+            web3Connection: this.web3Connection,
+            contractAddress: await this.erc20(),
         });
         return parseFloat(res);
       })

@@ -6,7 +6,10 @@ import IContract from "../IContract";
 /**
  * Exchange Contract Object
  * @class ExchangeContract
- * @param {Web3} web3
+ * @param {Boolean} params.mainnet
+ * @param {Boolean} params.test
+ * @param {Boolean} params.localtest, ganache local blockchain
+ * @param {Web3Connection} params.web3Connection ? (opt), created from above params
  * @param {Address} tokenAddress
  * @param {Integer} decimals
  * @param {Address} contractAddress ? (opt)
