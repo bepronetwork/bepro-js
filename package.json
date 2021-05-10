@@ -60,11 +60,13 @@
         "babel-preset-env": "^1.6.1",
         "babel-preset-es2015": "^6.24.1",
         "babel-register": "^6.26.0",
+        "better-docs": "^2.3.2",
         "eslint": "^6.8.0",
         "eslint-config-airbnb-base": "13.1.0",
         "eslint-config-prettier": "5.0.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-prettier": "3.1.0",
+        "ganache-cli": "^6.12.2",
         "gitbook-cli": "^2.3.2",
         "http-server": "^0.12.3",
         "jsdoc": "^3.6.6",
@@ -74,10 +76,7 @@
         "mocha-multi-reporters": "^1.5.1",
         "should": "^7.1.0",
         "supertest": "^1.0.0",
-        "truffle": "5.1.7",
-        "ganache-cli": "^6.12.2",
-        "http-server": "^0.12.3",
-        "jsdoc": "^3.6.6"
+        "truffle": "5.1.7"
     },
     "babel": {
         "presets": [
