@@ -23,7 +23,8 @@
         "clean:contracts": "rimraf build/contracts && truffle compile",
         "docs": "npm run build && npm run jsdoc:build && npm run jsdoc:serve",
         "jsdoc:build": "jsdoc -t ./node_modules/better-docs src -r -c docs-src/jsdoc.json",
-        "jsdoc:serve": "http-server ./docs/ -o"
+        "jsdoc:serve": "http-server ./docs/ -o",
+        "prebuild": "npm run jsdoc:build"
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",
