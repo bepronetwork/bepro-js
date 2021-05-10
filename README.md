@@ -1,8 +1,23 @@
-# bepro-js
+---
+noteId: "697b8700b1cc11eb8c4ed19e49359bd0"
+tags: []
 
-bepro-js is package to integrate BEPRO On-Chain products
+---
+
+![alt tag](https://uploads-ssl.webflow.com/5fc917a7914bf7aa30cae033/5ff4e84c73f45881c8b9cd85_Logo-purple-dark-background-p-500.png)
+=========
+
+![Python](https://img.shields.io/badge/python-v2.7+-blue.svg)
+[![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg
+)
+![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
+[![GitHub issues](https://img.shields.io/github/issues/bepronetwork/bepro-js.svg)](https://GitHub.com/bepronetwork/bepro-js/issues/)
+![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 
+## Introductions
+Build the future of DeFi Gaming
 
 ## Installation
 
@@ -86,6 +101,9 @@ await staking.deploy();
 await staking.availableTokens();
 
 ```
+## Contribution
+Contributions are welcomed but we ask to red existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
@@ -93,3 +111,5 @@ await staking.availableTokens();
 ## Notes
 
 The usage of ETH in all methods or params means using the native currency of that blockchain, example BSC in Binance Chain would still be nominated as ETH
+
+[1]: https://github.com/bepronetwork/bepro-js/blob/master/CONTRIBUTING.md
