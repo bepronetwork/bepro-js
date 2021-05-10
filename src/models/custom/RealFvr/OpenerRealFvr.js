@@ -69,8 +69,8 @@ class OpenerRealFvr extends IContract {
 	 * @param {String} params.packType Pack Type
 	 * @param {String} params.drop Pack Drop
 	 * @param {Date} params.saleStart Start Date
-	 * @param {Address} params.saleDistributionAddresses Revenue Addresses of the First Purchase
-	 * @param {Integer} params.saleDistributionAmounts Revenue Amounts of the First Purchase
+	 * @param {Address | Array} params.saleDistributionAddresses Revenue Addresses of the First Purchase
+	 * @param {Integer | Array} params.saleDistributionAmounts Revenue Amounts of the First Purchase
 	 * @returns {TransactionObject} Success the Tx Object if operation was successful
 	 */
    createPack = async ({packNumber, nftAmount, price, serie, packType, drop, 
