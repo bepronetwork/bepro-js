@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BEPRO Network Dev Docs models/ERC20/ERC20Contract.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="./doc-styles.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">BEPRO Network Documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/bepronetwork/bepro-js"
+                        >
+                            Github
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.bepro.network/blog"
+                        >
+                            Blog
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>models/ERC20/ERC20Contract.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { ierc20 } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
+import IContract from "../IContract";
+
+/**
+ * @class ERC20Contract
+ * @param {Object} params Parameters
+ * @param {Address} params.contractAddress Optional/If Existent
+ */
+class ERC20Contract extends IContract {
+  constructor(params) {
+    super({ abi: ierc20, ...params });
+  }
+
+  __assert = async () => {
+    this.params.contract.use(ierc20, this.getAddress());
+    this.params.decimals = await this.getDecimalsAsync();
+  };
+
+  getContract() {
+    return this.params.contract.getContract();
+  }
+
+  /**
+   * @function
+	 * @description Get Token Address
+   * @returns {Address} address
+	 */
+  getAddress() {
+    return this.params.contractAddress;
+  }
+
+  /**
+   * @function
+	 * @description Transfer Tokens
+   * @param {Object} params Parameters
+   * @param {Address} params.toAddress To Address
+   * @param {Integer} params.tokenAmount Amount of Tokens
+   * @returns {Transaction} Transaction
+	 */
+  transferTokenAmount = async ({ toAddress, tokenAmount }) => {
+    let amountWithDecimals = Numbers.toSmartContractDecimals(
+      tokenAmount,
+      this.getDecimals()
+    );
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.transfer(toAddress, amountWithDecimals)
+    );
+  }
+
+  /**
+   * @function
+	 * @description Get Amount of Tokens User Holds
+   * @param {Address} address User Address
+   * @returns {Transaction} Transaction
+	 */
+  getTokenAmount = async (address) => {
+    return Numbers.fromDecimals(
+      await this.getContract().methods.balanceOf(address).call(),
+      this.getDecimals()
+    );
+  }
+
+  /**
+   * @function
+	 * @description Get Total Supply of Token
+   * @returns {Integer} Total supply
+	 */
+  totalSupply = async () =>  {
+    return Numbers.fromDecimals(
+      await this.getContract().methods.totalSupply().call(),
+      this.getDecimals()
+    );
+  }
+
+  getABI() {
+    return this.params.contract;
+  }
+
+
+  /**
+   * @function
+	 * @description Get Decimals of Token
+   * @returns {Integer} Total supply
+	 */
+  getDecimals() {
+    return this.params.decimals;
+  }
+
+  getDecimalsAsync = async () =>  {
+    return await this.getContract().methods.decimals().call();
+  }
+
+  /**
+   * @function
+	 * @description Verify if Spender is Approved to use tokens
+   * @param {Object} params Parameters
+   * @param {Address} params.address Sender Address
+   * @param {Integer} params.amount Amount of Tokens
+   * @param {Address} params.spenderAddress Spender Address
+   * @returns {Bool} isApproved
+	 */
+  isApproved = async ({ address, amount, spenderAddress }) =>  {
+    try {
+      let approvedAmount = Numbers.fromDecimals(
+        await this.getContract()
+          .methods.allowance(address, spenderAddress)
+          .call(),
+        this.getDecimals()
+      );
+      return approvedAmount >= amount;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+   * @function
+	 * @description Approve tokens to be used by another address/contract
+   * @param {Object} params Parameters
+   * @param {Address} params.address Spender Address/Contract
+   * @param {Integer} params.amount Amount of Tokens
+   * @returns {Transaction} Transaction
+	 */
+  approve = async ({ address, amount, callback }) => {
+    try {
+      let amountWithDecimals = Numbers.toSmartContractDecimals(
+        amount,
+        this.getDecimals()
+      );
+      let res = await this.__sendTx(
+        this.params.contract
+          .getContract()
+          .methods.approve(address, amountWithDecimals),
+        null,
+        null,
+        callback
+      );
+      return res;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+   * @function
+	 * @description Deploy ERC20 Token
+   * @param {Object} params Parameters
+   * @param {String} params.name Name of token
+   * @param {String} params.symbol Symbol of token
+   * @param {Integer} params.cap Max supply of Token (ex : 100M)
+   * @param {Address} params.distributionAddress Where tokens should be sent to initially
+   * @returns {Transaction} Transaction
+	 */
+  deploy = async ({ name, symbol, cap, distributionAddress, callback }) => {
+    if (!distributionAddress) {
+      throw new Error("Please provide an Distribution address for distro");
+    }
+
+    if (!name) {
+      throw new Error("Please provide a name");
+    }
+
+    if (!symbol) {
+      throw new Error("Please provide a symbol");
+    }
+
+    if (!cap) {
+      throw new Error("Please provide a cap");
+    }
+    let params = [name, symbol, cap, distributionAddress];
+    let res = await this.__deploy(params, callback);
+    this.params.contractAddress = res.contractAddress;
+    /* Call to Backend API */
+    await this.__assert();
+    return res;
+  };
+}
+
+export default ERC20Contract;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>
