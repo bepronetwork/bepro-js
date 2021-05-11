@@ -8,6 +8,18 @@ import ERC20Contract from '../ERC20/ERC20Contract';
 const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
 
 /**
+ * @typedef Issue
+ * @property {boolean} finalized: boolean
+ * @property {boolean} canceled
+ * @property {number} votesForApprove
+ * @property {number} beproStaked
+ * @property {Address} issueGenerator
+ * @property {number} mergeProposalsAmount
+ * @property {number} _id
+ * @property {Date} creationDate
+ */
+
+/**
  * BEPRONetwork Object
  * @class BEPRONetwork
  * @param {Object} params
@@ -283,7 +295,7 @@ class BEPRONetwork extends IContract {
    * Get Issue Id Info
    * @param {Object} params
    * @param {number} params.issue_id
-   * @return {Promise<{finalized: boolean, canceled: boolean, votesForApprove: number, beproStaked: number, issueGenerator: Address, mergeProposalsAmount: number, _id: number, creationDate: Date}>}
+   * @return {Promise<Issue>}
    */
   async getIssueById({ issue_id }) {
     const r = await this.__sendTx(
