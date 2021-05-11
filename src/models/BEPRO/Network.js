@@ -20,6 +20,12 @@ class BEPRONetwork extends IContract {
     super({ abi: beproNetwork, ...params });
   }
 
+  /**
+   * Asserts using {@link BEPRONetwork.params.contract} with {@link beproNetwork} and {@link BEPRONetwork.params.abi}
+   * followed by setting a new {@link ERC20Contract} to {@link BEPRONetwork.params.ERC20Contract}, asserting it.
+   * @void
+   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
+   */
   __assert = async () => {
     if (!this.getAddress()) {
       throw new Error(
@@ -42,10 +48,9 @@ class BEPRONetwork extends IContract {
   };
 
   /**
-   * @function
-   * @description Get Open Issues Available
+   * Get Open Issues Available
    * @param {Address} address
-   * @returns {Integer | Array}
+   * @returns {number[]}
    */
   async getIssuesByAddress(address) {
     const res = await this.params.contract
@@ -57,9 +62,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Amount of Issues Opened in the network
-   * @returns {Integer}
+   * Get Amount of Issues Opened in the network
+   * @returns {Promise<number>}
    */
   async getAmountofIssuesOpened() {
     return parseInt(
@@ -69,9 +73,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Amount of Issues Closed in the network
-   * @returns {Integer}
+   * Get Amount of Issues Closed in the network
+   * @returns {Promise<number>}
    */
   async getAmountofIssuesClosed() {
     return parseInt(
@@ -81,9 +84,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Amount of Needed for Approve
-   * @returns {Integer}
+   * Get Amount of Needed for Approve
+   * @returns {Promise<number>}
    */
   async percentageNeededForApprove() {
     return parseInt(
@@ -112,9 +114,8 @@ class BEPRONetwork extends IContract {
 
 
   /**
-   * @function
-   * @description Get Amount of Needed for Merge
-   * @returns {Integer}
+   * Get Amount of Needed for Merge
+   * @returns {Promise<number>}
    */
   async percentageNeededForMerge() {
     return parseInt(
@@ -127,9 +128,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Total Amount of BEPRO Staked for Tickets in the network
-   * @returns {Integer}
+   * Get Total Amount of BEPRO Staked for Tickets in the network
+   * @returns {Promise<number>}
    */
   async getBEPROStaked() {
     return Numbers.fromDecimals(
@@ -139,9 +139,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description GetTotal amount of time where an issue has to be approved
-   * @returns {Date}
+   * GetTotal amount of time where an issue has to be approved
+   * @returns {Promise<Date>}
    */
   async timeOpenForIssueApprove() {
     return Numbers.fromSmartContractTimeToMinutes(
@@ -153,9 +152,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Total Amount of BEPRO Staked for Tickets in the network
-   * @returns {Integer}
+   * Get Total Amount of BEPRO Staked for Tickets in the network
+   * @returns {Promise<number>}
    */
   async beproVotesStaked() {
     return Numbers.fromDecimals(
@@ -168,9 +166,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Total Amount of BEPRO Staked for Council in the network
-   * @returns {Integer}
+   * Get Total Amount of BEPRO Staked for Council in the network
+   * @returns {Promise<number>}
    */
   async COUNCIL_BEPRO_AMOUNT() {
     return Numbers.fromDecimals(
@@ -183,9 +180,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Total Amount of BEPRO Staked for Operator in the network
-   * @returns {Integer}
+   * Get Total Amount of BEPRO Staked for Operator in the network
+   * @returns {Promise<number>}
    */
   async OPERATOR_BEPRO_AMOUNT() {
     return Numbers.fromDecimals(
@@ -198,9 +194,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Total Amount of BEPRO Staked for Developer in the network
-   * @returns {Integer}
+   * Get Total Amount of BEPRO Staked for Developer in the network
+   * @returns {Promise<number>}
    */
   async DEVELOPER_BEPRO_AMOUNT() {
     return Numbers.fromDecimals(
@@ -213,10 +208,9 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Is issue Approved
-   * @param {Integer} issueId
-   * @returns {Bool}
+   * Is issue Approved
+   * @param {number} issueId
+   * @returns {Promise<boolean>}
    */
   async isIssueApproved({ issueId }) {
     return await this.params.contract
@@ -226,10 +220,9 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Is issue available to be approved (time wise)
-   * @param {Integer} issueId
-   * @returns {Bool}
+   * Is issue available to be approved (time wise)
+   * @param {number} issueId
+   * @returns {Promise<boolean>}
    */
   async isIssueApprovable({ issueId }) {
     return await this.params.contract
@@ -239,11 +232,10 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Is issue mergeable
-   * @param {Integer} issueId
-   * @param {Integer} mergeId
-   * @returns {Bool}
+   * Can this issue be merged
+   * @param {number} issueId
+   * @param {number} mergeId
+   * @returns {Promise<boolean>}
    */
   async isIssueMergeable({ issueId, mergeId }) {
     return await this.params.contract
@@ -253,11 +245,10 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Is issue mergeable
-   * @param {Integer} issueId
-   * @param {Integer} mergeId
-   * @returns {Bool}
+   * Can this issue be merged
+   * @param {number} issueId
+   * @param {number} mergeId
+   * @returns {Promise<boolean>}
    */
   async isMergeTheOneWithMoreVotes({ issueId, mergeId }) {
     return await this.params.contract
@@ -267,10 +258,9 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Issue Id Info
+   * Get Issue Id Info
    * @param {Address} address
-   * @returns {Integer} votes
+   * @returns {Promise<number>} Number of votes
    */
 
   async getVotesByAddress({ address }) {
@@ -282,19 +272,10 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Issue Id Info
-   * @param {Integer} issue_id
-   * @returns {Integer} _id
-   * @returns {Integer} beproStaked
-   * @returns {Date} creationDate
-   * @returns {Address} issueGenerator
-   * @returns {Integer} votesForApprove
-   * @returns {Integer} mergeProposalsAmount
-   * @returns {Bool} finalized
-   * @returns {Bool} canceled
+   * Get Issue Id Info
+   * @param issue_id
+   * @return {Promise<{finalized: boolean, canceled: boolean votesForApprove: number, beproStaked: number, issueGenerator: Address, mergeProposalsAmount: number, _id: number, creationDate: Date}>}
    */
-
   async getIssueById({ issue_id }) {
     const r = await this.__sendTx(
       this.params.contract.getContract().methods.getIssueById(issue_id),
@@ -313,19 +294,13 @@ class BEPRONetwork extends IContract {
     };
   }
 
-  /**
-   * @function
-   * @description Get Issue Id Info
-   * @param {Integer} issue_id
-   * @param {Integer} merge_id
-   * @returns {Integer} _id
-   * @returns {Integer} votes
-   * @returns {Integer} disputes
-   * @returns {Address | Array} prAddresses
-   * @returns {Integer | Array} prAmounts
-   * @returns {Address} proposalAddress
-   */
 
+  /**
+   * Get votes, address and amounts for issue
+   * @param issue_id
+   * @param merge_id
+   * @return {Promise<{prAddresses: Address|Array, prAmounts: number|number[], votes: number, _id: number, proposalAddress: Address}>}
+   */
   async getMergeById({ issue_id, merge_id }) {
     const r = await this.__sendTx(
       this.params.contract
@@ -345,8 +320,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Approve ERC20 Allowance
+   * Approve ERC20 Allowance
+   * @return {Promise<number>}
    */
   approveERC20 = async () => {
     const totalMaxAmount = await this.getERC20Contract().totalSupply();
@@ -357,8 +332,8 @@ class BEPRONetwork extends IContract {
   };
 
   /**
-   * @function
-   * @description Verify if Approved
+   * Verify if Approved
+   * @return {Promise<number>}
    */
   isApprovedERC20 = async ({ amount, address }) => await this.getERC20Contract().isApproved({
     address,
@@ -367,9 +342,11 @@ class BEPRONetwork extends IContract {
   });
 
   /**
-   * @function
-   * @description lock BEPRO for oracles
-   * @param {integer} beproAmount
+   * lock BEPRO for oracles
+   * @params params.beproAmount {number}
+   * @return {Promise<*>}
+   * @throws {Error} Bepro Amount has to be higher than 0
+   * @throws {Error} Bepro not approve for tx, first use 'approveERC20'
    */
   async lockBepro({ beproAmount }) {
     if (beproAmount <= 0) {
@@ -386,10 +363,11 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Unlock BEPRO for oracles
-   * @param {integer} beproAmount
-   * @param {address} from
+   * Unlock BEPRO for oracles
+   * @params params.beproAmount {number}
+   * @params params.from {address}
+   * @return {Promise<*>}
+   * @throws {Error} Bepro Amount has to be higher than 0
    */
   async unlockBepro({ beproAmount, from }) {
     if (beproAmount <= 0) {
@@ -402,10 +380,10 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Delegated Oracles to others
-   * @param {integer} beproAmount
-   * @param {address} delegatedTo
+   * Delegated Oracles to others
+   * @param {number} beproAmount
+   * @param {Address} delegatedTo
+   * @return {Promise<*>}
    */
   async delegateOracles({ beproAmount, delegatedTo }) {
     if (beproAmount <= 0) {
@@ -420,10 +398,12 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description open Issue
-   * @param {integer} beproAmount
-   * @param {address} address
+   * open Issue
+   * @param {number} beproAmount
+   * @param {Address} address
+   * @throws {Error} Bepro Amount has to be higher than 0
+   * @throws {Error} Bepro not approve for tx, first use 'approveERC20'
+   * @return {Promise<*>}
    */
   async openIssue({ beproAmount, address }) {
     if (beproAmount < 0) {
@@ -440,9 +420,9 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description open Issue
-   * @param {integer} issueId
+   * open Issue
+   * @param {number} issueId
+   * @return {Promise<*>}
    */
   async approveIssue({ issueId }) {
     return await this.__sendTx(
@@ -451,8 +431,9 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description redeem Issue
+   * redeem Issue
+   * @param {number} issueId
+   * @return {Promise<*>}
    */
   async redeemIssue({ issueId }) {
     return await this.__sendTx(
@@ -461,10 +442,10 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description open Issue
-   * @param {integer} issueId
-   * @param {integer} mergeId
+   * open Issue
+   * @param {number} issueId
+   * @param {number} mergeId
+   * @return {Promise<*>}
    */
   async approveMerge({ issueId, mergeId }) {
     return await this.__sendTx(
@@ -473,11 +454,11 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description open Issue
-   * @param {integer} issueID
-   * @param {integer} beproAmount
+   * open Issue
+   * @param {number} issueID
+   * @param {number} beproAmount
    * @param {address} address
+   * @return {Promise<*>}
    */
   async updateIssue({ issueID, beproAmount, address }) {
     if (beproAmount < 0) {
@@ -496,11 +477,11 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description Propose Merge of Issue
-   * @param {integer} issueID
+   * Propose Merge of Issue
+   * @param {number} issueID
    * @param {address | Array} prAddresses
    * @param {address | Integer} prAmounts
+   * @return {Promise<*>}
    */
   async proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
     if (prAddresses.length != prAmounts.length) {
@@ -516,8 +497,9 @@ class BEPRONetwork extends IContract {
   /**
    * @function
    * @description close Issue
-   * @param {integer} issueID
-   * @param {integer} mergeID
+   * @param {number} issueID
+   * @param {number} mergeID
+   * @return {Promise<*>}
    */
   async closeIssue({ issueID, mergeID }) {
     return await this.__sendTx(
@@ -525,6 +507,12 @@ class BEPRONetwork extends IContract {
     );
   }
 
+  /**
+   *
+   * @param tokenAddress
+   * @param callback
+   * @return {Promise<*|undefined>}
+   */
   deploy = async ({ tokenAddress, callback }) => {
     const params = [tokenAddress];
     const res = await this.__deploy(params, callback);
@@ -534,6 +522,9 @@ class BEPRONetwork extends IContract {
     return res;
   };
 
+  /**
+   * @return ERC20Contract
+   */
   getERC20Contract = () => this.params.ERC20Contract;
 }
 
