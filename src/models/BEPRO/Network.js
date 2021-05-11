@@ -278,7 +278,7 @@ class BEPRONetwork extends IContract {
    * Get Issue Id Info
    * @param {Object} params
    * @param {number} params.issue_id
-   * @return {Promise<Issue>}
+   * @return Promise<Issue>
    */
   async getIssueById({ issue_id }) {
     const r = await this.__sendTx(
