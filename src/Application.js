@@ -31,11 +31,11 @@ const networksEnum = Object.freeze({
  * Application Object
  * @class Application
  * @param {Object} params Parameters
- * @param {Bool} params.test Automated Tests / Default : False
- * @param {Bool} params.localtest Ganache Local Blockchain / Default : False
- * @param {Object} params.opt Optional Chain Connection Object (Default ETH)
- * @param {String} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
- * @param {String} params.opt.privateKey Private key (0x....) used for server side use
+ * @param {boolean} [params.test=false] Automated Tests
+ * @param {boolean} [params.localtest=false] Ganache Local Blockchain
+ * @param {Object} [params.opt] Optional Chain Connection Object (Default ETH)
+ * @param {string} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
+ * @param {string} params.opt.privateKey Private key (0x....) used for server side use
  */
 class Application {
   constructor({
@@ -64,8 +64,10 @@ class Application {
   }
 
   /**
-   * @function
-   * @description Connect to Web3 injected in the constructor
+   * Connect to Web3 injected in the constructor
+	 * @function
+	 * @throws {Error} Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet
+	 * @void
    */
   start = () => {
     if (this.localtest) {
@@ -90,31 +92,33 @@ class Application {
   };
 
   /**
-   * @function
-   * @description Login with Metamask/Web3 Wallet - substitutes start()
-   */
-  login = async () => {
-    try {
-      if (typeof window === 'undefined') {
-        return false;
-      }
-      if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
-        this.web3 = window.web3;
-        await window.ethereum.enable();
-        return true;
-      }
-      return false;
-    } catch (err) {
-      throw err;
-    }
-  };
+   * Login with Metamask/Web3 Wallet - substitutes start()
+	 * @function
+	 * @return {Promise<boolean>}
+	 */
+	login = async () => {
+		try {
+			if (typeof window === 'undefined') {
+				return false;
+			}
+			if (window.ethereum) {
+				window.web3 = new Web3(window.ethereum);
+				this.web3 = window.web3;
+				await window.ethereum.enable();
+				return true;
+			}
+			return false;
+		} catch (err) {
+			throw err;
+		}
+	};
 
-  /**
-   * @function
-   * @description Create a Exchange Contract
-   * @param {Object} params
-   * @param {Address} params.ContractAddress (Opt) If it is deployed
+/**
+   * Create a Exchange Contract
+	 * @function
+	 * @param {Object} params
+   * @param {Address} [params.contractAddress=null]
+	 * @throws {Error}
    * @return {ExchangeContract} ExchangeContract
    */
   getExchangeContract = ({ contractAddress = null } = {}) => {
@@ -130,11 +134,11 @@ class Application {
   };
 
   /**
-   * @function
-   * @description Create a OpenerRealFvr Object
+   * Create a OpenerRealFvr Object
+	 * @function
    * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
-   * @param {Address} params.tokenAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null]
+   * @param {Address} [params.tokenAddress=null]
    * @return {OpenerRealFvr} OpenerRealFvr
    */
   getOpenRealFvrContract = ({
@@ -154,11 +158,11 @@ class Application {
   };
 
   /**
-   * @function
-   * @description Create a StakingContract Object
+   * Create a StakingContract Object
+	 * @function
    * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
-   * @param {Address} params.tokenAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null] (Opt) If it is deployed
+   * @param {Address} [params.tokenAddress=null] (Opt) If it is deployed
    * @return {StakingContract} StakingContract
    */
   getStakingContract = ({
@@ -178,11 +182,11 @@ class Application {
   };
 
   /**
-   * @function
-   * @description Create a ERC20TokenLock Object
+   * Create a ERC20TokenLock Object
+	 * @function
    * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
-   * @param {Address} params.tokenAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null] (Opt) If it is deployed
+   * @param {Address} [params.tokenAddress=null] (Opt) If it is deployed
    * @return {ERC20TokenLock} ERC20TokenLock
    */
   getERC20TokenLock = ({
@@ -202,10 +206,10 @@ class Application {
   };
 
   /**
-   * @function
-   * @description Create a ERC721Collectibles Object
-   * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * Create a ERC721Collectibles Object
+	 * @function
+   * @param {Object} [params={}]
+   * @param {Address} [params.contractAddress=null] (Opt) If it is deployed
    * @return {ERC721Collectibles} ERC721Collectibles
    */
   getERC721Collectibles = ({ contractAddress = null } = {}) => {
@@ -214,17 +218,17 @@ class Application {
         web3: this.web3,
         contractAddress,
         acc: this.test && !this.localtest ? this.account : null,
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
+			});
+		}catch(err){
+			throw err;
+		}
+    };
 
   /**
-   * @function
-   * @description Create a ERC20Contract Object
+   * Create a ERC20Contract Object
+	 * @function
    * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null] (Opt) If it is deployed
    * @return {ERC20Contract} ERC20Contract
    */
   getERC20Contract = ({ contractAddress = null }) => {
@@ -239,14 +243,10 @@ class Application {
     }
   };
 
-  /** ***** */
-  /** UTILS */
-  /** ***** */
-
   /**
-   * @function
-   * @description Get ETH Network
-   * @return {String} Network Name (Ex : Kovan)
+	 * Get ETH Network
+	 * @function
+   * @return {Promise<string>} Network Name (Ex : Kovan)
    */
   getETHNetwork = async () => {
     const netId = await this.web3.eth.net.getId();
@@ -258,19 +258,20 @@ class Application {
   };
 
   /**
-   * @function
-   * @description Get Address connected via login()
-   * @return {Address} Address in Use
+   * Get Address connected via login()
+	 * @function
+	 * @return {Promise<string>} Address in Use
    */
   getAddress = async () => {
     const accounts = await this.web3.eth.getAccounts();
     return accounts[0];
   };
 
-  /**
-   * @function
-   * @description Get ETH Balance of Address connected via login()
-   * @return {Integer} ETH Balance
+
+	/**
+	 * Get ETH Balance of Address connected via login()
+	 * @function
+   * @return {Promise<string>} ETH Balance
    */
   getETHBalance = async () => {
     const wei = await this.web3.eth.getBalance(await this.getAddress());
