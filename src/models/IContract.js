@@ -3,15 +3,14 @@ import Contract from '../utils/Contract';
 /**
  * Contract Object Interface
  * @class IContract
- * @description All Contracts inherit functions from IContract, so all the functions you see below you can use them as an extent to your Object
- * @param {Web3} web3
- * @param {Address} contractAddress ? (opt)
- * @param {ABI} abi
- * @param {Account} acc ? (opt)
- * @param {Address} tokenAddress ? (opt)
+ * @param {Object} params
+ * @param {Web3} params.web3
+ * @param {ABI} params.abi
+ * @param [Address] params.contractAddress
+ * @param [Account] params.acc
+ * @param [Address] params.tokenAddress
  * @throws {Error} Throws an error if ABI or Web3 providers are missing
  */
-
 class IContract {
   constructor({
     web3,
@@ -65,12 +64,12 @@ class IContract {
 
   /**
    * @function
-   * @param f
-   * @param acc
-   * @param value
-   * @param callback
-   * @return {Promise<unknown>}
-   * @private
+   * @params [Object] params
+   * @params {*} params.f
+   * @params {*} params.acc
+   * @params {*} params.value
+   * @params {function():void} params.callback
+   * @return {Promise<*>}
    */
   __metamaskCall = async ({
     f, acc, value, callback = () => {},
@@ -94,10 +93,10 @@ class IContract {
 
   /**
    * @function
-   * @param f
-   * @param call
-   * @param value
-   * @param callback
+   * @params {*} f
+   * @params {boolean} call
+   * @params {*} value
+   * @params [function():void] callback
    * @return {Promise<*>}
    */
   __sendTx = async (f, call = false, value, callback = () => {}) => {
@@ -168,7 +167,8 @@ class IContract {
   /**
    * Deploy {@link IContract.params.contract} and call {@link IContract.__assert}
    * @function
-   * @param {{callback: function()}} params
+   * @param {Object} params
+   * @param {function():void} callback
    * @return {Promise<*|undefined>}
    */
   deploy = async ({ callback }) => {
@@ -190,7 +190,8 @@ class IContract {
 
   /**
    * Set new owner of {@link IContract.params.contract}
-   * @params params.address address
+   * @param {Object} params
+   * @param {Address} params.address
    * @return {Promise<*|undefined>}
    */
   async setNewOwner({ address }) {
@@ -237,8 +238,9 @@ class IContract {
 
   /**
    * Remove Tokens from other ERC20 Address (in case of accident)
-   * @params params.tokenAddress {Address}
-   * @params params.toAddress {Address}
+   * @param {Object} params
+   * @param {Address} params.tokenAddress
+   * @param {Address} params.toAddress
    */
   async removeOtherERC20Tokens({ tokenAddress, toAddress }) {
     return await this.__sendTx(
@@ -250,7 +252,8 @@ class IContract {
 
   /**
    * (Admins only) Safeguards all tokens from {@link IContract.params.contract}
-   * @params params.toAddress {Address}
+   * @param {Object} params
+   * @param {Address} params.toAddress
    * @return {Promise<*|undefined>}
    */
   async safeGuardAllTokens({ toAddress }) {
@@ -261,7 +264,8 @@ class IContract {
 
   /**
    * Change token address of {@link IContract.params.contract}
-   * @params params.newTokenAddress {newTokenAddress: Address}
+   * @param {Object} params
+   * @param {Address} params.newTokenAddress
    * @return {Promise<*|undefined>}
    */
   async changeTokenAddress({ newTokenAddress }) {
@@ -274,7 +278,7 @@ class IContract {
 
   /**
    * Returns the contract address
-   * @returns {String|null} Contract address
+   * @returns {string|null} Contract address
    */
   getAddress() {
     return this.params.contractAddress;
@@ -302,7 +306,9 @@ class IContract {
 
   /**
    * Verify that current user/sender is admin, throws an error otherwise
+   * @async
    * @throws {Error} Only admin can perform this operation
+   * @void
    */
   async onlyOwner() {
     /* Verify that sender is admin */
@@ -316,7 +322,9 @@ class IContract {
 
   /**
    * Verify that contract is not paused before sending a transaction, throws an error otherwise
+   * @async
    * @throws {Error} Contract is paused
+   * @void
    */
   async whenNotPaused() {
     /* Verify that contract is not paused */
