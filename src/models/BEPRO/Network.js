@@ -20,8 +20,9 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * Asserts using {@link BEPRONetwork.params.contract} with {@link beproNetwork} and {@link BEPRONetwork.params.abi}
-   * followed by setting a new {@link ERC20Contract} to {@link BEPRONetwork.params.ERC20Contract}, asserting it.
+   * Asserts using the current contract
+   * followed by setting a new {@link ERC20Contract} to this instances public params, asserting it.
+   * @function
    * @void
    * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
    */
@@ -303,6 +304,7 @@ class BEPRONetwork extends IContract {
 
   /**
    * Approve ERC20 Allowance
+   * @function
    * @return {Promise<number>}
    */
   approveERC20 = async () => {
@@ -315,6 +317,7 @@ class BEPRONetwork extends IContract {
 
   /**
    * Verify if Approved
+   * @function
    * @return {Promise<number>}
    */
   isApprovedERC20 = async ({ amount, address }) => await this.getERC20Contract().isApproved({
@@ -461,8 +464,8 @@ class BEPRONetwork extends IContract {
   /**
    * Propose Merge of Issue
    * @param {number} issueID
-   * @param {address | Array} prAddresses
-   * @param {address | Integer} prAmounts
+   * @param {Address | Address[]} prAddresses
+   * @param {number | number[]} prAmounts
    * @return {Promise<*>}
    */
   async proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
@@ -477,8 +480,7 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @function
-   * @description close Issue
+   * close Issue
    * @param {number} issueID
    * @param {number} mergeID
    * @return {Promise<*>}
@@ -490,7 +492,8 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   *
+   * Deploys current contract and awaits {@link BEPRONetwork#__assert}
+   * @function
    * @param tokenAddress
    * @param callback
    * @return {Promise<*|undefined>}
@@ -505,7 +508,8 @@ class BEPRONetwork extends IContract {
   };
 
   /**
-   * @return ERC20Contract
+   * @function
+   * @return ERC20Contract|null
    */
   getERC20Contract = () => this.params.ERC20Contract;
 }

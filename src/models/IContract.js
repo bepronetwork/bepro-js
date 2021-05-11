@@ -43,6 +43,7 @@ class IContract {
 
   /**
    * Initialize by awaiting {@link IContract.__assert}
+   * @function
    * @return {Promise<void>}
    * @throws {Error} if no {@link IContract.getAddress}, Please add a Contract Address
    */
@@ -59,7 +60,7 @@ class IContract {
   };
 
   /**
-   *
+   * @function
    * @param f
    * @param acc
    * @param value
@@ -88,7 +89,7 @@ class IContract {
   });
 
   /**
-   *
+   * @function
    * @param f
    * @param call
    * @param value
@@ -130,7 +131,8 @@ class IContract {
   };
 
   /**
-   * Deploy {@link IContract.params.contract}
+   * Deploy current contract
+   * @function
    * @param {*} params
    * @param {function()} callback
    * @return {Promise<*|undefined>}
@@ -145,6 +147,7 @@ class IContract {
 
   /**
    * Asserts and uses {@link IContract.params.contract} with {@link IContract.params.abi}
+   * @function
    * @void
    * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
    */
@@ -160,6 +163,7 @@ class IContract {
 
   /**
    * Deploy {@link IContract.params.contract} and call {@link IContract.__assert}
+   * @function
    * @param {{callback: function()}} params
    * @return {Promise<*|undefined>}
    */
