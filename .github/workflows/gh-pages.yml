@@ -16,10 +16,12 @@ jobs:
         run: mkdir docs
 
       - name: Build
-        uses: andstor/jsdoc-action@v1
+        uses: andstor/jsdoc-action@v1.2
         with:
           source_dir: ./src
+          recurse: true
           config_file: docs-src/jsdoc.json
+          template_dir: node_modules/better-docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
