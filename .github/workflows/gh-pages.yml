@@ -19,7 +19,9 @@ jobs:
         uses: andstor/jsdoc-action@v1
         with:
           source_dir: ./src
-          config_file: conf.json
+          recurse: true
+          config_file: docs-src/jsdoc.json
+          template: better-docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
