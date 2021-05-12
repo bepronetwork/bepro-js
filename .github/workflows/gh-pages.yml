@@ -16,7 +16,7 @@ jobs:
         run: mkdir docs
 
       - name: Build
-        uses: andstor/jsdoc-action@v1.2
+        uses: andstor/jsdoc-action@v1
         with:
           source_dir: ./src
           recurse: true
