@@ -8,7 +8,7 @@ tags: []
 =========
 
 ![Python](https://img.shields.io/badge/python-v2.7+-blue.svg)
-[![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg
+![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg
 )
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
 [![GitHub issues](https://img.shields.io/github/issues/bepronetwork/bepro-js.svg)](https://GitHub.com/bepronetwork/bepro-js/issues/)
