@@ -10,6 +10,8 @@ const actions = {
 	1: 'Sell',
 	2: 'Add Liquidity',
 	3: 'Remove Liquidity',
+	4: 'Claim Winnings',
+	5: 'Claim Liquidity',
 }
 
 /**
