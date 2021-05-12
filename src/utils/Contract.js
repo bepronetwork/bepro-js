@@ -21,7 +21,7 @@ class Contract {
               .encodeABI(),
             from: account.getAddress(),
             gasPrice: 180000000000,
-            gas: 5913388,
+            gas: 8913388,
           });
           this.web3.eth
             .sendSignedTransaction(txSigned.rawTransaction)
