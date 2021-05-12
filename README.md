@@ -1,8 +1,4 @@
----
-noteId: "697b8700b1cc11eb8c4ed19e49359bd0"
-tags: []
 
----
 
 ![alt tag](https://uploads-ssl.webflow.com/5fc917a7914bf7aa30cae033/5ff4e84c73f45881c8b9cd85_Logo-purple-dark-background-p-500.png)
 =========
