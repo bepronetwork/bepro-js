@@ -1,9 +1,6 @@
----
-name: Take a bounty
-about: Provide a solution for an existing bounty
-labels: solution, needs-triage
+**Bounty**
+<!-- A link to the original bounty -->
 
----
 
 **Describe the solution**
 <!-- A clear and concise description of what the solution is composed of -->
@@ -11,10 +8,6 @@ labels: solution, needs-triage
 
 **Preview**
 <!-- If possible, or visual, provide a live-preview of the solution -->
-
-
-**Bounty**
-<!-- A link to the original bounty -->
 
 
 **ETH Wallet**

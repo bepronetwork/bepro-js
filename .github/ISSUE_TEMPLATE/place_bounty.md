@@ -14,7 +14,7 @@ labels: request, needs-triage
 
 
 **Bounty**
-<!-- Amount of BEPRO bounty that will be awarded for the completion of this feature, if accepted and completed -->
+<!-- (Optional) Amount of BEPRO bounty that will be awarded for the completion of this feature, if accepted and completed -->
 
 
 **Who are we**
