@@ -1,4 +1,6 @@
-const IPFS = require("ipfs");
+/* eslint-disable */
+const IPFS = require('ipfs');
+
 const node = new IPFS();
 
 class DexStorage {

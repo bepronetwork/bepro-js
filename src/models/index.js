@@ -7,11 +7,11 @@ import ERC721Standard from './ERC721/ERC721Standard';
 import OpenerRealFvr from './custom/RealFvr/OpenerRealFvr';
 
 export {
-	ERC20Contract,
-	ExchangeContract,
-	StakingContract,
-	ERC20TokenLock,
-	ERC721Collectibles,
-	ERC721Standard,
-	OpenerRealFvr
-}
+  ERC20Contract,
+  ExchangeContract,
+  StakingContract,
+  ERC20TokenLock,
+  ERC721Collectibles,
+  ERC721Standard,
+  OpenerRealFvr,
+};

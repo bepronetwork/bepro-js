@@ -1,23 +1,27 @@
-import { erc721standard } from "../../interfaces";
-import _ from "lodash";
-import IContract from "../IContract";
-import ERC20Contract from "../ERC20/ERC20Contract";
+import { erc721standard } from '../../interfaces';
+import IContract from '../IContract';
+import ERC20Contract from '../ERC20/ERC20Contract';
 /**
  * ERC721Contract Object
  * @class ERC721Contract
- * @param {Web3} web3
- * @param {Address} contractAddress ? (opt)
+ * @param {Object} params
+ * @param {Web3} params.web3
+ * @param [Address] params.contractAddress
  */
-
 class ERC721Standard extends IContract {
-  constructor(params) {
+  constructor(params = {}) {
     super({ abi: erc721standard, ...params });
   }
 
+  /**
+   * @function
+   * @return {Promise<void>}
+   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
+   */
   __assert = async () => {
     if (!this.getAddress()) {
       throw new Error(
-        "Contract is not deployed, first deploy it and provide a contract address"
+        'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
     /* Use ABI */
@@ -35,9 +39,10 @@ class ERC721Standard extends IContract {
   };
 
   /**
-   * @function
-   * @description Verify if token ID exists
-   * @returns {Integer} Token Id
+   * Verify if token ID exists
+   * @param {Object} params
+   * @param {number} params.tokenID
+   * @returns {Promise<boolean>} Token Id
    */
   async exists({ tokenID }) {
     return await this.params.contract
@@ -47,9 +52,10 @@ class ERC721Standard extends IContract {
   }
 
   /**
-   * @function
-   * @description Verify what is the getURITokenID
-   * @returns {String} URI
+   * Verify what is the getURITokenID
+   * @param {Object} params
+   * @param {number} params.tokenID
+   * @returns {Promise<string>} URI
    */
   async getURITokenID({ tokenID }) {
     return await this.params.contract
@@ -57,53 +63,68 @@ class ERC721Standard extends IContract {
       .methods.tokenURI(tokenID)
       .call();
   }
+
   /**
-   * @function
-   * @description Verify what is the baseURI
-   * @returns {String} URI
+   * Verify what is the baseURI
+   * @returns {Promise<string>} URI
    */
   async baseURI() {
     return await this.params.contract.getContract().methods.baseURI().call();
   }
 
   /**
+   * Set Base Token URI
    * @function
-   * @description Set Base Token URI
+   * @param {Object} params
+   * @param {string} params.URI
+   * @return {Promise<*>}
    */
-  setBaseTokenURI = async ({ URI }) => {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.setBaseURI(URI)
-    );
-  };
+  setBaseTokenURI = async ({ URI }) => await this.__sendTx(
+    this.params.contract.getContract().methods.setBaseURI(URI),
+  );
 
   /**
-   * @function
-   * @description Mint created TokenID
-   * @param {Address} to
-   * @param {Integer} tokenID
+   * Mint created TokenID
+   * @param {Object} params
+   * @param {number} params.tokenID
+   * @return {Promise<TransactionObject>}
    */
   async mint({ tokenID }) {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.mint(tokenID)
+      this.params.contract.getContract().methods.mint(tokenID),
     );
   }
 
+  /**
+   * @link ERC721Standard.__deploy
+   * @param {Object} params
+   * @param {string} params.name
+   * @param {*} params.symbol
+   * @param {function():void} params.callback
+   * @return {Promise<*|undefined>}
+   * @throws {Error} Please provide a name
+   * @throws {Error} Please provide a symbol
+   */
   deploy = async ({ name, symbol, callback }) => {
     if (!name) {
-      throw new Error("Please provide a name");
+      throw new Error('Please provide a name');
     }
 
     if (!symbol) {
-      throw new Error("Please provide a symbol");
+      throw new Error('Please provide a symbol');
     }
-    let params = [name, symbol];
-    let res = await this.__deploy(params, callback);
+    const params = [name, symbol];
+    const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
     return res;
   };
 
+  /**
+   * @function
+   * @return ERC20Contract|undefined
+   */
   getERC20Contract = () => this.params.ERC20Contract;
 }
 
