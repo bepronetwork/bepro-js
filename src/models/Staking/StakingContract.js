@@ -152,7 +152,7 @@ class StakingContract extends IContract {
   }
 
   /**
-   * Get All Available Products
+   * Get All Available Products Ids
    * @function
    * @returns {Promise<number[]>} ids
    */
