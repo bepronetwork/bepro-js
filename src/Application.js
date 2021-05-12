@@ -11,7 +11,6 @@ import {
 } from './models/index';
 import Account from './utils/Account';
 
-const ETH_URL_MAINNET = 'https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc';
 const ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
 // you can find this in "./truffle-config.js" file and should match ganache/ganache-cli local server settings too
 const ETH_URL_LOCAL_TEST = 'http://localhost:8545';
@@ -32,27 +31,24 @@ const networksEnum = Object.freeze({
  * Application Object
  * @class Application
  * @param {Object} params Parameters
- * @param {Bool} params.test Default : False
- * @param {Bool} params.localtest Default : False
- * @param {Bool} params.mainnet Default : True (If Ethereum Mainnet)
+ * @param {Bool} params.test Automated Tests / Default : False
+ * @param {Bool} params.localtest Ganache Local Blockchain / Default : False
  * @param {Object} params.opt Optional Chain Connection Object (Default ETH)
  * @param {String} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
  * @param {String} params.opt.privateKey Private key (0x....) used for server side use
  */
 class Application {
   constructor({
-    test = false,
+    test = false, // Automated tests
     localtest = false, // ganache local blockchain
-    mainnet = true,
     opt = {
-      web3Connection: ETH_URL_MAINNET,
-      privateKey: TEST_PRIVATE_KEY,
+      web3Connection : ETH_URL_TESTNET,
+      privateKey : TEST_PRIVATE_KEY,
     },
   }) {
     this.test = test;
     this.localtest = localtest;
     this.opt = opt;
-    this.mainnet = mainnet;
     if (this.test) {
       this.start();
       this.login();
@@ -72,24 +68,18 @@ class Application {
    * @description Connect to Web3 injected in the constructor
    */
   start = () => {
-    // this.web3 = new Web3(
-    // new Web3.providers.HttpProvider(this.mainnet == true ? this.opt.web3Connection : ETH_URL_TESTNET)
-    // );
-    if (this.mainnet) {
-      this.web3 = new Web3(
-        new Web3.providers.HttpProvider(this.opt.web3Connection),
-      );
-    } else if (this.test && this.localtest) {
+    if (this.localtest) {
       this.web3 = new Web3(
         new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST),
         // NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
         null,
         { transactionConfirmationBlocks: 1 },
       );
-    // if (this.test)
-    } else {
-      this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL_TESTNET));
+    }else{
+      this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
     }
+
+
     if (typeof window !== 'undefined') {
       window.web3 = this.web3;
     } else if (!this.test) {
