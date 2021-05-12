@@ -21,7 +21,7 @@ jobs:
           source_dir: ./src
           recurse: true
           config_file: docs-src/jsdoc.json
-          template_dir: node_modules/better-docs
+          template: better-docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
