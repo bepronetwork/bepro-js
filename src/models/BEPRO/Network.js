@@ -8,18 +8,6 @@ import ERC20Contract from '../ERC20/ERC20Contract';
 const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
 
 /**
- * @typedef Issue
- * @property {boolean} finalized: boolean
- * @property {boolean} canceled
- * @property {number} votesForApprove
- * @property {number} beproStaked
- * @property {Address} issueGenerator
- * @property {number} mergeProposalsAmount
- * @property {number} _id
- * @property {Date} creationDate
- */
-
-/**
  * BEPRONetwork Object
  * @class BEPRONetwork
  * @param {Object} params
@@ -30,6 +18,29 @@ const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
  * @param {beproNetwork} params.abi
  */
 class BEPRONetwork extends IContract {
+
+  /**
+   * @typedef {Object} BEPRONetwork~Issue
+   * @property {boolean} finalized: boolean
+   * @property {boolean} canceled
+   * @property {number} votesForApprove
+   * @property {number} beproStaked
+   * @property {Address} issueGenerator
+   * @property {number} mergeProposalsAmount
+   * @property {number} _id
+   * @property {Date} creationDate
+   */
+
+  /**
+   * @typedef {Object} BEPRONetwork~MergedIssue
+   * @property {Address[]} prAddresses
+   * @property {number[]} prAmounts
+   * @property {number} votes
+   * @property {Address} proposalAddress
+   * @property {number} _id
+   * @param params
+   */
+
   constructor(params) {
     super({ abi: beproNetwork, ...params });
   }
@@ -295,7 +306,7 @@ class BEPRONetwork extends IContract {
    * Get Issue Id Info
    * @param {Object} params
    * @param {number} params.issue_id
-   * @return Promise<Issue>
+   * @return {Promise<BEPRONetwork~Issue>}
    */
   async getIssueById({ issue_id }) {
     const r = await this.__sendTx(
@@ -321,7 +332,7 @@ class BEPRONetwork extends IContract {
    * @param {Object} params
    * @param {number} params.issue_id
    * @param {number} params.merge_id
-   * @return {Promise<{prAddresses: Address|Array, prAmounts: number|number[], votes: number, _id: number, proposalAddress: Address}>}
+   * @return {Promise<BEPRONetwork~MergedIssue>}
    */
   async getMergeById({ issue_id, merge_id }) {
     const r = await this.__sendTx(

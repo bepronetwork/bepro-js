@@ -40,10 +40,18 @@ class ExchangeContract extends IContract {
   }
 
   /**
+   * @typedef {Object} ExchangeContract~EventData
+   * @property {number} _resultId
+   * @property {string} name
+   * @property {string} urlOracle
+   * @property {boolean} isResolved
+   */
+
+  /**
    * Get EventData
    * @param {Object} event
    * @param {number} event.event_id
-   * @return {Promise<{_resultId: number, name: string, urlOracle: string, isResolved: boolean}>}
+   * @return {Promise<ExchangeContract~EventData>}
    */
   async getEventData({ event_id }) {
     const r = await this.__sendTx(
@@ -60,10 +68,20 @@ class ExchangeContract extends IContract {
   }
 
   /**
+   * @typedef {Object} ExchangeContract~EventHoldings
+   * @property {number} liquidityA
+   * @property {number} liquidityB
+   * @property {number} inPoolBalancesA
+   * @property {number} inPoolBalancesB
+   * @property {number} outPoolBalancesA
+   * @property {number} outPoolBalancesB
+   */
+
+  /**
    * Get My Event Holdings
    * @param {Object} event
    * @param {number} event.event_id
-   * @return {Promise<{liquidityA: number, inPoolBalancesB: number, inPoolBalancesA: number, liquidityB: number, outPoolBalancesA: number, outPoolBalancesB: number}>}
+   * @return {Promise<ExchangeContract~EventHoldings>}
    */
   async getMyEventHoldings({ event_id }) {
     const r = await this.__sendTx(
@@ -81,13 +99,25 @@ class ExchangeContract extends IContract {
     };
   }
 
+  /**
+   * @typedef {Object} ExchangeContract~SpaceData
+   * @property {number} inPool
+   * @property {number} amount
+   * @property {number} fees
+   * @property {number} cost
+   * @property {number} liqAmount
+   * @property {number} inPool
+   * @property {number} outPool
+   * @property {number} odd
+   * @property {number} _id
+   */
 
   /**
    * Get Result Space Data
    * @param {Object} event
    * @param {number} event.event_id
    * @param {number} event.resultSpace_id
-   * @return {Promise<{inPool: number, amount: number, fees: number, cost: number, liqAmount: number, _resultId, pool: number, outPool: number, _id, odd: number}>}
+   * @return {Promise<ExchangeContract~SpaceData>}
    */
   async getResultSpaceData({ event_id, resultSpace_id }) {
     const r = await this.__sendTx(
