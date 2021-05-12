@@ -90,7 +90,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
                 
             </nav>
         </div>
@@ -196,10 +196,33 @@
 
   
 
-  <td class="description last"><p>Parameters</p></td>
+  <td class="description last"></td>
 </tr>
 
   
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>web3</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Web3</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
   
     
 <tr class="deep-level-1">
@@ -220,7 +243,53 @@
 
   
 
-  <td class="description last"><p>Optional/If Existent</p></td>
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>acc</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>abi</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">beproNetwork</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
 </tr>
 
   
@@ -270,7 +339,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line11">line 11</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line10">line 10</a>
             </span>
         </p>
     
@@ -327,12 +396,135 @@
 
 
     
+    <h4 class="name" id="__assert">
+        <a class="href-link" href="#__assert">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                __assert<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Asserts using the current contract
+followed by setting a new <a href="ERC20Contract.html">ERC20Contract</a> to this instances public params, asserting it.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line55">line 55</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Contract is not deployed, first deploy it and provide a contract address</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
     <h4 class="name" id="approveERC20">
         <a class="href-link" href="#approveERC20">#</a>
         
         <span class="code-name">
             
-                approveERC20<span class="signature">()</span><span class="type-signature"></span>
+                approveERC20<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -392,7 +584,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line332">line 332</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line342">line 342</a>
             </span>
         </p>
     
@@ -414,6 +606,29 @@
 
 
 
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;number></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 
@@ -433,7 +648,7 @@
         
         <span class="code-name">
             
-                approveIssue<span class="signature">(issueId)</span><span class="type-signature"></span>
+                approveIssue<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -480,13 +695,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueId</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -498,6 +713,32 @@
 
   <td class="description last"></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
 
 
         
@@ -544,7 +785,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line428">line 428</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line452">line 452</a>
             </span>
         </p>
     
@@ -566,6 +807,29 @@
 
 
 
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 
@@ -585,7 +849,7 @@
         
         <span class="code-name">
             
-                approveMerge<span class="signature">(issueId, mergeId)</span><span class="type-signature"></span>
+                approveMerge<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -632,13 +896,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueId</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -651,11 +915,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueId</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>mergeId</code></td>
   
@@ -663,7 +949,7 @@
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -675,6 +961,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -721,7 +1009,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line450">line 450</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line477">line 477</a>
             </span>
         </p>
     
@@ -744,6 +1032,29 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -762,7 +1073,7 @@
         
         <span class="code-name">
             
-                beproVotesStaked<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                beproVotesStaked<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -822,7 +1133,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line143">line 143</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line168">line 168</a>
             </span>
         </p>
     
@@ -857,7 +1168,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -886,7 +1197,7 @@
         
         <span class="code-name">
             
-                closeIssue<span class="signature">(issueID, mergeID)</span><span class="type-signature"></span>
+                closeIssue<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -933,13 +1244,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueID</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -952,11 +1263,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueID</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>mergeID</code></td>
   
@@ -964,7 +1297,7 @@
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -976,6 +1309,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -1022,7 +1357,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line503">line 503</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line533">line 533</a>
             </span>
         </p>
     
@@ -1045,6 +1380,29 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -1063,7 +1421,7 @@
         
         <span class="code-name">
             
-                COUNCIL_BEPRO_AMOUNT<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                COUNCIL_BEPRO_AMOUNT<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1123,7 +1481,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line158">line 158</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line182">line 182</a>
             </span>
         </p>
     
@@ -1158,7 +1516,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1187,7 +1545,7 @@
         
         <span class="code-name">
             
-                delegateOracles<span class="signature">(beproAmount, delegatedTo)</span><span class="type-signature"></span>
+                delegateOracles<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -1234,13 +1592,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>beproAmount</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -1253,11 +1611,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>beproAmount</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>delegatedTo</code></td>
   
@@ -1265,7 +1645,7 @@
   <td class="type">
   
       
-<span class="param-type">address</span>
+<span class="param-type">Address</span>
 
 
   
@@ -1277,6 +1657,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -1323,7 +1705,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line391">line 391</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line411">line 411</a>
             </span>
         </p>
     
@@ -1346,6 +1728,249 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="deploy">
+        <a class="href-link" href="#deploy">#</a>
+        
+        <span class="code-name">
+            
+                deploy<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;(*|undefined)>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Deploys current contract and awaits for <a href="BEPRONetwork.html#__assert">BEPRONetwork#__assert</a></p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>tokenAddress</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line547">line 547</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;(*|undefined)></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -1364,7 +1989,7 @@
         
         <span class="code-name">
             
-                DEVELOPER_BEPRO_AMOUNT<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                DEVELOPER_BEPRO_AMOUNT<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1424,7 +2049,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line188">line 188</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line210">line 210</a>
             </span>
         </p>
     
@@ -1459,7 +2084,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1488,7 +2113,7 @@
         
         <span class="code-name">
             
-                getAmountofIssuesClosed<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                getAmountofIssuesClosed<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1548,7 +2173,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line75">line 75</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line105">line 105</a>
             </span>
         </p>
     
@@ -1583,7 +2208,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1612,7 +2237,7 @@
         
         <span class="code-name">
             
-                getAmountofIssuesOpened<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                getAmountofIssuesOpened<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1672,7 +2297,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line63">line 63</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line94">line 94</a>
             </span>
         </p>
     
@@ -1707,7 +2332,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1736,7 +2361,7 @@
         
         <span class="code-name">
             
-                getBEPROStaked<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                getBEPROStaked<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1796,7 +2421,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line117">line 117</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line144">line 144</a>
             </span>
         </p>
     
@@ -1831,10 +2456,120 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getERC20Contract">
+        <a class="href-link" href="#getERC20Contract">#</a>
+        
+        <span class="code-name">
+            
+                getERC20Contract<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line560">line 560</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ERC20Contract|null</p></div>
+    
     
 </div>
 
@@ -1860,7 +2595,7 @@
         
         <span class="code-name">
             
-                getIssueById<span class="signature">(issue_id)</span><span class="type-signature"> &rarr; {Integer|Integer|Date|Address|Integer|Integer|Bool|Bool}</span>
+                getIssueById<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="BEPRONetwork.html#~Issue">BEPRONetwork~Issue</a>>}</span>
             
         </span>
     </h4>
@@ -1907,13 +2642,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issue_id</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -1925,6 +2660,32 @@
 
   <td class="description last"></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issue_id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
 
 
         
@@ -1971,7 +2732,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line281">line 281</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line294">line 294</a>
             </span>
         </p>
     
@@ -2002,139 +2763,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>_id</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>beproStaked</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>creationDate</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Date</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>issueGenerator</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Address</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>votesForApprove</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>mergeProposalsAmount</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>finalized</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Bool</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>canceled</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Bool</span>
+<span class="param-type">Promise.&lt;<a href="BEPRONetwork.html#~Issue">BEPRONetwork~Issue</a>></span>
 
 
     </div>
@@ -2163,7 +2796,7 @@
         
         <span class="code-name">
             
-                getIssuesByAddress<span class="signature">(address)</span><span class="type-signature"> &rarr; {Integer|Array}</span>
+                getIssuesByAddress<span class="signature">(address)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span>
             
         </span>
     </h4>
@@ -2274,7 +2907,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line49">line 49</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line81">line 81</a>
             </span>
         </p>
     
@@ -2309,10 +2942,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
-|
-
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;number></span>
 
 
     </div>
@@ -2341,7 +2971,7 @@
         
         <span class="code-name">
             
-                getMergeById<span class="signature">(issue_id, merge_id)</span><span class="type-signature"> &rarr; {Integer|Integer|Address|Array|Integer|Array|Address}</span>
+                getMergeById<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="BEPRONetwork.html#~MergedIssue">BEPRONetwork~MergedIssue</a>>}</span>
             
         </span>
     </h4>
@@ -2350,7 +2980,7 @@
     
     
     <div class="description">
-        <p>Get Issue Id Info</p>
+        <p>Get votes, address and amounts for issue</p>
     </div>
     
 
@@ -2388,13 +3018,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issue_id</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -2407,11 +3037,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issue_id</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>merge_id</code></td>
   
@@ -2419,7 +3071,7 @@
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -2431,6 +3083,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -2477,7 +3131,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line311">line 311</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line320">line 320</a>
             </span>
         </p>
     
@@ -2508,91 +3162,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>_id</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>votes</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>prAddresses</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Address</span>
-|
-
-<span class="param-type">Array</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>prAmounts</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-|
-
-<span class="param-type">Array</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>proposalAddress</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Address</span>
+<span class="param-type">Promise.&lt;<a href="BEPRONetwork.html#~MergedIssue">BEPRONetwork~MergedIssue</a>></span>
 
 
     </div>
@@ -2621,7 +3195,7 @@
         
         <span class="code-name">
             
-                getVotesByAddress<span class="signature">(address)</span><span class="type-signature"> &rarr; {Integer}</span>
+                getVotesByAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -2668,6 +3242,30 @@
             
 <tr class="deep-level-0">
   
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
       <td class="name"><code>address</code></td>
   
 
@@ -2686,6 +3284,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -2732,7 +3332,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line259">line 259</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line280">line 280</a>
             </span>
         </p>
     
@@ -2763,13 +3363,13 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>votes</p></div>
+    <div class='param-desc column is-7'><p>Number of votes</p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -2794,7 +3394,7 @@
         
         <span class="code-name">
             
-                isApprovedERC20<span class="signature">()</span><span class="type-signature"></span>
+                isApprovedERC20<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -2814,6 +3414,106 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>amount</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Address</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -2854,7 +3554,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line344">line 344</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line358">line 358</a>
             </span>
         </p>
     
@@ -2877,6 +3577,29 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;number></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -2895,7 +3618,7 @@
         
         <span class="code-name">
             
-                isIssueApprovable<span class="signature">(issueId)</span><span class="type-signature"> &rarr; {Bool}</span>
+                isIssueApprovable<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -2942,13 +3665,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueId</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -2960,6 +3683,32 @@
 
   <td class="description last"></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
 
 
         
@@ -3006,7 +3755,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line217">line 217</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line239">line 239</a>
             </span>
         </p>
     
@@ -3041,7 +3790,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Bool</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -3070,7 +3819,7 @@
         
         <span class="code-name">
             
-                isIssueApproved<span class="signature">(issueId)</span><span class="type-signature"> &rarr; {Bool}</span>
+                isIssueApproved<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -3117,13 +3866,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueId</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -3135,6 +3884,32 @@
 
   <td class="description last"></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
 
 
         
@@ -3181,7 +3956,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line204">line 204</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line226">line 226</a>
             </span>
         </p>
     
@@ -3216,7 +3991,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Bool</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -3245,7 +4020,7 @@
         
         <span class="code-name">
             
-                isIssueMergeable<span class="signature">(issueId, mergeId)</span><span class="type-signature"> &rarr; {Bool}</span>
+                isIssueMergeable<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -3254,7 +4029,7 @@
     
     
     <div class="description">
-        <p>Is issue mergeable</p>
+        <p>Can this issue be merged</p>
     </div>
     
 
@@ -3292,13 +4067,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueId</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -3311,11 +4086,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueId</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>mergeId</code></td>
   
@@ -3323,7 +4120,7 @@
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -3335,6 +4132,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -3381,7 +4180,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line231">line 231</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line253">line 253</a>
             </span>
         </p>
     
@@ -3416,7 +4215,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Bool</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -3445,7 +4244,7 @@
         
         <span class="code-name">
             
-                isMergeTheOneWithMoreVotes<span class="signature">(issueId, mergeId)</span><span class="type-signature"> &rarr; {Bool}</span>
+                isMergeTheOneWithMoreVotes<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -3454,7 +4253,7 @@
     
     
     <div class="description">
-        <p>Is issue mergeable</p>
+        <p>Can this issue be merged</p>
     </div>
     
 
@@ -3492,13 +4291,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueId</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -3511,11 +4310,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueId</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>mergeId</code></td>
   
@@ -3523,7 +4344,7 @@
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -3535,6 +4356,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -3581,7 +4404,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line245">line 245</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line267">line 267</a>
             </span>
         </p>
     
@@ -3616,7 +4439,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Bool</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -3645,7 +4468,7 @@
         
         <span class="code-name">
             
-                lockBepro<span class="signature">(beproAmount)</span><span class="type-signature"></span>
+                lockBepro<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -3692,13 +4515,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>beproAmount</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -3756,7 +4579,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line355">line 355</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line372">line 372</a>
             </span>
         </p>
     
@@ -3777,7 +4600,65 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Bepro Amount has to be higher than 0</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
 
+
+    </div>
+    
+</div>
+
+                
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Bepro not approve for tx, first use 'approveERC20'</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 
@@ -3797,7 +4678,7 @@
         
         <span class="code-name">
             
-                openIssue<span class="signature">(beproAmount, address)</span><span class="type-signature"></span>
+                openIssue<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -3844,13 +4725,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>beproAmount</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -3863,11 +4744,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>beproAmount</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>address</code></td>
   
@@ -3875,7 +4778,7 @@
   <td class="type">
   
       
-<span class="param-type">address</span>
+<span class="param-type">Address</span>
 
 
   
@@ -3887,6 +4790,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -3933,7 +4838,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line409">line 409</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line432">line 432</a>
             </span>
         </p>
     
@@ -3954,7 +4859,65 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Bepro Amount has to be higher than 0</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
 
+
+    </div>
+    
+</div>
+
+                
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Bepro not approve for tx, first use 'approveERC20'</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 
@@ -3974,7 +4937,7 @@
         
         <span class="code-name">
             
-                OPERATOR_BEPRO_AMOUNT<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                OPERATOR_BEPRO_AMOUNT<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -4034,7 +4997,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line173">line 173</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line196">line 196</a>
             </span>
         </p>
     
@@ -4069,7 +5032,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -4098,7 +5061,7 @@
         
         <span class="code-name">
             
-                percentageNeededForApprove<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                percentageNeededForApprove<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -4158,7 +5121,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line87">line 87</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line116">line 116</a>
             </span>
         </p>
     
@@ -4193,7 +5156,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -4222,7 +5185,7 @@
         
         <span class="code-name">
             
-                percentageNeededForMerge<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                percentageNeededForMerge<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -4282,7 +5245,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line102">line 102</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line130">line 130</a>
             </span>
         </p>
     
@@ -4317,7 +5280,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -4346,7 +5309,7 @@
         
         <span class="code-name">
             
-                proposeIssueMerge<span class="signature">(issueID, prAddresses, prAmounts)</span><span class="type-signature"></span>
+                proposeIssueMerge<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -4393,13 +5356,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueID</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -4412,11 +5375,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueID</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>prAddresses</code></td>
   
@@ -4424,10 +5409,7 @@
   <td class="type">
   
       
-<span class="param-type">address</span>
-|
-
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;Address></span>
 
 
   
@@ -4440,11 +5422,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>prAmounts</code></td>
   
@@ -4452,10 +5432,7 @@
   <td class="type">
   
       
-<span class="param-type">address</span>
-|
-
-<span class="param-type">Integer</span>
+<span class="param-type">Array.&lt;number></span>
 
 
   
@@ -4467,6 +5444,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -4513,7 +5492,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line486">line 486</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line515">line 515</a>
             </span>
         </p>
     
@@ -4536,6 +5515,29 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -4554,7 +5556,7 @@
         
         <span class="code-name">
             
-                redeemIssue<span class="signature">()</span><span class="type-signature"></span>
+                redeemIssue<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -4574,6 +5576,83 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -4614,7 +5693,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line438">line 438</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line464">line 464</a>
             </span>
         </p>
     
@@ -4637,6 +5716,29 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -4655,7 +5757,7 @@
         
         <span class="code-name">
             
-                timeOpenForIssueApprove<span class="signature">()</span><span class="type-signature"> &rarr; {Date}</span>
+                timeOpenForIssueApprove<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Date>}</span>
             
         </span>
     </h4>
@@ -4715,7 +5817,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line129">line 129</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line155">line 155</a>
             </span>
         </p>
     
@@ -4750,7 +5852,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Date</span>
+<span class="param-type">Promise.&lt;Date></span>
 
 
     </div>
@@ -4779,7 +5881,7 @@
         
         <span class="code-name">
             
-                unlockBepro<span class="signature">(beproAmount, from)</span><span class="type-signature"></span>
+                unlockBepro<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -4826,38 +5928,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>beproAmount</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>from</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">address</span>
+<span class="param-type">Object</span>
 
 
   
@@ -4915,7 +5992,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line375">line 375</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line394">line 394</a>
             </span>
         </p>
     
@@ -4936,7 +6013,51 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Bepro Amount has to be higher than 0</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
 
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 
@@ -4956,7 +6077,7 @@
         
         <span class="code-name">
             
-                updateIssue<span class="signature">(issueID, beproAmount, address)</span><span class="type-signature"></span>
+                updateIssue<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -5003,13 +6124,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>issueID</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -5022,11 +6143,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>issueID</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>beproAmount</code></td>
   
@@ -5034,7 +6177,7 @@
   <td class="type">
   
       
-<span class="param-type">integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -5047,11 +6190,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>address</code></td>
   
@@ -5071,6 +6212,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -5117,7 +6260,7 @@
         <p class="tag-source">
             <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
             <span>
-                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line463">line 463</a>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line491">line 491</a>
             </span>
         </p>
     
@@ -5140,6 +6283,29 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -5149,6 +6315,516 @@
         </div>
     
 
+    
+        <div class='vertical-section'>
+            <h1>Type Definitions</h1>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="~Issue">
+    <a class="href-link" href="#~Issue">#</a>
+    
+    <span class="code-name">
+        Issue
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>finalized:</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">boolean</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"><p>boolean</p></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>canceled</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">boolean</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>votesForApprove</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>beproStaked</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>issueGenerator</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Address</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>mergeProposalsAmount</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>_id</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>creationDate</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Date</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line21">line 21</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="~MergedIssue">
+    <a class="href-link" href="#~MergedIssue">#</a>
+    
+    <span class="code-name">
+        MergedIssue
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>prAddresses</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Array.&lt;Address></span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>prAmounts</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>votes</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>proposalAddress</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Address</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>_id</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_Network.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_Network.js.html">models/BEPRO/Network.js</a>, <a href="models_BEPRO_Network.js.html#line33">line 33</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
     
 
     
