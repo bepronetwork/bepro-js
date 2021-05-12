@@ -1,7 +1,7 @@
-import { erc721standard } from "../../interfaces";
-import _ from "lodash";
-import IContract from "../IContract";
-import ERC20Contract from "../ERC20/ERC20Contract";
+import _ from 'lodash';
+import { erc721standard } from '../../interfaces';
+import IContract from '../IContract';
+import ERC20Contract from '../ERC20/ERC20Contract';
 /**
  * ERC721Contract Object
  * @class ERC721Contract
@@ -10,14 +10,14 @@ import ERC20Contract from "../ERC20/ERC20Contract";
  */
 
 class ERC721Standard extends IContract {
-  constructor(params={}) {
+  constructor(params = {}) {
     super({ abi: erc721standard, ...params });
   }
 
   __assert = async () => {
     if (!this.getAddress()) {
       throw new Error(
-        "Contract is not deployed, first deploy it and provide a contract address"
+        'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
     /* Use ABI */
@@ -57,6 +57,7 @@ class ERC721Standard extends IContract {
       .methods.tokenURI(tokenID)
       .call();
   }
+
   /**
    * @function
    * @description Verify what is the baseURI
@@ -70,11 +71,9 @@ class ERC721Standard extends IContract {
    * @function
    * @description Set Base Token URI
    */
-  setBaseTokenURI = async ({ URI }) => {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.setBaseURI(URI)
-    );
-  };
+  setBaseTokenURI = async ({ URI }) => await this.__sendTx(
+    this.params.contract.getContract().methods.setBaseURI(URI),
+  );
 
   /**
    * @function
@@ -84,20 +83,20 @@ class ERC721Standard extends IContract {
    */
   async mint({ tokenID }) {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.mint(tokenID)
+      this.params.contract.getContract().methods.mint(tokenID),
     );
   }
 
   deploy = async ({ name, symbol, callback }) => {
     if (!name) {
-      throw new Error("Please provide a name");
+      throw new Error('Please provide a name');
     }
 
     if (!symbol) {
-      throw new Error("Please provide a symbol");
+      throw new Error('Please provide a symbol');
     }
-    let params = [name, symbol];
-    let res = await this.__deploy(params, callback);
+    const params = [name, symbol];
+    const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
