@@ -88,7 +88,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul><h3><a href="global.html">Global</a></h3></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
                 
             </nav>
         </div>
@@ -269,11 +269,26 @@ class StakingContract extends IContract {
   );
 
   /**
-   * Get Subscription from product
+   * @typedef {Object} StakingContract~Product
+   * @property {Date} createdAt
+   * @property {Date} startDate
+   * @property {Date} endDate
+   * @property {boolean} lockedUntilFinalization
+   * @property {number} APR
+   * @property {number} currentAmount
+   * @property {number} individualMinimumAmount
+   * @property {number} totalMaxAmount
+   * @property {number[]} subscriptionIds
+   * @property {Address[]} subscribers
+   * @property {number} _id
+   */
+
+  /**
+   * Get product
    * @function
    * @param {Object} params
    * @param {number} params.product_id
-   * @return {Promise&lt;{createdAt: Date, APR: number, endDate: Date, subscribers: Address[], subscriptionIds: number[], individualMinimumAmount: number, currentAmount: number, _id: number, totalMaxAmount: number, lockedUntilFinalization: boolean, startDate: Date}>}
+   * @return {Promise&lt;StakingContract~Product>}
    */
   getProduct = async ({ product_id }) => {
     const res = await this.__sendTx(
@@ -356,12 +371,25 @@ class StakingContract extends IContract {
   };
 
   /**
+   * @typedef {Object} StakingContract.ProductSubscription
+   * @property {number} amount
+   * @property {number} APR
+   * @property {number} withdrawAmount
+   * @property {number} productId
+   * @property {number} _id
+   * @property {Address} subscriberAddress
+   * @property {Date} startDate
+   * @property {Date} endDate
+   * @property {boolean} finalized
+   */
+
+  /**
    * Get Subscription from product
    * @function
    * @param {Object} params
    * @param {number} params.subscription_id
    * @param {number} params.product_id
-   * @return {Promise&lt;{finalized: boolean, amount: number, APR: number, productId: number, endDate: Date, _id: number, withdrawAmount: number, subscriberAddress: Address, startDate: Date}>}
+   * @return {Promise&lt;StakingContract.ProductSubscription>}
    */
   getSubscription = async ({ subscription_id, product_id }) => {
     const res = await this.__sendTx(

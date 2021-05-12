@@ -24,7 +24,6 @@
         "docs": "npm run build && npm run jsdoc:build && npm run jsdoc:serve",
         "jsdoc:build": "jsdoc -t ./node_modules/better-docs src -r -c docs-src/jsdoc.json",
         "jsdoc:serve": "http-server ./docs/ -o",
-        "prebuild": "npm run jsdoc:build",
         "lint": "eslint ./src --cache",
         "lint:fix": "eslint ./src --fix",
         "ganache:start": "ganache-cli -p 8545"
