@@ -1,7 +1,6 @@
 **Bounty**
 <!-- A link to the original bounty -->
 
-
 **Describe the solution**
 <!-- A clear and concise description of what the solution is composed of -->
 

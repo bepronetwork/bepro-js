@@ -19,8 +19,6 @@ jobs:
       - name: npm install
         run: npm install
       - name: npm build
-        run: npm run-script build
-      - name: npm run jsdoc:build
-        run: npm run-script build docs
+        run: npm run build
         env:
-          CI: true        
+          CI: true
