@@ -41,6 +41,10 @@
             <span aria-hidden="true"></span>
         </a>
         <div class="logo">
+             
+                <a class="image" href="index.html">
+                    <img src="//avatars.githubusercontent.com/u/49488487?s=200&v=4" alt="logo">
+                </a>
             
              
                 <a href="index.html">
@@ -371,7 +375,7 @@ class StakingContract extends IContract {
   };
 
   /**
-   * @typedef {Object} StakingContract.ProductSubscription
+   * @typedef {Object} StakingContract~ProductSubscription
    * @property {number} amount
    * @property {number} APR
    * @property {number} withdrawAmount
@@ -389,7 +393,7 @@ class StakingContract extends IContract {
    * @param {Object} params
    * @param {number} params.subscription_id
    * @param {number} params.product_id
-   * @return {Promise&lt;StakingContract.ProductSubscription>}
+   * @return {Promise&lt;StakingContract~ProductSubscription>}
    */
   getSubscription = async ({ subscription_id, product_id }) => {
     const res = await this.__sendTx(
