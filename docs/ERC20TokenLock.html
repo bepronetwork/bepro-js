@@ -90,7 +90,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
                 
             </nav>
         </div>
@@ -109,7 +109,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ERC20TokenLock<span class="signature">(params)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>ERC20TokenLock<span class="signature">(params, Address<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -133,7 +133,7 @@
         
         <span class="code-name">
             
-                new ERC20TokenLock<span class="signature">(params)</span><span class="type-signature"></span>
+                new ERC20TokenLock<span class="signature">(params, Address<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -167,6 +167,8 @@
             <th>Type</th>
 
             
+            <th>Attributes</th>
+            
 
             
 
@@ -193,6 +195,14 @@
   </td>
 
   
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
 
   
 
@@ -217,6 +227,14 @@
   </td>
 
   
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
 
   
 
@@ -224,29 +242,36 @@
 </tr>
 
   
-    
-<tr class="deep-level-1">
+
+
+        
+
+            
+<tr class="deep-level-0">
   
-      <td class="name"><code>contractAddress</code></td>
+      <td class="name"><code>Address</code></td>
   
 
   <td class="type">
   
-      
-<span class="param-type">Address</span>
-
-
-  
   </td>
 
   
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
 
   
 
-  <td class="description last"><p>? (opt)</p></td>
+  <td class="description last"><p>params.contractAddress</p></td>
 </tr>
-
-  
 
 
         
@@ -293,7 +318,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line11">line 11</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line9">line 9</a>
             </span>
         </p>
     
@@ -340,6 +365,78 @@
     
 
     
+        <div class='vertical-section'>
+            <h1>Members</h1>
+            <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id="__assert">
+    <a class="href-link" href="#__assert">#</a>
+    
+    <span class="code-name">
+        __assert
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line288">line 288</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
 
     
         <div class='vertical-section'>
@@ -355,7 +452,7 @@
         
         <span class="code-name">
             
-                approveERC20Transfer<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span>
+                approveERC20Transfer<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -415,7 +512,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line278">line 278</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line271">line 271</a>
             </span>
         </p>
     
@@ -452,7 +549,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -477,7 +574,7 @@
         
         <span class="code-name">
             
-                canRelease<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span>
+                canRelease<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -614,7 +711,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line105">line 105</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line98">line 98</a>
             </span>
         </p>
     
@@ -651,7 +748,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -676,7 +773,7 @@
         
         <span class="code-name">
             
-                deploy<span class="signature">()</span><span class="type-signature"></span>
+                deploy<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;(*|undefined)>}</span>
             
         </span>
     </h4>
@@ -696,6 +793,83 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -736,7 +910,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line317">line 317</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line319">line 319</a>
             </span>
         </p>
     
@@ -757,7 +931,51 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>No Token Address Provided</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
 
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;(*|undefined)></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 
@@ -777,7 +995,7 @@
         
         <span class="code-name">
             
-                erc20<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span>
+                erc20<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Address>}</span>
             
         </span>
     </h4>
@@ -837,7 +1055,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line46">line 46</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line42">line 42</a>
             </span>
         </p>
     
@@ -872,10 +1090,120 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Address</span>
+<span class="param-type">Promise.&lt;Address></span>
 
 
     </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getERC20Contract">
+        <a class="href-link" href="#getERC20Contract">#</a>
+        
+        <span class="code-name">
+            
+                getERC20Contract<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line336">line 336</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ERC20Contract|undefined</p></div>
+    
     
 </div>
 
@@ -897,7 +1225,7 @@
         
         <span class="code-name">
             
-                getLockedTokens<span class="signature">(params)</span><span class="type-signature"> &rarr; {Integer}</span>
+                getLockedTokens<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1034,7 +1362,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line114">line 114</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line107">line 107</a>
             </span>
         </p>
     
@@ -1071,7 +1399,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1096,7 +1424,7 @@
         
         <span class="code-name">
             
-                getLockedTokensInfo<span class="signature">(params)</span><span class="type-signature"> &rarr; {Date|Date|Integer}</span>
+                getLockedTokensInfo<span class="signature">(params)</span><span class="type-signature"> &rarr; {Date|Date|Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1233,7 +1561,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line131">line 131</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line124">line 124</a>
             </span>
         </p>
     
@@ -1306,7 +1634,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1331,7 +1659,7 @@
         
         <span class="code-name">
             
-                getTokenAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Integer}</span>
+                getTokenAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1468,7 +1796,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line57">line 57</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line53">line 53</a>
             </span>
         </p>
     
@@ -1505,7 +1833,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1530,7 +1858,7 @@
         
         <span class="code-name">
             
-                lock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span>
+                lock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -1539,7 +1867,9 @@
     
     
     <div class="description">
-        <p>User locks his tokens until specified end date.</p>
+        <p>User locks his tokens until specified end date.
+REQUIREMENTS:
+user must have approved this contract to spend the tokens &quot;amount&quot; he wants to lock before calling this function.</p>
     </div>
     
 
@@ -1630,7 +1960,7 @@
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -1713,7 +2043,7 @@
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line204">line 204</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line197">line 197</a>
             </span>
         </p>
     
@@ -1744,15 +2074,13 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Success True if operation was successful
-REQUIREMENTS:
-user must have approved this contract to spend the tokens &quot;amount&quot; he wants to lock before calling this function.</p></div>
+    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -1781,7 +2109,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         
         <span class="code-name">
             
-                maxAmountToLock<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                maxAmountToLock<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1841,7 +2169,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line90">line 90</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line83">line 83</a>
             </span>
         </p>
     
@@ -1878,7 +2206,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1907,7 +2235,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         
         <span class="code-name">
             
-                minAmountToLock<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                minAmountToLock<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1967,7 +2295,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line77">line 77</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line71">line 71</a>
             </span>
         </p>
     
@@ -2004,7 +2332,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -2029,7 +2357,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         
         <span class="code-name">
             
-                release<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span>
+                release<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -2166,7 +2494,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line253">line 253</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line246">line 246</a>
             </span>
         </p>
     
@@ -2203,7 +2531,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -2228,7 +2556,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         
         <span class="code-name">
             
-                setMaxAmountToLock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span>
+                setMaxAmountToLock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -2237,7 +2565,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     
     
     <div class="description">
-        <p>Admin sets maximum amount of tokens to lock per user</p>
+        <p>(Admin only) sets maximum amount of tokens to lock per user</p>
     </div>
     
 
@@ -2365,7 +2693,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line154">line 154</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line147">line 147</a>
             </span>
         </p>
     
@@ -2402,7 +2730,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -2427,7 +2755,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         
         <span class="code-name">
             
-                setMinAmountToLock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Boolean}</span>
+                setMinAmountToLock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -2436,7 +2764,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     
     
     <div class="description">
-        <p>Admin sets minimum amount of tokens to lock per user</p>
+        <p>(Admin only) sets minimum amount of tokens to lock per user</p>
     </div>
     
 
@@ -2504,7 +2832,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -2564,7 +2892,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line177">line 177</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line170">line 170</a>
             </span>
         </p>
     
@@ -2601,7 +2929,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -2690,7 +3018,7 @@ user must have approved this contract to spend the tokens &quot;amount&quot; he 
         <p class="tag-source">
             <a href="models_ERC20_ERC20TokenLock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line64">line 64</a>
+                <a href="models_ERC20_ERC20TokenLock.js.html">models/ERC20/ERC20TokenLock.js</a>, <a href="models_ERC20_ERC20TokenLock.js.html#line59">line 59</a>
             </span>
         </p>
     
