@@ -12,6 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Fool GH Pages?
+        run: mkdir docs
+
       - name: Build
         uses: andstor/jsdoc-action@v1
         with:
