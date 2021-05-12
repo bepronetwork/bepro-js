@@ -39,6 +39,10 @@
             <span aria-hidden="true"></span>
         </a>
         <div class="logo">
+             
+                <a class="image" href="index.html">
+                    <img src="//avatars.githubusercontent.com/u/49488487?s=200&v=4" alt="logo">
+                </a>
             
              
                 <a href="index.html">
@@ -86,7 +90,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
                 
             </nav>
         </div>
@@ -313,20 +317,38 @@
     
 
     
+
+    
         <div class='vertical-section'>
-            <h1>Members</h1>
+            <h1>Methods</h1>
             <div class="members">
             
                 <div class="member">
 
-<h4 class="name" id="__assert">
-    <a class="href-link" href="#__assert">#</a>
+
     
-    <span class="code-name">
-        __assert
-    </span>
+    <h4 class="name" id="__assert">
+        <a class="href-link" href="#__assert">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                __assert<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
     
-</h4>
+
+    
+    
+
+
+
+
+
 
 
 
@@ -370,7 +392,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line391">line 391</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line416">line 416</a>
             </span>
         </p>
     
@@ -380,16 +402,44 @@
 
 
 
-</div>
-            
-            </div>
-        </div>
-    
 
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
     
-        <div class='vertical-section'>
-            <h1>Methods</h1>
-            <div class="members">
+    <div class='param-desc column is-7'><p>Contract is not deployed, first deploy it and provide a contract address</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
             
                 <div class="member">
 
@@ -400,7 +450,7 @@
         
         <span class="code-name">
             
-                approveERC20Transfer<span class="signature">()</span><span class="type-signature"></span>
+                approveERC20Transfer<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -460,7 +510,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line214">line 214</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line221">line 221</a>
             </span>
         </p>
     
@@ -483,6 +533,29 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -501,7 +574,7 @@
         
         <span class="code-name">
             
-                availableTokens<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                availableTokens<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -561,7 +634,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line67">line 67</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line65">line 65</a>
             </span>
         </p>
     
@@ -596,7 +669,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -625,7 +698,7 @@
         
         <span class="code-name">
             
-                createProduct<span class="signature">(startDate, endDate, totalMaxAmount, individualMinimumAmount, APR, lockedUntilFinalization)</span><span class="type-signature"></span>
+                createProduct<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -634,7 +707,7 @@
     
     
     <div class="description">
-        <p>createProduct</p>
+        <p>Creates a product</p>
     </div>
     
 
@@ -672,6 +745,30 @@
             
 <tr class="deep-level-0">
   
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
       <td class="name"><code>startDate</code></td>
   
 
@@ -691,11 +788,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>endDate</code></td>
   
@@ -716,11 +811,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>totalMaxAmount</code></td>
   
@@ -741,11 +834,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>individualMinimumAmount</code></td>
   
@@ -766,11 +857,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>APR</code></td>
   
@@ -791,11 +880,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>lockedUntilFinalization</code></td>
   
@@ -809,6 +896,219 @@
   
   </td>
 
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line126">line 126</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="deploy">
+        <a class="href-link" href="#deploy">#</a>
+        
+        <span class="code-name">
+            
+                deploy<span class="signature">(Object<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Deploy the Staking Contract</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>Object</code></td>
+  
+
+  <td class="type">
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+
+  <td class="description last"><p>params</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params.callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
   
 
   
@@ -861,7 +1161,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line127">line 127</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line444">line 444</a>
             </span>
         </p>
     
@@ -884,102 +1184,28 @@
 
 
 
-
-
-
-</div>
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
             
-                <div class="member">
+                    
 
-
+<div class="columns">
     
-    <h4 class="name" id="deploy">
-        <a class="href-link" href="#deploy">#</a>
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
         
-        <span class="code-name">
-            
-                deploy<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
+<span class="param-type">Promise.&lt;*></span>
 
-    
-    
-    <div class="description">
-        <p>Deploy the Staking Contract</p>
+
     </div>
     
+</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line417">line 417</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                
+        </div>
+    </div>
 
 
 
@@ -999,7 +1225,7 @@
         
         <span class="code-name">
             
-                depositAPRTokensByAdmin<span class="signature">(amount)</span><span class="type-signature"></span>
+                depositAPRTokensByAdmin<span class="signature">(params, amount)</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -1046,13 +1272,64 @@
             
 <tr class="deep-level-0">
   
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
       <td class="name"><code>amount</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>amount</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Promise.&lt;number></span>
 
 
   
@@ -1110,7 +1387,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line354">line 354</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line376">line 376</a>
             </span>
         </p>
     
@@ -1151,7 +1428,7 @@
         
         <span class="code-name">
             
-                erc20<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span>
+                erc20<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Address>}</span>
             
         </span>
     </h4>
@@ -1211,7 +1488,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line35">line 35</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line33">line 33</a>
             </span>
         </p>
     
@@ -1246,7 +1523,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Address</span>
+<span class="param-type">Promise.&lt;Address></span>
 
 
     </div>
@@ -1275,7 +1552,7 @@
         
         <span class="code-name">
             
-                futureLockedTokens<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                futureLockedTokens<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1335,7 +1612,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line54">line 54</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line53">line 53</a>
             </span>
         </p>
     
@@ -1370,7 +1647,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -1395,7 +1672,7 @@
         
         <span class="code-name">
             
-                getAllSubscriptions<span class="signature">()</span><span class="type-signature"> &rarr; {Array|Subscription}</span>
+                getAllSubscriptions<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;Subscription>>}</span>
             
         </span>
     </h4>
@@ -1455,7 +1732,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line328">line 328</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line348">line 348</a>
             </span>
         </p>
     
@@ -1492,10 +1769,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Array</span>
-|
-
-<span class="param-type">Subscription</span>
+<span class="param-type">Promise.&lt;Array.&lt;Subscription>></span>
 
 
     </div>
@@ -1520,7 +1794,7 @@
         
         <span class="code-name">
             
-                getAPRAmount<span class="signature">(APR, startDate, endDate, amount)</span><span class="type-signature"> &rarr; {Integer}</span>
+                getAPRAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1567,6 +1841,30 @@
             
 <tr class="deep-level-0">
   
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
       <td class="name"><code>APR</code></td>
   
 
@@ -1586,11 +1884,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>startDate</code></td>
   
@@ -1611,11 +1907,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>endDate</code></td>
   
@@ -1636,11 +1930,9 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>amount</code></td>
   
@@ -1660,6 +1952,8 @@
 
   <td class="description last"><p>Token Amount</p></td>
 </tr>
+
+  
 
 
         
@@ -1706,7 +2000,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line97">line 97</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line95">line 95</a>
             </span>
         </p>
     
@@ -1741,10 +2035,120 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getERC20Contract">
+        <a class="href-link" href="#getERC20Contract">#</a>
+        
+        <span class="code-name">
+            
+                getERC20Contract<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line460">line 460</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ERC20Contract|undefined</p></div>
+    
     
 </div>
 
@@ -1766,7 +2170,7 @@
         
         <span class="code-name">
             
-                getProduct<span class="signature">(product_id)</span><span class="type-signature"> &rarr; {Date|Date|Date|Integer|Integer|Integer|Integer|Boolean|Array|Address|Array|Integer}</span>
+                getProduct<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="StakingContract.html#~Product">StakingContract~Product</a>>}</span>
             
         </span>
     </h4>
@@ -1775,7 +2179,7 @@
     
     
     <div class="description">
-        <p>Get Subscription from product</p>
+        <p>Get product</p>
     </div>
     
 
@@ -1813,13 +2217,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>product_id</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -1831,6 +2235,32 @@
 
   <td class="description last"></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>product_id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
 
 
         
@@ -1877,7 +2307,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line180">line 180</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line186">line 186</a>
             </span>
         </p>
     
@@ -1908,181 +2338,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>createdAt</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Date</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>startDate</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Date</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>endDate</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Date</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>totalMaxAmount</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>individualMinimumAmount</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>APR</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>currentAmount</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>lockedUntilFinalization</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Boolean</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>subscribers</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Array</span>
-|
-
-<span class="param-type">Address</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>subscriptionIds</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Array</span>
-|
-
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;<a href="StakingContract.html#~Product">StakingContract~Product</a>></span>
 
 
     </div>
@@ -2107,7 +2367,7 @@
         
         <span class="code-name">
             
-                getProducts<span class="signature">()</span><span class="type-signature"> &rarr; {Array|Integer}</span>
+                getProducts<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;number>>}</span>
             
         </span>
     </h4>
@@ -2116,7 +2376,7 @@
     
     
     <div class="description">
-        <p>Get All Available Products</p>
+        <p>Get All Available Products Ids</p>
     </div>
     
 
@@ -2167,7 +2427,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line160">line 160</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line159">line 159</a>
             </span>
         </p>
     
@@ -2204,10 +2464,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Array</span>
-|
-
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;Array.&lt;number>></span>
 
 
     </div>
@@ -2232,7 +2489,7 @@
         
         <span class="code-name">
             
-                getSubscription<span class="signature">(product_id, subscription_id)</span><span class="type-signature"> &rarr; {Integer|Integer|Date|Date|Address|Integer|Boolean}</span>
+                getSubscription<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="StakingContract.html#~ProductSubscription">StakingContract~ProductSubscription</a>>}</span>
             
         </span>
     </h4>
@@ -2279,13 +2536,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>product_id</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -2298,11 +2555,10 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>subscription_id</code></td>
   
@@ -2310,7 +2566,7 @@
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -2322,6 +2578,31 @@
 
   <td class="description last"></td>
 </tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>product_id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
 
 
         
@@ -2368,7 +2649,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line270">line 270</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line287">line 287</a>
             </span>
         </p>
     
@@ -2399,121 +2680,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>_id</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>productId</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>startDate</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Date</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>endDate</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Date</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>subscriberAddress</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Address</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>APR</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Integer</span>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>finalized</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Boolean</span>
+<span class="param-type">Promise.&lt;<a href="StakingContract.html#~ProductSubscription">StakingContract~ProductSubscription</a>></span>
 
 
     </div>
@@ -2538,7 +2709,7 @@
         
         <span class="code-name">
             
-                getSubscriptionsByAddress<span class="signature">(address)</span><span class="type-signature"> &rarr; {Array|Integer}</span>
+                getSubscriptionsByAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;number>>}</span>
             
         </span>
     </h4>
@@ -2585,6 +2756,30 @@
             
 <tr class="deep-level-0">
   
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
       <td class="name"><code>address</code></td>
   
 
@@ -2603,6 +2798,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -2649,7 +2846,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line315">line 315</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line335">line 335</a>
             </span>
         </p>
     
@@ -2686,10 +2883,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Array</span>
-|
-
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;Array.&lt;number>></span>
 
 
     </div>
@@ -2714,7 +2908,7 @@
         
         <span class="code-name">
             
-                getTokenAmount<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span>
+                getTokenAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -2734,6 +2928,83 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Address</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -2809,7 +3080,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Address</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -2834,7 +3105,7 @@
         
         <span class="code-name">
             
-                getTotalNeededTokensForAPRbyAdmin<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                getTotalNeededTokensForAPRbyAdmin<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -2894,7 +3165,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line366">line 366</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line388">line 388</a>
             </span>
         </p>
     
@@ -2931,7 +3202,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -2960,7 +3231,7 @@
         
         <span class="code-name">
             
-                heldTokens<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+                heldTokens<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -3020,7 +3291,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line80">line 80</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line77">line 77</a>
             </span>
         </p>
     
@@ -3055,7 +3326,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Integer</span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -3080,7 +3351,7 @@
         
         <span class="code-name">
             
-                subscribeProduct<span class="signature">(product_id, amount)</span><span class="type-signature"> &rarr; {Boolean}</span>
+                subscribeProduct<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -3127,13 +3398,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>product_id</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -3146,11 +3417,33 @@
   <td class="description last"></td>
 </tr>
 
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>product_id</code></td>
+  
 
-        
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
 
-            
-<tr class="deep-level-0">
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>amount</code></td>
   
@@ -3158,7 +3451,7 @@
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -3170,6 +3463,8 @@
 
   <td class="description last"></td>
 </tr>
+
+  
 
 
         
@@ -3216,7 +3511,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line232">line 232</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line241">line 241</a>
             </span>
         </p>
     
@@ -3237,6 +3532,27 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Has to Approve Token Transfer First, use the 'approve' Call</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
     <div class='columns method-parameter'>
@@ -3253,7 +3569,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -3278,7 +3594,7 @@
         
         <span class="code-name">
             
-                withdrawSubscription<span class="signature">(product_id, subscription_id)</span><span class="type-signature"></span>
+                withdrawSubscription<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -3325,13 +3641,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>product_id</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">Object</span>
 
 
   
@@ -3344,11 +3660,10 @@
   <td class="description last"></td>
 </tr>
 
-
-        
-
-            
-<tr class="deep-level-0">
+  
+  
+    
+<tr class="deep-level-1">
   
       <td class="name"><code>subscription_id</code></td>
   
@@ -3356,7 +3671,7 @@
   <td class="type">
   
       
-<span class="param-type">Integer</span>
+<span class="param-type">number</span>
 
 
   
@@ -3368,6 +3683,31 @@
 
   <td class="description last"></td>
 </tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>product_id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
 
 
         
@@ -3414,7 +3754,7 @@
         <p class="tag-source">
             <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line303">line 303</a>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line322">line 322</a>
             </span>
         </p>
     
@@ -3437,6 +3777,29 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
 
@@ -3446,6 +3809,677 @@
         </div>
     
 
+    
+        <div class='vertical-section'>
+            <h1>Type Definitions</h1>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="~Product">
+    <a class="href-link" href="#~Product">#</a>
+    
+    <span class="code-name">
+        Product
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>createdAt</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Date</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>startDate</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Date</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>endDate</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Date</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>lockedUntilFinalization</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">boolean</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>APR</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>currentAmount</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>individualMinimumAmount</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>totalMaxAmount</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>subscriptionIds</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Array.&lt;number></span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>subscribers</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Array.&lt;Address></span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>_id</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line164">line 164</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Object</span>
+
+
+    </span>
+
+<h4 class="name" id="~ProductSubscription">
+    <a class="href-link" href="#~ProductSubscription">#</a>
+    
+    <span class="code-name">
+        ProductSubscription
+    </span>
+    
+</h4>
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+<div class="table-container">
+    <table class="props table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>amount</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>APR</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>withdrawAmount</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>productId</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>_id</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">number</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>subscriberAddress</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Address</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>startDate</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Date</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>endDate</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">Date</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+            
+<tr class="deep-level-0">
+    
+        <td class="name"><code>finalized</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">boolean</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last"></td>
+</tr>
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_Staking_StakingContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_Staking_StakingContract.js.html">models/Staking/StakingContract.js</a>, <a href="models_Staking_StakingContract.js.html#line266">line 266</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
     
 
     

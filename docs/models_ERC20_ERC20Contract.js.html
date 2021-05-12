@@ -92,7 +92,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
                 
             </nav>
         </div>
@@ -116,25 +116,32 @@ import IContract from '../IContract';
 /**
  * @class ERC20Contract
  * @param {Object} params Parameters
- * @param {Address} params.contractAddress Optional/If Existent
+ * @param [Address] params.contractAddress Optional/If Existent
  */
 class ERC20Contract extends IContract {
   constructor(params = {}) {
     super({ abi: ierc20, ...params });
   }
 
+  /**
+   * Use a {@link ierc20} contract with the current address
+   * @return {Promise&lt;void>}
+   */
   __assert = async () => {
     this.params.contract.use(ierc20, this.getAddress());
     this.params.decimals = await this.getDecimalsAsync();
   };
 
+  /**
+   *
+   * @return {*}
+   */
   getContract() {
     return this.params.contract.getContract();
   }
 
   /**
-   * @function
-   * @description Get Token Address
+	 * Get Token Address
    * @returns {Address} address
    */
   getAddress() {
@@ -142,12 +149,12 @@ class ERC20Contract extends IContract {
   }
 
   /**
+   * Transfer Tokens
    * @function
-   * @description Transfer Tokens
    * @param {Object} params Parameters
    * @param {Address} params.toAddress To Address
    * @param {Integer} params.tokenAmount Amount of Tokens
-   * @returns {Transaction} Transaction
+   * @returns {Promise&lt;Transaction>} Transaction
    */
   transferTokenAmount = async ({ toAddress, tokenAmount }) => {
     const amountWithDecimals = Numbers.toSmartContractDecimals(
@@ -162,10 +169,10 @@ class ERC20Contract extends IContract {
   };
 
   /**
+   * Get Amount of Tokens User Holds
    * @function
-   * @description Get Amount of Tokens User Holds
    * @param {Address} address User Address
-   * @returns {Transaction} Transaction
+   * @returns {Promise&lt;Transaction>} Transaction
    */
   getTokenAmount = async address => Numbers.fromDecimals(
     await this.getContract().methods.balanceOf(address).call(),
@@ -173,38 +180,46 @@ class ERC20Contract extends IContract {
   );
 
   /**
+   * Get Total Supply of Token
    * @function
-   * @description Get Total Supply of Token
-   * @returns {Integer} Total supply
+   * @returns {Promise&lt;number>} Total supply
    */
   totalSupply = async () => Numbers.fromDecimals(
     await this.getContract().methods.totalSupply().call(),
     this.getDecimals(),
   );
 
+  /**
+   *
+   * @return {Contract}
+   */
   getABI() {
     return this.params.contract;
   }
 
   /**
+   * Get Decimals of Token
    * @function
-   * @description Get Decimals of Token
-   * @returns {Integer} Total supply
+   * @returns {number} Total supply
    */
   getDecimals() {
     return this.params.decimals;
   }
 
+  /**
+   *
+   * @return {Promise&lt;number>}
+   */
   getDecimalsAsync = async () => await this.getContract().methods.decimals().call();
 
   /**
+   * Verify if Spender is Approved to use tokens
    * @function
-   * @description Verify if Spender is Approved to use tokens
    * @param {Object} params Parameters
    * @param {Address} params.address Sender Address
-   * @param {Integer} params.amount Amount of Tokens
+   * @param {number} params.amount Amount of Tokens
    * @param {Address} params.spenderAddress Spender Address
-   * @returns {Bool} isApproved
+   * @returns {Promise&lt;boolean>} isApproved
    */
   isApproved = async ({ address, amount, spenderAddress }) => {
     try {
@@ -221,12 +236,13 @@ class ERC20Contract extends IContract {
   };
 
   /**
+   * Approve tokens to be used by another address/contract
    * @function
-   * @description Approve tokens to be used by another address/contract
    * @param {Object} params Parameters
    * @param {Address} params.address Spender Address/Contract
-   * @param {Integer} params.amount Amount of Tokens
-   * @returns {Transaction} Transaction
+   * @param {number} params.amount Amount of Tokens
+   * @param {function():void} params.callback callback for the Tx
+   * @returns {Promise&lt;Transaction>} Transaction
    */
   approve = async ({ address, amount, callback }) => {
     try {
@@ -249,14 +265,14 @@ class ERC20Contract extends IContract {
   };
 
   /**
+   * Deploy ERC20 Token
    * @function
-   * @description Deploy ERC20 Token
    * @param {Object} params Parameters
-   * @param {String} params.name Name of token
-   * @param {String} params.symbol Symbol of token
-   * @param {Integer} params.cap Max supply of Token (ex : 100M)
+   * @param {string} params.name Name of token
+   * @param {string} params.symbol Symbol of token
+   * @param {number} params.cap Max supply of Token (ex : 100M)
    * @param {Address} params.distributionAddress Where tokens should be sent to initially
-   * @returns {Transaction} Transaction
+   * @returns {Promise&lt;Transaction>} Transaction
    */
   deploy = async ({
     name, symbol, cap, distributionAddress, callback,
