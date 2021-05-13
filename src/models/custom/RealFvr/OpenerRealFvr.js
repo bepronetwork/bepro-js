@@ -1,6 +1,6 @@
-import { openerRealFvr } from "../../../interfaces";
-import Numbers from "../../../utils/Numbers";
-import _ from "lodash";
+import _ from 'lodash';
+import { openerRealFvr } from '../../../interfaces';
+import Numbers from '../../../utils/Numbers';
 import IContract from '../../IContract';
 import ERC20Contract from '../../ERC20/ERC20Contract';
 
@@ -8,17 +8,22 @@ import ERC20Contract from '../../ERC20/ERC20Contract';
  * OpenerRealFvr Object
  * @class OpenerRealFvr
  * @param {Object} params Parameters
- * @param {Address} params.contractAddress Contract Address (If Deployed)
+ * @param {Boolean} params.test
+ * @param {Boolean} params.localtest, ganache local blockchain
+ * @param {Web3Connection} params.web3Connection ? (opt), created from above params
  * @param {Address} params.tokenAddress Token Purchase Address
+ * @param {Address} params.contractAddress Contract Address (If Deployed)
  */
 class OpenerRealFvr extends IContract {
-  constructor(params) {
-    super({abi: openerRealFvr, ...params});
+  constructor(params = {}) {
+    super({ abi: openerRealFvr, ...params });
   }
 
   __assert = async () => {
     if (!this.getAddress()) {
-      throw new Error("Contract is not deployed, first deploy it and provide a contract address");
+      throw new Error(
+        'Contract is not deployed, first deploy it and provide a contract address',
+      );
     }
 
     // Use ABI
@@ -26,101 +31,117 @@ class OpenerRealFvr extends IContract {
 
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
+      web3Connection: this.web3Connection,
       contractAddress: this.tokenAddress,
-      acc: this.acc
     });
 
     // Assert Token Contract
     await this.params.ERC20Contract.__assert();
-  }
-
-  /**
-   * @function
-	 * @description Buy Pack
-   * @param {Object} params Parameters
-   * @param {Integer} params.packId Pack Id
-   * @returns {Transaction} Transaction
-	 */
-   buyPack = async ({packId}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.buyPack(packId));
   };
 
   /**
    * @function
-   * @description Offer Pack 
+   * @description Buy Pack
+   * @param {Object} params Parameters
+   * @param {Integer} params.packId Pack Id
+   * @returns {Transaction} Transaction
+   */
+  buyPack = async ({ packId }) => await this.__sendTx(
+    this.params.contract.getContract().methods.buyPack(packId),
+  );
+
+  /**
+   * @function
+   * @description Offer Pack
    * @param {Object} params Parameters
    * @param {Integer} params.packId Pack Id
    * @param {Address} params.receivingAddress Pack Id Integer
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-  offerPack = async ({packId, receivingAddress}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.offerPack(packId, receivingAddress));
-  };
+   */
+  offerPack = async ({ packId, receivingAddress }) => await this.__sendTx(
+    this.params.contract
+      .getContract()
+      .methods.offerPack(packId, receivingAddress),
+  );
 
   /**
    * @function
-	 * @description Create Pack 
+   * @description Create Pack
    * @param {Object} params Parameters
-	 * @param {Integer} params.packNumber Pack Number
-	 * @param {Integer} params.nftAmount Amount of NFTs/Tokens
-	 * @param {Integer} params.price Price of Pack
-	 * @param {String} params.serie Serie of Pack
-	 * @param {String} params.packType Pack Type
-	 * @param {String} params.drop Pack Drop
-	 * @param {Date} params.saleStart Start Date
-	 * @param {Address} params.saleDistributionAddresses Revenue Addresses of the First Purchase
-	 * @param {Integer} params.saleDistributionAmounts Revenue Amounts of the First Purchase
-	 * @returns {TransactionObject} Success the Tx Object if operation was successful
-	 */
-   createPack = async ({packNumber, nftAmount, price, serie, packType, drop, 
-    saleStart, saleDistributionAddresses, saleDistributionAmounts}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.createPack(
-      packNumber, 
-      parseInt(nftAmount),
-      String(price).toString(),
-      serie,
-      packType,
-      drop,
-      Numbers.timeToSmartContractTime(saleStart),
-      saleDistributionAddresses,
-      saleDistributionAmounts
-    ));
-  };
+   * @param {Integer} params.packNumber Pack Number
+   * @param {Integer} params.nftAmount Amount of NFTs/Tokens
+   * @param {Integer} params.price Price of Pack
+   * @param {String} params.serie Serie of Pack
+   * @param {String} params.packType Pack Type
+   * @param {String} params.drop Pack Drop
+   * @param {Date} params.saleStart Start Date
+   * @param {Address | Array} params.saleDistributionAddresses Revenue Addresses of the First Purchase
+   * @param {Integer | Array} params.saleDistributionAmounts Revenue Amounts of the First Purchase
+   * @returns {TransactionObject} Success the Tx Object if operation was successful
+   */
+  createPack = async ({
+    packNumber,
+    nftAmount,
+    price,
+    serie,
+    packType,
+    drop,
+    saleStart,
+    saleDistributionAddresses,
+    saleDistributionAmounts,
+  }) => await this.__sendTx(
+    this.params.contract
+      .getContract()
+      .methods.createPack(
+        packNumber,
+        parseInt(nftAmount, 10),
+        String(price).toString(),
+        serie,
+        packType,
+        drop,
+        Numbers.timeToSmartContractTime(saleStart),
+        saleDistributionAddresses,
+        saleDistributionAmounts,
+      ),
+  );
 
   /**
    * @function
-	 * @description Edit Pack Info 
+   * @description Edit Pack Info
    * @param {Object} params Parameters
-	 * @param {Integer} params.packId Pack Number
-	 * @param {Date} params.saleStart Time of Start of the Sale
-	 * @param {String} params.serie Serie of Pack
-	 * @param {String} params.packType Pack Type
-	 * @param {String} params.drop Pack Drop
-	 * @param {Integer} params.price Pack Price
-	 * @returns {TransactionObject} Success the Tx Object if operation was successful
-	 */
-  editPackInfo = async ({packId, saleStart, price, serie, packType, drop}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.createPack(
-      packId, 
-      Numbers.timeToSmartContractTime(saleStart),
-      serie,
-      packType,
-      drop,
-      String(price).toString()
-    ));
-  };
+   * @param {Integer} params.packId Pack Number
+   * @param {Date} params.saleStart Time of Start of the Sale
+   * @param {String} params.serie Serie of Pack
+   * @param {String} params.packType Pack Type
+   * @param {String} params.drop Pack Drop
+   * @param {Integer} params.price Pack Price
+   * @returns {TransactionObject} Success the Tx Object if operation was successful
+   */
+  editPackInfo = async ({
+    packId, saleStart, price, serie, packType, drop,
+  }) => await this.__sendTx(
+    this.params.contract
+      .getContract()
+      .methods.createPack(
+        packId,
+        Numbers.timeToSmartContractTime(saleStart),
+        serie,
+        packType,
+        drop,
+        String(price).toString(),
+      ),
+  );
 
   /**
    * @function
    * @description Delete Pack
-   * @param {Object} params Parameters 
+   * @param {Object} params Parameters
    * @param {Integer} params.packId Pack Id Integer
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-   deletePackById = async ({packId}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.deletePackById(packId));
-  };
+   */
+  deletePackById = async ({ packId }) => await this.__sendTx(
+    this.params.contract.getContract().methods.deletePackById(packId),
+  );
 
   /**
    * @function
@@ -128,39 +149,37 @@ class OpenerRealFvr extends IContract {
    * @param {Object} params Parameters
    * @param {Integer} params.tokenId Token ID
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-  mint = async ({tokenId}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.mint(tokenId));
-  };
+   */
+  mint = async ({ tokenId }) => await this.__sendTx(
+    this.params.contract.getContract().methods.mint(tokenId),
+  );
 
   /**
    * @function
-   * @description Set Purchase Token 
+   * @description Set Purchase Token
    * @param {Object} params Parameters
    * @param {Address} params.address Token Address
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-   setPurchaseTokenAddress = async ({address}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.setPurchaseTokenAddress(address));
-  };
+   */
+  setPurchaseTokenAddress = async ({ address }) => await this.__sendTx(
+    this.params.contract
+      .getContract()
+      .methods.setPurchaseTokenAddress(address),
+  );
 
   /**
    * @function
    * @description Lock the Contract
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-   lock = async () => {
-    return await this.__sendTx(this.params.contract.getContract().methods.lock());
-  };
+   */
+  lock = async () => await this.__sendTx(this.params.contract.getContract().methods.lock());
 
   /**
    * @function
    * @description Unlock the Contract
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-   unlock = async () => {
-    return await this.__sendTx(this.params.contract.getContract().methods.unlock());
-  };
+   */
+  unlock = async () => await this.__sendTx(this.params.contract.getContract().methods.unlock());
 
   /**
    * @function
@@ -168,10 +187,12 @@ class OpenerRealFvr extends IContract {
    * @param {Object} params Parameters
    * @param {Address} params.address Token Address
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-   setTokenPriceInUSD = async ({address}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.setPurchaseTokenAddress(address));
-  };
+   */
+  setTokenPriceInUSD = async ({ address }) => await this.__sendTx(
+    this.params.contract
+      .getContract()
+      .methods.setPurchaseTokenAddress(address),
+  );
 
   /**
    * @function
@@ -179,10 +200,10 @@ class OpenerRealFvr extends IContract {
    * @param {Object} params Parameters
    * @param {String} params.uri URI of the Token Id Metadata JSON
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-   setBaseURI = async ({uri}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.setBaseURI(uri));
-  };
+   */
+  setBaseURI = async ({ uri }) => await this.__sendTx(
+    this.params.contract.getContract().methods.setBaseURI(uri),
+  );
 
   /**
    * @function
@@ -191,10 +212,10 @@ class OpenerRealFvr extends IContract {
    * @param {Integer} params.tokenId Token ID
    * @param {String} params.uri URI of the Token Id Metadata JSON
    * @returns {TransactionObject} Success the Tx Object if operation was successful
-  */
-   setTokenURI = async ({tokenId, uri}) => {
-    return await this.__sendTx(this.params.contract.getContract().methods.setTokenURI(tokenId, uri));
-  };
+   */
+  setTokenURI = async ({ tokenId, uri }) => await this.__sendTx(
+    this.params.contract.getContract().methods.setTokenURI(tokenId, uri),
+  );
 
   /**
    * @function
@@ -210,110 +231,106 @@ class OpenerRealFvr extends IContract {
    * @returns {Address} buyer
    * @returns {Array | Address} saleDistributionAddresses
    * @returns {Array | Integer} saleDistributionAmounts
-  */
-   getPackbyId = async ({ packId }) => {
-    let res = await 
-      this.params.contract.getContract()
-      .methods.getPackbyId(packId).call();
+   */
+  getPackbyId = async ({ packId }) => {
+    const res = await this.params.contract
+      .getContract()
+      .methods.getPackbyId(packId)
+      .call();
 
     return {
-        packId : packId,
-        packNumber: parseInt(res[1]),
-        initialNFTId: parseInt(res[2]),
-        price: Numbers.fromDecimals(res[3], 6),
-        serie: res[4],
-        drop: res[5],
-        packType: res[6],
-        buyer: res[7],
-        saleDistributionAddresses: res[8],
-        saleDistributionAmounts: res[9] ? res[9].map( a => parseInt(a)) : [],
-    }
-  }
+      packId,
+      packNumber: parseInt(res[1], 10),
+      initialNFTId: parseInt(res[2], 10),
+      price: Numbers.fromDecimals(res[3], 6),
+      serie: res[4],
+      drop: res[5],
+      packType: res[6],
+      buyer: res[7],
+      saleDistributionAddresses: res[8],
+      saleDistributionAmounts: res[9] ? res[9].map(a => parseInt(a, 10)) : [],
+    };
+  };
 
   /**
    * @function
    * @description Get Token IDs that were already bought via a pack
    * @returns {Array | Integer} TokensRegistered
-  */
-   getRegisteredTokens = async () => {
-    let res = await 
-      this.params.contract.getContract()
-      .methods.getRegisteredIDs().call();
+   */
+  getRegisteredTokens = async () => {
+    const res = await this.params.contract
+      .getContract()
+      .methods.getRegisteredIDs()
+      .call();
 
-    return res.map( a => parseInt(a))
-  }
+    return res.map(a => parseInt(a, 10));
+  };
 
   /**
    * @function
    * @description Verify if a Token was already minted
    * @param {Object} params Parameters
-   * @param {Integer} params.tokenId 
+   * @param {Integer} params.tokenId
    * @returns {Bool} wasMinted
-  */
-   exists = async ({tokenId}) => {
-    return await 
-      this.params.contract.getContract()
-      .methods.exists(tokenId).call();
-  }
+   */
+  exists = async ({ tokenId }) => await this.params.contract.getContract().methods.exists(tokenId).call();
 
-   /**
+  /**
    * @function
    * @description Get Cost in Fvr Tokens of the Pack
    * @param {Object} params Parameters
-   * @param {Integer} params.packId 
+   * @param {Integer} params.packId
    * @returns {Integer} Price in Real Fvr Tokens
-  */
-  getPackPriceInFVR = async ({packId}) => {
-    return Numbers.fromDecimals(await 
-      this.params.contract.getContract()
-      .methods.getPackPriceInFVR(packId).call(), this.getERC20Contract().getDecimals());
-  }
+   */
+  getPackPriceInFVR = async ({ packId }) => Numbers.fromDecimals(
+    await this.params.contract
+      .getContract()
+      .methods.getPackPriceInFVR(packId)
+      .call(),
+    this.getERC20Contract().getDecimals(),
+  );
 
   /**
    * @function
    * @description Get Amount of Packs Created
    * @returns {Integer} packsAmount
-  */
-  getAmountOfPacksCreated = async () => {
-    return parseInt(await 
-      this.params.contract.getContract()
-      .methods.packIncrementId().call());
-  }
+   */
+  getAmountOfPacksCreated = async () => parseInt(
+    await this.params.contract.getContract().methods.packIncrementId().call(), 10,
+  );
 
   /**
    * @function
    * @description Get Amount of Packs Opened
    * @returns {Integer} packsAmount
-  */
-   getAmountOfPacksOpened = async () => {
-    return parseInt(await 
-      this.params.contract.getContract()
-      .methods._openedPacks().call());
-  }
+   */
+  getAmountOfPacksOpened = async () => parseInt(
+    await this.params.contract.getContract().methods._openedPacks().call(), 10,
+  );
 
   /**
    * @function
    * @description Get Amount of Tokens/NFTs Created (Inherent to the Packs)
    * @returns {Integer} tokensAmount
-  */
-  getAmountOfTokensCreated = async () => {
-    return parseInt(await 
-      this.params.contract.getContract()
-      .methods.lastNFTID().call());
-  }
+   */
+  getAmountOfTokensCreated = async () => parseInt(
+    await this.params.contract.getContract().methods.lastNFTID().call(), 10,
+  );
 
-	/**
+  /**
    * @function
-	 * @description User deploys the contract
+   * @description User deploys the contract
    * @param {Object} params Parameters
-	 * @param {String} params.name Name of the Contract
-	 * @param {String} params.symbol Symbol of the Contract
-	 * @param {Address} params.tokenAddress token Address of the purchase Token in use
-	 * @returns {Boolean} Success the Tx Object if operation was successful
-	 */
-  deploy = async ({name, symbol, tokenAddress, callback}) => {
-    let params = [name, symbol, tokenAddress];
-    let res = await this.__deploy(params, callback);
+   * @param {String} params.name Name of the Contract
+   * @param {String} params.symbol Symbol of the Contract
+   * @param {Address} params.tokenAddress token Address of the purchase Token in use
+   * @returns {Boolean} Success the Tx Object if operation was successful
+   */
+  deploy = async ({
+    name, symbol, tokenAddress, callback,
+  }) => {
+    const params = [name, symbol, tokenAddress];
+    const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
@@ -321,7 +338,6 @@ class OpenerRealFvr extends IContract {
   };
 
   getERC20Contract = () => this.params.ERC20Contract;
-
 }
 
 export default OpenerRealFvr;

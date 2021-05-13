@@ -1,6 +1,6 @@
 {
     "name": "bepro-js",
-    "version": "1.2.1-beta-1",
+    "version": "1.2.3-beta",
     "description": "",
     "main": "index.js",
     "engines": {
@@ -22,9 +22,16 @@
         "compile": "truffle compile",
         "clean:contracts": "rimraf build/contracts && truffle compile",
         "docs": "npm run build && npm run jsdoc:build && npm run jsdoc:serve",
-        "jsdoc:build": "jsdoc -t ./docs-template/ src -r -c ./docs-template/jsdoc.json",
-        "jsdoc:serve": "http-server ./docs/ -o"
+        "jsdoc:build": "jsdoc -t ./node_modules/better-docs src -r -c docs-src/jsdoc.json",
+        "jsdoc:serve": "http-server ./docs/ -o",
+        "prebuild": "npm run jsdoc:build",
+        "lint": "eslint ./src --cache",
+        "lint:fix": "eslint ./src --fix"
     },
+    "pre-commit": [
+        "lint",
+        "lint:fix"
+    ],
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",
         "abi-decoder": "^1.2.0",
@@ -59,22 +66,24 @@
         "babel-preset-env": "^1.6.1",
         "babel-preset-es2015": "^6.24.1",
         "babel-register": "^6.26.0",
+        "better-docs": "^2.3.2",
         "eslint": "^6.8.0",
-        "eslint-config-airbnb-base": "13.1.0",
+        "eslint-config-airbnb-base": "^13.1.0",
         "eslint-config-prettier": "5.0.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-prettier": "3.1.0",
+        "ganache-cli": "^6.12.2",
         "gitbook-cli": "^2.3.2",
+        "http-server": "^0.12.3",
+        "jsdoc": "^3.6.6",
         "jsdoc-babel": "^0.5.0",
         "jsdoc-md": "^8.0.0",
         "jsdoc-to-markdown": "^6.0.1",
         "mocha-multi-reporters": "^1.5.1",
+        "pre-commit": "^1.2.2",
         "should": "^7.1.0",
         "supertest": "^1.0.0",
-        "truffle": "5.1.7",
-        "ganache-cli": "^6.12.2",
-        "http-server": "^0.12.3",
-        "jsdoc": "^3.6.6"
+        "truffle": "5.1.7"
     },
     "babel": {
         "presets": [

@@ -1,17 +1,15 @@
-
-
 import chai from 'chai';
-import { mochaAsync } from './utils';
-import { Application, ERC20Contract, ExchangeContract, StakingContract, ERC20TokenLock, ERC721Collectibles, ERC721Standard } from '..';
 import moment from 'moment';
 import delay from 'delay';
+import { mochaAsync } from './utils';
+import { Application, ERC20Contract, ExchangeContract, StakingContract, ERC20TokenLock, ERC721Collectibles, ERC721Standard } from '..';
 import Numbers from '../src/utils/Numbers';
 
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 const tokenAddress = "0xd3f461fef313a992fc25e681acc09c6191b08bca";
 const mainnet = false;
 
-const expect = chai.expect;
+const { expect } = chai;
 const ethAmount = 0.1;
 var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
 var totalMaxAmount = 100;
@@ -28,10 +26,16 @@ const testConfig = {
 };
 
 context('ERC721 Collectibles', async () => {
-    var erc721Contract, erc20Contract;
-    var tokensHeld, subscriptionId, withdrawTx, startDateSubscription, endDateSubscription;
-	var userAddress;
-	
+    let erc721Contract;
+    let erc20Contract;
+    let app;
+  	let tokensHeld;
+  	let subscriptionId;
+  	let withdrawTx;
+  	let startDateSubscription;
+  	let endDateSubscription;
+  	let userAddress;
+
     before( async () =>  {
         erc721Contract = new ERC721Collectibles(testConfig);
 		userAddress = await erc721Contract.getUserAddress(); //local test with ganache

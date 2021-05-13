@@ -14,4 +14,4 @@ export {
 	ERC20TokenLock,
 	ERC721Collectibles,
 	ERC721Standard
-}
+};

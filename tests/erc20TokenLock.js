@@ -1,8 +1,8 @@
 import chai from 'chai';
-import { mochaAsync } from './utils';
-import { Application, ERC20Contract, ExchangeContract, StakingContract, ERC20TokenLock, ERC721Collectibles, ERC721Standard } from '..';
 import moment from 'moment';
 import delay from 'delay';
+import { mochaAsync } from './utils';
+import { Application, ERC20Contract, ExchangeContract, StakingContract, ERC20TokenLock, ERC721Collectibles, ERC721Standard } from '..';
 import Numbers from '../src/utils/Numbers';
 //var assert = require('assert');
 // public address for this key is 0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB
@@ -13,20 +13,20 @@ const tokenAddress = "0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2";
 //var deployed_tokenAddress = '0x4197A48d240B104f2bBbb11C0a43fA789f2A5675';
 //var deployed_tokenAddress = '0x422E11f71440e17EbA859faCF44Dfd03fD259DDB'; //ganache
 var deployed_tokenAddress;
-const expect = chai.expect;
-const assert = chai.assert;
+const { expect } = chai;
+const { assert } = chai;
 const ethAmount = 0.1;
-var contractAddress = "0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64";
+let contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
 // this is already deployed on rinkeby network for testing
-//var deployed_contractAddress = '0xf7177df4a4797304cf59aa1e2dd4718cb390cbad';
-var deployed_contractAddress = "0xeAE93A3C4d74C469B898C345DEAD456C8Db06194";
-var totalMaxAmount = 100;
-var individualMinimumAmount = 10;
+// var deployed_contractAddress = '0xf7177df4a4797304cf59aa1e2dd4718cb390cbad';
+let deployed_contractAddress = '0xeAE93A3C4d74C469B898C345DEAD456C8Db06194';
+const totalMaxAmount = 100;
+const individualMinimumAmount = 10;
 
-var lockTokens;
+let lockTokens;
 // rinkeby test network needs about 15-20 seconds to confirm transactions so pick something greater
 const lockSeconds = 30; // lock tokens for x amount of seconds
-var endDate = moment().add(lockSeconds, "seconds");
+let endDate = moment().add(lockSeconds, 'seconds');
 const maxTokenAmount = 7000;
 const minTokenAmount = 1000;
 const testConfig = {
@@ -36,9 +36,9 @@ const testConfig = {
 };
 
 context('ERC20TokenLock Contract', async () => {
-	var erc20Contract;
-	var erc20Lock;
-	var userAddress;
+	let erc20Contract;
+	let erc20Lock;
+	let userAddress;
 
 	before(async () => {
 		console.log('---moment: ' + moment());
@@ -123,11 +123,11 @@ context('ERC20TokenLock Contract', async () => {
 			let decAsync = await erc20Lock.getERC20Contract().getDecimalsAsync();
 			console.log('erc20Lock.getERC20TokenDecimalsAsync: ' + decAsync);
 		})
-	);*/
-  ///<=
+	); */
+  // /<=
 
-  ///=> release locked tokens
-  /*it(
+  // /=> release locked tokens
+  /* it(
 		'should release tokens',
 		mochaAsync(async () => {
 			// release and withdraw unlocked tokens
@@ -324,5 +324,5 @@ context('ERC20TokenLock Contract', async () => {
         // Create Event
         let res = await erc20Lock.totalAmountStaked();
         expect(Numbers.fromExponential(res).toString()).to.equal(Number(0).toString());
-    }));*/
+    })); */
 });

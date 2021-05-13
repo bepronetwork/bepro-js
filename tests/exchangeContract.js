@@ -1,13 +1,11 @@
-
-
 import chai from 'chai';
-import { mochaAsync } from './utils';
 import moment from 'moment';
 import delay from 'delay';
+import { mochaAsync } from './utils';
 import { Application, ERC20Contract, ExchangeContract, StakingContract, ERC20TokenLock, ERC721Collectibles, ERC721Standard } from '..';
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
-const expect = chai.expect;
+const { expect } = chai;
 const ethAmount = 0.1;
 var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
 const testConfig = {
@@ -17,8 +15,8 @@ const testConfig = {
 };
 
 context('Exchange Contract', async () => {
-    var exchangeContract;
-    var eventId;
+    let exchangeContract;
+    let eventId;
    
     before( async () =>  {
         exchangeContract = new ExchangeContract(testConfig);
@@ -33,7 +31,7 @@ context('Exchange Contract', async () => {
 
     it('should deploy Exchange Contract', mochaAsync(async () => {
         /* Create Contract */
-        exchangeContract = new ExchangeContract({contractAddress : contractAddress});
+        exchangeContract = new ExchangeContract({ contractAddress });
         /* Deploy */
         let res = await exchangeContract.deploy({});
         contractAddress = exchangeContract.getAddress();
@@ -58,22 +56,22 @@ context('Exchange Contract', async () => {
 
     it('should get event data', mochaAsync(async () => {
         /* Get If Event was created */
-        let res = await exchangeContract.getEventData({event_id : eventId});
+        const res = await exchangeContract.getEventData({ event_id : eventId });
     }));
 
     it('should get result space data', mochaAsync(async () => {
         /* Get If Event was created */
-        let res = await exchangeContract.getResultSpaceData({event_id : eventId, resultSpace_id : 1});
+        const res = await exchangeContract.getResultSpaceData({ event_id : eventId, resultSpace_id : 1 });
     }));
 
     it('should be able to add liquidity', mochaAsync(async () => {
         /* Get If Event was created */
-        let res = await exchangeContract.addLiquidity({event_id : eventId, ethAmount});
+        const res = await exchangeContract.addLiquidity({ event_id : eventId, ethAmount });
     }));
 
     it('should be able to buy fractions', mochaAsync(async () => {
         /* Get If Event was created */
-        let res = await exchangeContract.buy({event_id : eventId, fractions_amount : 0.0001, resultSpace_id : 1});
+        const res = await exchangeContract.buy({ event_id : eventId, fractions_amount : 0.0001, resultSpace_id : 1 });
     }));
     
 

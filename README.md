@@ -1,8 +1,19 @@
-# bepro-js
-
-bepro-js is package to integrate BEPRO On-Chain products
 
 
+![alt tag](https://uploads-ssl.webflow.com/5fc917a7914bf7aa30cae033/5ff4e84c73f45881c8b9cd85_Logo-purple-dark-background-p-500.png)
+=========
+
+![Python](https://img.shields.io/badge/python-v2.7+-blue.svg)
+![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg
+)
+![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
+[![GitHub issues](https://img.shields.io/github/issues/bepronetwork/bepro-js.svg)](https://GitHub.com/bepronetwork/bepro-js/issues/)
+![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+
+## Introductions
+Build the future of DeFi Gaming
 
 ## Installation
 
@@ -64,7 +75,7 @@ https://bepronetwork.github.io/bepro-js/
 /* Note :  WEB3_LINK should be get from Infura/Quicknode or any other Web3 Provider - ETH, BSC, Moonbeam and others are supported */
 
 import moment from 'moment';
-import Application from 'bepro-js';
+import { Application } from 'bepro-js';
 
 /* 1 - Instantiate the App with the Infura/Web3 Connection */
 let app = new Application({opt : {web3Connection : 'WEB3_LINK'}});
@@ -86,6 +97,9 @@ await staking.deploy();
 await staking.availableTokens();
 
 ```
+## Contribution
+Contributions are welcomed but we ask to red existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
@@ -93,3 +107,5 @@ await staking.availableTokens();
 ## Notes
 
 The usage of ETH in all methods or params means using the native currency of that blockchain, example BSC in Binance Chain would still be nominated as ETH
+
+[1]: https://github.com/bepronetwork/bepro-js/blob/master/CONTRIBUTING.md

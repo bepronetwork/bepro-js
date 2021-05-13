@@ -1,75 +1,34 @@
-<testsuite name="Mocha Tests" tests="22" failures="1" errors="1" skipped="-1" timestamp="Mon, 10 May 2021 18:20:40 GMT" time="26.503">
-<testcase classname="Unit Tests Application" name="should start the Application" time="0.033"/>
-<testcase classname="Unit Tests ERC20" name="should start the ERC20Contract" time="0.001"/>
-<testcase classname="Unit Tests ERC20" name="should deploy a new ERC20 contract" time="1.646"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should deploy a new ERC20Contract" time="1.554"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should start the ERC20TokenLock" time="0.008"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should deploy ERC20TokenLock Contract" time="1.587"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="ERC20TokenLock Contract should have initial variables expected values" time="0.655"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set max tokens to lock per user" time="1.504"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set min tokens to lock per user" time="1.409"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should lock user tokens" time="3.964"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should get totalAmountStaked == 1000" time="0.173"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should fail to release tokens before release date" time="0.154"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should release and withdraw unlocked tokens" time="0.001"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set min tokens to lock to zero" time="1.565"/>
-<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set max tokens to lock to zero" time="1.489"/>
-<testcase classname="Unit Tests ERC721 Collectibles" name="should deploy a new ERC20Contract" time="1.697"/>
-<testcase classname="Unit Tests ERC721 Collectibles" name="should start the ERC721Collectibles" time="0.013"/>
-<testcase classname="Unit Tests ERC721 Collectibles" name="should deploy Contract" time="2.47"/>
-<testcase classname="Unit Tests ERC721 Collectibles" name="should verify if sale is limited" time="0.187"/>
-<testcase classname="Unit Tests ERC721 Collectibles" name="should add base tokenURI" time="1.382"/>
-<testcase classname="Unit Tests ERC721 Collectibles" name="should set Pack Price" time="1.645"/>
-<testcase classname="Unit Tests ERC721 Collectibles" name="should open a pack" time="3.082"><failure>Invalid bytes string given: undefined
-Error: Invalid bytes string given: undefined
-    at AbiCoder.decodeParameters (node_modules\web3-eth-abi\dist\web3-eth-abi.cjs.js:64:15)
-    at AbiCoder.decodeParameter (node_modules\web3-eth-abi\dist\web3-eth-abi.cjs.js:55:19)
-    at C:\Users\user\Desktop\sgoia.bepronetwork.bepro-js\node_modules\web3-eth-abi\dist\web3-eth-abi.cjs.js:112:27
-    at Array.forEach (&#x3C;anonymous&#x3E;)
-    at AbiCoder.decodeLog (node_modules\web3-eth-abi\dist\web3-eth-abi.cjs.js:105:14)
-    at AllEventsLogDecoder.decode (node_modules\web3-eth-contract\dist\web3-eth-contract.cjs.js:232:45)
-    at AllEventsLogDecoder.decode (node_modules\web3-eth-contract\dist\web3-eth-contract.cjs.js:262:85)
-    at C:\Users\user\Desktop\sgoia.bepronetwork.bepro-js\node_modules\web3-eth-contract\dist\web3-eth-contract.cjs.js:641:44
-    at Array.forEach (&#x3C;anonymous&#x3E;)
-    at SendContractMethod.afterExecution (node_modules\web3-eth-contract\dist\web3-eth-contract.cjs.js:640:23)
-    at SafeSubscriber._complete (node_modules\web3-core-method\dist\web3-core-method.cjs.js:1075:44)
-    at SafeSubscriber.wrappedComplete (node_modules\rxjs\src\internal\Subscriber.ts:248:54)
-    at SafeSubscriber.__tryOrUnsub (node_modules\rxjs\src\internal\Subscriber.ts:265:10)
-    at SafeSubscriber.complete (node_modules\rxjs\src\internal\Subscriber.ts:251:16)
-    at Subscriber._complete (node_modules\rxjs\src\internal\Subscriber.ts:148:22)
-    at Subscriber.complete (node_modules\rxjs\src\internal\Subscriber.ts:126:12)
-    at _callee2$ (node_modules\web3-core-method\dist\web3-core-method.cjs.js:427:28)
-    at tryCatch (node_modules\@babel\runtime\node_modules\regenerator-runtime\runtime.js:63:40)
-    at Generator.invoke [as _invoke] (node_modules\@babel\runtime\node_modules\regenerator-runtime\runtime.js:293:22)
-    at Generator.next (node_modules\@babel\runtime\node_modules\regenerator-runtime\runtime.js:118:21)
-    at asyncGeneratorStep (node_modules\@babel\runtime\helpers\asyncToGenerator.js:3:24)
-    at _next (node_modules\@babel\runtime\helpers\asyncToGenerator.js:25:9)
-    at &#x3C;anonymous&#x3E;
-    at process._tickCallback (internal/process/next_tick.js:189:7)</failure></testcase>
-<testcase classname="Unit Tests ERC721 Collectibles" name="should open a pack" time="3.082"><failure>Invalid bytes string given: undefined
-Error: Invalid bytes string given: undefined
-    at AbiCoder.decodeParameters (node_modules\web3-eth-abi\dist\web3-eth-abi.cjs.js:64:15)
-    at AbiCoder.decodeParameter (node_modules\web3-eth-abi\dist\web3-eth-abi.cjs.js:55:19)
-    at C:\Users\user\Desktop\sgoia.bepronetwork.bepro-js\node_modules\web3-eth-abi\dist\web3-eth-abi.cjs.js:112:27
-    at Array.forEach (&#x3C;anonymous&#x3E;)
-    at AbiCoder.decodeLog (node_modules\web3-eth-abi\dist\web3-eth-abi.cjs.js:105:14)
-    at AllEventsLogDecoder.decode (node_modules\web3-eth-contract\dist\web3-eth-contract.cjs.js:232:45)
-    at AllEventsLogDecoder.decode (node_modules\web3-eth-contract\dist\web3-eth-contract.cjs.js:262:85)
-    at C:\Users\user\Desktop\sgoia.bepronetwork.bepro-js\node_modules\web3-eth-contract\dist\web3-eth-contract.cjs.js:641:44
-    at Array.forEach (&#x3C;anonymous&#x3E;)
-    at SendContractMethod.afterExecution (node_modules\web3-eth-contract\dist\web3-eth-contract.cjs.js:640:23)
-    at SafeSubscriber._complete (node_modules\web3-core-method\dist\web3-core-method.cjs.js:1075:44)
-    at SafeSubscriber.wrappedComplete (node_modules\rxjs\src\internal\Subscriber.ts:248:54)
-    at SafeSubscriber.__tryOrUnsub (node_modules\rxjs\src\internal\Subscriber.ts:265:10)
-    at SafeSubscriber.complete (node_modules\rxjs\src\internal\Subscriber.ts:251:16)
-    at Subscriber._complete (node_modules\rxjs\src\internal\Subscriber.ts:148:22)
-    at Subscriber.complete (node_modules\rxjs\src\internal\Subscriber.ts:126:12)
-    at _callee2$ (node_modules\web3-core-method\dist\web3-core-method.cjs.js:427:28)
-    at tryCatch (node_modules\@babel\runtime\node_modules\regenerator-runtime\runtime.js:63:40)
-    at Generator.invoke [as _invoke] (node_modules\@babel\runtime\node_modules\regenerator-runtime\runtime.js:293:22)
-    at Generator.next (node_modules\@babel\runtime\node_modules\regenerator-runtime\runtime.js:118:21)
-    at asyncGeneratorStep (node_modules\@babel\runtime\helpers\asyncToGenerator.js:3:24)
-    at _next (node_modules\@babel\runtime\helpers\asyncToGenerator.js:25:9)
-    at &#x3C;anonymous&#x3E;
-    at process._tickCallback (internal/process/next_tick.js:189:7)</failure></testcase>
+<testsuite name="Mocha Tests" tests="32" failures="0" errors="0" skipped="0" timestamp="Thu, 13 May 2021 14:17:03 GMT" time="76.048">
+<testcase classname="Unit Tests ERC20" name="should start the Application" time="0.001"/>
+<testcase classname="Unit Tests ERC20" name="should deploy a ERC20 contract" time="1.139"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should start the Application" time="0"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should deploy ERC20TokenLock Contract" time="1.078"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="ERC20TokenLock Contract should have initial variables expected values" time="0.117"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set max tokens to lock per user" time="1.07"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set min tokens to lock per user" time="1.067"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should lock user tokens" time="2.205"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should get totalAmountStaked == 1000" time="0.018"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should fail to release tokens before release date" time="0.016"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should release and withdraw unlocked tokens" time="0"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set min tokens to lock to zero" time="1.116"/>
+<testcase classname="Unit Tests ERC20TokenLock Contract" name="should set max tokens to lock to zero" time="1.076"/>
+<testcase classname="Unit Tests Staking Contract" name="should start the Application" time="0.004"/>
+<testcase classname="Unit Tests Staking Contract" name="should deploy Staking Contract" time="1.116"/>
+<testcase classname="Unit Tests Staking Contract" name="should create a Product" time="1.074"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Product Data" time="0.024"/>
+<testcase classname="Unit Tests Staking Contract" name="should get APR Data" time="0.067"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == 0" time="0.018"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == 0" time="0.019"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Future Locked Tokens == 0" time="0.011"/>
+<testcase classname="Unit Tests Staking Contract" name="should get tokens needed for APR == totalNeededAPR" time="0.049"/>
+<testcase classname="Unit Tests Staking Contract" name="should fund with tokens needed for APR" time="1.09"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == APR Needed for 1 subscription with min Amount" time="0.089"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == APR Needed for 1 subscription with min Amount" time="0.121"/>
+<testcase classname="Unit Tests Staking Contract" name="should get subscribe to product Data &#x26; APR Right" time="2.2"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Subscription Data Right" time="0.024"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Held Tokens == APR Amount + indivualAmount" time="0.015"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Future Locked Tokens == APR Amount" time="0.011"/>
+<testcase classname="Unit Tests Staking Contract" name="should get Available Tokens == 0 (all used)" time="0.016"/>
+<testcase classname="Unit Tests Staking Contract" name="should withdraw Subscription" time="61.1"/>
+<testcase classname="Unit Tests Staking Contract" name="should confirm Subscription Data after Withdraw" time="0.042"/>
 </testsuite>

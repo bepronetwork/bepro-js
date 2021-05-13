@@ -1,11 +1,10 @@
-import Contract from '../utils/Contract';
 import _ from 'lodash';
+import Contract from '../utils/Contract';
 import Web3Connection from '../Web3Connection';
 
 /**
  * Contract Object Interface
  * @class IContract
- * @param {boolean} params.mainnet
  * @param {boolean} params.test
  * @param {boolean} params.localtest, ganache local blockchain
  * @param {Web3Connection} web3Connection ? (opt), created from above params
@@ -15,11 +14,11 @@ import Web3Connection from '../Web3Connection';
 
 class IContract {
 	constructor({
-	web3Connection = null, //Web3Connection if exists, otherwise create one from the rest of params
-	contractAddress = null, // If not deployed
-    abi,
-	...params
-  }) {
+		web3Connection = null, //Web3Connection if exists, otherwise create one from the rest of params
+		contractAddress = null, // If not deployed
+    	abi,
+		...params
+	}) {
 		try {
 			if (!abi) {
 				throw new Error('No ABI Interface provided');
@@ -57,32 +56,32 @@ class IContract {
 		}
 	};
 
-  __metamaskCall = async ({ f, acc, value, callback = () => {} }) => {
-    return new Promise((resolve, reject) => {
-      f.send({
-        from: acc,
-        value: value,
+  __metamaskCall = async ({
+  	f, acc, value, callback = () => {},
+  }) => new Promise((resolve, reject) => {
+  	f.send({
+  		from: acc,
+        value,
         gasPrice: 20000000000, //temp test
         gas: 5913388, //6721975 //temp test
-      })
-        .on("confirmation", (confirmationNumber, receipt) => {
-          callback(confirmationNumber);
-          if (confirmationNumber > 0) {
-            resolve(receipt);
-          }
-        })
-        .on("error", (err) => {
-          reject(err);
-        });
+    })
+    .on('confirmation', (confirmationNumber, receipt) => {
+    	callback(confirmationNumber);
+    	if (confirmationNumber > 0) {
+    		resolve(receipt);
+    	}
+    })
+    .on('error', (err) => {
+    	reject(err);
     });
-  };
+  });
 
   __sendTx = async (f, call = false, value, callback = () => {}) => {
     try {
-      var res;
+      let res;
       if (!this.acc && !call) {
         const accounts = await this.params.web3.eth.getAccounts();
-        console.log("---__sendTx.bp0");
+        console.log('---__sendTx.bp0');
         res = await this.__metamaskCall({
           f,
           acc: accounts[0],
@@ -90,7 +89,7 @@ class IContract {
           callback,
         });
       } else if (this.acc && !call) {
-        let data = f.encodeABI();
+        const data = f.encodeABI();
         res = await this.params.contract
           .send(this.acc.getAccount(), data, value)
           .catch((err) => {
@@ -111,20 +110,18 @@ class IContract {
     }
   };
 
-  __deploy = async (params, callback) => {
-    return await this.params.contract.deploy(
-      this.acc,
-      this.params.contract.getABI(),
-      this.params.contract.getJSON().bytecode,
-      params,
-      callback
-    );
-  };
+  __deploy = async (params, callback) => await this.params.contract.deploy(
+    this.acc,
+    this.params.contract.getABI(),
+    this.params.contract.getJSON().bytecode,
+    params,
+    callback,
+  );
 
   __assert = async () => {
     if (!this.getAddress()) {
       throw new Error(
-        "Contract is not deployed, first deploy it and provide a contract address"
+        'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
     /* Use ABI */
@@ -136,8 +133,8 @@ class IContract {
    * @description Deploy the Contract
    */
   deploy = async ({ callback }) => {
-    let params = [];
-    let res = await this.__deploy(params, callback);
+    const params = [];
+    const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
@@ -151,7 +148,7 @@ class IContract {
    */
   async setNewOwner({ address }) {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.transferOwnership(address)
+      this.params.contract.getContract().methods.transferOwnership(address),
     );
   }
 
@@ -180,7 +177,7 @@ class IContract {
    */
   async pauseContract() {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.pause()
+      this.params.contract.getContract().methods.pause(),
     );
   }
 
@@ -191,7 +188,7 @@ class IContract {
    */
   async unpauseContract() {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.unpause()
+      this.params.contract.getContract().methods.unpause(),
     );
   }
 
@@ -207,7 +204,7 @@ class IContract {
     return await this.__sendTx(
       this.params.contract
         .getContract()
-        .methods.removeOtherERC20Tokens(tokenAddress, toAddress)
+        .methods.removeOtherERC20Tokens(tokenAddress, toAddress),
     );
   }
 
@@ -218,7 +215,7 @@ class IContract {
    */
   async safeGuardAllTokens({ toAddress }) {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.safeGuardAllTokens(toAddress)
+      this.params.contract.getContract().methods.safeGuardAllTokens(toAddress),
     );
   }
 
@@ -231,7 +228,7 @@ class IContract {
     return await this.__sendTx(
       this.params.contract
         .getContract()
-        .methods.changeTokenAddress(newTokenAddress)
+        .methods.changeTokenAddress(newTokenAddress),
     );
   }
 
@@ -250,8 +247,8 @@ class IContract {
    * @param {Integer} Balance
    */
   async getBalance() {
-    let wei = await this.web3.eth.getBalance(this.getAddress());
-    return this.web3.utils.fromWei(wei, "ether");
+    const wei = await this.web3.eth.getBalance(this.getAddress());
+    return this.web3.utils.fromWei(wei, 'ether');
   }
 
   /**
@@ -261,10 +258,9 @@ class IContract {
    */
   async getUserAddress() {
     if (this.acc) return this.acc.getAddress();
-    else {
-      const accounts = await this.params.web3.eth.getAccounts();
-      return accounts[0];
-    }
+
+    const accounts = await this.params.web3.eth.getAccounts();
+    return accounts[0];
   }
 
   /**
@@ -274,11 +270,11 @@ class IContract {
    */
   async onlyOwner() {
     /* Verify that sender is admin */
-    let adminAddress = await this.owner();
-    let userAddress = await this.getUserAddress();
-    let isAdmin = adminAddress === userAddress;
+    const adminAddress = await this.owner();
+    const userAddress = await this.getUserAddress();
+    const isAdmin = adminAddress === userAddress;
     if (!isAdmin) {
-      throw new Error("Only admin can perform this operation");
+      throw new Error('Only admin can perform this operation');
     }
   }
 
@@ -289,9 +285,9 @@ class IContract {
    */
   async whenNotPaused() {
     /* Verify that contract is not paused */
-    let paused = await this.isPaused();
+    const paused = await this.isPaused();
     if (paused) {
-      throw new Error("Contract is paused");
+      throw new Error('Contract is paused');
     }
   }
 }

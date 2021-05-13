@@ -1,18 +1,17 @@
-import { ierc20 } from "../../interfaces";
-import Numbers from "../../utils/Numbers";
-import IContract from "../IContract";
+import { ierc20 } from '../../interfaces';
+import Numbers from '../../utils/Numbers';
+import IContract from '../IContract';
 
 /**
  * @class ERC20Contract
  * @param {Object} params Parameters
- * @param {Boolean} params.mainnet
  * @param {Boolean} params.test
  * @param {Boolean} params.localtest, ganache local blockchain
  * @param {Web3Connection} params.web3Connection ? (opt), created from above params
  * @param {Address} params.contractAddress Optional/If Existent
  */
 class ERC20Contract extends IContract {
-  constructor(params) {
+  constructor(params = {}) {
     super({ abi: ierc20, ...params });
   }
 
@@ -42,16 +41,16 @@ class ERC20Contract extends IContract {
    * @returns {Transaction} Transaction
    */
   transferTokenAmount = async ({ toAddress, tokenAmount }) => {
-    let amountWithDecimals = Numbers.toSmartContractDecimals(
+    const amountWithDecimals = Numbers.toSmartContractDecimals(
       tokenAmount,
-      this.getDecimals()
+      this.getDecimals(),
     );
     return await this.__sendTx(
       this.params.contract
         .getContract()
-        .methods.transfer(toAddress, amountWithDecimals)
+        .methods.transfer(toAddress, amountWithDecimals),
     );
-  }
+  };
 
   /**
    * @function
@@ -71,7 +70,7 @@ class ERC20Contract extends IContract {
    * @description Get Total Supply of Token
    * @returns {Integer} Total supply
    */
-  totalSupply = async () =>  {
+  totalSupply = async () => {
     return Numbers.fromDecimals(
       await this.getContract().methods.totalSupply().call(),
       this.getDecimals()
@@ -82,7 +81,6 @@ class ERC20Contract extends IContract {
     return this.params.contract;
   }
 
-
   /**
    * @function
    * @description Get Decimals of Token
@@ -92,9 +90,7 @@ class ERC20Contract extends IContract {
     return this.params.decimals;
   }
 
-  getDecimalsAsync = async () =>  {
-    return await this.getContract().methods.decimals().call();
-  }
+  getDecimalsAsync = async () => await this.getContract().methods.decimals().call();
 
   /**
    * @function
@@ -107,17 +103,17 @@ class ERC20Contract extends IContract {
    */
   isApproved = async ({ address, amount, spenderAddress }) =>  {
     try {
-      let approvedAmount = Numbers.fromDecimals(
+      const approvedAmount = Numbers.fromDecimals(
         await this.getContract()
           .methods.allowance(address, spenderAddress)
           .call(),
-        this.getDecimals()
+        this.getDecimals(),
       );
       return approvedAmount >= amount;
     } catch (err) {
       throw err;
     }
-  }
+  };
 
   /**
    * @function
@@ -129,23 +125,23 @@ class ERC20Contract extends IContract {
    */
   approve = async ({ address, amount, callback }) => {
     try {
-      let amountWithDecimals = Numbers.toSmartContractDecimals(
+      const amountWithDecimals = Numbers.toSmartContractDecimals(
         amount,
-        this.getDecimals()
+        this.getDecimals(),
       );
-      let res = await this.__sendTx(
+      const res = await this.__sendTx(
         this.params.contract
           .getContract()
           .methods.approve(address, amountWithDecimals),
         null,
         null,
-        callback
+        callback,
       );
       return res;
     } catch (err) {
       throw err;
     }
-  }
+  };
 
   /**
    * @function
@@ -159,22 +155,22 @@ class ERC20Contract extends IContract {
    */
   deploy = async ({ name, symbol, cap, distributionAddress, callback }) => {
     if (!distributionAddress) {
-      throw new Error("Please provide an Distribution address for distro");
+      throw new Error('Please provide an Distribution address for distro');
     }
 
     if (!name) {
-      throw new Error("Please provide a name");
+      throw new Error('Please provide a name');
     }
 
     if (!symbol) {
-      throw new Error("Please provide a symbol");
+      throw new Error('Please provide a symbol');
     }
 
     if (!cap) {
-      throw new Error("Please provide a cap");
+      throw new Error('Please provide a cap');
     }
-    let params = [name, symbol, cap, distributionAddress];
-    let res = await this.__deploy(params, callback);
+    const params = [name, symbol, cap, distributionAddress];
+    const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

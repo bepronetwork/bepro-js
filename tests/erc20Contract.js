@@ -1,11 +1,9 @@
-
-
 import chai from 'chai';
 import { mochaAsync } from './utils';
-//import { Application } from '..';
 import { Application, ERC20Contract, ExchangeContract, StakingContract, ERC20TokenLock, ERC721Collectibles, ERC721Standard } from '..';
 import Numbers from '../src/utils/Numbers';
-const expect = chai.expect;
+
+const { expect } = chai;
 //var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
 // this is already deployed on rinkeby network for testing
 var contractAddress = '0x4197A48d240B104f2bBbb11C0a43fA789f2A5675';
@@ -17,9 +15,9 @@ const testConfig = {
 };
 
 context('ERC20', async () => {
-    var erc20Contract;
-    var app;
-	var userAddress;
+    let erc20Contract;
+    let app;
+	let userAddress;
    
     before( async () =>  {
 		erc20Contract = new ERC20Contract(testConfig);

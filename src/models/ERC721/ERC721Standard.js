@@ -1,26 +1,27 @@
-import { erc721standard } from "../../interfaces";
 import _ from "lodash";
+import { erc721standard } from "../../interfaces";
 import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
 /**
  * ERC721Contract Object
  * @class ERC721Contract
- * @param {Boolean} params.mainnet
  * @param {Boolean} params.test
  * @param {Boolean} params.localtest, ganache local blockchain
  * @param {Web3Connection} params.web3Connection ? (opt), created from above params
  * @param {Address} contractAddress ? (opt)
  */
 
-class ERC721Standard extends IContract{
-	constructor(params) {
-		super({abi : erc721standard, ...params});
+class ERC721Standard extends IContract {
+	constructor(params = {}) {
+		super({ abi : erc721standard, ...params });
 	}
 
 	__assert = async () => {
-        if(!this.getAddress()){
-            throw new Error("Contract is not deployed, first deploy it and provide a contract address");
+        if (!this.getAddress()) {
+            throw new Error(
+            	'Contract is not deployed, first deploy it and provide a contract address',
+            );
         }
         /* Use ABI */
         this.params.contract.use(erc721collectibles, this.getAddress());
@@ -33,7 +34,7 @@ class ERC721Standard extends IContract{
 
         /* Assert Token Contract */
         await this.params.ERC20Contract.__assert();
-	}
+	};
 
 	/**
 	 * @function
@@ -74,35 +75,32 @@ class ERC721Standard extends IContract{
 	 * @function
 	 * @description Set Base Token URI
     */
-	setBaseTokenURI = async ({ URI }) => {
-		return await this.__sendTx(
-			this.params.contract.getContract().methods.setBaseURI(URI)
-		);
-	}
+	setBaseTokenURI = async ({ URI }) => await this.__sendTx(
+		this.params.contract.getContract().methods.setBaseURI(URI),
+	);
 
 	/**
 	 * @function
 	 * @description Mint created TokenID
 	 * @param {Address} to
 	 * @param {Integer} tokenID
-	*/
+	 */
 	async mint({ tokenID }) {
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.mint(tokenID)
+			this.params.contract.getContract().methods.mint(tokenID),
 		);
 	}
 
 	deploy = async ({ name, symbol, callback }) => {
-
-		if(!name){
-			throw new Error("Please provide a name");
+		if (!name) {
+			throw new Error('Please provide a name');
 		}
 
-		if(!symbol){
-			throw new Error("Please provide a symbol");
+		if (!symbol) {
+			throw new Error('Please provide a symbol');
 		}
-		let params = [name, symbol];
-		let res = await this.__deploy(params, callback);
+		const params = [name, symbol];
+		const res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */
 		await this.__assert();

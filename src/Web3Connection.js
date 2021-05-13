@@ -1,6 +1,5 @@
 import Web3 from 'web3';
 import Account from './utils/Account';
-import IContract from './models/IContract';
 
 const ETH_URL_MAINNET =
   "https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
@@ -27,34 +26,34 @@ const networksEnum = Object.freeze({
  * Web3Connection Object
  * @class Web3Connection
  * @param {Object} params Parameters
- * @param {Bool} params.test Default : False
- * @param {Bool} params.localtest Default : False
- * @param {Bool} params.mainnet Default : True (If Ethereum Mainnet)
- * @param {Object} params.opt Optional Chain Web3 Connection Object (Default ETH)
+ * @param {Bool} params.test Automated Tests / Default : False
+ * @param {Bool} params.localtest Ganache Local Blockchain / Default : False
+ * @param {Object} params.opt Optional Chain Connection Object (Default ETH)
  * @param {String} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
+ * @param {String} params.opt.privateKey Private key (0x....) used for server side use
  */
 class Web3Connection {
 	constructor({
-		test = false,
-		localtest = false, //ganache local blockchain
-		mainnet = true,
+		test = false, // Automated tests
+		localtest = false, // ganache local blockchain
 		opt = {
-			web3Connection: ETH_URL_MAINNET,
+			web3Connection: ETH_URL_TESTNET,
+			privateKey: TEST_PRIVATE_KEY,
 		},
-		...params
 	}) {
 		this.test = test;
 		this.localtest = localtest;
 		this.opt = opt;
-		this.mainnet = mainnet;
 		if (this.test) {
 			this.start();
 			this.login();
 			if(!this.localtest) {
-				this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
-				console.log('My address: ' + this.account.getAddress())
+				this.account = new Account(
+					this.web3,
+					this.web3.eth.accounts.privateKeyToAccount(opt.privateKey),
+				);
+				console.log(`My address: ${this.account.getAddress()}`);
 			}
-			///this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(LOCAL_TEST_PRIVATE_KEY));
 		}
 	}
 
@@ -67,31 +66,30 @@ class Web3Connection {
 	 * @description Start the Application
 	 */
 	start = () => {
-		//this.web3 = new Web3(
-		//	new Web3.providers.HttpProvider(this.mainnet == true ? this.opt.web3Connection : ETH_URL_TESTNET)
-		//);
-		if (this.mainnet)
-			this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
-		else if (this.test && this.localtest)
-			this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST)
-			//NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
-			, null, { transactionConfirmationBlocks: 1 }
+		if (this.localtest) {
+			this.web3 = new Web3(
+				new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST),
+				// NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
+				null,
+				{ transactionConfirmationBlocks: 1 },
 			);
-		else //if (this.test)
-			this.web3 = new Web3(new Web3.providers.HttpProvider(ETH_URL_TESTNET));
+		} else {
+			this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
+		}
+		
 		
 		if (typeof window !== 'undefined') {
 			window.web3 = this.web3;
-		} else {
-			if (!this.test) {
-				throw new Error('Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet');
-			}
+		} else if (!this.test) {
+			throw new Error(
+				'Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet'
+			);
 		}
 	};
-
+	
 	/**
-	 * @name login
-	 * @description Login with Metamask or a web3 provider
+	 * @function
+	 * @description Login with Metamask/Web3 Wallet - substitutes start()
 	 */
 	login = async () => {
 		try {
@@ -110,27 +108,27 @@ class Web3Connection {
 		}
 	};
 	
-	
-	
 	/******* */
 	/** UTILS */
 	/******* */
 
 	/**
-	 * @name getETHNetwork
-	 * @description Access current ETH Network used
-	 * @returns {String} Eth Network
+	 * @function
+	 * @description Get ETH Network
+	 * @return {String} Network Name (Ex : Kovan)
 	 */
 	getETHNetwork = async () => {
 		const netId = await this.web3.eth.net.getId();
-		const networkName = networksEnum.hasOwnProperty(netId) ? networksEnum[netId] : (await this.web3.currentProvider.host); //'Unknown';
+		const networkName = networksEnum.hasOwnProperty(netId)
+			? networksEnum[netId]
+			: (await this.web3.currentProvider.host); //'Unknown';
 		return networkName;
 	};
 
 	/**
-	 * @name getAddress
-	 * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
-	 * @returns {Address} Address
+	 * @function
+	 * @description Get Address connected via login()
+	 * @return {Address} Address in Use
 	 */
 	getAddress = async () => {
 		const accounts = await this.web3.eth.getAccounts();
@@ -138,9 +136,9 @@ class Web3Connection {
 	};
 
 	/**
-	 * @name getETHBalance
-	 * @description Access current ETH Balance Available for the Injected Web3 Address
-	 * @returns {Integer} Balance
+	 * @function
+	 * @description Get ETH Balance of Address connected via login()
+	 * @return {Integer} ETH Balance
 	 */
 	getETHBalance = async () => {
 		let wei = await this.web3.eth.getBalance(await this.getAddress());
