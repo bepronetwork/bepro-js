@@ -9,6 +9,7 @@ var _index = require('./models/index');
 
 
 
+
 var _Account = require('./utils/Account');var _Account2 = _interopRequireDefault(_Account);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 var ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
@@ -208,7 +209,30 @@ function Application(_ref)
 
 
 
-  getERC721Collectibles = function () {var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref7$contractAddress = _ref7.contractAddress,contractAddress = _ref7$contractAddress === undefined ? null : _ref7$contractAddress;
+  getBEPRONetwork = function ()
+
+
+  {var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref7$contractAddress = _ref7.contractAddress,contractAddress = _ref7$contractAddress === undefined ? null : _ref7$contractAddress,_ref7$tokenAddress = _ref7.tokenAddress,tokenAddress = _ref7$tokenAddress === undefined ? null : _ref7$tokenAddress;
+    try {
+      return new _index.BEPRONetwork({
+        web3: _this.web3,
+        contractAddress: contractAddress,
+        tokenAddress: tokenAddress,
+        acc: _this.test && !_this.localtest ? _this.account : null });
+
+    } catch (err) {
+      throw err;
+    }
+  };this.
+
+
+
+
+
+
+
+
+  getERC721Collectibles = function () {var _ref8 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref8$contractAddress = _ref8.contractAddress,contractAddress = _ref8$contractAddress === undefined ? null : _ref8$contractAddress;
     try {
       return new _index.ERC721Collectibles({
         web3: _this.web3,
@@ -227,7 +251,7 @@ function Application(_ref)
 
 
 
-  getERC20Contract = function (_ref8) {var _ref8$contractAddress = _ref8.contractAddress,contractAddress = _ref8$contractAddress === undefined ? null : _ref8$contractAddress;
+  getERC20Contract = function (_ref9) {var _ref9$contractAddress = _ref9.contractAddress,contractAddress = _ref9$contractAddress === undefined ? null : _ref9$contractAddress;
     try {
       return new _index.ERC20Contract({
         web3: _this.web3,
@@ -310,26 +334,32 @@ function Application(_ref)
                           * @return {ERC20TokenLock} ERC20TokenLock
                           */ /**
                               * @function
-                              * @description Create a ERC721Collectibles Object
+                              * @description Create a BEPRONetwork Object
                               * @param {Object} params
                               * @param {Address} params.contractAddress (Opt) If it is deployed
-                              * @return {ERC721Collectibles} ERC721Collectibles
+                              * @return {BEPRONetwork} BEPRONetwork
                               */ /**
                                   * @function
-                                  * @description Create a ERC20Contract Object
+                                  * @description Create a ERC721Collectibles Object
                                   * @param {Object} params
                                   * @param {Address} params.contractAddress (Opt) If it is deployed
-                                  * @return {ERC20Contract} ERC20Contract
-                                  */ /** ***** */ /** UTILS */ /** ***** */ /**
-                                                                             * @function
-                                                                             * @description Get ETH Network
-                                                                             * @return {String} Network Name (Ex : Kovan)
-                                                                             */ /**
+                                  * @return {ERC721Collectibles} ERC721Collectibles
+                                  */ /**
+                                      * @function
+                                      * @description Create a ERC20Contract Object
+                                      * @param {Object} params
+                                      * @param {Address} params.contractAddress (Opt) If it is deployed
+                                      * @return {ERC20Contract} ERC20Contract
+                                      */ /** ***** */ /** UTILS */ /** ***** */ /**
                                                                                  * @function
-                                                                                 * @description Get Address connected via login()
-                                                                                 * @return {Address} Address in Use
+                                                                                 * @description Get ETH Network
+                                                                                 * @return {String} Network Name (Ex : Kovan)
                                                                                  */ /**
                                                                                      * @function
-                                                                                     * @description Get ETH Balance of Address connected via login()
-                                                                                     * @return {Integer} ETH Balance
-                                                                                     */;exports.default = Application;
+                                                                                     * @description Get Address connected via login()
+                                                                                     * @return {Address} Address in Use
+                                                                                     */ /**
+                                                                                         * @function
+                                                                                         * @description Get ETH Balance of Address connected via login()
+                                                                                         * @return {Integer} ETH Balance
+                                                                                         */;exports.default = Application;

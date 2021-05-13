@@ -118,10 +118,8 @@ const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
 /**
  * BEPRONetwork Object
  * @class BEPRONetwork
- * @param params.web3 {Web3}
- * @param params.contractAddress {Address}
- * @param params.acc {*}
- * @param params.abi {beproNetwork}
+ * @param {Object} params Parameters
+ * @param {Address} params.contractAddress Optional/If Existent
  */
 class BEPRONetwork extends IContract {
   constructor(params) {

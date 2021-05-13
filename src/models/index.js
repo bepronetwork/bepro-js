@@ -5,6 +5,7 @@ import ERC20TokenLock from './ERC20/ERC20TokenLock';
 import ERC721Collectibles from './ERC721/ERC721Collectibles';
 import ERC721Standard from './ERC721/ERC721Standard';
 import OpenerRealFvr from './custom/RealFvr/OpenerRealFvr';
+import BEPRONetwork from './BEPRO/Network';
 
 export {
   ERC20Contract,
@@ -13,5 +14,6 @@ export {
   ERC20TokenLock,
   ERC721Collectibles,
   ERC721Standard,
+  BEPRONetwork,
   OpenerRealFvr,
 };

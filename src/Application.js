@@ -5,6 +5,7 @@ import {
   ExchangeContract,
   ERC20Contract,
   StakingContract,
+  BEPRONetwork,
   ERC20TokenLock,
   ERC721Collectibles,
   OpenerRealFvr,
@@ -42,8 +43,8 @@ class Application {
     test = false, // Automated tests
     localtest = false, // ganache local blockchain
     opt = {
-      web3Connection : ETH_URL_TESTNET,
-      privateKey : TEST_PRIVATE_KEY,
+      web3Connection: ETH_URL_TESTNET,
+      privateKey: TEST_PRIVATE_KEY,
     },
   }) {
     this.test = test;
@@ -75,7 +76,7 @@ class Application {
         null,
         { transactionConfirmationBlocks: 1 },
       );
-    }else{
+    } else {
       this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
     }
 
@@ -191,6 +192,29 @@ class Application {
   } = {}) => {
     try {
       return new ERC20TokenLock({
+        web3: this.web3,
+        contractAddress,
+        tokenAddress,
+        acc: this.test && !this.localtest ? this.account : null,
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  /**
+   * @function
+   * @description Create a BEPRONetwork Object
+   * @param {Object} params
+   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * @return {BEPRONetwork} BEPRONetwork
+   */
+   getBEPRONetwork = ({
+    contractAddress = null,
+    tokenAddress = null,
+  } = {}) => {
+    try {
+      return new BEPRONetwork({
         web3: this.web3,
         contractAddress,
         tokenAddress,

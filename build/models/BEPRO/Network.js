@@ -11,10 +11,8 @@ var beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
 /**
                                                                   * BEPRONetwork Object
                                                                   * @class BEPRONetwork
-                                                                  * @param params.web3 {Web3}
-                                                                  * @param params.contractAddress {Address}
-                                                                  * @param params.acc {*}
-                                                                  * @param params.abi {beproNetwork}
+                                                                  * @param {Object} params Parameters
+                                                                  * @param {Address} params.contractAddress Optional/If Existent
                                                                   */ /* eslint-disable no-underscore-dangle */ // eslint-disable-next-line no-unused-vars
 var BEPRONetwork = function (_IContract) {(0, _inherits3.default)(BEPRONetwork, _IContract);
   function BEPRONetwork(params) {(0, _classCallCheck3.default)(this, BEPRONetwork);var _this = (0, _possibleConstructorReturn3.default)(this, (BEPRONetwork.__proto__ || (0, _getPrototypeOf2.default)(BEPRONetwork)).call(this, (0, _extends3.default)({
