@@ -29,7 +29,8 @@
         "lint:fix": "eslint ./src --fix"
     },
     "pre-commit": [
-        "lint"
+        "lint",
+        "lint:fix"
     ],
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",

@@ -210,20 +210,20 @@ class Application {
    * @return {BEPRONetwork} BEPRONetwork
    */
    getBEPRONetwork = ({
-    contractAddress = null,
-    tokenAddress = null,
-  } = {}) => {
-    try {
-      return new BEPRONetwork({
-        web3: this.web3,
-        contractAddress,
-        tokenAddress,
-        acc: this.test && !this.localtest ? this.account : null,
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
+     contractAddress = null,
+     tokenAddress = null,
+   } = {}) => {
+     try {
+       return new BEPRONetwork({
+         web3: this.web3,
+         contractAddress,
+         tokenAddress,
+         acc: this.test && !this.localtest ? this.account : null,
+       });
+     } catch (err) {
+       throw err;
+     }
+   };
 
   /**
    * @function
