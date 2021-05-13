@@ -112,5 +112,4 @@ ERC721Standard = function (_IContract) {(0, _inherits3.default)(ERC721Standard, 
 	getERC20Contract = function () {return _this2.params.ERC20Contract;};};exports.default =
 
 
-
 ERC721Standard;
