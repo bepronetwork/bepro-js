@@ -18,7 +18,6 @@ const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
  * @param {beproNetwork} params.abi
  */
 class BEPRONetwork extends IContract {
-
   /**
    * @typedef {Object} BEPRONetwork~Issue
    * @property {boolean} finalized: boolean
