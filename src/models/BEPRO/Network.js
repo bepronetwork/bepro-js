@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 // eslint-disable-next-line no-unused-vars
-import _ from "lodash";
-import { beproNetwork } from "../../interfaces";
-import Numbers from "../../utils/Numbers";
+import _ from 'lodash';
+import { beproNetwork } from '../../interfaces';
+import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
@@ -25,7 +25,7 @@ class BEPRONetwork extends IContract {
   __assert = async () => {
     if (!this.getAddress()) {
       throw new Error(
-      	'Contract is not deployed, first deploy it and provide a contract address',
+        'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
 
@@ -37,10 +37,10 @@ class BEPRONetwork extends IContract {
       web3Connection: this.web3Connection,
       contractAddress: beproAddress,
     });
-	
+
     // Assert Token Contract
     await this.params.ERC20Contract.__assert();
-  }
+  };
 
   /**
    * @function
@@ -54,7 +54,7 @@ class BEPRONetwork extends IContract {
       .methods.getIssuesByAddress(address)
       .call();
 
-    return res.map(r => parseInt(r, 10))
+    return res.map(r => parseInt(r, 10));
   }
 
   /**
@@ -64,8 +64,11 @@ class BEPRONetwork extends IContract {
    */
   async getAmountofIssuesOpened() {
     return parseInt(
-    	await this.params.contract.getContract().methods.incrementIssueID().call(),
-    	10,
+      await this.params.contract
+        .getContract()
+        .methods.incrementIssueID()
+        .call(),
+      10,
     );
   }
 
@@ -76,8 +79,8 @@ class BEPRONetwork extends IContract {
    */
   async getAmountofIssuesClosed() {
     return parseInt(
-    	await this.params.contract.getContract().methods.closedIdsCount().call(),
-    	10,
+      await this.params.contract.getContract().methods.closedIdsCount().call(),
+      10,
     );
   }
 
@@ -88,11 +91,11 @@ class BEPRONetwork extends IContract {
    */
   async percentageNeededForApprove() {
     return parseInt(
-    	await this.params.contract
-    		.getContract()
-    		.methods.percentageNeededForApprove()
-    		.call(),
-    	10,
+      await this.params.contract
+        .getContract()
+        .methods.percentageNeededForApprove()
+        .call(),
+      10,
     );
   }
 
@@ -103,11 +106,11 @@ class BEPRONetwork extends IContract {
    */
   async percentageNeededForMerge() {
     return parseInt(
-    	await this.params.contract
-    		.getContract()
-    		.methods.percentageNeededForMerge()
-    		.call(),
-    	10,
+      await this.params.contract
+        .getContract()
+        .methods.percentageNeededForMerge()
+        .call(),
+      10,
     );
   }
 
@@ -117,7 +120,10 @@ class BEPRONetwork extends IContract {
    * @returns {Integer}
    */
   async getBEPROStaked() {
-    return Numbers.fromDecimals(await this.params.contract.getContract().methods.totalStaked().call(), 18);
+    return Numbers.fromDecimals(
+      await this.params.contract.getContract().methods.totalStaked().call(),
+      18,
+    );
   }
 
   /**
@@ -127,11 +133,11 @@ class BEPRONetwork extends IContract {
    */
   async timeOpenForIssueApprove() {
     return Numbers.fromSmartContractTimeToMinutes(
-    	await this.params.contract
-    		.getContract()
-    		.methods.timeOpenForIssueApprove()
-    		.call(),
-    	);
+      await this.params.contract
+        .getContract()
+        .methods.timeOpenForIssueApprove()
+        .call(),
+    );
   }
 
   /**
@@ -141,11 +147,11 @@ class BEPRONetwork extends IContract {
    */
   async beproVotesStaked() {
     return Numbers.fromDecimals(
-    	await this.params.contract
-    		.getContract()
-    		.methods.beproVotesStaked()
-    		.call(),
-    	18,
+      await this.params.contract
+        .getContract()
+        .methods.beproVotesStaked()
+        .call(),
+      18,
     );
   }
 
@@ -156,11 +162,11 @@ class BEPRONetwork extends IContract {
    */
   async COUNCIL_BEPRO_AMOUNT() {
     return Numbers.fromDecimals(
-    	await this.params.contract
-    		.getContract()
-    		.methods.COUNCIL_BEPRO_AMOUNT()
-    		.call(),
-    	18,
+      await this.params.contract
+        .getContract()
+        .methods.COUNCIL_BEPRO_AMOUNT()
+        .call(),
+      18,
     );
   }
 
@@ -171,11 +177,11 @@ class BEPRONetwork extends IContract {
    */
   async OPERATOR_BEPRO_AMOUNT() {
     return Numbers.fromDecimals(
-    	await this.params.contract
-    		.getContract()
-    		.methods.OPERATOR_BEPRO_AMOUNT()
-    		.call(),
-    	18,
+      await this.params.contract
+        .getContract()
+        .methods.OPERATOR_BEPRO_AMOUNT()
+        .call(),
+      18,
     );
   }
 
@@ -186,7 +192,12 @@ class BEPRONetwork extends IContract {
    */
   async DEVELOPER_BEPRO_AMOUNT() {
     return Numbers.fromDecimals(
-    	await this.params.contract.getContract().methods.DEVELOPER_BEPRO_AMOUNT().call(), 18);
+      await this.params.contract
+        .getContract()
+        .methods.DEVELOPER_BEPRO_AMOUNT()
+        .call(),
+      18,
+    );
   }
 
   /**
@@ -197,9 +208,9 @@ class BEPRONetwork extends IContract {
    */
   async isIssueApproved({ issueId }) {
     return await this.params.contract
-    	.getContract()
-    	.methods.isIssueApproved(issueId)
-    	.call();
+      .getContract()
+      .methods.isIssueApproved(issueId)
+      .call();
   }
 
   /**
@@ -210,11 +221,10 @@ class BEPRONetwork extends IContract {
    */
   async isIssueApprovable({ issueId }) {
     return await this.params.contract
-    	.getContract()
-    	.methods.isIssueApprovable(issueId)
-    	.call();
+      .getContract()
+      .methods.isIssueApprovable(issueId)
+      .call();
   }
-
 
   /**
    * @function
@@ -224,7 +234,10 @@ class BEPRONetwork extends IContract {
    * @returns {Bool}
    */
   async isIssueMergeable({ issueId, mergeId }) {
-    return await this.params.contract.getContract().methods.isIssueMergeable(issueId, mergeId).call();
+    return await this.params.contract
+      .getContract()
+      .methods.isIssueMergeable(issueId, mergeId)
+      .call();
   }
 
   /**
@@ -235,7 +248,10 @@ class BEPRONetwork extends IContract {
    * @returns {Bool}
    */
   async isMergeTheOneWithMoreVotes({ issueId, mergeId }) {
-    return await this.params.contract.getContract().methods.isMergeTheOneWithMoreVotes(issueId, mergeId).call();
+    return await this.params.contract
+      .getContract()
+      .methods.isMergeTheOneWithMoreVotes(issueId, mergeId)
+      .call();
   }
 
   /**
@@ -246,7 +262,10 @@ class BEPRONetwork extends IContract {
    */
 
   async getVotesByAddress({ address }) {
-    const r = await this.params.contract.getContract().methods.getVotesByAddress(address).call();
+    const r = await this.params.contract
+      .getContract()
+      .methods.getVotesByAddress(address)
+      .call();
     return Numbers.fromDecimals(r, 18);
   }
 
@@ -296,7 +315,9 @@ class BEPRONetwork extends IContract {
 
   async getMergeById({ issue_id, merge_id }) {
     const r = await this.__sendTx(
-      this.params.contract.getContract().methods.getMergeById(issue_id, merge_id),
+      this.params.contract
+        .getContract()
+        .methods.getMergeById(issue_id, merge_id),
       true,
     );
 
@@ -308,7 +329,6 @@ class BEPRONetwork extends IContract {
       proposalAddress: r[5],
     };
   }
-
 
   /**
    * @function
@@ -327,11 +347,10 @@ class BEPRONetwork extends IContract {
    * @description Verify if Approved
    */
   isApprovedERC20 = async ({ amount, address }) => await this.getERC20Contract().isApproved({
-  	address,
-  	amount,
-  	spenderAddress: this.getAddress(),
+    address,
+    amount,
+    spenderAddress: this.getAddress(),
   });
-  
 
   /**
    * @function
@@ -339,9 +358,8 @@ class BEPRONetwork extends IContract {
    * @param {integer} beproAmount
    */
   async lockBepro({ beproAmount }) {
-
     if (beproAmount <= 0) {
-      throw new Error('Bepro Amount has to be higher than 0')
+      throw new Error('Bepro Amount has to be higher than 0');
     }
 
     if (!(await this.isApprovedERC20({ amount, address }))) {
@@ -360,7 +378,6 @@ class BEPRONetwork extends IContract {
    * @param {address} from
    */
   async unlockBepro({ beproAmount, from }) {
-
     if (beproAmount <= 0) {
       throw new Error('Bepro Amount has to be higher than 0');
     }
@@ -377,13 +394,14 @@ class BEPRONetwork extends IContract {
    * @param {address} delegatedTo
    */
   async delegateOracles({ beproAmount, delegatedTo }) {
-
     if (beproAmount <= 0) {
       throw new Error('Bepro Amount has to be higher than 0');
     }
 
     return await this.__sendTx(
-      this.params.contract.getContract().methods.unlockBepro(beproAmount, delegatedTo),
+      this.params.contract
+        .getContract()
+        .methods.unlockBepro(beproAmount, delegatedTo),
     );
   }
 
@@ -394,7 +412,6 @@ class BEPRONetwork extends IContract {
    * @param {address} address
    */
   async openIssue({ beproAmount, address }) {
-
     if (beproAmount < 0) {
       throw new Error('Bepro Amount has to be higher than 0');
     }
@@ -449,7 +466,6 @@ class BEPRONetwork extends IContract {
    * @param {address} address
    */
   async updateIssue({ issueID, beproAmount, address }) {
-
     if (beproAmount < 0) {
       throw new Error('Bepro Amount has to be higher than 0');
     }
@@ -459,7 +475,9 @@ class BEPRONetwork extends IContract {
     }
 
     return await this.__sendTx(
-      this.params.contract.getContract().methods.updateIssue(issueID, beproAmount, address),
+      this.params.contract
+        .getContract()
+        .methods.updateIssue(issueID, beproAmount, address),
     );
   }
 
@@ -475,7 +493,9 @@ class BEPRONetwork extends IContract {
       throw new Error('prAddresses dont match prAmounts size');
     }
     return await this.__sendTx(
-      this.params.contract.getContract().methods.proposeIssueMerge(issueID, prAddresses, prAmounts),
+      this.params.contract
+        .getContract()
+        .methods.proposeIssueMerge(issueID, prAddresses, prAmounts),
     );
   }
 
@@ -491,7 +511,6 @@ class BEPRONetwork extends IContract {
     );
   }
 
-
   deploy = async ({ tokenAddress, callback }) => {
     const params = [tokenAddress];
     const res = await this.__deploy(params, callback);
@@ -502,7 +521,6 @@ class BEPRONetwork extends IContract {
   };
 
   getERC20Contract = () => this.params.ERC20Contract;
-
 }
 
 export default BEPRONetwork;

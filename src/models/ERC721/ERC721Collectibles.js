@@ -12,35 +12,35 @@ const baseFeeAddress = '0x6714d41094a264bb4b8fcb74713b42cfee6b4f74';
  * @param {Boolean} params.test
  * @param {Boolean} params.localtest, ganache local blockchain
  * @param {Web3Connection} params.web3Connection ? (opt), created from above params
- * @param {Address} contractAddress ? (opt)
+ * @param {Address} params.contractAddress ? (opt)
  */
 
-class ERC721Collectibles extends IContract{
-	constructor(params = {}) {
-		super({ abi : erc721collectibles, ...params });
-	}
+class ERC721Collectibles extends IContract {
+  constructor(params = {}) {
+    super({ abi: erc721collectibles, ...params });
+  }
 
-	/**
-     * @private
-     */
-	__assert = async () => {
-        if (!this.getAddress()) {
-            throw new Error(
-            	'Contract is not deployed, first deploy it and provide a contract address',
-            );
-        }
-        /* Use ABI */
-        this.params.contract.use(erc721collectibles, this.getAddress());
-        
-        /* Set Token Address Contract for easy access */
-        this.params.ERC20Contract = new ERC20Contract({
-            web3Connection: this.web3Connection,
-            contractAddress: await this.purchaseToken(),
-        });
-        
-        /* Assert Token Contract */
-        await this.params.ERC20Contract.__assert();
-	};
+  /**
+   * @private
+   */
+  __assert = async () => {
+    if (!this.getAddress()) {
+      throw new Error(
+        'Contract is not deployed, first deploy it and provide a contract address',
+      );
+    }
+    /* Use ABI */
+    this.params.contract.use(erc721collectibles, this.getAddress());
+
+    /* Set Token Address Contract for easy access */
+    this.params.ERC20Contract = new ERC20Contract({
+      web3Connection: this.web3Connection,
+      contractAddress: await this.purchaseToken(),
+    });
+
+    /* Assert Token Contract */
+    await this.params.ERC20Contract.__assert();
+  };
 
   /**
    * @function
@@ -95,7 +95,8 @@ class ERC721Collectibles extends IContract{
 
   async currentTokenId() {
     return parseInt(
-      await this.params.contract.getContract().methods._currentTokenId().call(), 10,
+      await this.params.contract.getContract().methods._currentTokenId().call(),
+      10,
     );
   }
 

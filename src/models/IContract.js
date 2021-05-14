@@ -13,67 +13,69 @@ import Web3Connection from '../Web3Connection';
  */
 
 class IContract {
-	constructor({
-		web3Connection = null, //Web3Connection if exists, otherwise create one from the rest of params
-		contractAddress = null, // If not deployed
-    	abi,
-		...params
-	}) {
-		try {
-			if (!abi) {
-				throw new Error('No ABI Interface provided');
-			}
-			
-			this.web3Connection = (!web3Connection) ? (new Web3Connection(params)) : web3Connection;
-			this.web3 = this.web3Connection.web3;
-			this.acc = this.web3Connection.account;
-			
-			if (!this.web3) {
-				throw new Error('Please provide a valid web3 provider');
-			}
-			
-			this.params = {
-				web3Connection: this.web3Connection,
-				web3: this.web3,
-				abi: abi,
-				contractAddress: contractAddress,
-				contract: new Contract(this.web3, abi, contractAddress),
-			};
-		} catch (err) {
-			throw err;
-		}
-	}
-	
-	__init__ = async () => {
-		try {
-			if (!this.getAddress()) {
-				throw new Error('Please add a Contract Address');
-			}
-			
-			await this.__assert();
-		} catch (err) {
-			throw err;
-		}
-	};
+  constructor({
+    web3Connection = null, // Web3Connection if exists, otherwise create one from the rest of params
+    contractAddress = null, // If not deployed
+    abi,
+    ...params
+  }) {
+    try {
+      if (!abi) {
+        throw new Error('No ABI Interface provided');
+      }
+
+      this.web3Connection = !web3Connection
+        ? new Web3Connection(params)
+        : web3Connection;
+      this.web3 = this.web3Connection.web3;
+      this.acc = this.web3Connection.account;
+
+      if (!this.web3) {
+        throw new Error('Please provide a valid web3 provider');
+      }
+
+      this.params = {
+        web3Connection: this.web3Connection,
+        web3: this.web3,
+        abi,
+        contractAddress,
+        contract: new Contract(this.web3, abi, contractAddress),
+      };
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  __init__ = async () => {
+    try {
+      if (!this.getAddress()) {
+        throw new Error('Please add a Contract Address');
+      }
+
+      await this.__assert();
+    } catch (err) {
+      throw err;
+    }
+  };
 
   __metamaskCall = async ({
-  	f, acc, value, callback = () => {},
+    f, acc, value, callback = () => {},
   }) => new Promise((resolve, reject) => {
-  	f.send({
-  		from: acc,
-        value,
-        gasPrice: 20000000000, //temp test
-        gas: 5913388, //6721975 //temp test
+    f.send({
+      from: acc,
+      value,
+      gasPrice: 20000000000, // temp test
+      gas: 5913388, // 6721975 //temp test
     })
-    .on('confirmation', (confirmationNumber, receipt) => {
-    	callback(confirmationNumber);
-    	if (confirmationNumber > 0) {
-    		resolve(receipt);
-    	}
-    })
-    .on('error', (err) => {
-    	reject(err);
-    });
+      .on('confirmation', (confirmationNumber, receipt) => {
+        callback(confirmationNumber);
+        if (confirmationNumber > 0) {
+          resolve(receipt);
+        }
+      })
+      .on('error', (err) => {
+        reject(err);
+      });
   });
 
   __sendTx = async (f, call = false, value, callback = () => {}) => {

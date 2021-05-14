@@ -10,25 +10,25 @@ import Numbers from '../../utils/Numbers';
  * @param {Boolean} params.test
  * @param {Boolean} params.localtest, ganache local blockchain
  * @param {Web3Connection} params.web3Connection ? (opt), created from above params
- * @param {Address} tokenAddress
- * @param {Address} contractAddress ? (opt)
+ * @param {Address} params.tokenAddress
+ * @param {Address} params.contractAddress ? (opt)
  */
 
 class StakingContract extends IContract {
-	constructor(params = {}) {
-		try {
-            super({ ...params, abi : staking });
-            if (params.tokenAddress) {
-                this.params.ERC20Contract = new ERC20Contract({
-					web3Connection: this.web3Connection,
-                    contractAddress: tokenAddress,
-                });
-            }
-		} catch (err) {
-			throw err;
-		}
+  constructor(params = {}) {
+    try {
+      super({ ...params, abi: staking });
+      if (params.tokenAddress) {
+        this.params.ERC20Contract = new ERC20Contract({
+          web3Connection: this.web3Connection,
+          contractAddress: params.tokenAddress,
+        });
+      }
+    } catch (err) {
+      throw err;
     }
-    
+  }
+
   /**
    * @function
    * @description Get ERC20 Address of the Contract
@@ -40,7 +40,7 @@ class StakingContract extends IContract {
       true,
     );
   }
-  
+
   /**
    * @function
    * @description Get Token Amount of ERC20 Address
@@ -347,7 +347,7 @@ class StakingContract extends IContract {
     );
     return subscriptions ? _.flatten(subscriptions) : [];
   };
-  
+
   /**
    * @function
    * @description Transfer Tokens by the Admin to ensure APR Amount
@@ -359,7 +359,7 @@ class StakingContract extends IContract {
       tokenAmount: amount,
     });
   }
-  
+
   /**
    * @function
    * @description Get Total Amount of tokens needed to be deposited by Admin to ensure APR for all available Products
@@ -386,7 +386,7 @@ class StakingContract extends IContract {
       allProducts.reduce((a, b) => a + b, 0),
     ).toString();
   };
-  
+
   /**
    * @override
    */
@@ -399,12 +399,14 @@ class StakingContract extends IContract {
 
     /* Use ABI */
     this.params.contract.use(staking, this.getAddress());
-	
-	/* Set Token Address Contract for easy access */
-	this.params.ERC20Contract = new ERC20Contract({
-		web3Connection: this.web3Connection,
-		contractAddress: await this.erc20(),
-	});
+
+    /* Set Token Address Contract for easy access */
+    if (!this.params.ERC20Contract) {
+      this.params.ERC20Contract = new ERC20Contract({
+        web3Connection: this.web3Connection,
+        contractAddress: await this.erc20(),
+      });
+    }
 
     /* Assert Token Contract */
     await this.params.ERC20Contract.__assert();

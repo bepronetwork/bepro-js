@@ -296,7 +296,8 @@ class OpenerRealFvr extends IContract {
    * @returns {Integer} packsAmount
    */
   getAmountOfPacksCreated = async () => parseInt(
-    await this.params.contract.getContract().methods.packIncrementId().call(), 10,
+    await this.params.contract.getContract().methods.packIncrementId().call(),
+    10,
   );
 
   /**
@@ -305,7 +306,8 @@ class OpenerRealFvr extends IContract {
    * @returns {Integer} packsAmount
    */
   getAmountOfPacksOpened = async () => parseInt(
-    await this.params.contract.getContract().methods._openedPacks().call(), 10,
+    await this.params.contract.getContract().methods._openedPacks().call(),
+    10,
   );
 
   /**
@@ -314,7 +316,8 @@ class OpenerRealFvr extends IContract {
    * @returns {Integer} tokensAmount
    */
   getAmountOfTokensCreated = async () => parseInt(
-    await this.params.contract.getContract().methods.lastNFTID().call(), 10,
+    await this.params.contract.getContract().methods.lastNFTID().call(),
+    10,
   );
 
   /**

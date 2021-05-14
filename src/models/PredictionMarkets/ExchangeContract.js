@@ -9,9 +9,9 @@ import IContract from '../IContract';
  * @param {Boolean} params.test
  * @param {Boolean} params.localtest, ganache local blockchain
  * @param {Web3Connection} params.web3Connection ? (opt), created from above params
- * @param {Address} tokenAddress
- * @param {Integer} decimals
- * @param {Address} contractAddress ? (opt)
+ * @param {Address} params.tokenAddress
+ * @param {Integer} params.decimals
+ * @param {Address} params.contractAddress ? (opt)
  */
 
 class ExchangeContract extends IContract {

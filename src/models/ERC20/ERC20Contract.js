@@ -23,6 +23,7 @@ class ERC20Contract extends IContract {
   getContract() {
     return this.params.contract.getContract();
   }
+
   /**
    * @function
    * @description Get Token Address
@@ -58,24 +59,20 @@ class ERC20Contract extends IContract {
    * @param {Address} address User Address
    * @returns {Transaction} Transaction
    */
-  getTokenAmount = async (address) => {
-    return Numbers.fromDecimals(
-      await this.getContract().methods.balanceOf(address).call(),
-      this.getDecimals()
-    );
-  }
+  getTokenAmount = async address => Numbers.fromDecimals(
+    await this.getContract().methods.balanceOf(address).call(),
+    this.getDecimals(),
+  );
 
   /**
    * @function
    * @description Get Total Supply of Token
    * @returns {Integer} Total supply
    */
-  totalSupply = async () => {
-    return Numbers.fromDecimals(
-      await this.getContract().methods.totalSupply().call(),
-      this.getDecimals()
-    );
-  }
+  totalSupply = async () => Numbers.fromDecimals(
+    await this.getContract().methods.totalSupply().call(),
+    this.getDecimals(),
+  );
 
   getABI() {
     return this.params.contract;
@@ -101,7 +98,7 @@ class ERC20Contract extends IContract {
    * @param {Address} params.spenderAddress Spender Address
    * @returns {Bool} isApproved
    */
-  isApproved = async ({ address, amount, spenderAddress }) =>  {
+  isApproved = async ({ address, amount, spenderAddress }) => {
     try {
       const approvedAmount = Numbers.fromDecimals(
         await this.getContract()
@@ -153,7 +150,9 @@ class ERC20Contract extends IContract {
    * @param {Address} params.distributionAddress Where tokens should be sent to initially
    * @returns {Transaction} Transaction
    */
-  deploy = async ({ name, symbol, cap, distributionAddress, callback }) => {
+  deploy = async ({
+    name, symbol, cap, distributionAddress, callback,
+  }) => {
     if (!distributionAddress) {
       throw new Error('Please provide an Distribution address for distro');
     }
