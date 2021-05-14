@@ -4,9 +4,9 @@
     "airbnb-base"
   ],
   "rules": {
-      "no-return-await": 1,
-      "camelcase": 1,
-      "no-underscore-dangle": 1,
+      "no-return-await": 0,
+      "camelcase": 0,
+      "no-underscore-dangle": 0,
       "class-methods-use-this": 1,
       "no-unused-vars": 1,
       "max-len": 1,

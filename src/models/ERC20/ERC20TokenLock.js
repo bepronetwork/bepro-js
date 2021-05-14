@@ -186,7 +186,7 @@ class ERC20TokenLock extends IContract {
   /**
    * User locks his tokens until specified end date.
    * REQUIREMENTS:
-   *	user must have approved this contract to spend the tokens "amount" he wants to lock before calling this function.
+   *  user must have approved this contract to spend the tokens "amount" he wants to lock before calling this function.
    * @function
    * @param {Object} params
    * @param {Address} params.address User Address
@@ -201,8 +201,8 @@ class ERC20TokenLock extends IContract {
 
     assert(
       amount > 0
-        && amount >= (await this.minAmountToLock())
-        && amount <= (await this.maxAmountToLock()),
+      && amount >= (await this.minAmountToLock())
+      && amount <= (await this.maxAmountToLock()),
       'Invalid token amount',
     );
     assert(endDate > moment(), 'Invalid end date');

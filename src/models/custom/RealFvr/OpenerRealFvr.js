@@ -237,7 +237,7 @@ class OpenerRealFvr extends IContract {
    */
   getPackbyId = async ({ packId }) => {
     const res = await
-      this.params.contract.getContract()
+    this.params.contract.getContract()
       .methods.getPackbyId(packId).call();
 
     return {
@@ -261,7 +261,7 @@ class OpenerRealFvr extends IContract {
    */
   getRegisteredTokens = async () => {
     const res = await
-      this.params.contract.getContract()
+    this.params.contract.getContract()
       .methods.getRegisteredIDs().call();
 
     return res.map(a => parseInt(a, 10));
@@ -274,9 +274,9 @@ class OpenerRealFvr extends IContract {
    * @param {number} params.tokenId
    * @returns {Promise<boolean>} wasMinted
    */
-  exists = async ({ tokenId }) =>  await
-      this.params.contract.getContract()
-      .methods.exists(tokenId).call();
+  exists = async ({ tokenId }) => await
+  this.params.contract.getContract()
+    .methods.exists(tokenId).call();
 
 
   /**
@@ -286,10 +286,9 @@ class OpenerRealFvr extends IContract {
    * @param {number} params.packId
    * @returns {Promise<number>} Price in Real Fvr Tokens
    */
-  getPackPriceInFVR = async ({ packId }) =>  Numbers.fromDecimals(await
-      this.params.contract.getContract()
-      .methods.getPackPriceInFVR(packId).call(), this.getERC20Contract().getDecimals(),
-  );
+  getPackPriceInFVR = async ({ packId }) => Numbers.fromDecimals(await
+  this.params.contract.getContract()
+    .methods.getPackPriceInFVR(packId).call(), this.getERC20Contract().getDecimals());
 
   /**
    * Get Amount of Packs Created
@@ -297,7 +296,7 @@ class OpenerRealFvr extends IContract {
    * @returns {Promise<number>} packsAmount
    */
   getAmountOfPacksCreated = async () => parseInt(
-     await this.params.contract.getContract().methods.packIncrementId().call(), 10,
+    await this.params.contract.getContract().methods.packIncrementId().call(), 10,
   );
 
   /**
@@ -306,7 +305,7 @@ class OpenerRealFvr extends IContract {
    * @returns {Promise<number>} packsAmount
    */
   getAmountOfPacksOpened = async () => parseInt(
-     await this.params.contract.getContract().methods._openedPacks().call(), 10,
+    await this.params.contract.getContract().methods._openedPacks().call(), 10,
   );
 
   /**
@@ -315,7 +314,7 @@ class OpenerRealFvr extends IContract {
    * @returns {Promise<number>} tokensAmount
    */
   getAmountOfTokensCreated = async () => parseInt(
-     await this.params.contract.getContract().methods.lastNFTID().call(), 10,
+    await this.params.contract.getContract().methods.lastNFTID().call(), 10,
   );
 
   /**

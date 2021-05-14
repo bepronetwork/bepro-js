@@ -30,7 +30,7 @@ class ERC20Contract extends IContract {
   }
 
   /**
-	 * Get Token Address
+   * Get Token Address
    * @returns {Address} address
    */
   getAddress() {
