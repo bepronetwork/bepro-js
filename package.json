@@ -26,7 +26,8 @@
         "jsdoc:serve": "http-server ./docs/ -o",
         "prebuild": "npm run jsdoc:build",
         "lint": "eslint ./src --cache",
-        "lint:fix": "eslint ./src --fix"
+        "lint:fix": "eslint ./src --fix",
+        "ganache:start": "ganache-cli -p 8545"
     },
     "pre-commit": [
         "lint",
