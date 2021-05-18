@@ -5,9 +5,11 @@ on:
      
 jobs:
   update_doc_vue:
-    - name: dispatch update_docs event
-            uses: peter-evans/repository-dispatch@v1
-            with:
-              token: ${{ secrets.PAT }}
-              repository: moshmage/bepro-docs
-              event-type: update_docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: dispatch update_docs event
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PAT }}
+          repository: moshmage/bepro-docs
+          event-type: update_docs
