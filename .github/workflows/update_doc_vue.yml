@@ -1,3 +1,5 @@
+name: Dispatch update_doc event
+
 on:
   push:
     branches:
