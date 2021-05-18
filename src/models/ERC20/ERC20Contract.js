@@ -3,9 +3,15 @@ import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 
 /**
+ * @typedef {Object} ERC20Contract~Options
+ * @property {Web3} web3
+ * @property {string} [contractAddress]
+ * @property {Account} [acc]
+ */
+
+/**
  * @class ERC20Contract
- * @param {Object} params Parameters
- * @param [Address] params.contractAddress Optional/If Existent
+ * @param {ERC20Contract~Options} options
  */
 class ERC20Contract extends IContract {
   constructor(params = {}) {

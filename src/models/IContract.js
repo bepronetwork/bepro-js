@@ -1,15 +1,17 @@
 import Contract from '../utils/Contract';
 
 /**
+ * @typedef {Object} IContract~Options
+ * @property {Web3} web3
+ * @property {ABI} abi
+ * @property {string} [contractAddress]
+ * @property {Account} [acc]
+ */
+
+/**
  * Contract Object Interface
  * @class IContract
- * @param {Object} params
- * @param {Web3} params.web3
- * @param {ABI} params.abi
- * @param [Address] params.contractAddress
- * @param [Account] params.acc
- * @param [Address] params.tokenAddress
- * @throws {Error} Throws an error if ABI or Web3 providers are missing
+ * @param {IContract~Options} options
  */
 class IContract {
   constructor({
