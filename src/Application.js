@@ -29,14 +29,22 @@ const networksEnum = Object.freeze({
 });
 
 /**
+ * @typedef {Object} Application~Optional
+ * @property {string} web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
+ * @property {string} privateKey Private key (0x....) used for server side use
+ */
+
+/**
+ * @typedef {Object} Application~Options
+ * @property {boolean} [test=false] Automated Tests
+ * @property {boolean} [localtest=false] Ganache Local Blockchain
+ * @property {Application~Optional} [opt] Optional Chain Connection Object (Default ETH)
+ */
+
+/**
  * Application Object
  * @class Application
- * @param {Object} params Parameters
- * @param {Bool} params.test Automated Tests / Default : False
- * @param {Bool} params.localtest Ganache Local Blockchain / Default : False
- * @param {Object} params.opt Optional Chain Connection Object (Default ETH)
- * @param {String} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
- * @param {String} params.opt.privateKey Private key (0x....) used for server side use
+ * @param {Application~Options} options
  */
 class Application {
   constructor({
@@ -65,8 +73,10 @@ class Application {
   }
 
   /**
+   * Connect to Web3 injected in the constructor
    * @function
-   * @description Connect to Web3 injected in the constructor
+   * @throws {Error} Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet
+   * @void
    */
   start = () => {
     if (this.localtest) {
@@ -91,8 +101,9 @@ class Application {
   };
 
   /**
+   * Login with Metamask/Web3 Wallet - substitutes start()
    * @function
-   * @description Login with Metamask/Web3 Wallet - substitutes start()
+   * @return {Promise<boolean>}
    */
   login = async () => {
     try {
@@ -112,10 +123,11 @@ class Application {
   };
 
   /**
+   * Create a Exchange Contract
    * @function
-   * @description Create a Exchange Contract
    * @param {Object} params
-   * @param {Address} params.ContractAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null]
+   * @throws {Error}
    * @return {ExchangeContract} ExchangeContract
    */
   getExchangeContract = ({ contractAddress = null } = {}) => {
@@ -131,11 +143,11 @@ class Application {
   };
 
   /**
+   * Create a OpenerRealFvr Object
    * @function
-   * @description Create a OpenerRealFvr Object
    * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
-   * @param {Address} params.tokenAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null]
+   * @param {Address} [params.tokenAddress=null]
    * @return {OpenerRealFvr} OpenerRealFvr
    */
   getOpenRealFvrContract = ({
@@ -155,11 +167,11 @@ class Application {
   };
 
   /**
+   * Create a StakingContract Object
    * @function
-   * @description Create a StakingContract Object
    * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
-   * @param {Address} params.tokenAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null] (Opt) If it is deployed
+   * @param {Address} [params.tokenAddress=null] (Opt) If it is deployed
    * @return {StakingContract} StakingContract
    */
   getStakingContract = ({
@@ -179,11 +191,11 @@ class Application {
   };
 
   /**
+   * Create a ERC20TokenLock Object
    * @function
-   * @description Create a ERC20TokenLock Object
    * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
-   * @param {Address} params.tokenAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null] (Opt) If it is deployed
+   * @param {Address} [params.tokenAddress=null] (Opt) If it is deployed
    * @return {ERC20TokenLock} ERC20TokenLock
    */
   getERC20TokenLock = ({
@@ -209,27 +221,27 @@ class Application {
    * @param {Address} params.contractAddress (Opt) If it is deployed
    * @return {BEPRONetwork} BEPRONetwork
    */
-   getBEPRONetwork = ({
-     contractAddress = null,
-     tokenAddress = null,
-   } = {}) => {
-     try {
-       return new BEPRONetwork({
-         web3: this.web3,
-         contractAddress,
-         tokenAddress,
-         acc: this.test && !this.localtest ? this.account : null,
-       });
-     } catch (err) {
-       throw err;
-     }
-   };
+  getBEPRONetwork = ({
+    contractAddress = null,
+    tokenAddress = null,
+  } = {}) => {
+    try {
+      return new BEPRONetwork({
+        web3: this.web3,
+        contractAddress,
+        tokenAddress,
+        acc: this.test && !this.localtest ? this.account : null,
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
 
   /**
+   * Create a ERC721Collectibles Object
    * @function
-   * @description Create a ERC721Collectibles Object
-   * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * @param {Object} [params={}]
+   * @param {Address} [params.contractAddress=null] (Opt) If it is deployed
    * @return {ERC721Collectibles} ERC721Collectibles
    */
   getERC721Collectibles = ({ contractAddress = null } = {}) => {
@@ -245,10 +257,10 @@ class Application {
   };
 
   /**
+   * Create a ERC20Contract Object
    * @function
-   * @description Create a ERC20Contract Object
    * @param {Object} params
-   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * @param {Address} [params.contractAddress=null] (Opt) If it is deployed
    * @return {ERC20Contract} ERC20Contract
    */
   getERC20Contract = ({ contractAddress = null }) => {
@@ -263,14 +275,10 @@ class Application {
     }
   };
 
-  /** ***** */
-  /** UTILS */
-  /** ***** */
-
   /**
+   * Get ETH Network
    * @function
-   * @description Get ETH Network
-   * @return {String} Network Name (Ex : Kovan)
+   * @return {Promise<string>} Network Name (Ex : Kovan)
    */
   getETHNetwork = async () => {
     const netId = await this.web3.eth.net.getId();
@@ -282,19 +290,20 @@ class Application {
   };
 
   /**
+   * Get Address connected via login()
    * @function
-   * @description Get Address connected via login()
-   * @return {Address} Address in Use
+   * @return {Promise<string>} Address in Use
    */
   getAddress = async () => {
     const accounts = await this.web3.eth.getAccounts();
     return accounts[0];
   };
 
+
   /**
+   * Get ETH Balance of Address connected via login()
    * @function
-   * @description Get ETH Balance of Address connected via login()
-   * @return {Integer} ETH Balance
+   * @return {Promise<string>} ETH Balance
    */
   getETHBalance = async () => {
     const wei = await this.web3.eth.getBalance(await this.getAddress());
