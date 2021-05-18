@@ -26,7 +26,9 @@
         "jsdoc:serve": "http-server ./docs/ -o",
         "prebuild": "npm run jsdoc:build",
         "lint": "eslint ./src --cache",
-        "lint:fix": "eslint ./src --fix"
+        "lint:fix": "eslint ./src --fix",
+        "ganache:start": "ganache-cli -p 8545",
+        "watch": "onchange 'src/**/*.js' -- npm run build"
     },
     "pre-commit": [
         "lint",
@@ -74,6 +76,7 @@
         "eslint-plugin-prettier": "3.1.0",
         "ganache-cli": "^6.12.2",
         "gitbook-cli": "^2.3.2",
+        "onchange": "^2.4.0",
         "http-server": "^0.12.3",
         "jsdoc": "^3.6.6",
         "jsdoc-babel": "^0.5.0",

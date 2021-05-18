@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  bepro:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes:
+      - "./src:/app/src"
+      - "./build:/app/build"
+      - "./package.json:/app/package.json"
+      - "./docs:/app/docs"
+      - "./docs-src:/app/docs-src"
+      - "./contracts:/app/contracts"
+      - "./tests:/app/tests"
+      - "./migrations:/app/migrations"
+      - "./truffle-config.js:/app/truffle-config.js"
+      - "./index.js:/app/index.js"
+      - "./README.md:/app/README.md"
