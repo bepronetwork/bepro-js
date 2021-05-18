@@ -29,14 +29,22 @@ const networksEnum = Object.freeze({
 });
 
 /**
+ * @typedef {Object} Application~Optional
+ * @property {string} web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
+ * @property {string} privateKey Private key (0x....) used for server side use
+ */
+
+/**
+ * @typedef {Object} Application~Options
+ * @property {boolean} [test=false] Automated Tests
+ * @property {boolean} [localtest=false] Ganache Local Blockchain
+ * @property {Application~Optional} [opt] Optional Chain Connection Object (Default ETH)
+ */
+
+/**
  * Application Object
  * @class Application
- * @param {Object} params Parameters
- * @param {boolean} [params.test=false] Automated Tests
- * @param {boolean} [params.localtest=false] Ganache Local Blockchain
- * @param {Object} [params.opt] Optional Chain Connection Object (Default ETH)
- * @param {string} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
- * @param {string} params.opt.privateKey Private key (0x....) used for server side use
+ * @param {Application~Options} options
  */
 class Application {
   constructor({

@@ -4,11 +4,16 @@ import IContract from '../../IContract';
 import ERC20Contract from '../../ERC20/ERC20Contract';
 
 /**
+ * @typedef {Object} OpenerRealFvr~Options
+ * @property {Web3} web3
+ * @property {string} [contractAddress]
+ * @property {Account} [acc]
+ */
+
+/**
  * OpenerRealFvr Object
  * @class OpenerRealFvr
- * @param {Object} params Parameters
- * @param {Address} params.contractAddress Contract Address (If Deployed)
- * @param {Address} params.tokenAddress Token Purchase Address
+ * @param {OpenerRealFvr~Options} options
  */
 class OpenerRealFvr extends IContract {
   constructor(params = {}) {

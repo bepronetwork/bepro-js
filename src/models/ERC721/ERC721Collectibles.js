@@ -6,11 +6,16 @@ import ERC20Contract from '../ERC20/ERC20Contract';
 const baseFeeAddress = '0x6714d41094a264bb4b8fcb74713b42cfee6b4f74';
 
 /**
+ * @typedef {Object} ERC721Contract~Options
+ * @property {Web3} web3
+ * @property {string} [contractAddress]
+ * @property {Account} [acc]
+ */
+
+/**
  * ERC721Contract Object
  * @class ERC721Contract
- * @param {Object} params
- * @param {Web3} params.web3
- * @param [Address] params.contractAddress
+ * @param {ERC721Contract~Options} options
  */
 class ERC721Collectibles extends IContract {
   constructor(params = {}) {

@@ -8,13 +8,16 @@ import ERC20Contract from '../ERC20/ERC20Contract';
 const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
 
 /**
+ * @typedef {Object} BEPRONetwork~Options
+ * @property {Web3} web3
+ * @property {string} [contractAddress]
+ * @property {Account} [acc]
+ * */
+
+/**
  * BEPRONetwork Object
  * @class BEPRONetwork
- * @param {Object} params
- * @param {Web3} params.web3
- * @param {Address} [params.contractAddress]
- * @param {*} params.acc
- * @param {beproNetwork} params.abi
+ * @param {BEPRONetwork~Options} options
  */
 class BEPRONetwork extends IContract {
   /**

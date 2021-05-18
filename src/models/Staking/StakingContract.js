@@ -5,10 +5,17 @@ import IContract from '../IContract';
 import Numbers from '../../utils/Numbers';
 
 /**
+ * @typedef {Object} StakingContract~Options
+ * @property {string} tokenAddress
+ * @property {Web3} web3
+ * @property {string} [contractAddress]
+ * @property {Account} [acc]
+ */
+
+/**
  * Staking Contract Object
  * @class StakingContract
- * @param {Object} params
- * @param {Address} params.tokenAddress
+ * @param {StakingContract~Options} options
  */
 class StakingContract extends IContract {
   constructor(params = {}) {

@@ -7,11 +7,17 @@ import Numbers from '../../utils/Numbers';
 const assert = require('assert');
 
 /**
+ * @typedef {Object} ERC20TokenLock~Options
+ * @property {string} tokenAddress
+ * @property {Web3} web3
+ * @property {string} [contractAddress]
+ * @property {Account} [acc]
+ */
+
+/**
  * ERC20 Token Lock Contract Object
  * @class ERC20TokenLock
- * @param {Object} params
- * @param {Address} params.tokenAddress
- * @param [Address] params.contractAddress
+ * @param {ERC20TokenLock~Options} options
  */
 class ERC20TokenLock extends IContract {
   constructor(params = {}) {

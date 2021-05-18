@@ -3,12 +3,18 @@ import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 
 /**
+ * @typedef {Object} ExchangeContract~Options
+ * @property {number} decimals
+ * @property {string} tokenAddress
+ * @property {Web3} web3
+ * @property {string} [contractAddress]
+ * @property {Account} [acc]
+ */
+
+/**
  * Exchange Contract Object
  * @class ExchangeContract
- * @param {Web3} web3
- * @param {Address} tokenAddress
- * @param {Integer} decimals
- * @param {Address} contractAddress ? (opt)
+ * @param {ExchangeContract~Options} options
  */
 class ExchangeContract extends IContract {
   constructor(params) {
