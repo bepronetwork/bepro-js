@@ -4,6 +4,7 @@
     "airbnb-base"
   ],
   "rules": {
+      "no-prototype-builtins": 0,
       "no-return-await": 1,
       "camelcase": 1,
       "no-underscore-dangle": 1,

@@ -255,18 +255,6 @@ class IContract {
 
   /**
    * @function
-   * @description Get contract current user/sender address
-   * @param {Address} User address
-   */
-  async getUserAddress() {
-    if (this.acc) return this.acc.getAddress();
-
-    const accounts = await this.params.web3.eth.getAccounts();
-    return accounts[0];
-  }
-
-  /**
-   * @function
    * @description Verify that current user/sender is admin, throws an error otherwise
    * @throws {Error}
    */
@@ -291,6 +279,53 @@ class IContract {
     if (paused) {
       throw new Error('Contract is paused');
     }
+  }
+
+  /** ***** */
+  /** Web3Connection functions */
+  /** ***** */
+
+  /**
+   * @name start
+   * @description Start the Web3Connection
+   */
+  start() {
+    return this.web3Connection.start();
+  }
+
+  /**
+   * @function
+   * @description Login with Metamask/Web3 Wallet - substitutes start()
+   */
+  async login() {
+    return await this.web3Connection.login();
+  }
+
+  /**
+   * @function
+   * @description Get ETH Network
+   * @return {String} Network Name (Ex : Kovan)
+   */
+  async getETHNetwork() {
+    return await this.web3Connection.getETHNetwork();
+  }
+
+  /**
+   * @function
+   * @description Get contract current user/sender address
+   * @param {Address} User address
+   */
+  async getUserAddress() {
+    return await this.web3Connection.getAddress();
+  }
+
+  /**
+   * @function
+   * @description Get user ETH Balance of Address connected via login()
+   * @return {Integer} User ETH Balance
+   */
+  async getUserETHBalance() {
+    return await this.web3Connection.getETHBalance();
   }
 }
 

@@ -32,10 +32,7 @@ class Web3Connection {
   constructor({
     test = false, // Automated tests
     localtest = false, // ganache local blockchain
-    opt = {
-      web3Connection: ETH_URL_TESTNET,
-      privateKey: TEST_PRIVATE_KEY,
-    },
+    opt = { web3Connection: ETH_URL_TESTNET, privateKey: TEST_PRIVATE_KEY },
   }) {
     this.test = test;
     this.localtest = localtest;
@@ -116,7 +113,7 @@ class Web3Connection {
    */
   getETHNetwork = async () => {
     const netId = await this.web3.eth.net.getId();
-    const networkName = Object.prototype.hasOwnProperty.call(networksEnum, netId)
+    const networkName = networksEnum.hasOwnProperty(netId)
       ? networksEnum[netId]
       : await this.web3.currentProvider.host; // 'Unknown';
     return networkName;
@@ -128,6 +125,8 @@ class Web3Connection {
    * @return {Address} Address in Use
    */
   getAddress = async () => {
+    if (this.account) return this.account.getAddress();
+
     const accounts = await this.web3.eth.getAccounts();
     return accounts[0];
   };
