@@ -14,7 +14,7 @@ const testConfig = {
 
 // NOTE: We only test ERC20contract because all the other models are similar
 // We want to test generic behaviour like connect to RINKEBY TESTNET and MAINNET and check expected values
-context("ERC20", async () => {
+context("---generics---", async () => {
   let erc20;
 
   before(async () => {
@@ -44,18 +44,24 @@ context("ERC20", async () => {
       expect(erc20).to.not.equal(null);
 
       try {
-        let userAddr = await erc20.getUserAddress();
-        console.log("---erc20.userAddress: " + userAddr);
+        // load web3 connection
+        await erc20.start();
 
         assert.fail();
-        console.log("---log erc20.getUserAddress() this should not be reached");
+        console.log("---log erc20.start() this should not be reached");
       } catch (err) {
-        console.log("---log erc20.getUserAddress().error: " + err.message);
+        console.log("---log erc20.start().error: " + err.message);
         assert(
-          err.message.indexOf("undefined") >= 0,
-          "erc20.getUserAddress() should fail with expected error"
+          err.message.indexOf(
+            "Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet"
+          ) >= 0,
+          "erc20.start() should fail with expected error"
         );
       }
+
+      let userAddr = await erc20.getUserAddress();
+      console.log("---erc20.userAddress: " + userAddr);
+      expect(userAddr).to.equal(undefined);
     })
   );
 

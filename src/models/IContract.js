@@ -302,6 +302,15 @@ class IContract {
 
   /**
    * @function
+   * @description Start the Web3Connection
+   */
+  async start() {
+    this.web3Connection.start();
+    this._loadDataFromWeb3Connection();
+  }
+
+  /**
+   * @function
    * @description Login with Metamask/Web3 Wallet - substitutes start()
    * @return {Boolean} True is login was successful
    */

@@ -158,7 +158,7 @@ let stakingTest = new StakingContract({ test : true, contractAddress : /* Contra
 /* 2 - Connect the App/Contract to the Metamask Web3 Injected wallet*/
 await app.login();
 await staking.login();
-/* or instantiate with the provided web3Connection */
+/* or instantiate with the provided web3Connection, for tests it was already done at object creation */
 await app.start();
 await staking.start();
 
