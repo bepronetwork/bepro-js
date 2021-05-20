@@ -58,7 +58,7 @@ class Web3Connection {
    * @name start
    * @description Start the Application
    */
-  start = () => {
+  start() {
     if (this.localtest) {
       this.web3 = new Web3(
         new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST),
@@ -70,6 +70,14 @@ class Web3Connection {
       this.web3 = new Web3(
         new Web3.providers.HttpProvider(this.opt.web3Connection),
       );
+
+      if (this.test) {
+        this.account = new Account(
+          this.web3,
+          this.web3.eth.accounts.privateKeyToAccount(this.opt.privateKey),
+        );
+        console.log(`My address: ${this.account.getAddress()}`);
+      }
     }
 
     if (typeof window !== 'undefined') {
@@ -79,7 +87,7 @@ class Web3Connection {
         'Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet',
       );
     }
-  };
+  }
 
   /**
    * @function
@@ -111,35 +119,35 @@ class Web3Connection {
    * @description Get ETH Network
    * @return {String} Network Name (Ex : Kovan)
    */
-  getETHNetwork = async () => {
+  async getETHNetwork() {
     const netId = await this.web3.eth.net.getId();
     const networkName = networksEnum.hasOwnProperty(netId)
       ? networksEnum[netId]
       : await this.web3.currentProvider.host; // 'Unknown';
     return networkName;
-  };
+  }
 
   /**
    * @function
    * @description Get Address connected via login()
    * @return {Address} Address in Use
    */
-  getAddress = async () => {
+  async getAddress() {
     if (this.account) return this.account.getAddress();
 
     const accounts = await this.web3.eth.getAccounts();
     return accounts[0];
-  };
+  }
 
   /**
    * @function
    * @description Get ETH Balance of Address connected via login()
    * @return {Integer} ETH Balance
    */
-  getETHBalance = async () => {
+  async getETHBalance() {
     const wei = await this.web3.eth.getBalance(await this.getAddress());
     return this.web3.utils.fromWei(wei, 'ether');
-  };
+  }
 }
 
 export default Web3Connection;

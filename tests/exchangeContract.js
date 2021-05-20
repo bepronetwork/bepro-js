@@ -1,20 +1,11 @@
-import chai from "chai";
+import { expect, assert } from "chai";
 import moment from "moment";
 import delay from "delay";
 import { mochaAsync } from "./utils";
-import {
-  Application,
-  ERC20Contract,
-  ExchangeContract,
-  StakingContract,
-  ERC20TokenLock,
-  ERC721Collectibles,
-  ERC721Standard,
-} from "..";
+import { ERC20Contract, ExchangeContract } from "..";
 var userPrivateKey =
   "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
-const { expect } = chai;
 const ethAmount = 0.1;
 var contractAddress = "0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64";
 const testConfig = {

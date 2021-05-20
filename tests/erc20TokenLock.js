@@ -1,16 +1,8 @@
-import chai from "chai";
+import { expect, assert } from "chai";
 import moment from "moment";
 import delay from "delay";
 import { mochaAsync } from "./utils";
-import {
-  Application,
-  ERC20Contract,
-  ExchangeContract,
-  StakingContract,
-  ERC20TokenLock,
-  ERC721Collectibles,
-  ERC721Standard,
-} from "..";
+import { ERC20Contract, ERC20TokenLock } from "..";
 import Numbers from "../src/utils/Numbers";
 //var assert = require('assert');
 // public address for this key is 0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB
@@ -21,8 +13,6 @@ const tokenAddress = "0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2";
 //var deployed_tokenAddress = '0x4197A48d240B104f2bBbb11C0a43fA789f2A5675';
 //var deployed_tokenAddress = '0x422E11f71440e17EbA859faCF44Dfd03fD259DDB'; //ganache
 var deployed_tokenAddress;
-const { expect } = chai;
-const { assert } = chai;
 const ethAmount = 0.1;
 let contractAddress = "0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64";
 // this is already deployed on rinkeby network for testing

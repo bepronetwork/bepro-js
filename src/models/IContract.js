@@ -27,20 +27,14 @@ class IContract {
       this.web3Connection = !web3Connection
         ? new Web3Connection(params)
         : web3Connection;
-      this.web3 = this.web3Connection.web3;
-      this.acc = this.web3Connection.account;
-
-      if (!this.web3) {
-        throw new Error('Please provide a valid web3 provider');
-      }
 
       this.params = {
         web3Connection: this.web3Connection,
-        web3: this.web3,
         abi,
         contractAddress,
-        contract: new Contract(this.web3, abi, contractAddress),
       };
+
+      if (this.web3Connection.test) this._loadDataFromWeb3Connection();
     } catch (err) {
       throw err;
     }
@@ -281,24 +275,40 @@ class IContract {
     }
   }
 
+  /**
+   * @function
+   * @description Load data from Web3Connection object,
+   * Called at start when testing or at login on MAINNET
+   */
+  _loadDataFromWeb3Connection() {
+    this.web3 = this.web3Connection.web3;
+    this.acc = this.web3Connection.account;
+
+    // update some params properties with new values
+    this.params = {
+      ...this.params,
+      web3: this.web3,
+      contract: new Contract(
+        this.web3,
+        this.params.abi,
+        this.params.contractAddress,
+      ),
+    };
+  }
+
   /** ***** */
   /** Web3Connection functions */
   /** ***** */
 
   /**
-   * @name start
-   * @description Start the Web3Connection
-   */
-  start() {
-    return this.web3Connection.start();
-  }
-
-  /**
    * @function
    * @description Login with Metamask/Web3 Wallet - substitutes start()
+   * @return {Boolean} True is login was successful
    */
   async login() {
-    return await this.web3Connection.login();
+    const loginOk = await this.web3Connection.login();
+    if (loginOk) this._loadDataFromWeb3Connection();
+    return loginOk;
   }
 
   /**
