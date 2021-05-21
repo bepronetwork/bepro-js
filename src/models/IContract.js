@@ -142,7 +142,7 @@ class IContract {
    * @function
    * @description Get Web3 Contract to interact directly with the web3 library functions like events (https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=events#contract-events)
    */
-  async getWeb3Contract() {
+  getWeb3Contract() {
     return this.params.contract.getContract();
   }
 
