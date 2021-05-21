@@ -128,7 +128,7 @@ IContract = function () {
   /**
      * @function
      * @description Deploy the Contract
-     */(0, _createClass3.default)(IContract, [{ key: 'setNewOwner',
+     */(0, _createClass3.default)(IContract, [{ key: 'getWeb3Contract',
 
 
 
@@ -139,10 +139,18 @@ IContract = function () {
 
 
     /**
-                                                                     * @function
-                                                                     * @description Set New Owner of the Contract
-                                                                     * @param {string} address
-                                                                     */value: function () {var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {var
+                                                                         * @function
+                                                                         * @description Get Web3 Contract to interact directly with the web3 library functions like events (https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=events#contract-events)
+                                                                         */value: function getWeb3Contract()
+    {
+      return this.params.contract.getContract();
+    }
+
+    /**
+       * @function
+       * @description Set New Owner of the Contract
+       * @param {string} address
+       */ }, { key: 'setNewOwner', value: function () {var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_ref3) {var
         address = _ref3.address;return _regenerator2.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
                   this.__sendTx(
                   this.params.contract.getContract().methods.transferOwnership(address)));case 2:return _context.abrupt('return', _context.sent);case 3:case 'end':return _context.stop();}}}, _callee, this);}));function setNewOwner(_x) {return _ref2.apply(this, arguments);}return setNewOwner;}()
