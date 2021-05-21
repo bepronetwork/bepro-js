@@ -96,6 +96,22 @@ class BEPRONetwork extends IContract {
 
   /**
    * @function
+   * @description Get Amount of Needed for Dispute
+   * @returns {Integer}
+   */
+  async percentageNeededForDispute() {
+    return parseInt(
+      await this.params.contract
+        .getContract()
+        .methods.percentageNeededForDispute()
+        .call(),
+      10,
+    );
+  }
+
+
+  /**
+   * @function
    * @description Get Amount of Needed for Merge
    * @returns {Integer}
    */
@@ -303,6 +319,7 @@ class BEPRONetwork extends IContract {
    * @param {Integer} merge_id
    * @returns {Integer} _id
    * @returns {Integer} votes
+   * @returns {Integer} disputes
    * @returns {Address | Array} prAddresses
    * @returns {Integer | Array} prAmounts
    * @returns {Address} proposalAddress
@@ -319,6 +336,7 @@ class BEPRONetwork extends IContract {
     return {
       _id: Numbers.fromHex(r[0]),
       votes: Numbers.fromDecimals(r[1], 18),
+      disputes: Numbers.fromDecimals(r[2], 18),
       prAddresses: r[3],
       prAmounts: r[4] ? r[4].map(a => Numbers.fromDecimals(a, 18)) : 0,
       proposalAddress: r[5],
