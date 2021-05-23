@@ -15,6 +15,7 @@
     },
     "scripts": {
         "pretest": "npm run build && truffle compile && truffle migrate --network development",
+        "pre-commit": "lint-staged",
         "test": "./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
         "test:truffle": "truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "index": "babel-node ./index.js --presets es2015,stage-2",
@@ -28,12 +29,9 @@
         "lint": "eslint ./src --cache",
         "lint:fix": "eslint ./src --fix",
         "ganache:start": "ganache-cli -p 8545",
-        "watch": "onchange 'src/**/*.js' -- npm run build"
+        "watch": "onchange 'src/**/*.js' -- npm run build",
+        "prepare": "husky install"
     },
-    "pre-commit": [
-        "lint",
-        "lint:fix"
-    ],
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",
         "abi-decoder": "^1.2.0",
@@ -76,14 +74,15 @@
         "eslint-plugin-prettier": "3.1.0",
         "ganache-cli": "^6.12.2",
         "gitbook-cli": "^2.3.2",
-        "onchange": "^2.4.0",
         "http-server": "^0.12.3",
+        "husky": "^6.0.0",
         "jsdoc": "^3.6.6",
         "jsdoc-babel": "^0.5.0",
         "jsdoc-md": "^8.0.0",
         "jsdoc-to-markdown": "^6.0.1",
+        "lint-staged": "^8.0.0",
         "mocha-multi-reporters": "^1.5.1",
-        "pre-commit": "^1.2.2",
+        "onchange": "^2.4.0",
         "should": "^7.1.0",
         "supertest": "^1.0.0",
         "truffle": "5.1.7"
@@ -99,6 +98,12 @@
         ],
         "sourceMaps": true,
         "retainLines": true
+    },
+    "lint-staged": {
+        "*.{js,jsx}": [
+            "eslint . --fix",
+            "git add"
+        ]
     },
     "author": "",
     "license": "ISC"
