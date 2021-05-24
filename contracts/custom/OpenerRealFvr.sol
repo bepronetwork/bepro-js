@@ -81,7 +81,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         return registeredIDsArray[_address];
     }
 
-    function getPackbyId(uint256 _packId) public onlyOwner returns (uint256, uint256, uint256, uint256, string memory, string memory, string memory, address, 
+    function getPackbyId(uint256 _packId) public returns (uint256, uint256, uint256, uint256, string memory, string memory, string memory, address, 
         address[] memory, uint256[] memory)  {
         Pack memory pack = packs[_packId];
         return (
