@@ -1,12 +1,14 @@
 /* eslint-disable */
-const IPFS = require('ipfs');
-
-const node = new IPFS();
+import { create } from 'ipfs-https-client';
 
 class DexStorage {
-  constructor() {}
+  constructor({ipfsClientHTTP}={ipfsClientHTTP : null}) {
+    if(!ipfsClientHTTP){
+      throw new Error("Please provide a valid ipfsClientHTTP, you can find one at infura.io")
+    }
+    this.ipfs = new create(ipfsClientHTTP);
+  }
 
-  start = () => {};
 }
 
 export default DexStorage;
