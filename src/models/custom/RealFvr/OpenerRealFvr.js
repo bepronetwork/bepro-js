@@ -189,7 +189,7 @@ class OpenerRealFvr extends IContract {
   setTokenPriceInUSD = async ({ value }) => await this.__sendTx(
     this.params.contract
       .getContract()
-      .methods.setPurchaseTokenAddress(value),
+      .methods.setTokenPriceInUSD(value),
   );
 
   /**
