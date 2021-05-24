@@ -296,7 +296,7 @@ class OpenerRealFvr extends IContract {
   setTokenPriceInUSD = async ({ price }) => await this.__sendTx(
     this.params.contract
       .getContract()
-      .methods.setTokenPriceInUSD(price)
+      .methods.setTokenPriceInUSD(price),
   );
 
   /**
@@ -307,7 +307,7 @@ class OpenerRealFvr extends IContract {
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
   setBaseURI = async ({ uri }) => await this.__sendTx(
-    this.params.contract.getContract().methods.setBaseURI(uri)
+    this.params.contract.getContract().methods.setBaseURI(uri),
   );
 
   /**
