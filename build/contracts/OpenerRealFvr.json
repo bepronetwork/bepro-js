@@ -22780,7 +22780,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-05-24T21:15:42.802Z",
+  "updatedAt": "2021-05-24T21:36:31.091Z",
   "devdoc": {
     "methods": {
       "approve(address,uint256)": {

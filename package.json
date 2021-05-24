@@ -18,7 +18,7 @@
         "test": "./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
         "test:truffle": "truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "index": "babel-node ./index.js --presets es2015,stage-2",
-        "build": "babel ./src --out-dir lib --copy-files -d ./build",
+        "build": "babel ./src --out-dir lib --copy-files -d ./build && npm run compile",
         "compile": "truffle compile",
         "clean:contracts": "rimraf build/contracts && truffle compile",
         "docs": "npm run build && npm run jsdoc:build && npm run jsdoc:serve",
