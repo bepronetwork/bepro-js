@@ -183,7 +183,7 @@ class OpenerRealFvr extends IContract {
    * @function
    * @description Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
    * @param {Object} params Parameters
-   * @param {Address} params.price Token Price
+   * @param {Price} params.price Token Price
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
   setTokenPriceInUSD = async ({ price }) => await this.__sendTx(
