@@ -31,9 +31,9 @@
         "watch": "onchange 'src/**/*.js' -- npm run build"
     },
     "pre-commit": [
+        "build",
         "lint",
-        "lint:fix",
-        "build"
+        "lint:fix"
     ],
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",
