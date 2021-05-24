@@ -144,7 +144,8 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         pack.saleDistributionAddresses = saleDistributionAddresses;
         pack.saleDistributionAmounts = saleDistributionAmounts;
         pack.packType = packType;
-
+        packs[packIncrementId] = pack;
+        
         emit PackCreated(packIncrementId, nftAmount, serie, packType, drop);
         lastNFTID = lastNFTID + nftAmount;
         packIncrementId = packIncrementId+1;
