@@ -4,6 +4,7 @@ var _Contract = require('../utils/Contract');var _Contract2 = _interopRequireDef
 /**
                                                                                                                                                                                                * Contract Object Interface
                                                                                                                                                                                                * @class IContract
+                                                                                                                                                                                               * @description All Contracts inherit functions from IContract, so all the functions you see below you can use them as an extent to your Object
                                                                                                                                                                                                * @param {Web3} web3
                                                                                                                                                                                                * @param {Address} contractAddress ? (opt)
                                                                                                                                                                                                * @param {ABI} abi
