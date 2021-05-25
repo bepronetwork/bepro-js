@@ -95,7 +95,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
     function buyPack(uint256 packId) public {
         require(!_closed, "Opener is locked");
-        require(packs[packId].buyer != address(0), "Pack was already bought");
+        require(packs[packId].buyer == address(0), "Pack was already bought");
         require(packs[packId].price != 0, "Pack has to exist");
         require(packs[packId].price >= _realFvrTokenPriceUSD, "Price in realFvr has to be higher than unit price of the pack");
 
@@ -145,7 +145,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         pack.saleDistributionAmounts = saleDistributionAmounts;
         pack.packType = packType;
         packs[packIncrementId] = pack;
-        
+
         emit PackCreated(packIncrementId, nftAmount, serie, packType, drop);
         lastNFTID = lastNFTID + nftAmount;
         packIncrementId = packIncrementId+1;

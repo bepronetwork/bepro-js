@@ -22,19 +22,24 @@ class OpenerRealFvr extends IContract {
         'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
-
     // Use ABI
     this.params.contract.use(openerRealFvr, this.getAddress());
-
+    
+    if(!this.params.tokenAddress){
+      throw new Error("Problem on ERC20 Assert, 'tokenAddress' not provided")
+    }
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
       web3: this.web3,
-      contractAddress: this.tokenAddress,
+      contractAddress: this.params.tokenAddress,
       acc: this.acc,
     });
-
-    // Assert Token Contract
-    await this.params.ERC20Contract.__assert();
+    try{
+      // Assert Token Contract
+      await this.params.ERC20Contract.__assert();
+    }catch(err){
+      throw new Error("Problem on ERC20 Assert, confirm ERC20 'tokenAddress'" + err)
+    }
   };
 
   /**
