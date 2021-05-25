@@ -55,6 +55,17 @@ class OpenerRealFvr extends IContract {
 
   /**
    * @function
+   * @description Open Pack
+   * @param {Object} params Parameters
+   * @param {Integer} params.packId Pack Id
+   * @returns {Transaction} Transaction
+   */
+   openPack = async ({ packId }) => await this.__sendTx(
+     this.params.contract.getContract().methods.openPack(packId),
+   );
+
+  /**
+   * @function
    * @description Offer Pack
    * @param {Object} params Parameters
    * @param {Integer} params.packId Pack Id
@@ -71,7 +82,6 @@ class OpenerRealFvr extends IContract {
    * @function
    * @description Create Pack
    * @param {Object} params Parameters
-   * @param {Integer} params.packNumber Pack Number
    * @param {Integer} params.nftAmount Amount of NFTs/Tokens
    * @param {Integer} params.price Price of Pack
    * @param {String} params.serie Serie of Pack
@@ -83,7 +93,6 @@ class OpenerRealFvr extends IContract {
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
   createPack = async ({
-    packNumber,
     nftAmount,
     price,
     serie,
@@ -96,7 +105,6 @@ class OpenerRealFvr extends IContract {
     this.params.contract
       .getContract()
       .methods.createPack(
-        packNumber,
         parseInt(nftAmount, 10),
         Numbers.toSmartContractDecimals(price, 6),
         serie,
@@ -226,7 +234,6 @@ class OpenerRealFvr extends IContract {
    * @param {Object} params Parameters
    * @param {Integer} params.packId
    * @returns {Integer} packId
-   * @returns {Integer} packNumber
    * @returns {Integer} price
    * @returns {String} serie
    * @returns {String} drop
@@ -234,6 +241,7 @@ class OpenerRealFvr extends IContract {
    * @returns {Address} buyer
    * @returns {Array | Address} saleDistributionAddresses
    * @returns {Array | Integer} saleDistributionAmounts
+   * @returns {Bool} opened
    */
   getPackbyId = async ({ packId }) => {
     const res = await this.params.contract
@@ -243,15 +251,15 @@ class OpenerRealFvr extends IContract {
 
     return {
       packId,
-      packNumber: parseInt(res[1], 10),
-      initialNFTId: parseInt(res[2], 10),
-      price: Numbers.fromDecimals(res[3], 6),
-      serie: res[4],
-      drop: res[5],
-      packType: res[6],
-      buyer: res[7],
-      saleDistributionAddresses: res[8],
-      saleDistributionAmounts: res[9] ? res[9].map(a => parseInt(a, 10)) : [],
+      initialNFTId: parseInt(res[1], 10),
+      price: Numbers.fromDecimals(res[2], 6),
+      serie: res[3],
+      drop: res[4],
+      packType: res[5],
+      buyer: res[6],
+      saleDistributionAddresses: res[7],
+      saleDistributionAmounts: res[8] ? res[8].map(a => parseInt(a, 10)) : [],
+      opened: res[9],
     };
   };
 
@@ -277,6 +285,20 @@ class OpenerRealFvr extends IContract {
    * @returns {Bool} wasMinted
    */
   exists = async ({ tokenId }) => await this.params.contract.getContract().methods.exists(tokenId).call();
+
+  /**
+   * @function
+   * @description Get Real Fvr Cost in USD
+   * @returns {Integer} Price in Real Fvr Tokens
+   */
+  getTokenPriceInUSD = async () => Numbers.fromDecimals(
+    await this.params.contract
+      .getContract()
+      .methods._realFvrTokenPriceUSD()
+      .call(),
+    this.getERC20Contract().getDecimals(),
+  );
+
 
   /**
    * @function

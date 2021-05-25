@@ -31,7 +31,6 @@
         "watch": "onchange 'src/**/*.js' -- npm run build"
     },
     "pre-commit": [
-        "lint",
         "lint:fix",
         "build",
         "jsdoc:build"

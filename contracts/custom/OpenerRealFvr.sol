@@ -21,6 +21,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     uint256 public lastNFTID = 0;
 
     event PackCreated(uint256 packId, uint256  nftsAmount, string indexed serie, string indexed packType, string indexed drop);
+    event PackBought(address indexed by, uint256 indexed packId);
     event PackOpened(address indexed by, uint256 indexed packId);
     event PackDelete(uint256 indexed packId);
 
@@ -32,7 +33,6 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     struct Pack {
         uint256 packId;
         uint256 nftAmount;
-        uint256 packNumber;
         uint256 initialNFTId;
         uint256 saleStart;
         uint256[] saleDistributionAmounts;
@@ -42,10 +42,10 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         string serie;
         string drop;
         string packType;
+        bool opened;
         //external info
         address buyer;
     }
-
   
     constructor (string memory name, string memory symbol, ERC20 _purchaseToken) public ERC721(name, symbol) {}
 
@@ -81,12 +81,12 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         return registeredIDsArray[_address];
     }
 
-    function getPackbyId(uint256 _packId) public returns (uint256, uint256, uint256, uint256, string memory, string memory, string memory, address, 
-        address[] memory, uint256[] memory)  {
+    function getPackbyId(uint256 _packId) public returns (uint256,  uint256, uint256, string memory, string memory, string memory, address, 
+        address[] memory, uint256[] memory, bool)  {
         Pack memory pack = packs[_packId];
         return (
-            pack.packId, pack.packNumber, pack.initialNFTId, pack.price, pack.serie, pack.drop, pack.packType, pack.buyer,
-            pack.saleDistributionAddresses, pack.saleDistributionAmounts);
+            pack.packId, pack.initialNFTId, pack.price, pack.serie, pack.drop, pack.packType, pack.buyer,
+            pack.saleDistributionAddresses, pack.saleDistributionAmounts, pack.opened);
     }
 
     function getPackPriceInFVR(uint256 packId) public returns (uint256) {
@@ -97,11 +97,11 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         require(!_closed, "Opener is locked");
         require(packs[packId].buyer == address(0), "Pack was already bought");
         require(packs[packId].price != 0, "Pack has to exist");
-        require(packs[packId].price >= _realFvrTokenPriceUSD, "Price in realFvr has to be higher than unit price of the pack");
+        require(packs[packId].price >= _realFvrTokenPriceUSD.div(10**_purchaseToken.decimals()), "Price in realFvr has to be higher than unit price of the pack");
 
         uint256 price = getPackPriceInFVR(packId);
 
-        require(_purchaseToken.allowance(msg.sender, address(this)) >= price, "Not enough money per pack");
+        require(_purchaseToken.allowance(msg.sender, address(this)) >= price, "First you have to allow the use of the tokens by the Opener, use allow function");
 
         address from = msg.sender;
 
@@ -116,11 +116,21 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
         packs[packId].buyer = from;
 
-        emit PackOpened(from, packId);
-
+        emit PackBought(from, packId);
     }
 
-    function createPack(uint256 packNumber, uint256 nftAmount, uint256 price /* 1 = ($0.000001) */, 
+    function openPack(uint256 packId) public {
+        require(!_closed, "Opener is locked");
+        require(!packs[packId].opened, "Opened Already");
+        require(packs[packId].buyer == msg.sender, "Not buyer");
+
+        packs[packId].opened = true;
+        
+        emit PackOpened(msg.sender, packId);
+    }
+
+
+    function createPack(uint256 nftAmount, uint256 price /* 1 = ($0.000001) */, 
         string memory serie, string memory packType, string memory drop, uint256 saleStart,
         address[] memory saleDistributionAddresses,  uint256[] memory saleDistributionAmounts /* [1;98;1]*/
     ) public onlyOwner {
@@ -134,7 +144,6 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
         Pack memory pack = packs[packIncrementId];
         pack.packId = packIncrementId;
-        pack.packNumber = packNumber;
         pack.nftAmount = nftAmount;
         pack.saleStart = saleStart;
         pack.initialNFTId = lastNFTID;
@@ -193,8 +202,9 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         _purchaseToken = purchaseToken;
     }
 
-    function setTokenPriceInUSD(uint256 newPrice /* 1 = $0.000001 */) public onlyOwner {
-        _realFvrTokenPriceUSD = newPrice; // 1/10**18 Real Fvr ( 0.00(16)1 FVR) = 1000000 ($1)
+    function setTokenPriceInUSD(uint256 newPrice /* 1 = $0.000001 per 0.00(16)1 FVR */) public onlyOwner {
+        require(newPrice.div(10**_purchaseToken.decimals()) > 0, "'newPrice.div(10**decimals) should be higher than 0'");
+        _realFvrTokenPriceUSD = newPrice;
     }
 
     function lock() public onlyOwner {
