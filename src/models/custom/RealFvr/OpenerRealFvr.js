@@ -29,7 +29,7 @@ class OpenerRealFvr extends IContract {
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
       web3: this.web3,
-      contractAddress: this.tokenAddress,
+      contractAddress: this.params.tokenAddress,
       acc: this.acc,
     });
 

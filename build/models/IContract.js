@@ -8,6 +8,7 @@ var _Contract = require('../utils/Contract');var _Contract2 = _interopRequireDef
                                                                                                                                                                                                * @param {Address} contractAddress ? (opt)
                                                                                                                                                                                                * @param {ABI} abi
                                                                                                                                                                                                * @param {Account} acc ? (opt)
+                                                                                                                                                                                               * @param {Address} tokenAddress ? (opt)
                                                                                                                                                                                                */var
 
 IContract = function () {
@@ -16,7 +17,8 @@ IContract = function () {
 
 
 
-  {var web3 = _ref.web3,_ref$contractAddress = _ref.contractAddress,contractAddress = _ref$contractAddress === undefined ? null : _ref$contractAddress,abi = _ref.abi,acc = _ref.acc;(0, _classCallCheck3.default)(this, IContract);_initialiseProps.call(this);
+
+  {var web3 = _ref.web3,_ref$contractAddress = _ref.contractAddress,contractAddress = _ref$contractAddress === undefined ? null : _ref$contractAddress,abi = _ref.abi,acc = _ref.acc,tokenAddress = _ref.tokenAddress;(0, _classCallCheck3.default)(this, IContract);_initialiseProps.call(this);
     try {
       if (!abi) {
         throw new Error('No ABI Interface provided');
@@ -34,6 +36,7 @@ IContract = function () {
         web3: web3,
         abi: abi,
         contractAddress: contractAddress,
+        tokenAddress: tokenAddress,
         contract: new _Contract2.default(web3, abi, contractAddress) };
 
     } catch (err) {
