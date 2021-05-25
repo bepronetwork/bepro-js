@@ -11,11 +11,13 @@ const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
 /**
  * BEPRONetwork Object
  * @class BEPRONetwork
+ * @param {Object} params Parameters
  * @param {Boolean} params.test
  * @param {Boolean} params.localtest, ganache local blockchain
  * @param {Web3Connection} params.web3Connection ? (opt), created from above params
- * @param params.contractAddress {Address} Optional/If Existent
- * @param params.abi {beproNetwork}
+ * @param {Address} params.contractAddress Optional/If Existent
+ * @param {Address} params.tokenAddress Optional/If Not the Mainnet Bepro Address
+ * @param {beproNetwork} params.abi
  */
 class BEPRONetwork extends IContract {
   constructor(params) {
@@ -35,7 +37,7 @@ class BEPRONetwork extends IContract {
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
       web3Connection: this.web3Connection,
-      contractAddress: beproAddress,
+      contractAddress: params.tokenAddress || beproAddress,
     });
 
     // Assert Token Contract
@@ -86,7 +88,7 @@ class BEPRONetwork extends IContract {
 
   /**
    * @function
-   * @description Get Amount of Needed for Approve
+   * @description Get Amount of percentage needed for Approve
    * @returns {Integer}
    */
   async percentageNeededForApprove() {
@@ -101,7 +103,23 @@ class BEPRONetwork extends IContract {
 
   /**
    * @function
-   * @description Get Amount of Needed for Merge
+   * @description Get Amount of percentage needed for Dispute
+   * @returns {Integer}
+   */
+  async percentageNeededForDispute() {
+    return parseInt(
+      await this.params.contract
+        .getContract()
+        .methods.percentageNeededForDispute()
+        .call(),
+      10,
+    );
+  }
+
+
+  /**
+   * @function
+   * @description Get Amount of percentage needed for Merge
    * @returns {Integer}
    */
   async percentageNeededForMerge() {
@@ -308,6 +326,7 @@ class BEPRONetwork extends IContract {
    * @param {Integer} merge_id
    * @returns {Integer} _id
    * @returns {Integer} votes
+   * @returns {Integer} disputes
    * @returns {Address | Array} prAddresses
    * @returns {Integer | Array} prAmounts
    * @returns {Address} proposalAddress
@@ -324,6 +343,7 @@ class BEPRONetwork extends IContract {
     return {
       _id: Numbers.fromHex(r[0]),
       votes: Numbers.fromDecimals(r[1], 18),
+      disputes: Numbers.fromDecimals(r[2], 18),
       prAddresses: r[3],
       prAmounts: r[4] ? r[4].map(a => Numbers.fromDecimals(a, 18)) : 0,
       proposalAddress: r[5],

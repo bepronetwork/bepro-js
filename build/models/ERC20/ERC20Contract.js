@@ -5,6 +5,9 @@ var _IContract2 = require('../IContract');var _IContract3 = _interopRequireDefau
 /**
                                                                                                                                                                                                * @class ERC20Contract
                                                                                                                                                                                                * @param {Object} params Parameters
+                                                                                                                                                                                               * @param {Boolean} params.test
+                                                                                                                                                                                               * @param {Boolean} params.localtest, ganache local blockchain
+                                                                                                                                                                                               * @param {Web3Connection} params.web3Connection ? (opt), created from above params
                                                                                                                                                                                                * @param {Address} params.contractAddress Optional/If Existent
                                                                                                                                                                                                */var
 ERC20Contract = function (_IContract) {(0, _inherits3.default)(ERC20Contract, _IContract);

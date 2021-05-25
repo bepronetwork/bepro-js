@@ -10,6 +10,7 @@ import Web3Connection from '../Web3Connection';
  * @param {Web3Connection} web3Connection ? (opt), created from above params
  * @param {Address} contractAddress ? (opt)
  * @param {ABI} abi
+ * @param {Address} tokenAddress ? (opt)
  */
 
 class IContract {
@@ -17,6 +18,7 @@ class IContract {
     web3Connection = null, // Web3Connection if exists, otherwise create one from the rest of params
     contractAddress = null, // If not deployed
     abi,
+    tokenAddress,
     ...params
   }) {
     try {
@@ -32,6 +34,7 @@ class IContract {
         web3Connection: this.web3Connection,
         abi,
         contractAddress,
+        tokenAddress,
       };
 
       if (this.web3Connection.test) this._loadDataFromWeb3Connection();
@@ -136,6 +139,14 @@ class IContract {
     await this.__assert();
     return res;
   };
+
+  /**
+   * @function
+   * @description Get Web3 Contract to interact directly with the web3 library functions like events (https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=events#contract-events)
+   */
+  getWeb3Contract() {
+    return this.params.contract.getContract();
+  }
 
   /**
    * @function

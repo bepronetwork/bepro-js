@@ -39,6 +39,7 @@ contract BEPRONetwork is Pausable, Ownable{
     uint256 public feeShare = 2; // (%) - Share to go to marketplace manager
     uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to the merge proposal creator
     uint256 public percentageNeededForApprove = 10; // (%) - Amount needed to approve a PR and distribute the rewards
+    uint256 public percentageNeededForDispute = 3; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 constant public timeOpenForIssueApprove = 3 days;
     uint256 public percentageNeededForMerge = 20; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public beproVotesStaked = 0;
@@ -57,7 +58,9 @@ contract BEPRONetwork is Pausable, Ownable{
     struct MergeProposal {
         uint256 _id;
         mapping(address => uint256) votesForMergeByAddress; // Address -> Votes for that merge
+        mapping(address => uint256) disputesForMergeByAddress; // Address -> Votes for that merge
         uint256 votes; // Amount of votes set
+        uint256 disputes; // Amount of votes set
         address[] prAddresses;
         uint256[] prAmounts;
         address proposalAddress;
@@ -86,6 +89,7 @@ contract BEPRONetwork is Pausable, Ownable{
     event OpenIssue(uint256 indexed id, address indexed opener, uint256 indexed amount);
     event ApproveIssue(uint256 indexed id, uint256 indexed votes, address indexed approver);
     event MergeProposalCreated(uint256 indexed id, uint256 indexed mergeID, address indexed creator);
+    event DisputeMerge(uint256 indexed id, uint256 indexed mergeID, uint256 votes, address indexed disputer);
     event ApproveMerge(uint256 indexed id, uint256 indexed mergeID, uint256 votes, address indexed approver);
     event CloseIssue(uint256 indexed id, uint256 indexed mergeID, address[] indexed addresses);
 
@@ -172,6 +176,22 @@ contract BEPRONetwork is Pausable, Ownable{
         emit ApproveMerge(_issueID, _mergeID, votesToAdd, msg.sender);
     }
 
+    function disputeMerge(uint256 _issueID, uint256 _mergeID) public {
+        Voter memory voter = voters[msg.sender];
+        Issue memory issue = issues[_issueID];
+        MergeProposal storage merge = issues[_issueID].mergeProposals[_mergeID];
+        require(issue._id != 0, "Issue does not exist");
+        require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
+        require(merge.disputesForMergeByAddress[msg.sender] == 0, "Has already voted");
+
+        uint256 votesToAdd = getVotesByAddress(msg.sender);
+        
+        issues[_issueID].mergeProposals[_mergeID].disputes = merge.disputes.add(votesToAdd);
+        issues[_issueID].mergeProposals[_mergeID].disputesForMergeByAddress[msg.sender] = votesToAdd;
+        
+        emit DisputeMerge(_issueID, _mergeID, votesToAdd, msg.sender);
+    }
+
     function isIssueApprovable(uint256 _issueID) public returns (bool){
         // Only if in the open window
         return (issues[_issueID].creationDate.add(timeOpenForIssueApprove) < block.timestamp);
@@ -181,7 +201,11 @@ contract BEPRONetwork is Pausable, Ownable{
         return (issues[_issueID].votesForApprove >= beproVotesStaked.mul(percentageNeededForApprove).div(100));
     }
 
-    function isIssueMergeable(uint256 _issueID, uint256 _mergeID) public returns (bool) {
+    function isMergeDisputed(uint256 _issueID, uint256 _mergeID) public returns (bool) {
+        return (issues[_issueID].mergeProposals[_mergeID].disputes >= beproVotesStaked.mul(percentageNeededForDispute).div(100));
+    }
+
+    function isMergeApproved(uint256 _issueID, uint256 _mergeID) public returns (bool) {
         return (issues[_issueID].mergeProposals[_mergeID].votes >= beproVotesStaked.mul(percentageNeededForMerge).div(100));
     }
     
@@ -295,7 +319,8 @@ contract BEPRONetwork is Pausable, Ownable{
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
         require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
-        require(isIssueMergeable(_issueID, _mergeID), "Issue has to have passed voting");
+        require(isMergeApproved(_issueID, _mergeID), "Issue has to have passed voting");
+        require(!isMergeDisputed(_issueID, _mergeID), "Merge has been disputed");
         require(isMergeTheOneWithMoreVotes(_issueID, _mergeID), "There is a merge proposal with more votes");
 
         // Closes the issue
@@ -333,9 +358,9 @@ contract BEPRONetwork is Pausable, Ownable{
         return (issue._id, issue.beproStaked, issue.creationDate, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
     }
 
-    function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, address[] memory, uint256[] memory, address){
+    function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, uint256, address[] memory, uint256[] memory, address){
         MergeProposal memory merge = issues[_issueID].mergeProposals[_mergeId];
-        return (merge._id, merge.votes, merge.prAddresses, merge.prAmounts, merge.proposalAddress);
+        return (merge._id, merge.votes, merge.disputes, merge.prAddresses, merge.prAmounts, merge.proposalAddress);
     }
 
     /**

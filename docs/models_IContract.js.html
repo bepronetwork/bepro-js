@@ -88,7 +88,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li><li><a href="Web3Connection.html">Web3Connection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#start">start</a></li></ul></div>
                 
             </nav>
         </div>
@@ -107,42 +107,44 @@
         <article>
             <pre class="prettyprint source linenums"><code>import _ from 'lodash';
 import Contract from '../utils/Contract';
+import Web3Connection from '../Web3Connection';
 
 /**
  * Contract Object Interface
  * @class IContract
- * @param {Web3} web3
+ * @param {boolean} params.test
+ * @param {boolean} params.localtest, ganache local blockchain
+ * @param {Web3Connection} web3Connection ? (opt), created from above params
  * @param {Address} contractAddress ? (opt)
  * @param {ABI} abi
- * @param {Account} acc ? (opt)
+ * @param {Address} tokenAddress ? (opt)
  */
 
 class IContract {
   constructor({
-    web3,
-    contractAddress = null /* If not deployed */,
+    web3Connection = null, // Web3Connection if exists, otherwise create one from the rest of params
+    contractAddress = null, // If not deployed
     abi,
-    acc,
+    tokenAddress,
+    ...params
   }) {
     try {
       if (!abi) {
         throw new Error('No ABI Interface provided');
       }
-      if (!web3) {
-        throw new Error('Please provide a valid web3 provider');
-      }
 
-      this.web3 = web3;
+      this.web3Connection = !web3Connection
+        ? new Web3Connection(params)
+        : web3Connection;
 
-      if (acc) {
-        this.acc = acc;
-      }
       this.params = {
-        web3,
+        web3Connection: this.web3Connection,
         abi,
         contractAddress,
-        contract: new Contract(web3, abi, contractAddress),
+        tokenAddress,
       };
+
+      if (this.web3Connection.test) this._loadDataFromWeb3Connection();
     } catch (err) {
       throw err;
     }
@@ -244,6 +246,14 @@ class IContract {
     await this.__assert();
     return res;
   };
+
+  /**
+   * @function
+   * @description Get Web3 Contract to interact directly with the web3 library functions like events (https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=events#contract-events)
+   */
+  getWeb3Contract() {
+    return this.params.contract.getContract();
+  }
 
   /**
    * @function
@@ -357,18 +367,6 @@ class IContract {
 
   /**
    * @function
-   * @description Get contract current user/sender address
-   * @param {Address} User address
-   */
-  async getUserAddress() {
-    if (this.acc) return this.acc.getAddress();
-
-    const accounts = await this.params.web3.eth.getAccounts();
-    return accounts[0];
-  }
-
-  /**
-   * @function
    * @description Verify that current user/sender is admin, throws an error otherwise
    * @throws {Error}
    */
@@ -393,6 +391,78 @@ class IContract {
     if (paused) {
       throw new Error('Contract is paused');
     }
+  }
+
+  /**
+   * @function
+   * @description Load data from Web3Connection object,
+   * Called at start when testing or at login on MAINNET
+   */
+  _loadDataFromWeb3Connection() {
+    this.web3 = this.web3Connection.web3;
+    this.acc = this.web3Connection.account;
+
+    // update some params properties with new values
+    this.params = {
+      ...this.params,
+      web3: this.web3,
+      contract: new Contract(
+        this.web3,
+        this.params.abi,
+        this.params.contractAddress,
+      ),
+    };
+  }
+
+  /** ***** */
+  /** Web3Connection functions */
+  /** ***** */
+
+  /**
+   * @function
+   * @description Start the Web3Connection
+   */
+  async start() {
+    this.web3Connection.start();
+    this._loadDataFromWeb3Connection();
+  }
+
+  /**
+   * @function
+   * @description Login with Metamask/Web3 Wallet - substitutes start()
+   * @return {Boolean} True is login was successful
+   */
+  async login() {
+    const loginOk = await this.web3Connection.login();
+    if (loginOk) this._loadDataFromWeb3Connection();
+    return loginOk;
+  }
+
+  /**
+   * @function
+   * @description Get ETH Network
+   * @return {String} Network Name (Ex : Kovan)
+   */
+  async getETHNetwork() {
+    return await this.web3Connection.getETHNetwork();
+  }
+
+  /**
+   * @function
+   * @description Get contract current user/sender address
+   * @param {Address} User address
+   */
+  async getUserAddress() {
+    return await this.web3Connection.getAddress();
+  }
+
+  /**
+   * @function
+   * @description Get user ETH Balance of Address connected via login()
+   * @return {Integer} User ETH Balance
+   */
+  async getUserETHBalance() {
+    return await this.web3Connection.getETHBalance();
   }
 }
 

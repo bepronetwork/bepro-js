@@ -48,10 +48,6 @@ contract StakingContract is Pausable, Ownable {
     constructor(address _tokenAddress) public {
         erc20 = ERC20(_tokenAddress);
     }
-
-    function random() private view returns (uint) {
-        return uint(keccak256(abi.encode(block.difficulty, now)));
-    } 
     
     /* Current Held Tokens */
     function heldTokens() public view returns (uint256) {
@@ -99,7 +95,7 @@ contract StakingContract is Pausable, Ownable {
         /* Add to LockedTokens */
         lockedTokens = lockedTokens.add(_amount.add(futureAPRAmount));
 
-        uint256 subscription_id = random().add(incrementId);
+        uint256 subscription_id = incrementId;
         incrementId = incrementId + 1;
 
         /* Create SubscriptionAPR Object */

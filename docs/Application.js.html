@@ -183,8 +183,10 @@ class Application {
         null,
         { transactionConfirmationBlocks: 1 },
       );
-    } else {
+    } else if (this.opt.web3Connection.toLowerCase().contains('http')) {
       this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
+    } else {
+      this.web3 = new Web3(new Web3.providers.WebsocketProvider(this.opt.web3Connection));
     }
 
 
@@ -317,20 +319,20 @@ class Application {
    * @return {BEPRONetwork} BEPRONetwork
    */
    getBEPRONetwork = ({
-    contractAddress = null,
-    tokenAddress = null,
-  } = {}) => {
-    try {
-      return new BEPRONetwork({
-        web3: this.web3,
-        contractAddress,
-        tokenAddress,
-        acc: this.test &amp;&amp; !this.localtest ? this.account : null,
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
+     contractAddress = null,
+     tokenAddress = null,
+   } = {}) => {
+     try {
+       return new BEPRONetwork({
+         web3: this.web3,
+         contractAddress,
+         tokenAddress,
+         acc: this.test &amp;&amp; !this.localtest ? this.account : null,
+       });
+     } catch (err) {
+       throw err;
+     }
+   };
 
   /**
    * @function

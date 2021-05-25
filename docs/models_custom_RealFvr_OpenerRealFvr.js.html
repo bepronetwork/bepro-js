@@ -88,7 +88,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li><li><a href="Web3Connection.html">Web3Connection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#start">start</a></li></ul></div>
                 
             </nav>
         </div>
@@ -115,6 +115,9 @@ import ERC20Contract from '../../ERC20/ERC20Contract';
  * OpenerRealFvr Object
  * @class OpenerRealFvr
  * @param {Object} params Parameters
+ * @param {Boolean} params.test
+ * @param {Boolean} params.localtest, ganache local blockchain
+ * @param {Web3Connection} params.web3Connection ? (opt), created from above params
  * @param {Address} params.contractAddress Contract Address (If Deployed)
  * @param {Address} params.tokenAddress Token Purchase Address
  */
@@ -135,9 +138,8 @@ class OpenerRealFvr extends IContract {
 
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
-      contractAddress: this.tokenAddress,
-      acc: this.acc,
+      web3Connection: this.web3Connection,
+      contractAddress: params.tokenAddress,
     });
 
     // Assert Token Contract
@@ -290,13 +292,13 @@ class OpenerRealFvr extends IContract {
    * @function
    * @description Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
    * @param {Object} params Parameters
-   * @param {Address} params.address Token Address
+   * @param {Price} params.price Token Price
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  setTokenPriceInUSD = async ({ address }) => await this.__sendTx(
+  setTokenPriceInUSD = async ({ price }) => await this.__sendTx(
     this.params.contract
       .getContract()
-      .methods.setPurchaseTokenAddress(address),
+      .methods.setTokenPriceInUSD(price),
   );
 
   /**
@@ -401,7 +403,8 @@ class OpenerRealFvr extends IContract {
    * @returns {Integer} packsAmount
    */
   getAmountOfPacksCreated = async () => parseInt(
-    await this.params.contract.getContract().methods.packIncrementId().call(), 10,
+    await this.params.contract.getContract().methods.packIncrementId().call(),
+    10,
   );
 
   /**
@@ -410,7 +413,8 @@ class OpenerRealFvr extends IContract {
    * @returns {Integer} packsAmount
    */
   getAmountOfPacksOpened = async () => parseInt(
-    await this.params.contract.getContract().methods._openedPacks().call(), 10,
+    await this.params.contract.getContract().methods._openedPacks().call(),
+    10,
   );
 
   /**
@@ -419,7 +423,8 @@ class OpenerRealFvr extends IContract {
    * @returns {Integer} tokensAmount
    */
   getAmountOfTokensCreated = async () => parseInt(
-    await this.params.contract.getContract().methods.lastNFTID().call(), 10,
+    await this.params.contract.getContract().methods.lastNFTID().call(),
+    10,
   );
 
   /**

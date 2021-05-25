@@ -56,7 +56,7 @@ class Web3Connection {
 
   /**
    * @name start
-   * @description Start the Application
+   * @description Connect to Web3 injected in the constructor
    */
   start() {
     if (this.localtest) {
@@ -66,18 +66,18 @@ class Web3Connection {
         null,
         { transactionConfirmationBlocks: 1 },
       );
+    } else if (this.opt.web3Connection.toLowerCase().includes('http')) {
+      this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
     } else {
-      this.web3 = new Web3(
-        new Web3.providers.HttpProvider(this.opt.web3Connection),
+      this.web3 = new Web3(new Web3.providers.WebsocketProvider(this.opt.web3Connection));
+    }
+    
+    if (!this.localtest && this.test) {
+      this.account = new Account(
+        this.web3,
+        this.web3.eth.accounts.privateKeyToAccount(this.opt.privateKey),
       );
-
-      if (this.test) {
-        this.account = new Account(
-          this.web3,
-          this.web3.eth.accounts.privateKeyToAccount(this.opt.privateKey),
-        );
-        console.log(`My address: ${this.account.getAddress()}`);
-      }
+      console.log(`My address: ${this.account.getAddress()}`);
     }
 
     if (typeof window !== 'undefined') {
@@ -87,7 +87,7 @@ class Web3Connection {
         'Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet',
       );
     }
-  }
+  };
 
   /**
    * @function
@@ -121,6 +121,7 @@ class Web3Connection {
    */
   async getETHNetwork() {
     const netId = await this.web3.eth.net.getId();
+	// eslint-disable-next-line no-prototype-builtins
     const networkName = networksEnum.hasOwnProperty(netId)
       ? networksEnum[netId]
       : await this.web3.currentProvider.host; // 'Unknown';

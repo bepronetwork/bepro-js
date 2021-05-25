@@ -86,7 +86,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li><li><a href="Web3Connection.html">Web3Connection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#start">start</a></li></ul></div>
                 
             </nav>
         </div>
@@ -105,7 +105,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>IContract<span class="signature">(web3, contractAddress, abi, acc)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>IContract<span class="signature">(web3Connection, contractAddress, abi, tokenAddress)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -129,7 +129,7 @@
         
         <span class="code-name">
             
-                new IContract<span class="signature">(web3, contractAddress, abi, acc)</span><span class="type-signature"></span>
+                new IContract<span class="signature">(web3Connection, contractAddress, abi, tokenAddress)</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -176,13 +176,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>web3</code></td>
+      <td class="name"><code>params.test</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Web3</span>
+<span class="param-type">boolean</span>
 
 
   
@@ -193,6 +193,56 @@
   
 
   <td class="description last"></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params.localtest,</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">boolean</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>ganache local blockchain</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>web3Connection</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="Web3Connection.html">Web3Connection</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>? (opt), created from above params</p></td>
 </tr>
 
 
@@ -251,13 +301,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>acc</code></td>
+      <td class="name"><code>tokenAddress</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Account</span>
+<span class="param-type">Address</span>
 
 
   
@@ -315,7 +365,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line4">line 4</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line5">line 5</a>
             </span>
         </p>
     
@@ -367,6 +417,104 @@
         <div class='vertical-section'>
             <h1>Methods</h1>
             <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="_loadDataFromWeb3Connection">
+        <a class="href-link" href="#_loadDataFromWeb3Connection">#</a>
+        
+        <span class="code-name">
+            
+                _loadDataFromWeb3Connection<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Load data from Web3Connection object,
+Called at start when testing or at login on MAINNET</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_IContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line294">line 294</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
             
                 <div class="member">
 
@@ -492,7 +640,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line224">line 224</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line234">line 234</a>
             </span>
         </p>
     
@@ -589,7 +737,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line132">line 132</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line134">line 134</a>
             </span>
         </p>
     
@@ -737,7 +885,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line237">line 237</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line247">line 247</a>
             </span>
         </p>
     
@@ -889,7 +1037,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line246">line 246</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line256">line 256</a>
             </span>
         </p>
     
@@ -911,6 +1059,132 @@
 
 
 
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getETHNetwork">
+        <a class="href-link" href="#getETHNetwork">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getETHNetwork<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get ETH Network</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_IContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line339">line 339</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Network Name (Ex : Kovan)</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
 
 
 
@@ -1041,7 +1315,230 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line256">line 256</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line348">line 348</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getUserETHBalance">
+        <a class="href-link" href="#getUserETHBalance">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getUserETHBalance<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get user ETH Balance of Address connected via login()</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_IContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line357">line 357</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>User ETH Balance</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Integer</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getWeb3Contract">
+        <a class="href-link" href="#getWeb3Contract">#</a>
+        
+        <span class="code-name">
+            
+                getWeb3Contract<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get Web3 Contract to interact directly with the web3 library functions like events (https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=events#contract-events)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_IContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line147">line 147</a>
             </span>
         </p>
     
@@ -1142,7 +1639,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line166">line 166</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line176">line 176</a>
             </span>
         </p>
     
@@ -1178,6 +1675,132 @@
         <label>Type: </label>
         
 <span class="param-type">boolean</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="login">
+        <a class="href-link" href="#login">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                login<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Login with Metamask/Web3 Wallet - substitutes start()</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_IContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line328">line 328</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>True is login was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Boolean</span>
 
 
     </div>
@@ -1266,7 +1889,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line268">line 268</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line266">line 266</a>
             </span>
         </p>
     
@@ -1389,7 +2012,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line157">line 157</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line167">line 167</a>
             </span>
         </p>
     
@@ -1515,7 +2138,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line175">line 175</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line185">line 185</a>
             </span>
         </p>
     
@@ -1715,7 +2338,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line200">line 200</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line210">line 210</a>
             </span>
         </p>
     
@@ -1867,7 +2490,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line213">line 213</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line223">line 223</a>
             </span>
         </p>
     
@@ -2019,7 +2642,108 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line146">line 146</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line156">line 156</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="start">
+        <a class="href-link" href="#start">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                start<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Start the Web3Connection</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_IContract.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line318">line 318</a>
             </span>
         </p>
     
@@ -2120,7 +2844,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line186">line 186</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line196">line 196</a>
             </span>
         </p>
     
@@ -2244,7 +2968,7 @@
         <p class="tag-source">
             <a href="models_IContract.js.html" class="button">View Source</a>
             <span>
-                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line283">line 283</a>
+                <a href="models_IContract.js.html">models/IContract.js</a>, <a href="models_IContract.js.html#line281">line 281</a>
             </span>
         </p>
     

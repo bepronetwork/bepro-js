@@ -6,10 +6,12 @@ var _IContract2 = require('../IContract');var _IContract3 = _interopRequireDefau
 /**
                                                                                                                                                                                                * Exchange Contract Object
                                                                                                                                                                                                * @class ExchangeContract
-                                                                                                                                                                                               * @param {Web3} web3
-                                                                                                                                                                                               * @param {Address} tokenAddress
-                                                                                                                                                                                               * @param {Integer} decimals
-                                                                                                                                                                                               * @param {Address} contractAddress ? (opt)
+                                                                                                                                                                                               * @param {Boolean} params.test
+                                                                                                                                                                                               * @param {Boolean} params.localtest, ganache local blockchain
+                                                                                                                                                                                               * @param {Web3Connection} params.web3Connection ? (opt), created from above params
+                                                                                                                                                                                               * @param {Address} params.tokenAddress
+                                                                                                                                                                                               * @param {Integer} params.decimals
+                                                                                                                                                                                               * @param {Address} params.contractAddress ? (opt)
                                                                                                                                                                                                */var
 
 ExchangeContract = function (_IContract) {(0, _inherits3.default)(ExchangeContract, _IContract);

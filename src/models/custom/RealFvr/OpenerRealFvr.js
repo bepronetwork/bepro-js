@@ -11,8 +11,8 @@ import ERC20Contract from '../../ERC20/ERC20Contract';
  * @param {Boolean} params.test
  * @param {Boolean} params.localtest, ganache local blockchain
  * @param {Web3Connection} params.web3Connection ? (opt), created from above params
- * @param {Address} params.tokenAddress Token Purchase Address
  * @param {Address} params.contractAddress Contract Address (If Deployed)
+ * @param {Address} params.tokenAddress Token Purchase Address
  */
 class OpenerRealFvr extends IContract {
   constructor(params = {}) {
@@ -32,7 +32,7 @@ class OpenerRealFvr extends IContract {
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
       web3Connection: this.web3Connection,
-      contractAddress: this.tokenAddress,
+      contractAddress: params.tokenAddress,
     });
 
     // Assert Token Contract
@@ -185,13 +185,13 @@ class OpenerRealFvr extends IContract {
    * @function
    * @description Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
    * @param {Object} params Parameters
-   * @param {Address} params.address Token Address
+   * @param {Price} params.price Token Price
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  setTokenPriceInUSD = async ({ address }) => await this.__sendTx(
+  setTokenPriceInUSD = async ({ price }) => await this.__sendTx(
     this.params.contract
       .getContract()
-      .methods.setPurchaseTokenAddress(address),
+      .methods.setTokenPriceInUSD(price),
   );
 
   /**
