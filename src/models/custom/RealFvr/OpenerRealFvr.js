@@ -98,7 +98,7 @@ class OpenerRealFvr extends IContract {
       .methods.createPack(
         packNumber,
         parseInt(nftAmount, 10),
-        String(price).toString(),
+        Numbers.toSmartContractDecimals(price, 6),
         serie,
         packType,
         drop,
