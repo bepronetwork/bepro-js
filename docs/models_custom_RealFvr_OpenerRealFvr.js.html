@@ -240,7 +240,7 @@ class OpenerRealFvr extends IContract {
   }) => await this.__sendTx(
     this.params.contract
       .getContract()
-      .methods.createPack(
+      .methods.editPackInfo(
         packId,
         Numbers.timeToSmartContractTime(saleStart),
         serie,
