@@ -13,6 +13,7 @@ const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
  * @class BEPRONetwork
  * @param {Object} params Parameters
  * @param {Address} params.contractAddress Optional/If Existent
+ * @param {Address} params.tokenAddress Optional/If Not the Mainnet Bepro Address
  */
 class BEPRONetwork extends IContract {
   constructor(params) {
@@ -32,7 +33,7 @@ class BEPRONetwork extends IContract {
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
       web3: this.web3,
-      contractAddress: beproAddress,
+      contractAddress: this.params.tokenAddress || beproAddress,
       acc: this.acc,
     });
 

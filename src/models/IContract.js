@@ -8,6 +8,7 @@ import Contract from '../utils/Contract';
  * @param {Address} contractAddress ? (opt)
  * @param {ABI} abi
  * @param {Account} acc ? (opt)
+ * @param {Address} tokenAddress ? (opt)
  */
 
 class IContract {
@@ -16,6 +17,7 @@ class IContract {
     contractAddress = null /* If not deployed */,
     abi,
     acc,
+    tokenAddress,
   }) {
     try {
       if (!abi) {
@@ -34,6 +36,7 @@ class IContract {
         web3,
         abi,
         contractAddress,
+        tokenAddress,
         contract: new Contract(web3, abi, contractAddress),
       };
     } catch (err) {

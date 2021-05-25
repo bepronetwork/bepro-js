@@ -27,7 +27,7 @@
         "jsdoc:serve": "http-server ./docs/ -o",
         "prebuild": "npm run jsdoc:build",
         "lint": "eslint ./src --cache",
-        "lint:fix": "eslint ./src --fix",
+        "lint:fix": "eslint ./ --fix",
         "ganache:start": "ganache-cli -p 8545",
         "watch": "onchange 'src/**/*.js' -- npm run build",
         "prepare": "husky install"
@@ -101,8 +101,7 @@
     },
     "lint-staged": {
         "*.{js,jsx}": [
-            "eslint . --fix",
-            "git add"
+            "eslint ./src --fix"
         ]
     },
     "author": "",

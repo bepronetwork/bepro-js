@@ -2,3 +2,5 @@
 **/build/*
 **/docs/*
 **/coverage/*
+**/tests/*
+**/_book/*
