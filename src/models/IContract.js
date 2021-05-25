@@ -17,7 +17,7 @@ class IContract {
     contractAddress = null /* If not deployed */,
     abi,
     acc,
-    tokenAddress
+    tokenAddress,
   }) {
     try {
       if (!abi) {
