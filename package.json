@@ -32,8 +32,8 @@
     },
     "pre-commit": [
         "lint:fix",
-        "build",
-        "jsdoc:build"
+        "jsdoc:build",
+        "build"
     ],
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",
