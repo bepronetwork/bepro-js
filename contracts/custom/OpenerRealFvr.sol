@@ -90,14 +90,13 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     }
 
     function getPackPriceInFVR(uint256 packId) public returns (uint256) {
-        return packs[packId].price.mul(10**_purchaseToken.decimals()).div(_realFvrTokenPriceUSD);
+        return packs[packId].price.mul(_realFvrTokenPriceUSD).div(10**3);
     }
 
     function buyPack(uint256 packId) public {
         require(!_closed, "Opener is locked");
         require(packs[packId].buyer == address(0), "Pack was already bought");
         require(packs[packId].price != 0, "Pack has to exist");
-        require(packs[packId].price >= _realFvrTokenPriceUSD.div(10**_purchaseToken.decimals()), "Price in realFvr has to be higher than unit price of the pack");
 
         uint256 price = getPackPriceInFVR(packId);
 
@@ -130,7 +129,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     }
 
 
-    function createPack(uint256 nftAmount, uint256 price /* 1 = ($0.000001) */, 
+    function createPack(uint256 nftAmount, uint256 price /* 1 = ($1) */, 
         string memory serie, string memory packType, string memory drop, uint256 saleStart,
         address[] memory saleDistributionAddresses,  uint256[] memory saleDistributionAmounts /* [1;98;1]*/
     ) public onlyOwner {
@@ -202,9 +201,8 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         _purchaseToken = purchaseToken;
     }
 
-    function setTokenPriceInUSD(uint256 newPrice /* 1 = $0.000001 per 0.00(16)1 FVR */) public onlyOwner {
-        require(newPrice!= 0, "newPrice has to higher than 0");
-        require(newPrice.div(10**_purchaseToken.decimals()) > 0, "'newPrice.div(10**decimals) should be higher than 0'");
+    function setTokenPriceInUSD(uint256 newPrice /* 1*10e18 -> 1 FVR = $1; 1*10e17 -> 0.1 FVR = $1  */) public onlyOwner {
+        require(newPrice != 0, "newPrice has to higher than 0");
         _realFvrTokenPriceUSD = newPrice;
     }
 

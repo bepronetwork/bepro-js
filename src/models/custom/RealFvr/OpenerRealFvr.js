@@ -106,7 +106,7 @@ class OpenerRealFvr extends IContract {
       .getContract()
       .methods.createPack(
         parseInt(nftAmount, 10),
-        Numbers.toSmartContractDecimals(price, 6),
+        Numbers.toSmartContractDecimals(price, 3),
         serie,
         packType,
         drop,
@@ -252,7 +252,7 @@ class OpenerRealFvr extends IContract {
     return {
       packId,
       initialNFTId: parseInt(res[1], 10),
-      price: Numbers.fromDecimals(res[2], 6),
+      price: Numbers.fromDecimals(res[2], 3),
       serie: res[3],
       drop: res[4],
       packType: res[5],
@@ -304,7 +304,7 @@ class OpenerRealFvr extends IContract {
       .getContract()
       .methods._realFvrTokenPriceUSD()
       .call(),
-    parseInt(this.getERC20Contract().getDecimals()) + 6,
+    this.getERC20Contract().getDecimals(),
   );
 
 

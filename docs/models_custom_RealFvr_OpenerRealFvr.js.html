@@ -411,7 +411,7 @@ class OpenerRealFvr extends IContract {
       .getContract()
       .methods._realFvrTokenPriceUSD()
       .call(),
-    this.getERC20Contract().getDecimals(),
+    Number(this.getERC20Contract().getDecimals()) + 6,
   );
 
 
