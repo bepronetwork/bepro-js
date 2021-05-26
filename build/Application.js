@@ -76,8 +76,10 @@ function Application(_ref)
       null,
       { transactionConfirmationBlocks: 1 });
 
-    } else {
+    } else if (_this.opt.web3Connection.indexOf('http') > 0) {
       _this.web3 = new _web2.default(new _web2.default.providers.HttpProvider(_this.opt.web3Connection));
+    } else {
+      _this.web3 = new _web2.default(new _web2.default.providers.WebsocketProvider(_this.opt.web3Connection));
     }
 
 
