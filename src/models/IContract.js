@@ -19,6 +19,7 @@ class IContract {
     contractAddress = null /* If not deployed */,
     abi,
     acc,
+    tokenAddress,
   }) {
     try {
       if (!abi) {
@@ -37,6 +38,7 @@ class IContract {
         web3,
         abi,
         contractAddress,
+        tokenAddress,
         contract: new Contract(web3, abi, contractAddress),
       };
     } catch (err) {
@@ -179,6 +181,13 @@ class IContract {
     await this.__assert();
     return res;
   };
+
+  /**
+   * @description Get Web3 Contract to interact directly with the web3 library functions like events (https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=events#contract-events)
+   */
+  getWeb3Contract() {
+    return this.params.contract.getContract();
+  }
 
   /**
    * Set new owner of {@link IContract.params.contract}

@@ -37,6 +37,7 @@ class BEPRONetwork extends IContract {
    * @property {Address[]} prAddresses
    * @property {number[]} prAmounts
    * @property {number} votes
+   * @property {number} disputes
    * @property {Address} proposalAddress
    * @property {number} _id
    * @param params
@@ -67,7 +68,7 @@ class BEPRONetwork extends IContract {
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
       web3: this.web3,
-      contractAddress: beproAddress,
+      contractAddress: this.params.tokenAddress || beproAddress,
       acc: this.acc,
     });
 
@@ -330,6 +331,7 @@ class BEPRONetwork extends IContract {
     return {
       _id: Numbers.fromHex(r[0]),
       votes: Numbers.fromDecimals(r[1], 18),
+      disputes: Numbers.fromDecimals(r[2], 18),
       prAddresses: r[3],
       prAmounts: r[4] ? r[4].map(a => Numbers.fromDecimals(a, 18)) : 0,
       proposalAddress: r[5],

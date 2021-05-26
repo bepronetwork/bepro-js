@@ -39,7 +39,7 @@ class OpenerRealFvr extends IContract {
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
       web3: this.web3,
-      contractAddress: this.tokenAddress,
+      contractAddress: this.params.tokenAddress,
       acc: this.acc,
     });
 
@@ -193,13 +193,13 @@ class OpenerRealFvr extends IContract {
    * Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
    * @function
    * @param {Object} params Parameters
-   * @param {Address} params.address Token Address
+   * @param {Price} params.price Token Price
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  setTokenPriceInUSD = async ({ address }) => await this.__sendTx(
+  setTokenPriceInUSD = async ({ price }) => await this.__sendTx(
     this.params.contract
       .getContract()
-      .methods.setPurchaseTokenAddress(address),
+      .methods.setTokenPriceInUSD(price),
   );
 
   /**
