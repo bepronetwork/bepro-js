@@ -203,6 +203,8 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     }
 
     function setTokenPriceInUSD(uint256 newPrice /* 1 = $0.000001 per 0.00(16)1 FVR */) public onlyOwner {
+        require(newPrice!= 0, "newPrice has to higher than 0");
+        require(newPrice.div(10**_purchaseToken.decimals()) > 0, "'newPrice.div(10**decimals) should be higher than 0'");
         _realFvrTokenPriceUSD = newPrice;
     }
 
