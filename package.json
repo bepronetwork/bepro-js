@@ -27,7 +27,8 @@
         "lint": "eslint ./src --cache",
         "lint:fix": "eslint ./src --fix",
         "ganache:start": "ganache-cli -p 8545",
-        "watch": "onchange 'src/**/*.js' -- npm run build"
+        "watch": "onchange 'src/**/*.js' -- npm run build",
+        "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"Already built\""
     },
     "pre-commit": [
         "lint:fix",
