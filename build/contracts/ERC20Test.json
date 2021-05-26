@@ -415,10 +415,10 @@
         "contractDependencies": [
           31,
           52,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "contractKind": "contract",
         "documentation": "@title ERC20 test token contract\n@dev Mintable token with a token cap having msg.sender as distributionContract address.",
@@ -428,10 +428,10 @@
           79,
           52,
           31,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "name": "ERC20Test",
         "nodeType": "ContractDefinition",
@@ -704,10 +704,10 @@
         "contractDependencies": [
           31,
           52,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "contractKind": "contract",
         "documentation": "@title ERC20 test token contract\n@dev Mintable token with a token cap having msg.sender as distributionContract address.",
@@ -717,10 +717,10 @@
           79,
           52,
           31,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "name": "ERC20Test",
         "nodeType": "ContractDefinition",
@@ -942,7 +942,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-05-24T21:36:30.959Z",
+  "updatedAt": "2021-05-26T11:35:52.771Z",
   "devdoc": {
     "details": "Mintable token with a token cap having msg.sender as distributionContract address.",
     "methods": {

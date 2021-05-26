@@ -393,6 +393,14 @@ class OpenerRealFvr extends IContract {
    */
   exists = async ({ tokenId }) => await this.params.contract.getContract().methods.exists(tokenId).call();
 
+
+  /**
+   * @function
+   * @description Get Purchase Token Address
+   * @returns {Address} Token Address
+   */
+  getPurchaseToken = async () => await this.params.contract.getContract().methods._purchaseToken().call();
+
   /**
    * @function
    * @description Get Real Fvr Cost in USD

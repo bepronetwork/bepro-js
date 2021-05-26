@@ -393,7 +393,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 53,
-        "sourceUnit": 8214,
+        "sourceUnit": 8278,
         "src": "26:55:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -404,7 +404,7 @@
         "id": 3,
         "nodeType": "ImportDirective",
         "scope": 53,
-        "sourceUnit": 7326,
+        "sourceUnit": 7390,
         "src": "82:29:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -419,10 +419,10 @@
               "id": 4,
               "name": "ERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 8213,
+              "referencedDeclaration": 8277,
               "src": "279:5:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC20_$8213",
+                "typeIdentifier": "t_contract$_ERC20_$8277",
                 "typeString": "contract ERC20"
               }
             },
@@ -437,10 +437,10 @@
               "id": 6,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 7325,
+              "referencedDeclaration": 7389,
               "src": "286:7:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$7325",
+                "typeIdentifier": "t_contract$_Ownable_$7389",
                 "typeString": "contract Ownable"
               }
             },
@@ -450,10 +450,10 @@
           }
         ],
         "contractDependencies": [
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "contractKind": "contract",
         "documentation": "@title Capped token\n@dev Mintable token with a token cap.",
@@ -461,10 +461,10 @@
         "id": 31,
         "linearizedBaseContracts": [
           31,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "name": "CappedToken",
         "nodeType": "ContractDefinition",
@@ -550,7 +550,7 @@
                       "name": "_mint",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 8093,
+                      "referencedDeclaration": 8157,
                       "src": "515:5:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -619,10 +619,10 @@
                   "name": "ERC20",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 8213,
+                  "referencedDeclaration": 8277,
                   "src": "483:5:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_ERC20_$8213_$",
+                    "typeIdentifier": "t_type$_t_contract$_ERC20_$8277_$",
                     "typeString": "type(contract ERC20)"
                   }
                 },
@@ -789,10 +789,10 @@
         ],
         "contractDependencies": [
           31,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -801,10 +801,10 @@
         "linearizedBaseContracts": [
           52,
           31,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "name": "Token",
         "nodeType": "ContractDefinition",
@@ -1062,7 +1062,7 @@
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 53,
-        "sourceUnit": 8214,
+        "sourceUnit": 8278,
         "src": "26:55:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1073,7 +1073,7 @@
         "id": 3,
         "nodeType": "ImportDirective",
         "scope": 53,
-        "sourceUnit": 7326,
+        "sourceUnit": 7390,
         "src": "82:29:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1088,10 +1088,10 @@
               "id": 4,
               "name": "ERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 8213,
+              "referencedDeclaration": 8277,
               "src": "279:5:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC20_$8213",
+                "typeIdentifier": "t_contract$_ERC20_$8277",
                 "typeString": "contract ERC20"
               }
             },
@@ -1106,10 +1106,10 @@
               "id": 6,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 7325,
+              "referencedDeclaration": 7389,
               "src": "286:7:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$7325",
+                "typeIdentifier": "t_contract$_Ownable_$7389",
                 "typeString": "contract Ownable"
               }
             },
@@ -1119,10 +1119,10 @@
           }
         ],
         "contractDependencies": [
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "contractKind": "contract",
         "documentation": "@title Capped token\n@dev Mintable token with a token cap.",
@@ -1130,10 +1130,10 @@
         "id": 31,
         "linearizedBaseContracts": [
           31,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "name": "CappedToken",
         "nodeType": "ContractDefinition",
@@ -1219,7 +1219,7 @@
                       "name": "_mint",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 8093,
+                      "referencedDeclaration": 8157,
                       "src": "515:5:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -1288,10 +1288,10 @@
                   "name": "ERC20",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 8213,
+                  "referencedDeclaration": 8277,
                   "src": "483:5:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_type$_t_contract$_ERC20_$8213_$",
+                    "typeIdentifier": "t_type$_t_contract$_ERC20_$8277_$",
                     "typeString": "type(contract ERC20)"
                   }
                 },
@@ -1458,10 +1458,10 @@
         ],
         "contractDependencies": [
           31,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -1470,10 +1470,10 @@
         "linearizedBaseContracts": [
           52,
           31,
-          7325,
-          8213,
-          8282,
-          9672
+          7389,
+          8277,
+          8346,
+          9736
         ],
         "name": "Token",
         "nodeType": "ContractDefinition",
@@ -1707,7 +1707,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-05-24T21:36:30.958Z",
+  "updatedAt": "2021-05-26T11:35:52.767Z",
   "devdoc": {
     "details": "Mintable token with a token cap.",
     "methods": {
