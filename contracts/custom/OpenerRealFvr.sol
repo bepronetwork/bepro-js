@@ -18,7 +18,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     mapping(uint256 => bool) public alreadyMinted;
     mapping(uint256 => Pack) public packs;
     uint256 public packIncrementId = 1;
-    uint256 public lastNFTID = 0;
+    uint256 public lastNFTID = 1;
 
     event PackCreated(uint256 packId, uint256  nftsAmount, string indexed serie, string indexed packType, string indexed drop);
     event PackBought(address indexed by, uint256 indexed packId);

@@ -306,7 +306,7 @@ class OpenerRealFvr extends IContract {
    * @param {Price} params.price Token Price
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  setTokenPriceInUSD = async ({ price }) => await this.__sendTx(
+  setTokenWorthof1USD = async ({ price }) => await this.__sendTx(
     this.params.contract
       .getContract()
       .methods.setTokenPriceInUSD(price),
