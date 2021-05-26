@@ -127,21 +127,6 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @description Get Amount of Needed for Dispute
-   * @returns {Promise<number>}
-   */
-  async percentageNeededForDispute() {
-    return parseInt(
-      await this.params.contract
-        .getContract()
-        .methods.percentageNeededForDispute()
-        .call(),
-      10,
-    );
-  }
-
-
-  /**
    * Get Amount of Needed for Merge
    * @returns {Promise<number>}
    */
