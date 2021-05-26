@@ -406,7 +406,7 @@ class OpenerRealFvr extends IContract {
    * @description Get Real Fvr Cost in USD
    * @returns {Integer} Price in Real Fvr Tokens
    */
-  getTokenPriceInUSD = async () => Numbers.fromDecimals(
+  getTokenWorthof1USD = async () => Numbers.fromDecimals(
     await this.params.contract
       .getContract()
       .methods._realFvrTokenPriceUSD()
