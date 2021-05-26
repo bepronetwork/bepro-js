@@ -50,7 +50,7 @@ class OpenerRealFvr extends IContract {
    * @returns {Transaction} Transaction
    */
   buyPack = async ({ packId }) => await this.__sendTx(
-    this.params.contract.getContract().methods.buyPack(packId)
+    this.params.contract.getContract().methods.buyPack(packId),
   );
 
   /**
