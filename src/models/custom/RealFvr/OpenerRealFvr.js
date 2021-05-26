@@ -83,7 +83,7 @@ class OpenerRealFvr extends IContract {
    * @description Create Pack
    * @param {Object} params Parameters
    * @param {Integer} params.nftAmount Amount of NFTs/Tokens
-   * @param {Integer} params.price Price of Pack
+   * @param {Integer} params.price Price of Pack (100 = $1; 1 = $0.01)
    * @param {String} params.serie Serie of Pack
    * @param {String} params.packType Pack Type
    * @param {String} params.drop Pack Drop
