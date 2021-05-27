@@ -1,4 +1,4 @@
-/* eslint-disable global-require */
+/* eslint-disable global-require , import/no-unresolved, import/no-extraneous-dependencies */
 const index = {
   exchange: require('../../build/contracts/Exchange.json'),
   staking: require('../../build/contracts/StakingContract.json'),

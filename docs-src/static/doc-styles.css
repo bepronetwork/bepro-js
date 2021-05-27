@@ -1,5 +1,11 @@
-.logo .image {
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo .image img {
     height: 24px;
+    width: auto;
 }
 
 #main-content-wrapper.core {
