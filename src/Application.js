@@ -76,7 +76,7 @@ class Application {
         null,
         { transactionConfirmationBlocks: 1 },
       );
-    } else if (this.opt.web3Connection.indexOf('http') > 0) {
+    } else if (this.opt.web3Connection.toLowerCase().includes('http')) {
       this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
     } else {
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(this.opt.web3Connection));
