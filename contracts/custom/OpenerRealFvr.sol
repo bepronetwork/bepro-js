@@ -121,7 +121,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     function openPack(uint256 packId) public {
         require(!_closed, "Opener is locked");
         require(!packs[packId].opened, "Opened Already");
-        require(packs[packId].buyer == msg.sender, "Not buyer");
+        require(packs[packId].buyer == msg.sender, "Pack Buyer is you");
 
         packs[packId].opened = true;
         

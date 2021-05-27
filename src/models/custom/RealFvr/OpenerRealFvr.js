@@ -139,7 +139,7 @@ class OpenerRealFvr extends IContract {
         serie,
         packType,
         drop,
-        String(price).toString(),
+        Numbers.toSmartContractDecimals(price, 3)
       ),
   );
 
