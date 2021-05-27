@@ -170,8 +170,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
             registeredIDs[receivingAddress][packs[packId].initialNFTId+i] = true;
             registeredIDsArray[receivingAddress].push(i);
         }
-
-        emit PackOpened(receivingAddress, packId);
+        emit PackBought(receivingAddress, packId);
     }
 
     function editPackInfo(uint256 _packId, uint256 _saleStart, string memory serie, string memory packType, string memory drop, uint256 price) public onlyOwner {
