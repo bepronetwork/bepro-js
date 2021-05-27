@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs ERC721Contract</title>
+  <title>BEPRO Network Dev Docs DexStorage</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -98,7 +98,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Class</p>
-                    <h1>ERC721Contract</h1>
+                    <h1>DexStorage</h1>
                 </header>
                 
 
@@ -109,7 +109,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ERC721Contract<span class="signature">(options)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>DexStorage<span class="signature">(params)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -128,12 +128,12 @@
 
 
     
-    <h4 class="name" id="ERC721Contract">
-        <a class="href-link" href="#ERC721Contract">#</a>
+    <h4 class="name" id="DexStorage">
+        <a class="href-link" href="#DexStorage">#</a>
         
         <span class="code-name">
             
-                new ERC721Contract<span class="signature">(options)</span><span class="type-signature"></span>
+                new DexStorage<span class="signature">(params)</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -142,7 +142,7 @@
     
     
     <div class="description">
-        <p>ERC721Contract Object</p>
+        <p>DexStorage Object</p>
     </div>
     
 
@@ -180,13 +180,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>options</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type"><a href="ERC721Contract.html#~Options">ERC721Contract~Options</a></span>
+<span class="param-type">Object</span>
 
 
   
@@ -196,8 +196,34 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>ipfsClientHTTP</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Optional, IPFS Infura Node API or object</p></td>
+</tr>
+
+  
 
 
         
@@ -242,9 +268,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="utils_IPFS.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line15">line 15</a>
+                <a href="utils_IPFS.js.html">utils/IPFS.js</a>, <a href="utils_IPFS.js.html#line5">line 5</a>
             </span>
         </p>
     
@@ -293,251 +319,20 @@
     
 
     
-
-    
         <div class='vertical-section'>
-            <h1>Type Definitions</h1>
+            <h1>Methods</h1>
             <div class="members">
             
                 <div class="member">
 
-    <span class="method-parameter is-pulled-right">
-        <label>Type:</label>
-        
-<span class="param-type">Object</span>
-
-
-    </span>
-
-<h4 class="name" id="~Options">
-    <a class="href-link" href="#~Options">#</a>
-    
-    <span class="code-name">
-        Options
-    </span>
-    
-</h4>
-
-
-
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
 
     
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-            <th>Attributes</th>
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>web3</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">Web3</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-
-        
-        </td>
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>contractAddress</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">string</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>acc</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">Account</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line8">line 8</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-            </div>
-        </div>
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2><span class="attribs"><span class="type-signature"></span></span>ERC721Contract<span class="signature">(options)</span><span class="type-signature"></span></h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class='vertical-section'>
-                <div class="members">
-                    <div class="member">
-                        <div class=name>
-                            <span class="tag">Constructor</span>
-                        </div>
-                        
-
-
-    
-    <h4 class="name" id="ERC721Contract">
-        <a class="href-link" href="#ERC721Contract">#</a>
+    <h4 class="name" id="get">
+        <a class="href-link" href="#get">#</a>
         
         <span class="code-name">
             
-                new ERC721Contract<span class="signature">(options)</span><span class="type-signature"></span>
+                get<span class="signature">(params)</span><span class="type-signature"> &rarr; {String}</span>
             
         </span>
     </h4>
@@ -546,7 +341,7 @@
     
     
     <div class="description">
-        <p>ERC721Contract Object</p>
+        <p>Get Data</p>
     </div>
     
 
@@ -584,13 +379,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>options</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type"><a href="ERC721Standard.html#~Options">ERC721Standard~Options</a></span>
+<span class="param-type">Object</span>
 
 
   
@@ -600,8 +395,34 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>cid</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>CID String, if image blob info</p></td>
+</tr>
+
+  
 
 
         
@@ -646,9 +467,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="utils_IPFS.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line12">line 12</a>
+                <a href="utils_IPFS.js.html">utils/IPFS.js</a>, <a href="utils_IPFS.js.html#line38">line 38</a>
             </span>
         </p>
     
@@ -671,56 +492,57 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
 
-
-
-
-                    </div>
-                </div>
-            </div>
-        
+<div class="columns">
     
+    <div class='param-desc column is-7'><p>data (Hash to be used to access the params.data later)</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">String</span>
+
+
     </div>
     
-    
+</div>
 
-    
+                
+        </div>
+    </div>
 
-    
 
-    
 
-    
 
-    
-
-    
-
-    
-
-    
-        <div class='vertical-section'>
-            <h1>Type Definitions</h1>
-            <div class="members">
+</div>
             
                 <div class="member">
 
-    <span class="method-parameter is-pulled-right">
-        <label>Type:</label>
+
+    
+    <h4 class="name" id="save">
+        <a class="href-link" href="#save">#</a>
         
-<span class="param-type">Object</span>
-
-
-    </span>
-
-<h4 class="name" id="~Options">
-    <a class="href-link" href="#~Options">#</a>
+        <span class="code-name">
+            
+                save<span class="signature">(params)</span><span class="type-signature"> &rarr; {String}</span>
+            
+        </span>
+    </h4>
     
-    <span class="code-name">
-        Options
-    </span>
+
     
-</h4>
+    
+    <div class="description">
+        <p>Save Data</p>
+    </div>
+    
 
 
 
@@ -729,11 +551,11 @@
 
 
 
-    <h5 class="subsection-title">Properties:</h5>
 
+    <h5>Parameters:</h5>
     
 <div class="table-container">
-    <table class="props table">
+    <table class="params table">
         <thead>
         <tr>
             
@@ -742,8 +564,6 @@
 
             <th>Type</th>
 
-            
-            <th>Attributes</th>
             
 
             
@@ -754,100 +574,62 @@
 
         <tbody>
         
+
             
 <tr class="deep-level-0">
-    
-        <td class="name"><code>web3</code></td>
-    
+  
+      <td class="name"><code>params</code></td>
+  
 
-    <td class="type">
-    
-        
-<span class="param-type">Web3</span>
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
 
 
-    
-    </td>
+  
+  </td>
 
-    
-        <td class="attributes">
-        
+  
 
-        
-        </td>
-    
+  
 
-    
-
-    <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
-        
-            
-<tr class="deep-level-0">
+  
+  
     
-        <td class="name"><code>contractAddress</code></td>
-    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>data</code></td>
+  
 
-    <td class="type">
-    
-        
-<span class="param-type">string</span>
+  <td class="type">
+  
+      
+<span class="param-type">String</span>
 
 
-    
-    </td>
+  
+  </td>
 
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
+  
 
-        
-        </td>
-    
+  
 
-    
-
-    <td class="description last"></td>
+  <td class="description last"><p>Data String, if image blob info</p></td>
 </tr>
 
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>acc</code></td>
-    
+  
 
-    <td class="type">
-    
-        
-<span class="param-type">Account</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-
-    <td class="description last"></td>
-</tr>
 
         
         </tbody>
     </table>
 </div>
+
+
 
 
 
@@ -884,9 +666,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="utils_IPFS.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line8">line 8</a>
+                <a href="utils_IPFS.js.html">utils/IPFS.js</a>, <a href="utils_IPFS.js.html#line26">line 26</a>
             </span>
         </p>
     
@@ -896,10 +678,53 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>CID (Hash to be used to access the params.data later)</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">String</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
 </div>
             
             </div>
         </div>
+    
+
     
 
     

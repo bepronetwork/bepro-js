@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs models/ERC20/ERC20Contract.js</title>
+  <title>BEPRO Network Dev Docs utils/IPFS.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -100,7 +100,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>models/ERC20/ERC20Contract.js</h1>
+                    <h1>utils/IPFS.js</h1>
                 </header>
                 
 
@@ -109,205 +109,62 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { ierc20 } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
-import IContract from '../IContract';
+            <pre class="prettyprint source linenums"><code>/* eslint-disable */
+import { create } from 'ipfs-http-client';
+
 
 /**
- * @typedef {Object} ERC20Contract~Options
- * @property {Web3} web3
- * @property {string} [contractAddress]
- * @property {Account} [acc]
+ * DexStorage Object
+ * @class DexStorage
+ * @param {Object} params Parameters
+ * @param {String} params.ipfsClientHTTP Optional, IPFS Infura Node API or object 
  */
-
-/**
- * @class ERC20Contract
- * @param {ERC20Contract~Options} options
- */
-class ERC20Contract extends IContract {
-  constructor(params = {}) {
-    super({ abi: ierc20, ...params });
+class DexStorage {
+  constructor({ipfsClientHTTP}={ipfsClientHTTP : { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }}) {
+    if(!ipfsClientHTTP){
+      throw new Error("Please provide a valid ipfsClientHTTP, you can find one at infura.io")
+    }
+    this.ipfs = create(ipfsClientHTTP);
   }
 
   /**
-   * Use a {@link ierc20} contract with the current address
-   * @return {Promise&lt;void>}
-   */
-  __assert = async () => {
-    this.params.contract.use(ierc20, this.getAddress());
-    this.params.decimals = await this.getDecimalsAsync();
-  };
-
-  /**
-   *
-   * @return {*}
-   */
-  getContract() {
-    return this.params.contract.getContract();
-  }
-
-  /**
-   * Get Token Address
-   * @returns {Address} address
-   */
-  getAddress() {
-    return this.params.contractAddress;
-  }
-
-  /**
-   * Transfer Tokens
    * @function
+   * @description Save Data
    * @param {Object} params Parameters
-   * @param {Address} params.toAddress To Address
-   * @param {Integer} params.tokenAmount Amount of Tokens
-   * @returns {Promise&lt;Transaction>} Transaction
+   * @param {String} params.data Data String, if image blob info 
+   * @returns {String} CID (Hash to be used to access the params.data later)
    */
-  transferTokenAmount = async ({ toAddress, tokenAmount }) => {
-    const amountWithDecimals = Numbers.toSmartContractDecimals(
-      tokenAmount,
-      this.getDecimals(),
-    );
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.transfer(toAddress, amountWithDecimals),
-    );
-  };
-
-  /**
-   * Get Amount of Tokens User Holds
-   * @function
-   * @param {Address} address User Address
-   * @returns {Promise&lt;Transaction>} Transaction
-   */
-  getTokenAmount = async address => Numbers.fromDecimals(
-    await this.getContract().methods.balanceOf(address).call(),
-    this.getDecimals(),
-  );
-
-  /**
-   * Get Total Supply of Token
-   * @function
-   * @returns {Promise&lt;number>} Total supply
-   */
-  totalSupply = async () => Numbers.fromDecimals(
-    await this.getContract().methods.totalSupply().call(),
-    this.getDecimals(),
-  );
-
-  /**
-   *
-   * @return {Contract}
-   */
-  getABI() {
-    return this.params.contract;
+  save = async ({data}) => {
+    const { path, cid, size } = await this.ipfs.add(data);
+    return { path, cid, size };
   }
 
   /**
-   * Get Decimals of Token
    * @function
-   * @returns {number} Total supply
+   * @description Get Data
+   * @param {Object} params Parameters
+   * @param {String} params.cid CID String, if image blob info 
+   * @returns {String} data (Hash to be used to access the params.data later)
    */
-  getDecimals() {
-    return this.params.decimals;
+  get = async ({cid}) => {
+    return new Promise( async (resolve, reject) => {
+      try{
+        for await (const file of this.ipfs.get(cid)) {
+          if (!file.content) continue;
+          const content = []
+          for await (const chunk of file.content) {
+            content.push(chunk)
+          }
+          resolve(content.toString())
+        }
+      }catch(err){
+        reject(err);
+      }
+    })
   }
-
-  /**
-   *
-   * @return {Promise&lt;number>}
-   */
-  getDecimalsAsync = async () => await this.getContract().methods.decimals().call();
-
-  /**
-   * Verify if Spender is Approved to use tokens
-   * @function
-   * @param {Object} params Parameters
-   * @param {Address} params.address Sender Address
-   * @param {number} params.amount Amount of Tokens
-   * @param {Address} params.spenderAddress Spender Address
-   * @returns {Promise&lt;boolean>} isApproved
-   */
-  isApproved = async ({ address, amount, spenderAddress }) => {
-    try {
-      const approvedAmount = Numbers.fromDecimals(
-        await this.getContract()
-          .methods.allowance(address, spenderAddress)
-          .call(),
-        this.getDecimals(),
-      );
-      return approvedAmount >= amount;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  /**
-   * Approve tokens to be used by another address/contract
-   * @function
-   * @param {Object} params Parameters
-   * @param {Address} params.address Spender Address/Contract
-   * @param {number} params.amount Amount of Tokens
-   * @param {function():void} params.callback callback for the Tx
-   * @returns {Promise&lt;Transaction>} Transaction
-   */
-  approve = async ({ address, amount, callback }) => {
-    try {
-      const amountWithDecimals = Numbers.toSmartContractDecimals(
-        amount,
-        this.getDecimals(),
-      );
-      const res = await this.__sendTx(
-        this.params.contract
-          .getContract()
-          .methods.approve(address, amountWithDecimals),
-        null,
-        null,
-        callback,
-      );
-      return res;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  /**
-   * Deploy ERC20 Token
-   * @function
-   * @param {Object} params Parameters
-   * @param {string} params.name Name of token
-   * @param {string} params.symbol Symbol of token
-   * @param {number} params.cap Max supply of Token (ex : 100M)
-   * @param {Address} params.distributionAddress Where tokens should be sent to initially
-   * @returns {Promise&lt;Transaction>} Transaction
-   */
-  deploy = async ({
-    name, symbol, cap, distributionAddress, callback,
-  }) => {
-    if (!distributionAddress) {
-      throw new Error('Please provide an Distribution address for distro');
-    }
-
-    if (!name) {
-      throw new Error('Please provide a name');
-    }
-
-    if (!symbol) {
-      throw new Error('Please provide a symbol');
-    }
-
-    if (!cap) {
-      throw new Error('Please provide a cap');
-    }
-    const params = [name, symbol, cap, distributionAddress];
-    const res = await this.__deploy(params, callback);
-    this.params.contractAddress = res.contractAddress;
-    /* Call to Backend API */
-    await this.__assert();
-    return res;
-  };
 }
 
-export default ERC20Contract;
+export default DexStorage;
 </code></pre>
         </article>
     </section>
