@@ -30,7 +30,6 @@ class DexStorage {
       }
     })
   }
-
 }
 
 export default DexStorage;
