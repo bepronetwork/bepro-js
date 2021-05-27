@@ -25,12 +25,12 @@
         "docs": "npm run build && npm run jsdoc:build && npm run jsdoc:serve",
         "jsdoc:build": "jsdoc -t ./node_modules/better-docs src -r -c docs-src/jsdoc.json",
         "jsdoc:serve": "http-server ./docs/ -o",
-        "prebuild": "npm run jsdoc:build",
         "lint": "eslint ./src --cache",
         "lint:fix": "eslint ./ --fix",
         "ganache:start": "ganache-cli -p 8545",
         "watch": "onchange 'src/**/*.js' -- npm run build",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"Already built\""
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",
