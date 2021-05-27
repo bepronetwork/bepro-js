@@ -106,7 +106,6 @@ class IContract {
       let res;
       if (!this.acc && !call) {
         const accounts = await this.params.web3.eth.getAccounts();
-        console.log('---__sendTx.bp0');
         res = await this.__metamaskCall({
           f,
           acc: accounts[0],

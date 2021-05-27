@@ -18,7 +18,6 @@ const timeDiff = Numbers.timeToSmartContractTime(endDate)
   - Numbers.timeToSmartContractTime(startDate);
 const userDepositNeededAPR = ((((APR / 365 / 24 / 60) * timeDiff) / 60) * individualMinimumAmount) / 100;
 const totalNeededAPR = ((((APR / 365 / 24 / 60) * timeDiff) / 60) * totalMaxAmount) / 100;
-console.log(totalNeededAPR.toFixed(18));
 
 context('Staking Contract', async () => {
   let stakingContract;
@@ -32,9 +31,6 @@ context('Staking Contract', async () => {
 
   before(async () => {
     app = new Application({ test: true, localtest: true, mainnet: false });
-    console.log(
-      `stakingContract.deployed_tokenAddress: ${deployed_tokenAddress}`,
-    );
   });
 
   it(
@@ -221,7 +217,6 @@ context('Staking Contract', async () => {
       });
       startDateSubscription = res.startDate;
       endDateSubscription = res.endDate;
-      console.log('res', res);
       expect(res.startDate).to.not.equal(false);
       expect(res.endDate).to.not.equal(false);
       expect(res.amount).to.equal(individualMinimumAmount.toString());

@@ -23,10 +23,6 @@ class ERC20TokenLock extends IContract {
   constructor(params = {}) {
     try {
       super({ ...params, abi: tokenlock });
-      console.log(`ERC20TokenLock.ctor.tokenAddress: ${params.tokenAddress}`);
-      console.log(
-        `ERC20TokenLock.ctor.contractAddress: ${params.contractAddress}`,
-      );
       if (params.tokenAddress) {
         this.params.ERC20Contract = new ERC20Contract({
           web3: params.web3,
@@ -228,7 +224,6 @@ class ERC20TokenLock extends IContract {
         "Has to Approve Token Transfer First, use the 'approve' Call",
       );
     }
-    console.log('---lock.bp0');
     return await this.__sendTx(
       this.params.contract
         .getContract()
@@ -303,7 +298,6 @@ class ERC20TokenLock extends IContract {
 
     /* Set Token Address Contract for easy access */
     if (!this.params.ERC20Contract) {
-      // console.log('---ERC20TokenLock.__assert.ERC20Contract null, creating new one');
       this.params.ERC20Contract = new ERC20Contract({
         web3: this.web3,
         contractAddress: await this.erc20(),

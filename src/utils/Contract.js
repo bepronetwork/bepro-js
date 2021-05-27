@@ -51,7 +51,6 @@ class Contract {
     byteCode, args, acc, callback = () => {},
   }) => new Promise((resolve, reject) => {
     try {
-      console.log(`Contract.__metamaskDeploy.acc: ${acc}`);
       this.getContract()
         .deploy({
           data: byteCode,
@@ -67,21 +66,15 @@ class Contract {
           gas: 5913388, // 6721975
         })
         .on('confirmation', (confirmationNumber, receipt) => {
-          console.log(
-            `Contract.__metamaskDeploy.confirmationNumber: ${
-              confirmationNumber}`,
-          );
           callback(confirmationNumber);
           if (confirmationNumber > 0) {
             resolve(receipt);
           }
         })
         .on('error', (err) => {
-          console.log(`Contract.__metamaskDeploy.error: ${err}`);
           reject(err);
         });
     } catch (err) {
-      console.log(`Contract.__metamaskDeploy.catch.error: ${err}`);
       reject(err);
     }
   });
