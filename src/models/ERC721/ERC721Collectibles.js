@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { erc721collectibles } from '../../interfaces';
 import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
@@ -7,21 +6,29 @@ import ERC20Contract from '../ERC20/ERC20Contract';
 const baseFeeAddress = '0x6714d41094a264bb4b8fcb74713b42cfee6b4f74';
 
 /**
- * ERC721Contract Object
- * @class ERC721Collectibles
- * @param {Boolean} params.test
- * @param {Boolean} params.localtest, ganache local blockchain
- * @param {Web3Connection} params.web3Connection ? (opt), created from above params
- * @param {Address} params.contractAddress ? (opt)
+ * @typedef {Object} ERC721Contract~Options
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection] created from above params
+ * @property {string} [contractAddress]
  */
 
+/**
+ * ERC721Contract Object
+ * @class ERC721Collectibles
+ * @param {ERC721Contract~Options} options
+ */
 class ERC721Collectibles extends IContract {
   constructor(params = {}) {
     super({ abi: erc721collectibles, ...params });
   }
 
   /**
-   * @private
+   * Uses {@link erc721collectibles} on the current address and assigns a new {@link ERC20Contract} with
+   * {@link ERC721Collectibles#purchaseToken} as its contract address
+   * @function
+   * @return {Promise<void>}
+   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
    */
   __assert = async () => {
     if (!this.getAddress()) {
@@ -43,9 +50,8 @@ class ERC721Collectibles extends IContract {
   };
 
   /**
-   * @function
-   * @description Get ERC20 Address of the Contract
-   * @returns {Address}
+   * Get ERC20 Address of the Contract
+   * @returns {Promise<Address>}
    */
   async purchaseToken() {
     return await this.params.contract
@@ -55,9 +61,8 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Price Per Pack
-   * @returns {Integer}
+   * Get Price Per Pack
+   * @returns {Promise<number>}
    */
   async getPricePerPack() {
     return Numbers.fromDecimals(
@@ -67,9 +72,10 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Verify if token ID exists
-   * @returns {Integer} Token Id
+   * Verify if token ID exists
+   * @param {Object} params
+   * @param {string} params.tokenID
+   * @returns {Promise<number>} Token Id
    */
   async exists({ tokenID }) {
     return await this.params.contract
@@ -79,20 +85,17 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Verify if it is limited
-   * @returns {Bool}
+   * Verify if it is limited
+   * @returns {Promise<boolean>}
    */
   async isLimited() {
     return await this.params.contract.getContract().methods._isLimited().call();
   }
 
   /**
-   * @function
-   * @description Verify what is the currentTokenId
-   * @returns {Integer} Current Token Id
+   * Verify what is the currentTokenId
+   * @returns {Promise<number>} Current Token Id
    */
-
   async currentTokenId() {
     return parseInt(
       await this.params.contract.getContract().methods._currentTokenId().call(),
@@ -101,9 +104,8 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Verify what is the getURITokenID
-   * @returns {String} URI
+   * Verify what is the getURITokenID
+   * @returns {Promise<string>} URI
    */
   async getURITokenID({ tokenID }) {
     return await this.params.contract
@@ -113,19 +115,18 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Verify what is the baseURI
-   * @returns {String} URI
+   * Verify what is the baseURI
+   * @returns {Promise<string>} URI
    */
   async baseURI() {
     return await this.params.contract.getContract().methods.baseURI().call();
   }
 
   /**
-   * @function
-   * @description Get Ids
-   * @param {Address} address
-   * @returns {Integer | Array} ids
+   * Get Ids
+   * @param {Object} params
+   * @param {Address} params.address
+   * @returns {number[]} ids
    */
   async getRegisteredIDs({ address }) {
     const res = await this.params.contract
@@ -137,9 +138,8 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Verify if ID is registered
-   * @returns {Bool}
+   * Verify if ID is registered
+   * @returns {Promise<boolean>}
    */
   async isIDRegistered({ address, tokenID }) {
     return await this.params.contract
@@ -149,11 +149,9 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Verify what is the current price per Pack
-   * @returns {Integer} Price per pack in tokens
+   * Verify what is the current price per Pack
+   * @returns {Promise<number>} Price per pack in tokens
    */
-
   async pricePerPack() {
     return Numbers.fromDecimals(
       await this.params.contract.getContract().methods._pricePerPack().call(),
@@ -162,11 +160,9 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Verify how much opened packs exist
-   * @returns {Integer} packs
+   * Verify how much opened packs exist
+   * @returns {Promise<number>} packs
    */
-
   async openedPacks() {
     return parseInt(
       await this.params.contract.getContract().methods._openedPacks().call(),
@@ -175,8 +171,9 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
+   * Approve ERC20 Allowance
    * @function
-   * @description Approve ERC20 Allowance
+   * @return {Promise<Transaction>}
    */
   approveERC20 = async () => {
     const totalMaxAmount = await this.getERC20Contract().totalSupply();
@@ -187,18 +184,23 @@ class ERC721Collectibles extends IContract {
   };
 
   /**
+   * Set Base Token URI
    * @function
-   * @description Set Base Token URI
+   * @param {Object} params
+   * @param {string} params.URI
+   * @return {Promise<TransactionObject>}
    */
   setBaseTokenURI = async ({ URI }) => await this.__sendTx(
     this.params.contract.getContract().methods.setBaseURI(URI),
   );
 
   /**
+   * Approve ERC20 Allowance
    * @function
-   * @description Approve ERC20 Allowance
-   * @param {Address} address
-   * @param {Integer} amount
+   * @param {Object} params
+   * @param {Address} params.address
+   * @param {number} params.amount
+   * @return {Promise<boolean>}
    */
   isApproved = async ({ address, amount }) => await this.getERC20Contract().isApproved({
     address,
@@ -207,9 +209,10 @@ class ERC721Collectibles extends IContract {
   });
 
   /**
-   * @function
-   * @description open Pack of tokens
-   * @param {Integer} amount Amount of packs to open
+   * open Pack of tokens
+   * @param {Object} params
+   * @param {number} params.amount Amount of packs to open
+   * @return {Promise<TransactionObject>}
    */
   async openPack({ amount }) {
     return await this.__sendTx(
@@ -218,10 +221,9 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description Mint created TokenID
-   * @param {Address} to
-   * @param {Integer} tokenID
+   * Mint created TokenID
+   * @param {Object} params
+   * @param {number} params.tokenID
    */
   async mint({ tokenID }) {
     return await this.__sendTx(
@@ -230,9 +232,10 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description set Purchase Token Address
-   * @param {Address} purchaseToken
+   * set Purchase Token Address
+   * @param {Object} params
+   * @param {Address} params.purchaseToken
+   * @return {Promise<TransactionObject>}
    */
   async setPurchaseTokenAddress({ purchaseToken }) {
     return await this.__sendTx(
@@ -243,9 +246,10 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description set Stake Address
-   * @param {Address} purchaseToken
+   * Set Stake Address
+   * @param {Object} params
+   * @param {Address} params.purchaseToken
+   * @return {Promise<TransactionObject>}
    */
   async setStakeAddress({ purchaseToken }) {
     return await this.__sendTx(
@@ -254,9 +258,10 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description set Fee Address
-   * @param {Address} purchaseToken
+   * Set Fee Address
+   * @param {Object} params
+   * @param {Address} params.purchaseToken
+   * @return {Promise<TransactionObject>}
    */
   async setSwapBackAddress({ purchaseToken }) {
     return await this.__sendTx(
@@ -267,9 +272,10 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description set Fee Address
-   * @param {Address} purchaseToken
+   * Set Fee Address
+   * @param {Object} params
+   * @param {Address} params.purchaseToken
+   * @return {Promise<TransactionObject>}
    */
   async setFeeAddress({ purchaseToken }) {
     return await this.__sendTx(
@@ -278,9 +284,10 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
-   * @function
-   * @description set Price per Pack
-   * @param {Amount} newPrice
+   * Set Price per Pack
+   * @param {Object} amount
+   * @param {number} amount.newPrice
+   * @return {Promise<TransactionObject>}
    */
   async setPricePerPack({ newPrice }) {
     const newPriceWithDecimals = Numbers.toSmartContractDecimals(newPrice, 18);
@@ -291,6 +298,22 @@ class ERC721Collectibles extends IContract {
     );
   }
 
+  /**
+   * @link ERC721Collectibles.__deploy
+   * @function
+   * @param {Object} params
+   * @param {*} params.name
+   * @param {*} params.symbol
+   * @param {number} params.limitedAmount
+   * @param {*} params.erc20Purchase
+   * @param {string} params.feeAddress
+   * @param {string} params.otherAddress
+   * @param {*} params.callback
+   * @return {Promise<*|undefined>}
+   * @throws {Error} Please provide an erc20 address for purchases
+   * @throws {Error} Please provide a name
+   * @throws {Error} Please provide a symbol
+   */
   deploy = async ({
     name,
     symbol,
@@ -327,6 +350,10 @@ class ERC721Collectibles extends IContract {
     return res;
   };
 
+  /**
+   * @function
+   * @return ERC20Contract|undefined
+   */
   getERC20Contract = () => this.params.ERC20Contract;
 }
 

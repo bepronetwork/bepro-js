@@ -53,7 +53,7 @@ context("Staking Contract", async () => {
       erc20Contract = new ERC20Contract(testConfig);
       expect(erc20Contract).to.not.equal(null);
       // Deploy
-      let res = await erc20Contract.deploy({
+      const res = await erc20Contract.deploy({
         name: "test",
         symbol: "B.E.P.R.O",
         cap: Numbers.toSmartContractDecimals(100000000, 18),
@@ -87,7 +87,7 @@ context("Staking Contract", async () => {
         tokenAddress: deployed_tokenAddress,
       }); //ganache local test
       /* Deploy */
-      let res = await stakingContract.deploy();
+      const res = await stakingContract.deploy();
       await stakingContract.__assert();
       contractAddress = stakingContract.getAddress();
       expect(res).to.not.equal(false);

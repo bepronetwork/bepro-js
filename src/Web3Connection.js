@@ -1,7 +1,6 @@
 import Web3 from 'web3';
 import Account from './utils/Account';
 
-const ETH_URL_MAINNET = 'https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc';
 const ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
 // you can find this in "./truffle-config.js" file and should match ganache/ganache-cli local server settings too
 const ETH_URL_LOCAL_TEST = 'http://localhost:8545';
@@ -19,14 +18,22 @@ const networksEnum = Object.freeze({
 });
 
 /**
+ * @typedef {Object} Web3Connection~Optional
+ * @property {string} web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
+ * @property {string} privateKey Private key (0x....) used for server side use
+ */
+
+/**
+ * @typedef {Object} Web3Connection~Options
+ * @property {boolean} [test=false] Automated Tests
+ * @property {boolean} [localtest=false] Ganache Local Blockchain
+ * @property {Web3Connection~Optional} [opt] Optional Chain Connection Object (Default ETH)
+ */
+
+/**
  * Web3Connection Object
  * @class Web3Connection
- * @param {Object} params Parameters
- * @param {Bool} params.test Automated Tests / Default : False
- * @param {Bool} params.localtest Ganache Local Blockchain / Default : False
- * @param {Object} params.opt Optional Chain Connection Object (Default ETH)
- * @param {String} params.opt.web3Connection Web3 Connection String (Ex : https://data-seed-prebsc-1-s1.binance.org:8545)
- * @param {String} params.opt.privateKey Private key (0x....) used for server side use
+ * @param {Web3Connection~Options} options
  */
 class Web3Connection {
   constructor({
@@ -55,8 +62,10 @@ class Web3Connection {
   /** **** */
 
   /**
-   * @name start
-   * @description Connect to Web3 injected in the constructor
+   * Connect to Web3 injected in the constructor
+   * @function
+   * @throws {Error} Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet
+   * @void
    */
   start() {
     if (this.localtest) {
@@ -90,8 +99,9 @@ class Web3Connection {
   };
 
   /**
+   * Login with Metamask/Web3 Wallet - substitutes start()
    * @function
-   * @description Login with Metamask/Web3 Wallet - substitutes start()
+   * @return {Promise<boolean>}
    */
   login = async () => {
     try {
@@ -115,9 +125,9 @@ class Web3Connection {
   /** ***** */
 
   /**
+   * Get ETH Network
    * @function
-   * @description Get ETH Network
-   * @return {String} Network Name (Ex : Kovan)
+   * @return {Promise<string>} Network Name (Ex : Kovan)
    */
   async getETHNetwork() {
     const netId = await this.web3.eth.net.getId();
@@ -129,9 +139,9 @@ class Web3Connection {
   }
 
   /**
+   * Get Address connected via login()
    * @function
-   * @description Get Address connected via login()
-   * @return {Address} Address in Use
+   * @return {Promise<string>} Address in Use
    */
   async getAddress() {
     if (this.account) return this.account.getAddress();
@@ -141,9 +151,9 @@ class Web3Connection {
   }
 
   /**
+   * Get ETH Balance of Address connected via login()
    * @function
-   * @description Get ETH Balance of Address connected via login()
-   * @return {Integer} ETH Balance
+   * @return {Promise<string>} ETH Balance
    */
   async getETHBalance() {
     const wei = await this.web3.eth.getBalance(await this.getAddress());

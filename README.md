@@ -53,10 +53,10 @@ $ npm config set python python
 
 ```bash
 // Install NVM recommended version for bepro-js
-$ nvm install 8.12.0
+$ nvm install 14.17.0
 
 // Set it on the working directory
-$ nvm alias default v8.12.0
+$ nvm alias default v14.17.0
 
 // Use the settled as default
 $ nvm use default
@@ -141,14 +141,14 @@ https://bepronetwork.github.io/bepro-js/
 
 import moment from 'moment';
 import {
-    Application, ERC20Contract, ExchangeContract, StakingContract,
+    Application, DexStorage, ERC20Contract, ExchangeContract, StakingContract,
     ERC20TokenLock, ERC721Collectibles, ERC721Standard
 } from 'bepro-js';
 
 /* 1.1 - Instantiate the App for Metamask functionality (MAINNET) */
 let app = new Application({ opt : { web3Connection : 'WEB3_LINK' } });
 
-/* 1.2 - Instantiate Stakingcontract Object or any other in a similar way (Staking, ERC20 etc..) */
+/* 1.2 - Instantiate StakingContract Object or any other in a similar way (Staking, ERC20 etc..) */
 // - MAINNET
 let staking = new StakingContract({ contractAddress : null, /* Contract Address (optional) */
                                     opt : { web3Connection : 'WEB3_LINK' } });

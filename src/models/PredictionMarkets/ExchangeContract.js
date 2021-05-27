@@ -1,29 +1,30 @@
-import _ from 'lodash';
 import { exchange } from '../../interfaces';
 import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 
 /**
- * Exchange Contract Object
- * @class ExchangeContract
- * @param {Boolean} params.test
- * @param {Boolean} params.localtest, ganache local blockchain
- * @param {Web3Connection} params.web3Connection ? (opt), created from above params
- * @param {Address} params.tokenAddress
- * @param {Integer} params.decimals
- * @param {Address} params.contractAddress ? (opt)
+ * @typedef {Object} ExchangeContract~Options
+ * @property {number} decimals
+ * @property {string} tokenAddress
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection] created from above params
+ * @property {string} [contractAddress]
  */
 
+/**
+ * Exchange Contract Object
+ * @class ExchangeContract
+ * @param {ExchangeContract~Options} options
+ */
 class ExchangeContract extends IContract {
   constructor(params) {
     super({ abi: exchange, ...params });
   }
 
-  /* Get Functions */
   /**
-   * @function
-   * @description Get Events
-   * @returns {Integer | Array} Get Events ID
+   * Get Events
+   * @returns {Promise<number[]>} Get Events ID
    */
   async getEvents() {
     const res = await this.params.contract
@@ -34,9 +35,8 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Events
-   * @returns {Integer | Array} Get Events ID
+   * Get Events
+   * @returns {Promise<number[]>} Get Events ID
    */
   async getMyEvents() {
     const res = await this.__sendTx(
@@ -47,13 +47,18 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function
-   * @description Get EventData
-   * @param {Integer} event_id
-   * @returns {String} Event Name
-   * @returns {Integer} Result Id
-   * @returns {String} URL Oracle
-   * @returns {Boolean} Is Resolved
+   * @typedef {Object} ExchangeContract~EventData
+   * @property {number} _resultId
+   * @property {string} name
+   * @property {string} urlOracle
+   * @property {boolean} isResolved
+   */
+
+  /**
+   * Get EventData
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @return {Promise<ExchangeContract~EventData>}
    */
   async getEventData({ event_id }) {
     const r = await this.__sendTx(
@@ -70,17 +75,21 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function
-   * @description Get My Event Holdings
-   * @param {Integer} event_id
-   * @returns {Integer} 1 In Pool Balances
-   * @returns {Integer} 1 Out Pool Balances
-   * @returns {Integer} 1 Liquidity Balances
-   * @returns {Integer} 2 In Pool Balances
-   * @returns {Integer} 2 Out Pool Balances
-   * @returns {Integer} 2 Liquidity Balances
+   * @typedef {Object} ExchangeContract~EventHoldings
+   * @property {number} liquidityA
+   * @property {number} liquidityB
+   * @property {number} inPoolBalancesA
+   * @property {number} inPoolBalancesB
+   * @property {number} outPoolBalancesA
+   * @property {number} outPoolBalancesB
    */
 
+  /**
+   * Get My Event Holdings
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @return {Promise<ExchangeContract~EventHoldings>}
+   */
   async getMyEventHoldings({ event_id }) {
     const r = await this.__sendTx(
       this.params.contract.getContract().methods.getMyEventHoldings(event_id),
@@ -98,22 +107,25 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Result Space Data
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
-   * @returns {Integer} _id
-   * @returns {Integer} _resultId
-   * @returns {Integer} pool
-   * @returns {Integer} cost
-   * @returns {Integer} odd
-   * @returns {Integer} amount
-   * @returns {Integer} inPool
-   * @returns {Integer} outPool
-   * @returns {Integer} fees
-   * @returns {Integer} liqAmount
+   * @typedef {Object} ExchangeContract~SpaceData
+   * @property {number} inPool
+   * @property {number} amount
+   * @property {number} fees
+   * @property {number} cost
+   * @property {number} liqAmount
+   * @property {number} inPool
+   * @property {number} outPool
+   * @property {number} odd
+   * @property {number} _id
    */
 
+  /**
+   * Get Result Space Data
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @return {Promise<ExchangeContract~SpaceData>}
+   */
   async getResultSpaceData({ event_id, resultSpace_id }) {
     const r = await this.__sendTx(
       this.params.contract
@@ -137,9 +149,8 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function
-   * @description To see if Event is open
-   * @returns {Boolean}
+   * To see if Event is open
+   * @returns {Promise<boolean>}
    */
   async isEventOpen() {
     return await this.params.contract
@@ -149,14 +160,13 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Fractions Cost
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
-   * @param {Integer} fractions_amount
-   * @return {Integer} cost
+   * Get Fractions Cost
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @param {number} event.fractions_amount
+   * @return {Promise<number>}
    */
-
   async getFractionsCost({ event_id, resultSpace_id, fractions_amount }) {
     return Numbers.fromDecimals(
       await this.__sendTx(
@@ -170,12 +180,12 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Slipage on Buy
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
-   * @param {Integer} fractions_amount
-   * @returns {Integer} _id
+   * Get Slippage on Buy
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @param {number} event.fractions_amount
+   * @returns {Promise<number>}
    */
   async getSlipageOnBuy({ event_id, resultSpace_id, fractions_amount }) {
     return await this.params.contract
@@ -185,12 +195,12 @@ class ExchangeContract extends IContract {
   }
 
   /**
-   * @function
-   * @description Get Slipage on Sell
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
-   * @param {Integer} fractions_amount
-   * @returns {Integer} _id
+   * Get Slippage on Buy
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @param {number} event.fractions_amount
+   * @returns {Promise<number>}
    */
   async getSlipageOnSell({ event_id, resultSpace_id, fractions_amount }) {
     return await this.params.contract
@@ -199,17 +209,17 @@ class ExchangeContract extends IContract {
       .call();
   }
 
-  /* POST User Functions */
 
   /**
+   * Create an Event
    * @function
-   * @description Create an Event
-   * @param {Integer | Array} _resultSpaceIds
-   * @param {String} urlOracle
-   * @param {String} eventName
-
+   * @param {Object} event
+   * @param {number[]} resultSpaceIds
+   * @param {string} urlOracle
+   * @param {string} eventName
+   * @param {number} ethAmount
+   * @return {Promise<TransactionObject>}
    */
-
   createEvent = async ({
     resultSpaceIds,
     urlOracle,
@@ -230,13 +240,13 @@ class ExchangeContract extends IContract {
   };
 
   /**
+   * Resolve Event
    * @function
-   * @description Resolve Event
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
-
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @return {Promise<TransactionObject>}
    */
-
   resolveEvent = async ({ event_id, resultSpace_id }) => await this.__sendTx(
     this.params.contract
       .getContract()
@@ -244,11 +254,13 @@ class ExchangeContract extends IContract {
   );
 
   /**
+   * Add Liquidity
    * @function
-   * @description Add Liquidity
-   * @param {Integer} eventId
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.ethAmount
+   * @return {Promise<TransactionObject>}
    */
-
   addLiquidity = async ({ event_id, ethAmount }) => {
     const ETHToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
     return await this.__sendTx(
@@ -259,23 +271,25 @@ class ExchangeContract extends IContract {
   };
 
   /**
+   * Remove Liquidity
    * @function
-   * @description Remove Liquidity
-   * @param {Integer} eventId
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @return {Promise<TransactionObject>}
    */
-
   removeLiquidity = async ({ event_id }) => await this.__sendTx(
     this.params.contract.getContract().methods.removeLiquidity(event_id),
   );
 
   /**
+   * Buy Fractions
    * @function
-   * @description Buy Fractions
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
-   * @param {Integer} fractions_amount
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @param {number} event.fractions_amount
+   * @return {Promise<TransactionObject>}
    */
-
   buy = async ({ event_id, resultSpace_id, fractions_amount }) => {
     // eslint-disable-next-line no-param-reassign
     fractions_amount = Numbers.toSmartContractDecimals(fractions_amount, 7);
@@ -295,13 +309,14 @@ class ExchangeContract extends IContract {
   };
 
   /**
+   * Sell Fractions
    * @function
-   * @description Sell Fractions
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
-   * @param {Integer} fractions_amount
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @param {number} event.fractions_amount
+   * @return {Promise<TransactionObject>}
    */
-
   sell = async ({ event_id, resultSpace_id, fractions_amount }) => await this.__sendTx(
     this.params.contract
       .getContract()
@@ -309,27 +324,29 @@ class ExchangeContract extends IContract {
   );
 
   /**
+   * Take Fractions out of the pool
    * @function
-   * @description Take Fractions out of the pool
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
-   * @param {Integer} fractions_amount
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @param {number} event.fractions_amount
+   * @return {Promise<TransactionObject>}
    */
-
   pullFractions = async ({ event_id, resultSpace_id, fractions_amount }) => await this.__sendTx(
     this.params.contract
       .getContract()
-      .methods.pullFractions(event_id, resultSpaceId, fractions_amount),
+      .methods.pullFractions(event_id, resultSpace_id, fractions_amount),
   );
 
   /**
+   * Move Fractions to the Pool
    * @function
-   * @description Move Fractions to the Pool
-   * @param {Integer} eventId
-   * @param {Integer} resultSpace_id
-   * @param {Integer} fractions_amount
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @param {number} event.fractions_amount
+   * @return {Promise<TransactionObject>}
    */
-
   pushFractions = async ({ event_id, resultSpace_id, fractions_amount }) => await this.__sendTx(
     this.params.contract
       .getContract()
@@ -337,12 +354,13 @@ class ExchangeContract extends IContract {
   );
 
   /**
+   * Withdraw Wins on end of Event
    * @function
-   * @description Withdraw Wins on end of Event
-   * @param {Integer} event_id
-   * @param {Integer} resultSpace_id
+   * @param {Object} event
+   * @param {number} event.event_id
+   * @param {number} event.resultSpace_id
+   * @return {Promise<TransactionObject>}
    */
-
   withdrawWins = async ({ event_id, resultSpace_id }) => await this.__sendTx(
     this.params.contract
       .getContract()
@@ -350,16 +368,17 @@ class ExchangeContract extends IContract {
   );
 
   /**
-  * @function
-  * @description Deploy the Pool Contract
-
-  */
+   * Deploy the Pool Contract
+   * @param {Object} params
+   * @param {function():void} params.callback
+   * @return {Promise<*|undefined>}
+   */
   deploy = async ({ callback }) => {
     const params = [];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
-    this.__assert();
+    await this.__assert();
     return res;
   };
 }

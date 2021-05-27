@@ -174,10 +174,10 @@ context("ERC20TokenLock Contract", async () => {
         deployed_tokenAddress,
         "Token address should match expected value"
       );
-      let res2 = await erc20Lock.maxAmountToLock();
-      let res3 = await erc20Lock.minAmountToLock();
-      let res4 = await erc20Lock.totalAmountStaked();
-      let res5 = await erc20Lock.getLockedTokens({ address: userAddress });
+      const res2 = await erc20Lock.maxAmountToLock();
+      const res3 = await erc20Lock.minAmountToLock();
+      const res4 = await erc20Lock.totalAmountStaked();
+      const res5 = await erc20Lock.getLockedTokens({ address: userAddress });
       console.log("***init.maxAmountToLock : " + res2);
       console.log("***init.minAmountToLock : " + res3);
       console.log("***init.totalAmountStaked : " + res4);
@@ -243,13 +243,13 @@ context("ERC20TokenLock Contract", async () => {
       res = await erc20Lock.lock({
         address: userAddress,
         amount: minTokenAmount,
-        endDate: endDate,
+        endDate,
       });
       expect(res).to.not.equal(false);
 
       // Check if user locked tokens successfully
       res = await erc20Lock.getLockedTokensInfo({ address: userAddress });
-      let retEndDate = Numbers.timeToSmartContractTime(res.endDate);
+      const retEndDate = Numbers.timeToSmartContractTime(res.endDate);
 
       assert(res.startDate != null, "startDate should be valid");
       console.log("***lock.tokens.endDate:     " + endDate);
@@ -267,7 +267,7 @@ context("ERC20TokenLock Contract", async () => {
     "should get totalAmountStaked == " + minTokenAmount,
     mochaAsync(async () => {
       // Create Event
-      let res = await erc20Lock.totalAmountStaked();
+      const res = await erc20Lock.totalAmountStaked();
       expect(Numbers.fromExponential(res).toString()).to.equal(
         Number(minTokenAmount).toString()
       );
@@ -279,7 +279,7 @@ context("ERC20TokenLock Contract", async () => {
     mochaAsync(async () => {
       // release and withdraw unlocked tokens
       try {
-        let res = await erc20Lock.release({ address: userAddress });
+        const res = await erc20Lock.release({ address: userAddress });
         assert.fail();
       } catch (err) {
         assert(
