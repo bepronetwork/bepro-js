@@ -24,6 +24,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     event PackBought(address indexed by, uint256 indexed packId);
     event PackOpened(address indexed by, uint256 indexed packId);
     event PackDelete(uint256 indexed packId);
+    event NftMinted(uint256 indexed nftId);
 
     uint256 public _realFvrTokenPriceUSD = 0;
 
@@ -195,6 +196,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
         alreadyMinted[tokenIdToMint] = true;
         _safeMint(msg.sender, tokenIdToMint);
+        emit NftMinted(tokenIdToMint);
     }
 
     function setPurchaseTokenAddress(ERC20 purchaseToken) public onlyOwner {
