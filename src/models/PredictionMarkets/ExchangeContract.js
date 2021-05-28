@@ -6,9 +6,10 @@ import IContract from '../IContract';
  * @typedef {Object} ExchangeContract~Options
  * @property {number} decimals
  * @property {string} tokenAddress
- * @property {Web3} web3
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
- * @property {Account} [acc]
  */
 
 /**
