@@ -211,14 +211,12 @@ context('ERC721 Collectibles', async () => {
     'should verify the current Token Metadatta URI',
     mochaAsync(async () => {
       const res = await erc721Contract.getURITokenID({ tokenID: 1000 });
-      console.log('res', res);
     }),
   );
 
   it(
     'should get the available token ids',
     mochaAsync(async () => {
-      console.log('address', userAddress);
       tokensHeld = await erc721Contract.getRegisteredIDs({
         address: userAddress,
       });
@@ -245,7 +243,6 @@ context('ERC721 Collectibles', async () => {
         to: userAddress,
         tokenID: 1003,
       });
-      console.log('res', res);
       expect(res).to.equal(false);
     }),
   );

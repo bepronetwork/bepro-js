@@ -30,11 +30,8 @@ context('ERC20', async () => {
     'should deploy a ERC20 contract',
     mochaAsync(async () => {
       userAddress = await app.getAddress();
-      console.log('---should deploy a ERC20 contract...');
-      console.log(`---userAddress: ${userAddress}`);
       /* Create Contract */
       erc20Contract = app.getERC20Contract({});
-      console.log('---erc20Contract bp0');
       /* Deploy */
       const res = await erc20Contract.deploy({
         name: 'test',
@@ -43,13 +40,10 @@ context('ERC20', async () => {
         // /distributionAddress : app.account.getAddress() //original
         distributionAddress: userAddress, // local test with ganache
       });
-      console.log('---erc20Contract bp1');
       await erc20Contract.__assert();
-      console.log('---erc20Contract bp2');
       contractAddress = erc20Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(contractAddress).to.equal(res.contractAddress);
-      console.log(`Deployed ERC20Contract address: ${contractAddress}`);
       deployed_tokenAddress = contractAddress;
     }),
   );

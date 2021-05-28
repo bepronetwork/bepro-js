@@ -1,8 +1,9 @@
-node_modules
-/node_modules
+node_modules/
 .env
 package-lock.json
 .idea
-
+xunit.xml
 build/
 docs/
+
+xunit.xml
