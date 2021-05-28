@@ -3,6 +3,3 @@ node_modules
 .env
 package-lock.json
 .idea
-
-/build
-/docs
