@@ -10,7 +10,7 @@ import Web3Connection from '../Web3Connection';
  * @property {Web3Connection} [web3Connection] created from above params
  * @property {string} [contractAddress]
  */
- 
+
 /**
  * Contract Object Interface
  * @class IContract

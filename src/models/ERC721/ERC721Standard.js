@@ -9,7 +9,7 @@ import ERC20Contract from '../ERC20/ERC20Contract';
  * @property {Web3Connection} [web3Connection] created from above params
  * @property {string} [contractAddress]
  */
- 
+
 /**
  * ERC721Contract Object
  * @class ERC721Contract

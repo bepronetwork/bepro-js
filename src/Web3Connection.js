@@ -80,7 +80,7 @@ class Web3Connection {
     } else {
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(this.opt.web3Connection));
     }
-    
+
     if (!this.localtest && this.test) {
       this.account = new Account(
         this.web3,
@@ -96,7 +96,7 @@ class Web3Connection {
         'Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet',
       );
     }
-  };
+  }
 
   /**
    * Login with Metamask/Web3 Wallet - substitutes start()
@@ -131,7 +131,7 @@ class Web3Connection {
    */
   async getETHNetwork() {
     const netId = await this.web3.eth.net.getId();
-	// eslint-disable-next-line no-prototype-builtins
+    // eslint-disable-next-line no-prototype-builtins
     const networkName = networksEnum.hasOwnProperty(netId)
       ? networksEnum[netId]
       : await this.web3.currentProvider.host; // 'Unknown';
