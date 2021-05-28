@@ -14,7 +14,7 @@ const testConfig = {
 
 // NOTE: We only test ERC20contract because all the other models are similar
 // We want to test generic behaviour like connect to RINKEBY TESTNET and MAINNET and check expected values
-context("---generics---", async () => {
+context("Generics", async () => {
   let erc20;
 
   before(async () => {

@@ -52,7 +52,6 @@ class Web3Connection {
           this.web3,
           this.web3.eth.accounts.privateKeyToAccount(opt.privateKey),
         );
-        console.log(`My address: ${this.account.getAddress()}`);
       }
     }
   }
@@ -86,7 +85,6 @@ class Web3Connection {
         this.web3,
         this.web3.eth.accounts.privateKeyToAccount(this.opt.privateKey),
       );
-      console.log(`My address: ${this.account.getAddress()}`);
     }
 
     if (typeof window !== 'undefined') {
