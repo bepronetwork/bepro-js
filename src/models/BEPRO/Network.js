@@ -11,7 +11,7 @@ const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
  * @typedef {Object} BEPRONetwork~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
- * @property {Web3Connection} [web3Connection] created from above params
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
  * @property {string} [tokenAddress]
  * */

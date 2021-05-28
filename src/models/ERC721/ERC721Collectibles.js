@@ -9,7 +9,7 @@ const baseFeeAddress = '0x6714d41094a264bb4b8fcb74713b42cfee6b4f74';
  * @typedef {Object} ERC721Contract~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
- * @property {Web3Connection} [web3Connection] created from above params
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
  */
 

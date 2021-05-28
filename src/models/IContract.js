@@ -7,7 +7,7 @@ import Web3Connection from '../Web3Connection';
  * @property {boolean} localtest ganache local blockchain
  * @property {ABI} abi
  * @property {string} tokenAddress
- * @property {Web3Connection} [web3Connection] created from above params
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
  */
 
