@@ -34,13 +34,8 @@ context("ERC20", async () => {
       let params = (({ abi, contract, web3, web3Connection, ...obj }) => obj)(
         erc20Contract.params
       );
-      console.log(
-        "ERC20Contract.params.before.start: " + JSON.stringify(params)
-      );
 
       userAddress = await erc20Contract.getUserAddress();
-      console.log("---should deploy a new ERC20 contract...");
-      console.log("---userAddress: " + userAddress);
       // Deploy
       let res = await erc20Contract.deploy({
         name: "test",
@@ -52,7 +47,6 @@ context("ERC20", async () => {
       contractAddress = erc20Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(contractAddress).to.equal(res.contractAddress);
-      console.log("Deployed ERC20Contract address: " + contractAddress);
       deployed_tokenAddress = contractAddress;
     })
   );
