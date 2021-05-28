@@ -103,7 +103,7 @@ class Web3Connection {
    * @function
    * @return {Promise<boolean>}
    */
-  login = async () => {
+  async login() {
     try {
       if (typeof window === 'undefined') {
         return false;
@@ -118,7 +118,7 @@ class Web3Connection {
     } catch (err) {
       throw err;
     }
-  };
+  }
 
   /** ***** */
   /** UTILS */

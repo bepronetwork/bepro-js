@@ -29,9 +29,8 @@ class IContract {
         throw new Error('No ABI Interface provided');
       }
 
-      this.web3Connection = !web3Connection
-        ? new Web3Connection(params)
-        : web3Connection;
+      if (!web3Connection) this.web3Connection = new Web3Connection(params);
+      else this.web3Connection = web3Connection;
 
       this.params = {
         web3Connection: this.web3Connection,
