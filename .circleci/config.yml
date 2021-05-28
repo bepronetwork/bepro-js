@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node:
     docker:
-      - image: circleci/node:14.17.0
+      - image: circleci/node:14.17
       - image: trufflesuite/ganache-cli
         # environment:
         #   FOOD: $BAR
