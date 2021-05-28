@@ -15,7 +15,7 @@
     },
     "scripts": {
         "pretest": "npm run build && truffle compile && truffle migrate --network development",
-        "test": "./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
+        "test": "./node_modules/.bin/mocha --exit ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
         "test:truffle": "truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "index": "babel-node ./index.js --presets es2015,stage-2",
         "build": "babel ./src --out-dir lib --copy-files -d ./build",
@@ -26,7 +26,7 @@
         "jsdoc:serve": "http-server ./docs/ -o",
         "lint": "eslint ./src --cache",
         "lint:fix": "eslint ./src --fix",
-        "ganache:start": "ganache-cli -p 8545",
+        "ganache:start": "ganache-cli -p 8545 -q",
         "watch": "onchange 'src/**/*.js' -- npm run build",
         "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"Already built\""
     },
