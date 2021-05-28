@@ -34,6 +34,14 @@ commands:
           key: *node_cache_key
           paths:
             - node_modules
+jobs:
+  tests:
+    working_directory: *default_workspace
+    executor: node
+    steps:
+      - prepare_code
+      - run: mkdir ~/reports
+
 workflows:
   code-checks:
     jobs:
