@@ -7,9 +7,10 @@ import Numbers from '../../utils/Numbers';
 /**
  * @typedef {Object} StakingContract~Options
  * @property {string} tokenAddress
- * @property {Web3} web3
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
- * @property {Account} [acc]
  */
 
 /**
@@ -23,9 +24,8 @@ class StakingContract extends IContract {
       super({ ...params, abi: staking });
       if (params.tokenAddress) {
         this.params.ERC20Contract = new ERC20Contract({
-          web3: params.web3,
+          web3Connection: this.web3Connection,
           contractAddress: params.tokenAddress,
-          acc: params.acc,
         });
       }
     } catch (err) {
@@ -431,11 +431,12 @@ class StakingContract extends IContract {
     this.params.contract.use(staking, this.getAddress());
 
     /* Set Token Address Contract for easy access */
-    this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
-      contractAddress: await this.erc20(),
-      acc: this.acc,
-    });
+    if (!this.params.ERC20Contract) {
+      this.params.ERC20Contract = new ERC20Contract({
+        web3Connection: this.web3Connection,
+        contractAddress: await this.erc20(),
+      });
+    }
 
     /* Assert Token Contract */
     await this.params.ERC20Contract.__assert();

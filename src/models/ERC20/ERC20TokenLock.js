@@ -9,9 +9,10 @@ const assert = require('assert');
 /**
  * @typedef {Object} ERC20TokenLock~Options
  * @property {string} tokenAddress
- * @property {Web3} web3
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
- * @property {Account} [acc]
  */
 
 /**
@@ -25,12 +26,9 @@ class ERC20TokenLock extends IContract {
       super({ ...params, abi: tokenlock });
       if (params.tokenAddress) {
         this.params.ERC20Contract = new ERC20Contract({
-          web3: params.web3,
+          web3Connection: this.web3Connection,
           contractAddress: params.tokenAddress,
-          acc: params.acc,
         });
-      } else {
-        throw new Error("Please provide an ERC20 Address in 'tokenAddress'");
       }
     } catch (err) {
       throw err;
@@ -299,9 +297,8 @@ class ERC20TokenLock extends IContract {
     /* Set Token Address Contract for easy access */
     if (!this.params.ERC20Contract) {
       this.params.ERC20Contract = new ERC20Contract({
-        web3: this.web3,
+        web3Connection: this.web3Connection,
         contractAddress: await this.erc20(),
-        acc: this.acc,
       });
     }
     /* Assert Token Contract */

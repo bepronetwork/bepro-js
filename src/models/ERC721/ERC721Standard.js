@@ -4,9 +4,10 @@ import ERC20Contract from '../ERC20/ERC20Contract';
 
 /**
  * @typedef {Object} ERC721Standard~Options
- * @property {Web3} web3
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
- * @property {Account} [acc]
  */
 
 /**
@@ -35,9 +36,8 @@ class ERC721Standard extends IContract {
 
     /* Set Token Address Contract for easy access */
     this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
+      web3Connection: this.web3Connection,
       contractAddress: await this.purchaseToken(),
-      acc: this.acc,
     });
 
     /* Assert Token Contract */
