@@ -2,7 +2,6 @@
 /* eslint-disable max-len */
 import Web3 from 'web3';
 import {
-  ExchangeContract,
   ERC20Contract,
   StakingContract,
   BEPRONetwork,
@@ -119,26 +118,6 @@ class Application {
         return true;
       }
       return false;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  /**
-   * Create a Exchange Contract
-   * @function
-   * @param {Object} params
-   * @param {Address} [params.contractAddress=null]
-   * @throws {Error}
-   * @return {ExchangeContract} ExchangeContract
-   */
-  getExchangeContract = ({ contractAddress = null } = {}) => {
-    try {
-      return new ExchangeContract({
-        web3: this.web3,
-        contractAddress,
-        acc: this.test && !this.localtest ? this.account : null,
-      });
     } catch (err) {
       throw err;
     }

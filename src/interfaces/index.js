@@ -1,6 +1,5 @@
 /* eslint-disable global-require , import/no-unresolved, import/no-extraneous-dependencies */
 const index = {
-  exchange: require('../contracts/Exchange.json'),
   staking: require('../contracts/StakingContract.json'),
   tokenlock: require('../contracts/ERC20TokenLock.json'),
   ierc20: require('../contracts/Token.json'),
