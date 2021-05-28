@@ -1,11 +1,14 @@
 import Contract from '../utils/Contract';
+import Web3Connection from '../Web3Connection';
 
 /**
  * @typedef {Object} IContract~Options
- * @property {Web3} web3
+ * @property {boolean} test
+ * @property {boolean} localtest ganache local blockchain
  * @property {ABI} abi
+ * @property {string} tokenAddress
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
- * @property {Account} [acc]
  */
 
 /**
@@ -15,32 +18,28 @@ import Contract from '../utils/Contract';
  */
 class IContract {
   constructor({
-    web3,
-    contractAddress = null /* If not deployed */,
+    web3Connection = null, // Web3Connection if exists, otherwise create one from the rest of params
+    contractAddress = null, // If not deployed
     abi,
-    acc,
     tokenAddress,
+    ...params
   }) {
     try {
       if (!abi) {
         throw new Error('No ABI Interface provided');
       }
-      if (!web3) {
-        throw new Error('Please provide a valid web3 provider');
-      }
 
-      this.web3 = web3;
+      if (!web3Connection) this.web3Connection = new Web3Connection(params);
+      else this.web3Connection = web3Connection;
 
-      if (acc) {
-        this.acc = acc;
-      }
       this.params = {
-        web3,
+        web3Connection: this.web3Connection,
         abi,
         contractAddress,
         tokenAddress,
-        contract: new Contract(web3, abi, contractAddress),
       };
+
+      if (this.web3Connection.test) this._loadDataFromWeb3Connection();
     } catch (err) {
       throw err;
     }
@@ -295,17 +294,6 @@ class IContract {
   }
 
   /**
-   * Get contract current user/sender address
-   * @return {Promise<string>|string}
-   */
-  async getUserAddress() {
-    if (this.acc) return this.acc.getAddress();
-
-    const accounts = await this.params.web3.eth.getAccounts();
-    return accounts[0];
-  }
-
-  /**
    * Verify that current user/sender is admin, throws an error otherwise
    * @async
    * @throws {Error} Only admin can perform this operation
@@ -333,6 +321,77 @@ class IContract {
     if (paused) {
       throw new Error('Contract is paused');
     }
+  }
+
+  /**
+   * @function
+   * @description Load data from Web3Connection object,
+   * Called at start when testing or at login on MAINNET
+   */
+  _loadDataFromWeb3Connection() {
+    this.web3 = this.web3Connection.web3;
+    this.acc = this.web3Connection.account;
+
+    // update some params properties with new values
+    this.params = {
+      ...this.params,
+      web3: this.web3,
+      contract: new Contract(
+        this.web3,
+        this.params.abi,
+        this.params.contractAddress,
+      ),
+    };
+  }
+
+  /** ***** */
+  /** Web3Connection functions */
+  /** ***** */
+
+  /**
+   * @function
+   * @description Start the Web3Connection
+   */
+  async start() {
+    this.web3Connection.start();
+    this._loadDataFromWeb3Connection();
+  }
+
+  /**
+   * @function
+   * @description Login with Metamask/Web3 Wallet - substitutes start()
+   * @return {Promise<Boolean>} True is login was successful
+   */
+  async login() {
+    const loginOk = await this.web3Connection.login();
+    if (loginOk) this._loadDataFromWeb3Connection();
+    return loginOk;
+  }
+
+  /**
+   * @function
+   * @description Get ETH Network
+   * @return {Promise<string>} Network Name (Ex : Kovan)
+   */
+  async getETHNetwork() {
+    return await this.web3Connection.getETHNetwork();
+  }
+
+  /**
+   * Get contract current user/sender address
+   * @return {Promise<string>|string}
+   */
+  async getUserAddress() {
+    return await this.web3Connection.getAddress();
+  }
+
+  /**
+   * @function
+   * @description Get user ETH Balance of Address connected via login()
+   * @return {Promise<string>} User ETH Balance
+   */
+  async getUserETHBalance() {
+    return await this.web3Connection.getETHBalance();
   }
 }
 

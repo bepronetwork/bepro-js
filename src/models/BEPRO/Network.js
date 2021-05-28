@@ -9,9 +9,11 @@ const beproAddress = '0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A';
 
 /**
  * @typedef {Object} BEPRONetwork~Options
- * @property {Web3} web3
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
- * @property {Account} [acc]
+ * @property {string} [tokenAddress]
  * */
 
 /**
@@ -67,9 +69,8 @@ class BEPRONetwork extends IContract {
 
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
-      contractAddress: this.params.tokenAddress || beproAddress,
-      acc: this.acc,
+      web3Connection: this.web3Connection,
+      contractAddress: params.tokenAddress || beproAddress,
     });
 
     // Assert Token Contract
@@ -96,7 +97,10 @@ class BEPRONetwork extends IContract {
    */
   async getAmountofIssuesOpened() {
     return parseInt(
-      await this.params.contract.getContract().methods.incrementIssueID().call(),
+      await this.params.contract
+        .getContract()
+        .methods.incrementIssueID()
+        .call(),
       10,
     );
   }
@@ -113,7 +117,7 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * Get Amount of Needed for Approve
+   * Get Amount of percentage Needed for Approve
    * @returns {Promise<number>}
    */
   async percentageNeededForApprove() {
@@ -127,7 +131,7 @@ class BEPRONetwork extends IContract {
   }
 
   /**
-   * @description Get Amount of Needed for Dispute
+   * @description Get Amount of percentage Needed for Dispute
    * @returns {Promise<number>}
    */
   async percentageNeededForDispute() {
@@ -142,7 +146,7 @@ class BEPRONetwork extends IContract {
 
 
   /**
-   * Get Amount of Needed for Merge
+   * Get Amount of percentage Needed for Merge
    * @returns {Promise<number>}
    */
   async percentageNeededForMerge() {
