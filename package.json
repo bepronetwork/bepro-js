@@ -26,7 +26,7 @@
         "jsdoc:serve": "http-server ./docs/ -o",
         "lint": "eslint ./src --cache",
         "lint:fix": "eslint ./src --fix",
-        "ganache:start": "ganache-cli -p 8545",
+        "ganache:start": "ganache-cli -p 8545 -q",
         "watch": "onchange 'src/**/*.js' -- npm run build",
         "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"Already built\""
     },
