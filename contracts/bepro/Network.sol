@@ -2,7 +2,7 @@ pragma solidity >=0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "../utils/Ownable.sol";
+import "../utils/Governed.sol";
 
 
 /**
@@ -26,7 +26,7 @@ interface _IERC20 is IERC20  {
 /**
  * @title BEPRO Network Contract
  */
-contract BEPRONetwork is Pausable, Ownable{
+contract BEPRONetwork is Pausable, Governed{
     using SafeMath for uint256;
 
     _IERC20 public beproToken;
@@ -93,8 +93,9 @@ contract BEPRONetwork is Pausable, Ownable{
     event ApproveMerge(uint256 indexed id, uint256 indexed mergeID, uint256 votes, address indexed approver);
     event CloseIssue(uint256 indexed id, uint256 indexed mergeID, address[] indexed addresses);
 
-    constructor(address _tokenAddress) public { 
+    constructor(address _tokenAddress, address _governor) public { 
         beproToken = _IERC20(_tokenAddress);
+        _governor = _governor;
     }
 
     function lockBepro(uint256 _beproAmount) public {
@@ -273,7 +274,7 @@ contract BEPRONetwork is Pausable, Ownable{
         }
     }
 
-  /**
+   /**
      * @dev Owner finalizes the issue and distributes the bepro or rejects the PR
      * @param _issueID issue id (mapping with github)
      * @param _prAddresses PR Address
@@ -366,28 +367,28 @@ contract BEPRONetwork is Pausable, Ownable{
     /**
      * @dev Change BEPRO Token Address (Upgrade)
      */
-    function changeBEPROAddress(address _newAddress) public onlyOwner {
+    function changeBEPROAddress(address _newAddress) public onlyGovernor {
         beproToken = _IERC20(_newAddress);
     }
 
     /**
      * @dev Change Fee Address
     */
-    function editFeeAddress(address _newAddress) public onlyOwner {
+    function editFeeAddress(address _newAddress) public onlyGovernor {
         feeAddress = _newAddress;
     }
 
     /**
      * @dev Change Share Fee Amount
     */
-    function editFeeShare(uint256 _feeShare) public onlyOwner {
+    function editFeeShare(uint256 _feeShare) public onlyGovernor {
         feeShare = _feeShare;
     }
 
     /**
      * @dev Upgrade Contract Version
      */
-    function upgradeContract(address _newContract) public onlyOwner whenPaused {
+    function upgradeContract(address _newContract) public onlyGovernor whenPaused {
         //To be done
     }
 }
