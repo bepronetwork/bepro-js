@@ -553,7 +553,9 @@ class Network extends IContract {
    * Deploys current contract and awaits for {@link TokensNetwork#__assert}
    * @function
    * @param {Object} params
-   * @param {string} params.tokenAddress
+   * @param {string} params.settlerTokenAddress
+   * @param {string} params.transactionTokenAddress
+   * @param {string} params.governanceAddress
    * @param {function():void} params.callback
    * @return {Promise<*|undefined>}
    */
