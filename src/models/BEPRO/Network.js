@@ -67,7 +67,7 @@ class Network extends IContract {
 
     const transactionalAddress = await this.getTransactionTokenAddress();
     const settlerAddresss = await this.getSettlerTokenAddress();
-    console.log("here")
+    console.log('here');
 
     // Set Token Address Contract for easy access
     this.params.transactionalToken = new ERC20Contract({
@@ -401,7 +401,7 @@ class Network extends IContract {
     });
   };
 
-   /**
+  /**
    * Approve ERC20 Allowance
    * @function
    * @return {Promise<number>}
@@ -437,12 +437,12 @@ class Network extends IContract {
    * @return {Promise<number>}
    */
    isApprovedTransactionalToken = async ({ amount, address }) => await this.getTransactionTokenContract().isApproved({
-    address,
-    amount,
-    spenderAddress: this.getAddress(),
-  });
+     address,
+     amount,
+     spenderAddress: this.getAddress(),
+   });
 
-  /**
+   /**
    * lock tokens for oracles
    * @param {Object} params
    * @params params.tokenAmount {number}
@@ -450,18 +450,18 @@ class Network extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  async lock({ tokenAmount }) {
-    if (tokenAmount <= 0) {
-      throw new Error('Token Amount has to be higher than 0');
-    }
+   async lock({ tokenAmount }) {
+     if (tokenAmount <= 0) {
+       throw new Error('Token Amount has to be higher than 0');
+     }
 
 
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.lock(tokenAmount),
-    );
-  }
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.lock(tokenAmount),
+     );
+   }
 
-  /**
+   /**
    * Unlock Tokens for oracles
    * @param {Object} params
    * @params params.tokenAmount {number}
@@ -469,36 +469,36 @@ class Network extends IContract {
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-  async unlock({ tokenAmount, from }) {
-    if (tokenAmount <= 0) {
-      throw new Error('Tokens Amount has to be higher than 0');
-    }
+   async unlock({ tokenAmount, from }) {
+     if (tokenAmount <= 0) {
+       throw new Error('Tokens Amount has to be higher than 0');
+     }
 
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.unlock(tokenAmount, from),
-    );
-  }
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.unlock(tokenAmount, from),
+     );
+   }
 
-  /**
+   /**
    * Delegated Oracles to others
    * @param {Object} params
    * @param {number} params.tokenAmount
    * @param {Address} params.delegatedTo
    * @return {Promise<TransactionObject>}
    */
-  async delegateOracles({ tokenAmount, delegatedTo }) {
-    if (tokenAmount <= 0) {
-      throw new Error('Tokens Amount has to be higher than 0');
-    }
+   async delegateOracles({ tokenAmount, delegatedTo }) {
+     if (tokenAmount <= 0) {
+       throw new Error('Tokens Amount has to be higher than 0');
+     }
 
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.unlock(tokenAmount, delegatedTo),
-    );
-  }
+     return await this.__sendTx(
+       this.params.contract
+         .getContract()
+         .methods.unlock(tokenAmount, delegatedTo),
+     );
+   }
 
-  /**
+   /**
    * open Issue
    * @param {Object} params
    * @param {number} params.tokenAmount
@@ -507,54 +507,54 @@ class Network extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  async openIssue({ tokenAmount, cid }) {
-    if (tokenAmount < 0) {
-      throw new Error('Tokens Amount has to be higher than 0');
-    }
+   async openIssue({ tokenAmount, cid }) {
+     if (tokenAmount < 0) {
+       throw new Error('Tokens Amount has to be higher than 0');
+     }
 
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.openIssue(cid, tokenAmount),
-    );
-  }
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.openIssue(cid, tokenAmount),
+     );
+   }
 
-  /**
+   /**
    * open Issue
    * @param {Object} params
    * @param {number} params.issueId
    * @return {Promise<TransactionObject>}
    */
-  async approveIssue({ issueId }) {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.approveIssue(issueId),
-    );
-  }
+   async approveIssue({ issueId }) {
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.approveIssue(issueId),
+     );
+   }
 
-  /**
+   /**
    * redeem Issue
    * @param {Object} params
    * @param {number} params.issueId
    * @return {Promise<TransactionObject>}
    */
-  async redeemIssue({ issueId }) {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.redeemIssue(issueId),
-    );
-  }
+   async redeemIssue({ issueId }) {
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.redeemIssue(issueId),
+     );
+   }
 
-  /**
+   /**
    * open Issue
    * @param {Object} params
    * @param {number} params.issueId
    * @param {number} params.mergeId
    * @return {Promise<TransactionObject>}
    */
-  async approveMerge({ issueId, mergeId }) {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.approveMerge(issueId, mergeId),
-    );
-  }
+   async approveMerge({ issueId, mergeId }) {
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.approveMerge(issueId, mergeId),
+     );
+   }
 
-  /**
+   /**
    * open Issue
    * @param {Object} params
    * @param {number} params.issueID
@@ -562,20 +562,20 @@ class Network extends IContract {
    * @param {address} params.address
    * @return {Promise<TransactionObject>}
    */
-  async updateIssue({ issueID, tokenAmount }) {
-    if (tokenAmount < 0) {
-      throw new Error('Tokens Amount has to be higher than 0');
-    }
+   async updateIssue({ issueID, tokenAmount }) {
+     if (tokenAmount < 0) {
+       throw new Error('Tokens Amount has to be higher than 0');
+     }
 
 
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.updateIssue(issueID, tokenAmount),
-    );
-  }
+     return await this.__sendTx(
+       this.params.contract
+         .getContract()
+         .methods.updateIssue(issueID, tokenAmount),
+     );
+   }
 
-  /**
+   /**
    * Propose Merge of Issue
    * @param {Object} params
    * @param {number} params.issueID
@@ -583,29 +583,29 @@ class Network extends IContract {
    * @param {number[]} params.prAmounts
    * @return {Promise<TransactionObject>}
    */
-  async proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
-    if (prAddresses.length !== prAmounts.length) {
-      throw new Error('prAddresses dont match prAmounts size');
-    }
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.proposeIssueMerge(issueID, prAddresses, prAmounts),
-    );
-  }
+   async proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
+     if (prAddresses.length !== prAmounts.length) {
+       throw new Error('prAddresses dont match prAmounts size');
+     }
+     return await this.__sendTx(
+       this.params.contract
+         .getContract()
+         .methods.proposeIssueMerge(issueID, prAddresses, prAmounts),
+     );
+   }
 
-  /**
+   /**
    * close Issue
    * @param {Object} params
    * @param {number} params.issueID
    * @param {number} params.mergeID
    * @return {Promise<TransactionObject>}
    */
-  async closeIssue({ issueID, mergeID }) {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.closeIssue(issueID, mergeID),
-    );
-  }
+   async closeIssue({ issueID, mergeID }) {
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.closeIssue(issueID, mergeID),
+     );
+   }
 
   /**
    * Deploys current contract and awaits for {@link TokensNetwork#__assert}
