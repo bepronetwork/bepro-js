@@ -1,5 +1,4 @@
 import ERC20Contract from './ERC20/ERC20Contract';
-import ExchangeContract from './PredictionMarkets/ExchangeContract';
 import StakingContract from './Staking/StakingContract';
 import ERC20TokenLock from './ERC20/ERC20TokenLock';
 import ERC721Collectibles from './ERC721/ERC721Collectibles';
@@ -9,7 +8,6 @@ import Network from './BEPRO/Network';
 
 export {
   ERC20Contract,
-  ExchangeContract,
   StakingContract,
   ERC20TokenLock,
   ERC721Collectibles,

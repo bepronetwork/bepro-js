@@ -2,7 +2,6 @@ import Application from './build/Application';
 import DexStorage from './build/utils/IPFS';
 import Network from './build/models/bepro/Network';
 import ERC20Contract from './build/models/ERC20/ERC20Contract';
-import ExchangeContract from './build/models/PredictionMarkets/ExchangeContract';
 import StakingContract from './build/models/Staking/StakingContract';
 import ERC20TokenLock from './build/models/ERC20/ERC20TokenLock';
 import ERC721Collectibles from './build/models/ERC721/ERC721Collectibles';
@@ -13,7 +12,6 @@ export {
 	DexStorage,
 	ERC20Contract,
 	Network,
-	ExchangeContract,
 	StakingContract,
 	ERC20TokenLock,
 	ERC721Collectibles,

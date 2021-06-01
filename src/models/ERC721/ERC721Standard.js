@@ -11,8 +11,8 @@ import ERC20Contract from '../ERC20/ERC20Contract';
  */
 
 /**
- * ERC721Contract Object
- * @class ERC721Contract
+ * ERC721Standard Object
+ * @class ERC721Standard
  * @param {ERC721Standard~Options} options
  */
 class ERC721Standard extends IContract {
