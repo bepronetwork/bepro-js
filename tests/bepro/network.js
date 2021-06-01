@@ -132,21 +132,4 @@ context("Network Contract", async () => {
       /* Get result */
     })
   );
-
-  it(
-    "should open an issue",
-    mochaAsync(async () => {
-      /* Approve tokens lock */
-      var res = await networkContract.approveTransactionalERC20Token();
-      expect(res).to.not.equal(false);
-      /* Call the function */
-      res = await networkContract.openIssue({
-        cid : 'sdfgs',
-        tokenAmount : 1000
-      });
-      expect(res).to.not.equal(false);
-      /* Get result */
-    })
-  );
-
 });
