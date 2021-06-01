@@ -6,7 +6,6 @@ import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
 class Network extends IContract {
-
   constructor(params) {
     super({ abi: network, ...params });
   }
