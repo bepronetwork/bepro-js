@@ -6,7 +6,7 @@ import ERC20Contract from '../ERC20/ERC20Contract';
 const baseFeeAddress = '0x6714d41094a264bb4b8fcb74713b42cfee6b4f74';
 
 /**
- * @typedef {Object} ERC721Contract~Options
+ * @typedef {Object} ERC721Collectibles~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
  * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
@@ -14,9 +14,9 @@ const baseFeeAddress = '0x6714d41094a264bb4b8fcb74713b42cfee6b4f74';
  */
 
 /**
- * ERC721Contract Object
+ * ERC721Collectibles Object
  * @class ERC721Collectibles
- * @param {ERC721Contract~Options} options
+ * @param {ERC721Collectibles~Options} options
  */
 class ERC721Collectibles extends IContract {
   constructor(params = {}) {
