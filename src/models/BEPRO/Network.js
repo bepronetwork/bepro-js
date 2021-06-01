@@ -7,8 +7,8 @@ import ERC20Contract from '../ERC20/ERC20Contract';
 
 
 /**
- * OpenerRealFvr Object
- * @class OpenerRealFvr
+ * Network Object
+ * @class Network
  * @param {Network~Options} options
  */
 
