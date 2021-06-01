@@ -6,7 +6,6 @@ import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
 
-
 /**
  * OpenerRealFvr Object
  * @class OpenerRealFvr
@@ -55,12 +54,13 @@ class Network extends IContract {
     // Assert Token Contract
     await this.params.settlerToken.__assert();
   };
+
   /**
    * Get Open Issues Available
    * @param {Address} address
    * @returns {number[]}
    */
-   async getIssuesByAddress(address) {
+  async getIssuesByAddress(address) {
     const res = await this.params.contract
       .getContract()
       .methods.getIssuesByAddress(address)
