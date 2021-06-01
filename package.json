@@ -1,6 +1,6 @@
 {
     "name": "bepro-js",
-    "version": "1.2.5-beta",
+    "version": "1.2.6",
     "description": "",
     "main": "index.js",
     "engines": {
@@ -99,7 +99,8 @@
             "stage-2"
         ],
         "plugins": [
-            "transform-runtime", "transform-remove-console"
+            "transform-runtime",
+            "transform-remove-console"
         ],
         "sourceMaps": true,
         "retainLines": true
