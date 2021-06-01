@@ -98,8 +98,7 @@
             "stage-2"
         ],
         "plugins": [
-            "transform-runtime",
-            "transform-remove-console"
+            "transform-runtime"
         ],
         "sourceMaps": true,
         "retainLines": true

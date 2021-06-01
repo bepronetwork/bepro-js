@@ -65,6 +65,7 @@ contract Network is Pausable, Governed{
 
     struct Issue {
         uint256 _id;
+        string cid;
         uint256 creationDate;
         uint256 tokensStaked;
         address issueGenerator;
@@ -222,10 +223,11 @@ contract Network is Pausable, Governed{
      * @dev open an Issue with transaction Tokens owned
      * 1st step
      */
-    function openIssue(uint256 _tokenAmount) public whenNotPaused {
+    function openIssue(string memory _cid, uint256 _tokenAmount) public whenNotPaused {
         // Open Issue
         Issue memory issue;
         issue._id = incrementIssueID;
+        issue.cid = _cid;
         issue.tokensStaked = _tokenAmount;
         issue.issueGenerator = msg.sender;
         issue.creationDate = block.timestamp;
@@ -247,8 +249,6 @@ contract Network is Pausable, Governed{
         issues[_issueId].canceled = true;
         require(transactionToken.transfer(msg.sender, issues[_issueId].tokensStaked), "Transfer not sucessful");
     }
-
-
 
     /**
      * @dev update an Issue with transaction tokens owned
@@ -348,9 +348,9 @@ contract Network is Pausable, Governed{
         return voter.votesDelegatedByOthers.add(voter.votesDelegated[_address]);
     }
     
-    function getIssueById(uint256 _issueID) public returns (uint256, uint256, uint256, address, uint256, uint256, bool, bool){
+    function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, uint256, bool, bool){
         Issue memory issue = issues[_issueID];
-        return (issue._id, issue.tokensStaked, issue.creationDate, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
+        return (issue._id, issue.cid, issue.tokensStaked, issue.creationDate, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
     }
 
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, uint256, address[] memory, uint256[] memory, address){
@@ -402,7 +402,7 @@ contract Network is Pausable, Governed{
      */
     function changeTimeOpenForIssueApprove(uint256 _timeOpenForIssueApprove) public onlyGovernor {
         require(_timeOpenForIssueApprove < 20 days, "Time open for issue has to be higher than lower than 20 days");
-        require(_timeOpenForIssueApprove >= 2 days, "Time open for issue has to be higher than 2 days");
+        require(_timeOpenForIssueApprove >= 1 minutes, "Time open for issue has to be higher than 1 minutes");
         timeOpenForIssueApprove = _timeOpenForIssueApprove;
     }
 

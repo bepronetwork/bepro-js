@@ -62,11 +62,12 @@ class Network extends IContract {
       );
     }
 
-    let transactionalAddress = await this.getTransactionTokenAddress();
-    let settlerAddresss = await this.getSettlerTokenAddress();
-
     // Use ABI
     this.params.contract.use(network, this.getAddress());
+
+    const transactionalAddress = await this.getTransactionTokenAddress();
+    const settlerAddresss = await this.getSettlerTokenAddress();
+    console.log("here")
 
     // Set Token Address Contract for easy access
     this.params.transactionalToken = new ERC20Contract({
@@ -74,16 +75,15 @@ class Network extends IContract {
       contractAddress: transactionalAddress,
     });
 
-     // Set Token Address Contract for easy access
-     this.params.settlerToken = new ERC20Contract({
+    // Set Token Address Contract for easy access
+    this.params.settlerToken = new ERC20Contract({
       web3Connection: this.web3Connection,
       contractAddress: settlerAddresss,
     });
-
     // Assert Token Contract
-    await this.params.transactionalAddress.__assert();
+    await this.params.transactionalToken.__assert();
     // Assert Token Contract
-    await this.params.settlerAddresss.__assert();
+    await this.params.settlerToken.__assert();
   };
 
   /**
@@ -212,20 +212,20 @@ class Network extends IContract {
    */
   async getTransactionTokenAddress() {
     return await this.params.contract
-        .getContract()
-        .methods.transactionToken()
-        .call();
+      .getContract()
+      .methods.transactionToken()
+      .call();
   }
 
   /**
    * Get Settle Token Address (Address of token to decide use of bounties)
    * @returns {Promise<number>}
    */
-   async getSettlerTokenAddress() {
+  async getSettlerTokenAddress() {
     return await this.params.contract
-        .getContract()
-        .methods.settlerToken()
-        .call();
+      .getContract()
+      .methods.settlerToken()
+      .call();
   }
 
   /**
@@ -393,9 +393,22 @@ class Network extends IContract {
    * @function
    * @return {Promise<number>}
    */
-  approveERC20 = async () => {
-    const totalMaxAmount = await this.getERC20Contract().totalSupply();
-    return await this.getERC20Contract().approve({
+  approveSettlerERC20Token = async () => {
+    const totalMaxAmount = await this.getSettlerTokenContract().totalSupply();
+    return await this.getSettlerTokenContract().approve({
+      address: this.getAddress(),
+      amount: totalMaxAmount,
+    });
+  };
+
+   /**
+   * Approve ERC20 Allowance
+   * @function
+   * @return {Promise<number>}
+   */
+  approveTransactionalERC20Token = async () => {
+    const totalMaxAmount = await this.getTransactionTokenContract().totalSupply();
+    return await this.getTransactionTokenContract().approve({
       address: this.getAddress(),
       amount: totalMaxAmount,
     });
@@ -409,7 +422,21 @@ class Network extends IContract {
    * @param {Address} params.address
    * @return {Promise<number>}
    */
-  isApprovedERC20 = async ({ amount, address }) => await this.getERC20Contract().isApproved({
+  isApprovedSettlerToken = async ({ amount, address }) => await this.getSettlerTokenContract().isApproved({
+    address,
+    amount,
+    spenderAddress: this.getAddress(),
+  });
+
+  /**
+   * Verify if Approved
+   * @function
+   * @param {Object} params
+   * @param {number} params.amount
+   * @param {Address} params.address
+   * @return {Promise<number>}
+   */
+   isApprovedTransactionalToken = async ({ amount, address }) => await this.getTransactionTokenContract().isApproved({
     address,
     amount,
     spenderAddress: this.getAddress(),
@@ -418,82 +445,75 @@ class Network extends IContract {
   /**
    * lock tokens for oracles
    * @param {Object} params
-   * @params params.tokensAmount {number}
+   * @params params.tokenAmount {number}
    * @throws {Error} Tokens Amount has to be higher than 0
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  async lock({ tokensAmount }) {
-    if (tokensAmount <= 0) {
+  async lock({ tokenAmount }) {
+    if (tokenAmount <= 0) {
       throw new Error('Token Amount has to be higher than 0');
     }
 
-    if (!(await this.isApprovedERC20({ amount, address }))) {
-      throw new Error("Tokens not approved for tx, first use 'approveERC20'");
-    }
 
     return await this.__sendTx(
-      this.params.contract.getContract().methods.lock(tokensAmount),
+      this.params.contract.getContract().methods.lock(tokenAmount),
     );
   }
 
   /**
    * Unlock Tokens for oracles
    * @param {Object} params
-   * @params params.tokensAmount {number}
+   * @params params.tokenAmount {number}
    * @params params.from {address}
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-  async unlock({ tokensAmount, from }) {
-    if (tokensAmount <= 0) {
+  async unlock({ tokenAmount, from }) {
+    if (tokenAmount <= 0) {
       throw new Error('Tokens Amount has to be higher than 0');
     }
 
     return await this.__sendTx(
-      this.params.contract.getContract().methods.unlock(tokensAmount, from),
+      this.params.contract.getContract().methods.unlock(tokenAmount, from),
     );
   }
 
   /**
    * Delegated Oracles to others
    * @param {Object} params
-   * @param {number} params.tokensAmount
+   * @param {number} params.tokenAmount
    * @param {Address} params.delegatedTo
    * @return {Promise<TransactionObject>}
    */
-  async delegateOracles({ tokensAmount, delegatedTo }) {
-    if (tokensAmount <= 0) {
+  async delegateOracles({ tokenAmount, delegatedTo }) {
+    if (tokenAmount <= 0) {
       throw new Error('Tokens Amount has to be higher than 0');
     }
 
     return await this.__sendTx(
       this.params.contract
         .getContract()
-        .methods.unlock(tokensAmount, delegatedTo),
+        .methods.unlock(tokenAmount, delegatedTo),
     );
   }
 
   /**
    * open Issue
    * @param {Object} params
-   * @param {number} params.tokensAmount
+   * @param {number} params.tokenAmount
    * @param {Address} params.address
    * @throws {Error} Tokens Amount has to be higher than 0
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  async openIssue({ tokensAmount, address }) {
-    if (tokensAmount < 0) {
+  async openIssue({ tokenAmount, cid }) {
+    if (tokenAmount < 0) {
       throw new Error('Tokens Amount has to be higher than 0');
     }
 
-    if (!(await this.isApprovedERC20({ amount, address }))) {
-      throw new Error("Tokens not approve for tx, first use 'approveERC20'");
-    }
-
     return await this.__sendTx(
-      this.params.contract.getContract().methods.openIssue(tokensAmount),
+      this.params.contract.getContract().methods.openIssue(cid, tokenAmount),
     );
   }
 
@@ -538,23 +558,20 @@ class Network extends IContract {
    * open Issue
    * @param {Object} params
    * @param {number} params.issueID
-   * @param {number} params.tokensAmount
+   * @param {number} params.tokenAmount
    * @param {address} params.address
    * @return {Promise<TransactionObject>}
    */
-  async updateIssue({ issueID, tokensAmount, address }) {
-    if (tokensAmount < 0) {
+  async updateIssue({ issueID, tokenAmount }) {
+    if (tokenAmount < 0) {
       throw new Error('Tokens Amount has to be higher than 0');
     }
 
-    if (!(await this.isApprovedERC20({ amount, address }))) {
-      throw new Error("Tokens not approved for tx, first use 'approveERC20'");
-    }
 
     return await this.__sendTx(
       this.params.contract
         .getContract()
-        .methods.updateIssue(issueID, tokensAmount, address),
+        .methods.updateIssue(issueID, tokenAmount),
     );
   }
 
@@ -598,7 +615,9 @@ class Network extends IContract {
    * @param {function():void} params.callback
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({ settlerTokenAddress, transactionTokenAddress, governanceAddress, callback }) => {
+  deploy = async ({
+    settlerTokenAddress, transactionTokenAddress, governanceAddress, callback,
+  }) => {
     const params = [settlerTokenAddress, transactionTokenAddress, governanceAddress];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
@@ -619,7 +638,6 @@ class Network extends IContract {
    * @return ERC20Contract|null
    */
   getTransactionTokenContract = () => this.params.transactionalToken;
-
 }
 
 export default Network;
