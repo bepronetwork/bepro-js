@@ -134,7 +134,7 @@ class DexStorage {
    * @param {String} params.data Data String, if image blob info 
    * @returns {String} CID (Hash to be used to access the params.data later)
    */
-  save = async ({data}) => {
+  async save({data}){
     const { path, cid, size } = await this.ipfs.add(data);
     return { path, cid, size };
   }
@@ -146,7 +146,7 @@ class DexStorage {
    * @param {String} params.cid CID String, if image blob info 
    * @returns {String} data (Hash to be used to access the params.data later)
    */
-  get = async ({cid}) => {
+   async get({cid}){
     return new Promise( async (resolve, reject) => {
       try{
         for await (const file of this.ipfs.get(cid)) {
