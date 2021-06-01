@@ -5,12 +5,26 @@ import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
+
+
+/**
+ * OpenerRealFvr Object
+ * @class OpenerRealFvr
+ * @param {Network~Options} options
+ */
+
 class Network extends IContract {
   constructor(params) {
     super({ abi: network, ...params });
   }
 
 
+  /**
+   * Asserts the 2 {@link ERC20Contract} on the current address
+   * @function
+   * @return {Promise<void>}
+   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
+   */
   __assert = async () => {
     if (!this.getAddress()) {
       throw new Error(
@@ -41,8 +55,12 @@ class Network extends IContract {
     // Assert Token Contract
     await this.params.settlerToken.__assert();
   };
-
-  async getIssuesByAddress(address) {
+  /**
+   * Get Open Issues Available
+   * @param {Address} address
+   * @returns {number[]}
+   */
+   async getIssuesByAddress(address) {
     const res = await this.params.contract
       .getContract()
       .methods.getIssuesByAddress(address)
@@ -51,16 +69,21 @@ class Network extends IContract {
     return res.map(r => parseInt(r, 10));
   }
 
+  /**
+   * Get Amount of Issues Opened in the network
+   * @returns {Promise<number>}
+   */
   async getAmountofIssuesOpened() {
     return parseInt(
-      await this.params.contract
-        .getContract()
-        .methods.incrementIssueID()
-        .call(),
+      await this.params.contract.getContract().methods.incrementIssueID().call(),
       10,
     );
   }
 
+  /**
+   * Get Amount of Issues Closed in the network
+   * @returns {Promise<number>}
+   */
   async getAmountofIssuesClosed() {
     return parseInt(
       await this.params.contract.getContract().methods.closedIdsCount().call(),
@@ -68,6 +91,10 @@ class Network extends IContract {
     );
   }
 
+  /**
+   * Get Amount of Needed for Approve
+   * @returns {Promise<number>}
+   */
   async percentageNeededForApprove() {
     return parseInt(
       await this.params.contract
@@ -78,6 +105,10 @@ class Network extends IContract {
     );
   }
 
+  /**
+   * @description Get Amount of Needed for Dispute
+   * @returns {Promise<number>}
+   */
   async percentageNeededForDispute() {
     return parseInt(
       await this.params.contract
@@ -88,6 +119,11 @@ class Network extends IContract {
     );
   }
 
+
+  /**
+   * Get Amount of Needed for Merge
+   * @returns {Promise<number>}
+   */
   async percentageNeededForMerge() {
     return parseInt(
       await this.params.contract
@@ -98,13 +134,21 @@ class Network extends IContract {
     );
   }
 
-  async getTokensStaked() {
+  /**
+   * Get Total Amount of BEPRO Staked for Tickets in the network
+   * @returns {Promise<number>}
+   */
+  async getBEPROStaked() {
     return Numbers.fromDecimals(
       await this.params.contract.getContract().methods.totalStaked().call(),
       18,
     );
   }
 
+  /**
+   * GetTotal amount of time where an issue has to be approved
+   * @returns {Promise<Date>}
+   */
   async timeOpenForIssueApprove() {
     return Numbers.fromSmartContractTimeToMinutes(
       await this.params.contract
@@ -114,16 +158,25 @@ class Network extends IContract {
     );
   }
 
-  async TokensVotesStaked() {
+  /**
+   * Get Total Amount of Tokens Staked in the network
+   * @returns {Promise<number>}
+   */
+  async votesStaked() {
     return Numbers.fromDecimals(
       await this.params.contract
         .getContract()
-        .methods.TokensVotesStaked()
+        .methods.votesStaked()
         .call(),
       18,
     );
   }
 
+
+  /**
+   * Get Transaction Token Address
+   * @returns {Promise<address>}
+   */
   async getTransactionTokenAddress() {
     return await this.params.contract
       .getContract()
@@ -131,6 +184,10 @@ class Network extends IContract {
       .call();
   }
 
+  /**
+   * Get Settler Token Address
+   * @returns {Promise<address>}
+   */
   async getSettlerTokenAddress() {
     return await this.params.contract
       .getContract()
@@ -138,35 +195,16 @@ class Network extends IContract {
       .call();
   }
 
+
+  /**
+   * Get Amount Needed for Council
+   * @returns {Promise<Integer>}
+   */
   async COUNCIL_AMOUNT() {
     return Numbers.fromDecimals(
       await this.params.contract
         .getContract()
         .methods.COUNCIL_AMOUNT()
-        .call(),
-      18,
-    );
-  }
-
-  async OPERATOR_AMOUNT() {
-    return Numbers.fromDecimals(
-      await this.params.contract
-        .getContract()
-        .methods.OPERATOR_AMOUNT()
-        .call(),
-      18,
-    );
-  }
-
-  /**
-   * Get Total Amount of Tokens Staked for Developer in the network
-   * @returns {Promise<number>}
-   */
-  async DEVELOPER_AMOUNT() {
-    return Numbers.fromDecimals(
-      await this.params.contract
-        .getContract()
-        .methods.DEVELOPER_AMOUNT()
         .call(),
       18,
     );
