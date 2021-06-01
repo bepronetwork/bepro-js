@@ -1,6 +1,6 @@
 import chai, { assert } from "chai";
 import { mochaAsync } from "./utils";
-import { Application } from "..";
+const { Application } = require('..');
 //import Numbers from '../src/utils/Numbers';
 const expect = chai.expect;
 
