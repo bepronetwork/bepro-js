@@ -4,6 +4,10 @@
     "airbnb-base"
   ],
   "rules": {
+      "import/no-unresolved": [
+        2, 
+        { "caseSensitive": false }
+    ],
       "no-prototype-builtins": 0,
       "no-return-await": 0,
       "camelcase": 0,

@@ -141,7 +141,7 @@ https://bepronetwork.github.io/bepro-js/
 
 import moment from 'moment';
 import {
-    Application, DexStorage, ERC20Contract, ExchangeContract, StakingContract,
+    Application, DexStorage, ERC20Contract, StakingContract,
     ERC20TokenLock, ERC721Collectibles, ERC721Standard
 } from 'bepro-js';
 

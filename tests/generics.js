@@ -1,7 +1,9 @@
+const { Application } = require('..');
 import { assert, expect } from "chai";
 import { mochaAsync } from "./utils";
 import { ERC20Contract } from "..";
 import Numbers from "../src/utils/Numbers";
+
 
 //var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
 // this is already deployed on rinkeby network for testing
@@ -14,12 +16,22 @@ const testConfig = {
 
 // NOTE: We only test ERC20contract because all the other models are similar
 // We want to test generic behaviour like connect to RINKEBY TESTNET and MAINNET and check expected values
-context("---generics---", async () => {
+context("Generics", async () => {
   let erc20;
 
   before(async () => {
     //erc20 = new ERC20Contract(testConfig);
   });
+
+  it(
+    "should be able to import directly via require(..)",
+    mochaAsync(async () => {
+      console.log("app", Application);
+      expect(Application).to.not.equal(null);
+    })
+  );
+
+
 
   it(
     "should start the ERC20Contract on RINKEBY TESTNET",

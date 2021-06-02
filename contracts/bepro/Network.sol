@@ -2,7 +2,7 @@ pragma solidity >=0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "../utils/Ownable.sol";
+import "../utils/Governed.sol";
 
 
 /**
@@ -24,29 +24,26 @@ interface _IERC20 is IERC20  {
 
 
 /**
- * @title BEPRO Network Contract
+ * @title Development Network Contract Autonomous Use
  */
-contract BEPRONetwork is Pausable, Ownable{
+contract Network is Pausable, Governed{
     using SafeMath for uint256;
 
-    _IERC20 public beproToken;
+    _IERC20 public settlerToken;
+    _IERC20 public transactionToken;
 
     uint256 constant private year = 365 days;
     uint256 public incrementIssueID = 1;
     uint256 public closedIdsCount = 0;
     uint256 public totalStaked = 0;
-    address public feeAddress = 0xCF3C8Be2e2C42331Da80EF210e9B1b307C03d36A;
-    uint256 public feeShare = 2; // (%) - Share to go to marketplace manager
     uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to the merge proposal creator
     uint256 public percentageNeededForApprove = 10; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public percentageNeededForDispute = 3; // (%) - Amount needed to approve a PR and distribute the rewards
-    uint256 constant public timeOpenForIssueApprove = 3 days;
+    uint256 public timeOpenForIssueApprove = 3 days;
     uint256 public percentageNeededForMerge = 20; // (%) - Amount needed to approve a PR and distribute the rewards
-    uint256 public beproVotesStaked = 0;
+    uint256 public votesStaked = 0;
 
-    uint256 public COUNCIL_BEPRO_AMOUNT = 10000000; // 10M
-    uint256 public OPERATOR_BEPRO_AMOUNT = 1000000; // 1M
-    uint256 public DEVELOPER_BEPRO_AMOUNT = 10000; // 10k
+    uint256 public COUNCIL_AMOUNT = 25000000; // 25M
 
     mapping(uint256 => Issue) public issues; /* Distribution object */
     mapping(address => uint256[]) public myIssues; /* Address Based Subcription */
@@ -68,8 +65,9 @@ contract BEPRONetwork is Pausable, Ownable{
 
     struct Issue {
         uint256 _id;
+        string cid;
         uint256 creationDate;
-        uint256 beproStaked;
+        uint256 tokensStaked;
         address issueGenerator;
         mapping(address => uint256) votesForApproveByAddress;
         uint256 votesForApprove;
@@ -83,7 +81,7 @@ contract BEPRONetwork is Pausable, Ownable{
         uint256 votesDelegatedByOthers;
         mapping(address => uint256) votesDelegated;
         address[] delegatedVotesAddresses;
-        uint256 beproLocked;
+        uint256 tokensLocked;
     }
 
     event OpenIssue(uint256 indexed id, address indexed opener, uint256 indexed amount);
@@ -93,57 +91,59 @@ contract BEPRONetwork is Pausable, Ownable{
     event ApproveMerge(uint256 indexed id, uint256 indexed mergeID, uint256 votes, address indexed approver);
     event CloseIssue(uint256 indexed id, uint256 indexed mergeID, address[] indexed addresses);
 
-    constructor(address _tokenAddress) public { 
-        beproToken = _IERC20(_tokenAddress);
+    constructor(address _settlerToken, address _transactionToken, address _governor) public { 
+        settlerToken = _IERC20(_settlerToken);
+        transactionToken = _IERC20(_transactionToken);
+        _governor = _governor;
     }
 
-    function lockBepro(uint256 _beproAmount) public {
-        require(_beproAmount > 0, "BEPRO Amount is to be higher than 0");
-        require(beproToken.transferFrom(msg.sender, address(this), _beproAmount), "Needs Allowance");
+    function lock(uint256 _tokenAmount) public {
+        require(_tokenAmount > 0, "Token Amount has to be higher than 0");
+        require(settlerToken.transferFrom(msg.sender, address(this), _tokenAmount), "Needs Allowance");
 
-        if(voters[msg.sender].beproLocked != 0){
+        if(voters[msg.sender].tokensLocked != 0){
             // Exists
-            voters[msg.sender].votesDelegated[msg.sender] = voters[msg.sender].votesDelegated[msg.sender].add(_beproAmount);
-            voters[msg.sender].beproLocked = voters[msg.sender].beproLocked.add(_beproAmount);
+            voters[msg.sender].votesDelegated[msg.sender] = voters[msg.sender].votesDelegated[msg.sender].add(_tokenAmount);
+            voters[msg.sender].tokensLocked = voters[msg.sender].tokensLocked.add(_tokenAmount);
         }else{
             // Does not exist
             Voter storage voter = voters[msg.sender];
-            voter.beproLocked = _beproAmount;
+            voter.tokensLocked = _tokenAmount;
             voter.delegatedVotesAddresses = [msg.sender];
-            voter.votesDelegated[msg.sender] = _beproAmount;
+            voter.votesDelegated[msg.sender] = _tokenAmount;
             votersArray.push(msg.sender);
         }
     }
 
-    function unlockBepro(uint256 _beproAmount, address _from) public {
+    function unlock(uint256 _tokenAmount, address _from) public {
         Voter storage voter = voters[msg.sender];
-        require(voter.beproLocked >= _beproAmount, "Has to have bepro to unlock");
-        require(voter.votesDelegated[_from] >= _beproAmount, "From has to have bepro to unlock");
+        require(voter.tokensLocked >= _tokenAmount, "Has to have tokens to unlock");
+        require(voter.votesDelegated[_from] >= _tokenAmount, "From has to have tokens to unlock");
 
-        voters[msg.sender].beproLocked = voter.beproLocked.sub(_beproAmount);
-        voters[msg.sender].votesDelegated[_from] = voter.votesDelegated[_from].sub(_beproAmount);
+        voters[msg.sender].tokensLocked = voter.tokensLocked.sub(_tokenAmount);
+        voters[msg.sender].votesDelegated[_from] = voter.votesDelegated[_from].sub(_tokenAmount);
         if(msg.sender != _from){
-            voters[_from].votesDelegatedByOthers = voters[_from].votesDelegatedByOthers.sub(_beproAmount);
+            voters[_from].votesDelegatedByOthers = voters[_from].votesDelegatedByOthers.sub(_tokenAmount);
         }
 
-        require(beproToken.transfer(msg.sender, _beproAmount), "Transfer didnt work");
-        beproVotesStaked.sub(_beproAmount);
+        require(settlerToken.transfer(msg.sender, _tokenAmount), "Transfer didnt work");
+        votesStaked.sub(_tokenAmount);
     }
 
-    function delegateOracles(uint256 _beproAmount, address _delegatedTo) internal {
+    function delegateOracles(uint256 _tokenAmount, address _delegatedTo) internal {
         Voter storage voter = voters[msg.sender];
 
         require(_delegatedTo != address(0), "Cannot transfer to the zero address");
         require(_delegatedTo != msg.sender, "Cannot transfer to itself");
 
-        require(voter.beproLocked >= _beproAmount, "Has to have bepro to unlock");
-        require(voter.votesDelegated[msg.sender] >= _beproAmount, "From has to have bepro to unlock");
+        require(voter.tokensLocked >= _tokenAmount, "Has to have tokens to unlock");
+        require(voter.votesDelegated[msg.sender] >= _tokenAmount, "From has to have tokens to unlock");
 
-        voters[msg.sender].votesDelegated[msg.sender] = voter.votesDelegated[msg.sender].sub(_beproAmount);
-        voters[msg.sender].votesDelegated[_delegatedTo] = voter.votesDelegated[_delegatedTo].add(_beproAmount);
+        voters[msg.sender].votesDelegated[msg.sender] = voter.votesDelegated[msg.sender].sub(_tokenAmount);
+        voters[msg.sender].votesDelegated[_delegatedTo] = voter.votesDelegated[_delegatedTo].add(_tokenAmount);
 
-        require(voters[_delegatedTo].beproLocked != uint256(0), "Delegated to has to have voted already");
-        voters[_delegatedTo].votesDelegatedByOthers = voters[_delegatedTo].votesDelegatedByOthers.add(_beproAmount);
+        require(voters[_delegatedTo].tokensLocked != uint256(0), "Delegated to has to have voted already");
+        voters[_delegatedTo].votesDelegatedByOthers = voters[_delegatedTo].votesDelegatedByOthers.add(_tokenAmount);
     }
 
     function approveIssue(uint256 _issueID) public {
@@ -198,15 +198,15 @@ contract BEPRONetwork is Pausable, Ownable{
     }
 
     function isIssueApproved(uint256 _issueID) public returns (bool) {
-        return (issues[_issueID].votesForApprove >= beproVotesStaked.mul(percentageNeededForApprove).div(100));
+        return (issues[_issueID].votesForApprove >= votesStaked.mul(percentageNeededForApprove).div(100));
     }
 
     function isMergeDisputed(uint256 _issueID, uint256 _mergeID) public returns (bool) {
-        return (issues[_issueID].mergeProposals[_mergeID].disputes >= beproVotesStaked.mul(percentageNeededForDispute).div(100));
+        return (issues[_issueID].mergeProposals[_mergeID].disputes >= votesStaked.mul(percentageNeededForDispute).div(100));
     }
 
     function isMergeApproved(uint256 _issueID, uint256 _mergeID) public returns (bool) {
-        return (issues[_issueID].mergeProposals[_mergeID].votes >= beproVotesStaked.mul(percentageNeededForMerge).div(100));
+        return (issues[_issueID].mergeProposals[_mergeID].votes >= votesStaked.mul(percentageNeededForMerge).div(100));
     }
     
     function isMergeTheOneWithMoreVotes(uint256 _issueID, uint256 _mergeID) public returns (bool) {
@@ -220,24 +220,25 @@ contract BEPRONetwork is Pausable, Ownable{
     }
 
     /**
-     * @dev open an Issue with bepro owned
+     * @dev open an Issue with transaction Tokens owned
      * 1st step
      */
-    function openIssue(uint256 _beproAmount) public whenNotPaused {
+    function openIssue(string memory _cid, uint256 _tokenAmount) public whenNotPaused {
         // Open Issue
         Issue memory issue;
         issue._id = incrementIssueID;
-        issue.beproStaked = _beproAmount;
+        issue.cid = _cid;
+        issue.tokensStaked = _tokenAmount;
         issue.issueGenerator = msg.sender;
         issue.creationDate = block.timestamp;
         issue.finalized = false;
         issues[incrementIssueID] = issue;
         myIssues[msg.sender].push(incrementIssueID);
-        // Stake bepro
-        require(beproToken.transferFrom(msg.sender, address(this), _beproAmount), "Needs Allowance");
-        totalStaked = totalStaked.add(_beproAmount);
+        // Transfer Transaction Token
+        require(transactionToken.transferFrom(msg.sender, address(this), _tokenAmount), "Needs Allowance");
+        totalStaked = totalStaked.add(_tokenAmount);
         incrementIssueID = incrementIssueID + 1;
-        emit OpenIssue(incrementIssueID, msg.sender, _beproAmount);
+        emit OpenIssue(incrementIssueID, msg.sender, _tokenAmount);
     }
 
     function redeemIssue(uint256 _issueId) public whenNotPaused {
@@ -246,35 +247,33 @@ contract BEPRONetwork is Pausable, Ownable{
         require(!isIssueApprovable(_issueId), "Time for approving has to be already passed");
         issues[_issueId].finalized = true;
         issues[_issueId].canceled = true;
-        require(beproToken.transfer(msg.sender, issues[_issueId].beproStaked), "Transfer not sucessful");
+        require(transactionToken.transfer(msg.sender, issues[_issueId].tokensStaked), "Transfer not sucessful");
     }
 
-
-
     /**
-     * @dev update an Issue with bepro owned
+     * @dev update an Issue with transaction tokens owned
      * 2nd step  (optional)
      */
-    function updateIssue(uint256 _issueId, uint256 _newbeproAmount) public whenNotPaused {
-        require(issues[_issueId].beproStaked != 0, "Issue has to exist");
+    function updateIssue(uint256 _issueId, uint256 _newTokenAmount) public whenNotPaused {
+        require(issues[_issueId].tokensStaked != 0, "Issue has to exist");
         require(issues[_issueId].issueGenerator == msg.sender, "Has to be the issue creator");
         require(!isIssueApproved(_issueId), "Issue is already Approved");
 
-        uint256 previousAmount = issues[_issueId].beproStaked;
+        uint256 previousAmount = issues[_issueId].tokensStaked;
         // Update Issue
-        issues[_issueId].beproStaked = _newbeproAmount;
-        // Stake bepro
-        if(_newbeproAmount > previousAmount){
-            require(beproToken.transferFrom(msg.sender, address(this), _newbeproAmount.sub(previousAmount)), "Needs Allowance");
-            totalStaked = totalStaked.add(_newbeproAmount.sub(previousAmount));
+        issues[_issueId].tokensStaked = _newTokenAmount;
+        // Lock Transaction Tokens
+        if(_newTokenAmount > previousAmount){
+            require(transactionToken.transferFrom(msg.sender, address(this), _newTokenAmount.sub(previousAmount)), "Needs Allowance");
+            totalStaked = totalStaked.add(_newTokenAmount.sub(previousAmount));
         }else{
-            require(beproToken.transfer(msg.sender, previousAmount.sub(_newbeproAmount)), "Transfer not sucessful");
-            totalStaked = totalStaked.sub(previousAmount.sub(_newbeproAmount));
+            require(transactionToken.transfer(msg.sender, previousAmount.sub(_newTokenAmount)), "Transfer not sucessful");
+            totalStaked = totalStaked.sub(previousAmount.sub(_newTokenAmount));
         }
     }
 
-  /**
-     * @dev Owner finalizes the issue and distributes the bepro or rejects the PR
+   /**
+     * @dev Owner finalizes the issue and distributes the transaction tokens or rejects the PR
      * @param _issueID issue id (mapping with github)
      * @param _prAddresses PR Address
      * @param _prAmounts PR Amounts
@@ -285,7 +284,7 @@ contract BEPRONetwork is Pausable, Ownable{
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
         require(_prAmounts.length == _prAddresses.length, "Amounts has to equal addresses length");
-        require(beproToken.balanceOf(msg.sender) > COUNCIL_BEPRO_AMOUNT*10**18, "To propose merges the proposer has to be a Council (COUNCIL_BEPRO_AMOUNT)");
+        require(transactionToken.balanceOf(msg.sender) > COUNCIL_AMOUNT*10**18, "To propose merges the proposer has to be a Council (COUNCIL_AMOUNT)");
 
         MergeProposal memory mergeProposal;
         mergeProposal._id = issue.mergeIDIncrement;
@@ -293,14 +292,13 @@ contract BEPRONetwork is Pausable, Ownable{
         mergeProposal.prAddresses = _prAddresses;
         mergeProposal.proposalAddress = msg.sender;
 
-        uint256 total = ((issues[_issueID].beproStaked * (feeShare + mergeCreatorFeeShare)) / 100); // Fee + Merge Creator Fee + 0
+        uint256 total = ((issues[_issueID].tokensStaked * (mergeCreatorFeeShare)) / 100); // Fee + Merge Creator Fee + 0
 
         for(uint i = 0; i < _prAddresses.length; i++){
-            require(beproToken.balanceOf(_prAddresses[i]) > DEVELOPER_BEPRO_AMOUNT*10**18, "To receive development rewards the rewarded has to be a Developer (DEVELOPER_BEPRO_AMOUNT)");
-            total = total.add((_prAmounts[i] * (100-feeShare-mergeCreatorFeeShare)) / 100);
+            total = total.add((_prAmounts[i] * (100-mergeCreatorFeeShare)) / 100);
         }
 
-        require(total == issues[_issueID].beproStaked, "Totals dont match");
+        require(total == issues[_issueID].tokensStaked, "Totals dont match");
 
         issues[_issueID].mergeProposals[issue.mergeIDIncrement] = mergeProposal;
         issues[_issueID].mergeIDIncrement = issues[_issueID].mergeIDIncrement + 1;
@@ -310,7 +308,7 @@ contract BEPRONetwork is Pausable, Ownable{
 
 
     /**
-     * @dev Owner finalizes the issue and distributes the bepro or rejects the PR
+     * @dev Owner finalizes the issue and distributes the transaction tokens or rejects the PR
      * @param _issueID issue id (mapping with github)
      * @param _mergeID merge id 
      */
@@ -327,20 +325,17 @@ contract BEPRONetwork is Pausable, Ownable{
         issues[_issueID].finalized = true;
         MergeProposal memory merge = issues[_issueID].mergeProposals[_mergeID];
 
-        // Fee Transfer
-        require(beproToken.transfer(feeAddress, (issues[_issueID].beproStaked * feeShare) / 100), "Has to transfer");
-
         // Merge Creator Transfer
-        require(beproToken.transfer(feeAddress, (issues[_issueID].beproStaked * mergeCreatorFeeShare) / 100), "Has to transfer");
+        require(transactionToken.transfer(merge.proposalAddress, (issues[_issueID].tokensStaked * mergeCreatorFeeShare) / 100), "Has to transfer");
         
-        // Generate Reputation Tokens
+        // Generate Transaction Tokens
         for(uint i = 0; i < merge.prAddresses.length; i++){
             myIssues[merge.prAddresses[i]].push(_issueID);
-            require(beproToken.transfer(merge.prAddresses[i], (merge.prAmounts[i] * (100-feeShare-mergeCreatorFeeShare)) / 100), "Has to transfer");
+            require(transactionToken.transfer(merge.prAddresses[i], (merge.prAmounts[i] * (100-mergeCreatorFeeShare)) / 100), "Has to transfer");
         }
 
         closedIdsCount = closedIdsCount.add(1);
-        totalStaked = totalStaked.sub(issue.beproStaked);
+        totalStaked = totalStaked.sub(issue.tokensStaked);
         emit CloseIssue(_issueID, _mergeID, merge.prAddresses);
     }
 
@@ -353,9 +348,9 @@ contract BEPRONetwork is Pausable, Ownable{
         return voter.votesDelegatedByOthers.add(voter.votesDelegated[_address]);
     }
     
-    function getIssueById(uint256 _issueID) public returns (uint256, uint256, uint256, address, uint256, uint256, bool, bool){
+    function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, uint256, bool, bool){
         Issue memory issue = issues[_issueID];
-        return (issue._id, issue.beproStaked, issue.creationDate, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
+        return (issue._id, issue.cid, issue.tokensStaked, issue.creationDate, issue.issueGenerator, issue.votesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
     }
 
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, uint256, address[] memory, uint256[] memory, address){
@@ -364,30 +359,61 @@ contract BEPRONetwork is Pausable, Ownable{
     }
 
     /**
-     * @dev Change BEPRO Token Address (Upgrade)
+     * @dev Change Transaction Token Address (Upgrade)
      */
-    function changeBEPROAddress(address _newAddress) public onlyOwner {
-        beproToken = _IERC20(_newAddress);
+    function changeTransactionToken(address _newToken) public onlyGovernor {
+        transactionToken = _IERC20(_newToken);
     }
 
     /**
-     * @dev Change Fee Address
-    */
-    function editFeeAddress(address _newAddress) public onlyOwner {
-        feeAddress = _newAddress;
-    }
-
-    /**
-     * @dev Change Share Fee Amount
-    */
-    function editFeeShare(uint256 _feeShare) public onlyOwner {
-        feeShare = _feeShare;
-    }
-
-    /**
-     * @dev Upgrade Contract Version
+     * @dev Change Merge Creator FeeShare
      */
-    function upgradeContract(address _newContract) public onlyOwner whenPaused {
-        //To be done
+    function changeMergeCreatorFeeShare(uint256 _mergeCreatorFeeShare) public onlyGovernor {
+        require(_mergeCreatorFeeShare < 20, "Merge Share can´t be higher than 20");
+        mergeCreatorFeeShare = _mergeCreatorFeeShare;
     }
+
+       /**
+     * @dev changePercentageNeededForApprove
+    */
+    function changePercentageNeededForApprove(uint256 _percentageNeededForApprove) public onlyGovernor {
+        require(_percentageNeededForApprove < 80, "Approve % Needed can´t be higher than 80");
+        percentageNeededForApprove = _percentageNeededForApprove;
+    }
+
+    /**
+     * @dev changePercentageNeededForDispute
+     */
+    function changePercentageNeededForDispute(uint256 _percentageNeededForDispute) public onlyGovernor {
+        require(_percentageNeededForDispute < 15, "Dispute % Needed can´t be higher than 15");
+        percentageNeededForDispute = _percentageNeededForDispute;
+    }
+
+    /**
+     * @dev changePercentageNeededForMerge
+     */
+    function changePercentageNeededForMerge(uint256 _percentageNeededForMerge) public onlyGovernor {
+        require(_percentageNeededForMerge < 80, "Approve for Merge % Needed can´t be higher than 80");
+        percentageNeededForMerge = _percentageNeededForMerge;
+    }
+
+     /**
+     * @dev changeTimeOpenForIssueApprove
+     */
+    function changeTimeOpenForIssueApprove(uint256 _timeOpenForIssueApprove) public onlyGovernor {
+        require(_timeOpenForIssueApprove < 20 days, "Time open for issue has to be higher than lower than 20 days");
+        require(_timeOpenForIssueApprove >= 1 minutes, "Time open for issue has to be higher than 1 minutes");
+        timeOpenForIssueApprove = _timeOpenForIssueApprove;
+    }
+
+    /**
+     * @dev changeTimeOpenForIssueApprove
+    */
+    function changeCOUNCIL_AMOUNT(uint256 _COUNCIL_AMOUNT) public onlyGovernor {
+        require(_COUNCIL_AMOUNT > 100000*10**18, "Council Amount has to higher than 100k");
+        require(_COUNCIL_AMOUNT < 100000000*10**18, "Council Amount has to lower than 50M");
+        COUNCIL_AMOUNT = _COUNCIL_AMOUNT;
+    }
+
+ 
 }

@@ -38,10 +38,8 @@ context("ERC20TokenLock Contract", async () => {
   let userAddress;
 
   before(async () => {
-    console.log("---moment: " + moment());
     erc20Lock = new ERC20TokenLock(testConfig);
     userAddress = await erc20Lock.getUserAddress(); //local test with ganache
-    console.log("erc20TokenLock.userAddress: " + userAddress);
   });
 
   ///this function is needed in all contracts working with an ERC20Contract token
