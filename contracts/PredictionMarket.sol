@@ -267,6 +267,11 @@ contract PredictionMarket is Ownable {
     mapping(address => bool) liquidityClaims; // wether participant has claimed liquidity winnings
     address[] liquidityHolders;
 
+    // fees
+    uint fee; // fee taken from every transaction
+    uint feePoolWeight; // internal var used to ensure pro-rate fee distribution
+    mapping(address => uint) feesClaimed;
+
     // market outcomes
     uint[] outcomeIds;
     mapping(uint256 => MarketOutcome) outcomes;
@@ -288,11 +293,10 @@ contract PredictionMarket is Ownable {
     mapping(address => uint) holdersIndexes;
     mapping(address => bool) holdersClaims; // wether participant has claimed liquidity winnings
     address[] holders;
-
-    // TODO: fees
   }
 
   uint[] marketIds;
+  uint public fee; // fee % taken from every transaction, can be updated by contract owner
   mapping(uint256 => Market) public markets;
   uint public marketIndex = 0;
 
@@ -380,6 +384,7 @@ contract PredictionMarket is Ownable {
     market.closedDateTime = closesAt;
     market.state = MarketState.open;
     market.oracle = oracle;
+    market.fee = fee;
     // setting intial value to an integer that does not map to any outcomeId
     market.resolvedOutcomeId = MAX_UINT_256;
 
@@ -434,6 +439,11 @@ contract PredictionMarket is Ownable {
     atState(marketId, MarketState.open)
   {
     Market storage market = markets[marketId];
+
+    if (parentAction == MarketAction.buy) {
+      // subtracting fee from transaction value
+      value = addTransactionToFeesPool(marketId, value);
+    }
 
     MarketOutcome storage outcome = market.outcomes[outcomeId];
     market.liquidityTotal = parentAction == MarketAction.removeLiquidity
@@ -575,6 +585,9 @@ contract PredictionMarket is Ownable {
 
     market.liquidityTotal = market.liquidityTotal.sub(value);
 
+    // subtracting fee from transaction value
+    value = addTransactionToFeesPool(marketId, value);
+
     // 3. Interaction
     msg.sender.transfer(value);
 
@@ -607,6 +620,9 @@ contract PredictionMarket is Ownable {
     }
 
     uint liquidityRatio = minShares.mul(msg.value).div(market.liquidityAvailable);
+
+    // re-balancing fees pool
+    rebalanceFeesPool(marketId, liquidityRatio, MarketAction.addLiquidity);
 
     market.liquidityAvailable = market.liquidityAvailable.add(liquidityRatio);
 
@@ -654,6 +670,9 @@ contract PredictionMarket is Ownable {
     // ETH to transfer to user from liquidity removal
     uint value;
 
+    // claiming any pending fees
+    claimFees(marketId);
+
     // removing liquidity tokens from market creator
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].sub(shares);
 
@@ -680,6 +699,9 @@ contract PredictionMarket is Ownable {
     }
 
     uint liquidityRatio = minShares.mul(shares).div(market.liquidityAvailable);
+
+    // re-balancing fees pool
+    rebalanceFeesPool(marketId, shares, MarketAction.removeLiquidity);
 
     // equal outcome split, no need to buy shares
     if (liquidityRatio == shares) {
@@ -791,6 +813,9 @@ contract PredictionMarket is Ownable {
     Market storage market = markets[marketId];
     MarketOutcome storage resolvedOutcome = market.outcomes[market.resolvedOutcomeId];
 
+    // claiming any pending fees
+    claimFees(marketId);
+
     require(market.liquidityShares[msg.sender] > 0, "Participant does not hold liquidity shares");
     require(market.liquidityClaims[msg.sender] == false, "Participant already claimed liquidity winnings");
 
@@ -808,12 +833,47 @@ contract PredictionMarket is Ownable {
       MarketAction.claimLiquidity,
       marketId,
       0,
-      market.holdersShares[msg.sender],
+      market.liquidityShares[msg.sender],
       value,
       now
     );
 
     msg.sender.transfer(value);
+  }
+
+  function claimFees(uint marketId) public payable {
+    Market storage market = markets[marketId];
+
+    uint claimableFees = getUserClaimableFees(marketId, msg.sender);
+
+    if (claimableFees > 0) {
+      market.feesClaimed[msg.sender] = market.feesClaimed[msg.sender].add(claimableFees);
+      msg.sender.transfer(claimableFees);
+    }
+  }
+
+  function addTransactionToFeesPool(uint marketId, uint value) internal returns(uint) {
+    Market storage market = markets[marketId];
+    uint feeAmount = value.mul(market.fee) / ONE;
+
+    market.feePoolWeight = market.feePoolWeight.add(feeAmount);
+
+    // returning investment minus fees
+    return value.sub(feeAmount);
+  }
+
+  function rebalanceFeesPool(uint marketId, uint liquidityShares, MarketAction action) internal returns (uint) {
+    Market storage market = markets[marketId];
+
+    uint feePoolWeight = liquidityShares.mul(market.feePoolWeight).div(market.liquidityAvailable);
+
+    if (action == MarketAction.addLiquidity) {
+      market.feePoolWeight = market.feePoolWeight.add(feePoolWeight);
+      market.feesClaimed[msg.sender] = market.feesClaimed[msg.sender].add(feePoolWeight);
+    } else {
+      market.feePoolWeight = market.feePoolWeight.sub(feePoolWeight);
+      market.feesClaimed[msg.sender] = market.feesClaimed[msg.sender].sub(feePoolWeight);
+    }
   }
 
   /// Internal function for advancing the market state.
@@ -836,6 +896,16 @@ contract PredictionMarket is Ownable {
   }
 
   // ------ Core Functions End ------
+
+  // ------ Governance Functions Start ------
+
+  function updateFee(uint feeValue) public
+    onlyOwner()
+  {
+    fee = feeValue;
+  }
+
+  // ------ Governance Functions End ------
 
   // ------ Getters ------
 
@@ -926,50 +996,20 @@ contract PredictionMarket is Ownable {
     );
   }
 
+  function getUserClaimableFees(uint marketId, address participant)
+    public view
+    returns(uint)
+  {
+    Market storage market = markets[marketId];
+
+    uint rawAmount = market.feePoolWeight.mul(market.liquidityShares[participant]).div(market.liquidityAvailable);
+    return rawAmount.sub(market.feesClaimed[participant]);
+  }
+
   /// Allow retrieving the the array of created contracts
   /// @return An array of all created Market contracts
   function getMarkets() public view returns(uint[] memory) {
     return marketIds;
-  }
-
-  function getMarketName(uint marketId) public view returns(string memory) {
-    Market storage market = markets[marketId];
-    return market.name;
-  }
-
-  function getMarketClosedDateTime(uint marketId) public view returns(uint) {
-    Market storage market = markets[marketId];
-    return market.closedDateTime;
-  }
-
-  function getMarketState(uint marketId) public view returns(MarketState) {
-    Market storage market = markets[marketId];
-    return market.state;
-  }
-
-  function getMarketOracle(uint marketId) public view returns(address) {
-    Market storage market = markets[marketId];
-    return market.oracle;
-  }
-
-  function getMarketAvailableLiquidity(uint marketId) public view returns(uint) {
-    Market storage market = markets[marketId];
-    return market.liquidityAvailable;
-  }
-
-  function getMarketTotalLiquidity(uint marketId) public view returns(uint) {
-    Market storage market = markets[marketId];
-    return market.liquidityTotal;
-  }
-
-  function getMarketTotalShares(uint marketId) public view returns(uint) {
-    Market storage market = markets[marketId];
-    return market.sharesTotal;
-  }
-
-  function getMarketAvailableShares(uint marketId) public view returns(uint) {
-    Market storage market = markets[marketId];
-    return market.sharesAvailable;
   }
 
   function getMarketData(uint marketId)
@@ -1044,13 +1084,6 @@ contract PredictionMarket is Ownable {
     return market.outcomeIds;
   }
 
-  function getMarketOutcomeName(uint marketId, uint marketOutcomeId) public view returns(string memory) {
-    Market storage market = markets[marketId];
-    MarketOutcome storage outcome = market.outcomes[marketOutcomeId];
-
-    return outcome.name;
-  }
-
   function getMarketOutcomePrice(uint marketId, uint marketOutcomeId) public view returns(uint) {
     Market storage market = markets[marketId];
     MarketOutcome storage outcome = market.outcomes[marketOutcomeId];
@@ -1066,20 +1099,6 @@ contract PredictionMarket is Ownable {
     uint holdersShares = market.sharesAvailable.sub(outcome.shares.available);
 
     return holdersShares.mul(ONE).div(market.sharesAvailable);
-  }
-
-  function getMarketOutcomeAvailableShares(uint marketId, uint marketOutcomeId) public view returns(uint) {
-    Market storage market = markets[marketId];
-    MarketOutcome storage outcome = market.outcomes[marketOutcomeId];
-
-    return outcome.shares.available;
-  }
-
-  function getMarketOutcomeTotalShares(uint marketId, uint marketOutcomeId) public view returns(uint) {
-    Market storage market = markets[marketId];
-    MarketOutcome storage outcome = market.outcomes[marketOutcomeId];
-
-    return outcome.shares.total;
   }
 
   function getMarketOutcomeData(uint marketId, uint marketOutcomeId)
