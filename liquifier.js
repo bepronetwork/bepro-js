@@ -5,7 +5,6 @@ const path = require('path');
 const yargs = require(`yargs`);
 const hideBin = require(`yargs/helpers`).hideBin;
 
-
 /**
  * @typedef {Object} Contract~AbiOption~Input
  * @property {string} internalType
@@ -40,6 +39,9 @@ const arguments = yargs(hideBin(process.argv))
   .alias(`d`, `dir`)
   .default(`d`, `./`)
   .describe(`d`, `Output dir`)
+  .alias(`i`, `interface-dir`)
+  .describe(`i`, `Folder to create the interface file on`)
+  .default(`i`, `./src/interfaces/`)
   .alias(`o`, `override`)
   .describe(`o`, `Override existing output file on -d`)
   .boolean(`o`)
@@ -70,12 +72,9 @@ if (arguments.SHOWOFF)
 if (arguments.showoff)
   arguments.verbose = arguments.v = true;
 
-const classHeader = (name = `Name`) => `export class ${name} extends IContract`;
-const makeClass = (header = ``, content = ``) =>
-  `
-  import { network as interface } from '../../interfaces';
-  
-  ${header} {
+
+const makeClass = (header = ``, content = ``,) =>
+  `${header} {
     constructor(params) {
       super({abi: interface, ...params});    
     }
@@ -109,9 +108,9 @@ const makeProperty = makeAtProp(`property`);
  * @param {string} className
  * @param {string} methodName
  */
-const makeTypeDef = (outputs, className = ``, methodName = ``) => {
+const makeTypeDef = (outputs, className = ``, methodName = ``, append = `Type`) => {
   return [
-    `/** @typedef {Object} ${className}~${methodName}Type`,
+    `/** @typedef {Object} ${className}~${methodName}${append}`,
     ...outputs.map(output => makeProperty({type: output.type, name: output.name || `*`})),
     `*/`,
     ``
@@ -128,7 +127,7 @@ const paramsBlock = (option, contractName) => {
   const needsTypeDef = option.outputs?.length > 1;
   if (!option.outputs)
     option.outputs = [];
-  
+
   if (!option.outputs.length)
     option.outputs.push({type: `void`});
 
@@ -144,6 +143,23 @@ const paramsBlock = (option, contractName) => {
   ].join(`\n     `)
 }
 
+/**
+ * 
+ * @param {string} name 
+ * @param {Contract~AbiOption} option 
+ * @returns 
+ */
+const classHeader = (name = `Name`, option = null) => [
+  `import ${name} as interface from '../../interfaces/${name}';`,
+  ``,
+  ...option?.inputs?.length && makeTypeDef(option.inputs, name, `Options`, ``) || [],
+  `/**`,
+  ` * Network Object`,
+  ` * @class Network`,
+  ` * @param {${name}~Options} options`,
+  ` */`,
+  `export class ${name} extends IContract`
+].join(`\n`)
 
 /**
  * @param {Contract~AbiOption} option
@@ -162,8 +178,8 @@ const makeFn = (option, contractName) => {
 }
 
 /**
- * @param {string} filePath 
- * @returns {{filename: string, source: string}}
+ * @param {string} filePath
+ * @returns {{filename: string, source: string interfaceFile: string, interfaceSource: string}}
  */
 const liquifySolidityContract = (filePath = ``) => {
 
@@ -183,9 +199,13 @@ const liquifySolidityContract = (filePath = ``) => {
     .map(option => makeFn(option, contract.contractName))
     .join(`\n`);
 
+  const constructorAbiOption = contract.abi.filter(({type}) => type === "constructor")[0];
+
   return {
     filename: `${contract.contractName}.js`,
-    source: makeClass(classHeader(contract.contractName), content),
+    interfaceFile: `${contract.contractName}.json`,
+    source: makeClass(classHeader(contract.contractName, constructorAbiOption), content),
+    interfaceSource: `module.exports = require('../contracts/${contract.contractName}.json)`
   };
 
 }
@@ -193,20 +213,29 @@ const liquifySolidityContract = (filePath = ``) => {
 
 const liquified = liquifySolidityContract(arguments.file);
 if (arguments.verbose)
-  console.log(`Parsed`);
+  console.log(`Parsed`, arguments.file);
 
+const sourceExists = fs.existsSync(path.resolve(path.normalize(arguments.dir, liquified.source)));
+const interfaceExists = fs.existsSync(path.resolve(path.normalize(arguments.interfaceDir, liquified.interfaceFile)));
 
-const exists = fs.existsSync(path.resolve(path.normalize(arguments.dir, liquified.source)));
+if (interfaceExists && arguments.override || !interfaceExists)
+  if (!arguments.showoff)
+    fs.writeFileSync(path.resolve(arguments.interfaceDir, liquified.interfaceFile), liquified.interfaceSource, `utf-8`);
 
-if (exists && arguments.override || !exists)
+if (sourceExists && arguments.override || !sourceExists)
   if (!arguments.showoff)
     fs.writeFileSync(path.resolve(arguments.dir, liquified.filename), liquified.source, `utf-8`);
 
 if (arguments.verbose) {
-  if (exists && arguments.override || !exists)
+  if (sourceExists && arguments.override || !sourceExists)
     console.log(`Wrote to ${path.resolve(arguments.dir, liquified.filename)} ${arguments.showoff && `(dry run, nothing written)` || ``}`, );
-  else console.log(`Did not write to ${path.resolve(arguments.dir, liquified.filename)} because it existed and no override flag was given`)
+  else console.log(`Did not write to ${path.resolve(arguments.dir, liquified.filename)} because it existed and no override flag was given`);
+
+  if (interfaceExists && arguments.override || !interfaceExists)
+    console.log(`Wrote to ${path.resolve(arguments.interfaceDir, liquified.interfaceFile)} ${arguments.showoff && `(dry run, nothing written)` || ``}`, );
+  else console.log(`Did not write to ${path.resolve(arguments.interfaceDir, liquified.interfaceFile)} because it existed and no override flag was given`);
+
 }
 
 if (arguments.SHOWOFF)
-  console.log(`Would write\n`, liquified.source);
+  console.log(liquified.source);
