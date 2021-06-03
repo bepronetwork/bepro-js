@@ -150,7 +150,7 @@ const paramsBlock = (option, contractName) => {
  * @returns 
  */
 const classHeader = (name = `Name`, option = null) => [
-  `import ${name} as interface from '../../interfaces/${name}';`,
+  `import interface from '../../interfaces/${name}';`,
   ``,
   ...option?.inputs?.length && makeTypeDef(option.inputs, name, `Options`, ``) || [],
   `/**`,
