@@ -90,6 +90,20 @@ class ERC721Standard extends IContract {
   );
 
   /**
+   * Set Token URI
+   * @function
+   * @param {Object} params
+   * @param {string} params.tokenID
+   * @param {string} params.URI
+   * @return {Promise<*>}
+   */
+  setTokenURI = async ({ tokenID, URI }) => await this.__sendTx(
+    this.params.contract.getContract().methods.setTokenURI(tokenID, URI),
+  );
+
+  setTokenURI
+
+  /**
    * Mint created TokenID
    * @param {Object} params
    * @param {number} params.tokenID
