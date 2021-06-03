@@ -1,16 +1,13 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const path = require('path');
+const yargs = require(`yargs`);
+const hideBin = require(`yargs/helpers`).hideBin;
+
 
 /**
- * @type {"constructor"|"function"|"event"} L~Contract~AbiOption~Type
- */
-
-/**
- * @type {"uint256"|"address"} L~Contract~AbiOption~InputType
- */
-
-/**
- * @typedef {Object} L~Contract~AbiOption~Input
+ * @typedef {Object} Contract~AbiOption~Input
  * @property {string} internalType
  * @property {string} name
  * @property {string} type
@@ -18,22 +15,60 @@ const path = require('path');
  */
 
 /**
- * @typedef {Object} L~Contract~AbiOption
+ * @typedef {Object} Contract~AbiOption
  * @property {string} type
  * @property {string} name
- * @property {L~Contract~AbiOption~Input[]} inputs
- * @property {L~Contract~AbiOption~Input[]} [outputs]
+ * @property {Contract~AbiOption~Input[]} inputs
+ * @property {Contract~AbiOption~Input[]} [outputs]
  * @property {boolean} [anonymous]
  * @property {string} [stateMutability]
  */
 
 /**
- * @typedef L~Contract
+ * @typedef Contract
  * @property {string} contractName
- * @property {L~Contract~AbiOption[]} abi
+ * @property {Contract~AbiOption[]} abi
  */
 
 // **
+
+const arguments = yargs(hideBin(process.argv))
+  .usage(`Usage: $0 [options]`)
+  .alias(`f`, `file`)
+  .nargs(`f`, 1)
+  .describe(`f`, `File to parse`)
+  .alias(`d`, `dir`)
+  .default(`d`, `./`)
+  .describe(`d`, `Output dir`)
+  .alias(`o`, `override`)
+  .describe(`o`, `Override existing output file on -d`)
+  .boolean(`o`)
+  .default(`o`, false)
+  .alias(`s`, `showoff`)
+  .describe(`s`, `Dry run`)
+  .boolean(`s`)
+  .default(`s`, false)
+  .alias(`S`, `SHOWOFF`)
+  .describe(`S`, `Dry run with show source at the end`)
+  .boolean(`S`)
+  .default(`S`, false)
+  .alias(`v`, `verbose`)
+  .describe(`v`, `Blablabla blabla, bla blaa!`)
+  .boolean(`v`)
+  .default(`v`, false)
+  .demandOption([`f`,])
+  .help(`h`)
+  .alias(`h`, `help`)
+  // .epilog('copyright bepro')
+  .argv;
+
+// **
+
+if (arguments.SHOWOFF)
+  arguments.showoff = true;
+
+if (arguments.showoff)
+  arguments.verbose = arguments.v = true;
 
 const classHeader = (name = `Name`) => `export class ${name} extends IContract`;
 const makeClass = (header = ``, content = ``) =>
@@ -49,7 +84,7 @@ const makeClass = (header = ``, content = ``) =>
   }`;
 
 /**
- * @param {L~Contract~AbiOption~Input[]} inputs
+ * @param {Contract~AbiOption~Input[]} inputs
  * @returns {string}
  */
 const parseInputsName = (inputs) =>
@@ -67,70 +102,111 @@ const sendTx = (name = ``, parsedInputs = ``, isAsync = true) =>
 const makeAtProp = (atProp = `param`) => ({type = ``, name = ``}) => `* @${atProp} {${type}} ${name}`;
 const makeParam = makeAtProp(`param`);
 const makeReturn = makeAtProp(`returns`);
+const makeProperty = makeAtProp(`property`);
 
 /**
- *
- * @param {L~Contract~AbiOption~Input[]} outputs
+ * @param {Contract~AbiOption~Input[]} outputs
+ * @param {string} className
+ * @param {string} methodName
  */
-const parseOutputs = (outputs) => {
-  let target = outputs || [];
-
-  if (!target.length)
-    target.push({type: `void`})
-
-  if (target.length === 1)
-    return outputs.map(makeReturn);
-
+const makeTypeDef = (outputs, className = ``, methodName = ``) => {
+  return [
+    `/** @typedef {Object} ${className}~${methodName}Type`,
+    ...outputs.map(output => makeProperty({type: output.type, name: output.name || `*`})),
+    `*/`,
+    ``
+  ]
 }
 
 /**
- * @param {L~Contract~AbiOption~Input[]} inputs
- * @param {L~Contract~AbiOption~Input[]} outputs
+ * @param {Contract~AbiOption} option
+ * @param {string} contractName
  * @return {string}
  */
-const paramsBlock = (inputs, outputs) => {
+const paramsBlock = (option, contractName) => {
+
+  const needsTypeDef = option.outputs?.length > 1;
+  if (!option.outputs)
+    option.outputs = [];
+  
+  if (!option.outputs.length)
+    option.outputs.push({type: `void`});
+
+  if (!needsTypeDef)
+    option.outputs[0].type = `Promise<${option.outputs[0].type}>`;
+
   return [
+    ...(needsTypeDef && makeTypeDef(option.outputs, contractName, option.name) || []),
     `/**`,
-    ...inputs.map(makeParam),
-    ...(outputs?.length && outputs || [{type: `void`}])
-      .map(({type, name}) => ({type: `Promise<${type}>`, name}))
-      .map(makeReturn),
+    ...option.inputs.map(makeParam),
+    needsTypeDef && makeReturn({type: `Promise<${contractName}~${option.name}>`}) || makeReturn(option.outputs[0]),
     `*/`
   ].join(`\n     `)
 }
 
 
 /**
- * @param {L~Contract~AbiOption} option
+ * @param {Contract~AbiOption} option
+ * @param {string} contractName
  * @return {string}
  */
-const makeFn = (option) => {
+const makeFn = (option, contractName) => {
   const parsedInputs = parseInputsName(option.inputs);
 
   return `
-    ${paramsBlock(option.inputs, option.outputs)}
+    ${paramsBlock(option, contractName)}
     ${fnHeader(option.name, parsedInputs)} {
       ${sendTx(option.name, parsedInputs)}    
     };
   `
 }
 
-
-
+/**
+ * @param {string} filePath 
+ * @returns {{filename: string, source: string}}
+ */
 const liquifySolidityContract = (filePath = ``) => {
 
+  if (arguments.verbose)
+    console.log(`Loading ${filePath}`);
+
   /**
-   * @type {L~Contract}
+   * @type {Contract}
    */
   const contract = JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf-8'));
 
+  if (arguments.verbose)
+    console.log(`Parsing ${contract.contractName}`)
+
   const content = contract.abi
     .filter(option => !option.anonymous && option.type === "function")
-    .map(makeFn)
+    .map(option => makeFn(option, contract.contractName))
     .join(`\n`);
 
-  return makeClass(classHeader(contract.contractName), content)
+  return {
+    filename: `${contract.contractName}.js`,
+    source: makeClass(classHeader(contract.contractName), content),
+  };
 
 }
 
-console.log(liquifySolidityContract(`./build/contracts/Network.json`));
+
+const liquified = liquifySolidityContract(arguments.file);
+if (arguments.verbose)
+  console.log(`Parsed`);
+
+
+const exists = fs.existsSync(path.resolve(path.normalize(arguments.dir, liquified.source)));
+
+if (exists && arguments.override || !exists)
+  if (!arguments.showoff)
+    fs.writeFileSync(path.resolve(arguments.dir, liquified.filename), liquified.source, `utf-8`);
+
+if (arguments.verbose) {
+  if (exists && arguments.override || !exists)
+    console.log(`Wrote to ${path.resolve(arguments.dir, liquified.filename)} ${arguments.showoff && `(dry run, nothing written)` || ``}`, );
+  else console.log(`Did not write to ${path.resolve(arguments.dir, liquified.filename)} because it existed and no override flag was given`)
+}
+
+if (arguments.SHOWOFF)
+  console.log(`Would write\n`, liquified.source);
