@@ -90,7 +90,8 @@
         "pre-commit": "^1.2.2",
         "should": "^7.1.0",
         "supertest": "^1.0.0",
-        "truffle": "5.1.7"
+        "truffle": "5.1.7",
+        "yargs": "^17.0.1"
     },
     "babel": {
         "presets": [
