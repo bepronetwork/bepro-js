@@ -154,8 +154,8 @@ const classHeader = (name = `Name`, option = null) => [
   ``,
   ...option?.inputs?.length && makeTypeDef(option.inputs, name, `Options`, ``) || [],
   `/**`,
-  ` * Network Object`,
-  ` * @class Network`,
+  ` * ${name} Object`,
+  ` * @class ${name}`,
   ` * @param {${name}~Options} options`,
   ` */`,
   `export class ${name} extends IContract`
