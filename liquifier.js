@@ -199,7 +199,7 @@ const classHeader = (name = `Name`, option = null) => [
   ` * @class ${name}`,
   ` * @param {${name}~Options} options`,
   ` */`,
-  `export class ${name} extends IContract`
+  `export default class ${name} extends IContract`
 ].join(`\n`)
 
 /**
@@ -246,7 +246,8 @@ const liquifySolidityContract = (filePath = ``) => {
     filename: `${contract.contractName}.js`,
     interfaceFile: `${contract.contractName}.json`,
     source: makeClass(classHeader(contract.contractName, constructorAbiOption), content),
-    interfaceSource: `module.exports = require('../contracts/${contract.contractName}.json)`
+    interfaceSource: `module.exports = require('../contracts/${contract.contractName}.json)`,
+    exportModelSource: `export ${contract.contractName} from ${arguments.dir}/${contract.contractName}`,
   };
 
 }
