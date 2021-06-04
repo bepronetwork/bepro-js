@@ -11,6 +11,8 @@ const hideBin = require(`yargs/helpers`).hideBin;
  * @property {string} name
  * @property {string} type
  * @property {boolean} [indexed]
+ * @property {boolean} [optional]
+ * @property {*} [defaultValue]
  */
 
 /**
@@ -98,7 +100,24 @@ const getContractMethod = (name = ``, parsedInputs = ``) =>
 const sendTx = (name = ``, parsedInputs = ``, isAsync = true) =>
   `return ${isAsync ? `await` : ``} this.__sendTx(${getContractMethod(name, parsedInputs)})`;
 
-const makeAtProp = (atProp = `param`) => ({type = ``, name = ``}) => `* @${atProp} {${type}} ${name}`;
+/**
+ *
+ * @param {string} name
+ * @param {boolean} [optional]
+ * @param {*} [defaultValue]
+ * @return {string}
+ */
+const paramName = (name, optional, defaultValue) =>
+  `${(optional||defaultValue) && `[` || ``}${name}${defaultValue !== undefined && `=${defaultValue}` || ``}${(optional||defaultValue) && `]` || ``}`
+
+/**
+ * @param {string} atProp
+ * @returns {function({type?: *, name?: *}): string}
+ */
+const makeAtProp = (atProp = `param`) => ({type = ``, name = ``, optional, defaultValue}) =>
+  `* @${atProp} {${type}} ${paramName(name, optional, defaultValue)}`
+
+
 const makeParam = makeAtProp(`param`);
 const makeReturn = makeAtProp(`returns`);
 const makeProperty = makeAtProp(`property`);
@@ -107,15 +126,37 @@ const makeProperty = makeAtProp(`property`);
  * @param {Contract~AbiOption~Input[]} outputs
  * @param {string} className
  * @param {string} methodName
+ * @param {string} [append="Type"]
+ * @param {string} [typeDefType="Object"]
+ * @return {string[]}
  */
-const makeTypeDef = (outputs, className = ``, methodName = ``, append = `Type`) => {
+const makeTypeDef = (outputs, className = ``, methodName = ``, append = `Type`, typeDefType = `Object`) => {
   return [
-    `/** @typedef {Object} ${className}~${methodName}${append}`,
-    ...outputs.map(output => makeProperty({type: output.type, name: output.name || `*`})),
+    `/** @typedef {${typeDefType}} ${className}~${methodName}${append}`,
+    ...outputs.map(output => makeProperty({...output, name: output.name || `*`})),
     `*/`,
     ``
   ]
 }
+
+/**
+ * @type {Contract~AbiOption~Input[]}
+ */
+const DEFAULT_ICONTRACT_OUTPUTS = [
+  {type: `Boolean`, name: `test`},
+  {type: `Boolean`, name: `localtest`},
+  {type: `Web3Connection`, name: `web3Connection`, defaultValue: `Web3Connection`},
+  {type: `address`, name: `contractAddress`, optional: true},
+];
+
+/**
+ *
+ * @param {Contract~AbiOption~Input[]} outputs
+ * @param {string} name
+ * @return {string[]}
+ */
+const makeConstructorTypeDef = (outputs, name) =>
+  makeTypeDef(outputs.concat(...DEFAULT_ICONTRACT_OUTPUTS), name, `Options`, ``)
 
 /**
  * @param {Contract~AbiOption} option
@@ -144,15 +185,15 @@ const paramsBlock = (option, contractName) => {
 }
 
 /**
- * 
- * @param {string} name 
- * @param {Contract~AbiOption} option 
- * @returns 
+ *
+ * @param {string} name
+ * @param {Contract~AbiOption} option
+ * @returns
  */
 const classHeader = (name = `Name`, option = null) => [
   `import interface from '../../interfaces/${name}';`,
   ``,
-  ...option?.inputs?.length && makeTypeDef(option.inputs, name, `Options`, ``) || [],
+  ...option?.inputs?.length && makeConstructorTypeDef(option.inputs, name) || [],
   `/**`,
   ` * ${name} Object`,
   ` * @class ${name}`,
