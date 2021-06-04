@@ -101,8 +101,6 @@ class ERC721Standard extends IContract {
     this.params.contract.getContract().methods.setTokenURI(tokenID, URI),
   );
 
-  setTokenURI
-
   /**
    * Mint created TokenID
    * @param {Object} params
