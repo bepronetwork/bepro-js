@@ -1,7 +1,6 @@
 import _ from 'lodash';
-import { erc721standard } from '../../interfaces';
+import { erc721contract } from '../../interfaces';
 import IContract from '../IContract';
-import ERC20Contract from '../ERC20/ERC20Contract';
 /**
  * ERC721Contract Object
  * @class ERC721Contract
@@ -9,9 +8,9 @@ import ERC20Contract from '../ERC20/ERC20Contract';
  * @param {Address} contractAddress ? (opt)
  */
 
-class ERC721Standard extends IContract {
+class ERC721Contract extends IContract {
   constructor(params = {}) {
-    super({ abi: erc721standard, ...params });
+    super({ abi: erc721contract, ...params });
   }
 
   __assert = async () => {
@@ -21,17 +20,7 @@ class ERC721Standard extends IContract {
       );
     }
     /* Use ABI */
-    this.params.contract.use(erc721collectibles, this.getAddress());
-
-    /* Set Token Address Contract for easy access */
-    this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
-      contractAddress: await this.purchaseToken(),
-      acc: this.acc,
-    });
-
-    /* Assert Token Contract */
-    await this.params.ERC20Contract.__assert();
+    this.params.contract.use(erc721contract, this.getAddress());
   };
 
   /**
@@ -67,6 +56,24 @@ class ERC721Standard extends IContract {
     return await this.params.contract.getContract().methods.baseURI().call();
   }
 
+    /**
+   * @function
+   * @description Get name
+   * @returns {String} Name
+   */
+     async name() {
+      return await this.params.contract.getContract().methods.name().call();
+    }
+
+       /**
+   * @function
+   * @description Get Symbol
+   * @returns {String} Symbol
+   */
+    async symbol() {
+      return await this.params.contract.getContract().methods.symbol().call();
+    }
+
   /**
    * @function
    * @description Set Base Token URI
@@ -78,12 +85,13 @@ class ERC721Standard extends IContract {
   /**
    * @function
    * @description Mint created TokenID
-   * @param {Address} to
-   * @param {Integer} tokenID
+   * @param {Object} params
+   * @param {Address} to Address to send to
+   * @param {Integer} tokenId Token Id to use
    */
-  async mint({ tokenID }) {
+  async mint({ to, tokenId }) {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.mint(tokenID),
+      this.params.contract.getContract().methods.mint(to, tokenId)
     );
   }
 
@@ -103,7 +111,6 @@ class ERC721Standard extends IContract {
     return res;
   };
 
-  getERC20Contract = () => this.params.ERC20Contract;
 }
 
-export default ERC721Standard;
+export default ERC721Contract;

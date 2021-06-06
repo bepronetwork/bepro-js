@@ -10,6 +10,8 @@ var _index = require('./models/index');
 
 
 
+
+
 var _Account = require('./utils/Account');var _Account2 = _interopRequireDefault(_Account);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 var ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
@@ -164,10 +166,32 @@ function Application(_ref)
 
 
 
+  getMarketplaceRealFvrContract = function ()
+
+  {var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref5$contractAddress = _ref5.contractAddress,contractAddress = _ref5$contractAddress === undefined ? null : _ref5$contractAddress;
+    try {
+      return new _index.MarketplaceRealFvr({
+        web3: _this.web3,
+        contractAddress: contractAddress,
+        acc: _this.test && !_this.localtest ? _this.account : null });
+
+    } catch (err) {
+      throw err;
+    }
+  };this.
+
+
+
+
+
+
+
+
+
   getStakingContract = function ()
 
 
-  {var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref5$contractAddress = _ref5.contractAddress,contractAddress = _ref5$contractAddress === undefined ? null : _ref5$contractAddress,_ref5$tokenAddress = _ref5.tokenAddress,tokenAddress = _ref5$tokenAddress === undefined ? null : _ref5$tokenAddress;
+  {var _ref6 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref6$contractAddress = _ref6.contractAddress,contractAddress = _ref6$contractAddress === undefined ? null : _ref6$contractAddress,_ref6$tokenAddress = _ref6.tokenAddress,tokenAddress = _ref6$tokenAddress === undefined ? null : _ref6$tokenAddress;
     try {
       return new _index.StakingContract({
         web3: _this.web3,
@@ -191,7 +215,7 @@ function Application(_ref)
   getERC20TokenLock = function ()
 
 
-  {var _ref6 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref6$contractAddress = _ref6.contractAddress,contractAddress = _ref6$contractAddress === undefined ? null : _ref6$contractAddress,_ref6$tokenAddress = _ref6.tokenAddress,tokenAddress = _ref6$tokenAddress === undefined ? null : _ref6$tokenAddress;
+  {var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref7$contractAddress = _ref7.contractAddress,contractAddress = _ref7$contractAddress === undefined ? null : _ref7$contractAddress,_ref7$tokenAddress = _ref7.tokenAddress,tokenAddress = _ref7$tokenAddress === undefined ? null : _ref7$tokenAddress;
     try {
       return new _index.ERC20TokenLock({
         web3: _this.web3,
@@ -214,7 +238,7 @@ function Application(_ref)
   getBEPRONetwork = function ()
 
 
-  {var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref7$contractAddress = _ref7.contractAddress,contractAddress = _ref7$contractAddress === undefined ? null : _ref7$contractAddress,_ref7$tokenAddress = _ref7.tokenAddress,tokenAddress = _ref7$tokenAddress === undefined ? null : _ref7$tokenAddress;
+  {var _ref8 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref8$contractAddress = _ref8.contractAddress,contractAddress = _ref8$contractAddress === undefined ? null : _ref8$contractAddress,_ref8$tokenAddress = _ref8.tokenAddress,tokenAddress = _ref8$tokenAddress === undefined ? null : _ref8$tokenAddress;
     try {
       return new _index.BEPRONetwork({
         web3: _this.web3,
@@ -234,7 +258,7 @@ function Application(_ref)
 
 
 
-  getERC721Collectibles = function () {var _ref8 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref8$contractAddress = _ref8.contractAddress,contractAddress = _ref8$contractAddress === undefined ? null : _ref8$contractAddress;
+  getERC721Collectibles = function () {var _ref9 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},_ref9$contractAddress = _ref9.contractAddress,contractAddress = _ref9$contractAddress === undefined ? null : _ref9$contractAddress;
     try {
       return new _index.ERC721Collectibles({
         web3: _this.web3,
@@ -253,9 +277,28 @@ function Application(_ref)
 
 
 
-  getERC20Contract = function (_ref9) {var _ref9$contractAddress = _ref9.contractAddress,contractAddress = _ref9$contractAddress === undefined ? null : _ref9$contractAddress;
+  getERC20Contract = function (_ref10) {var _ref10$contractAddres = _ref10.contractAddress,contractAddress = _ref10$contractAddres === undefined ? null : _ref10$contractAddres;
     try {
       return new _index.ERC20Contract({
+        web3: _this.web3,
+        contractAddress: contractAddress,
+        acc: _this.test && !_this.localtest ? _this.account : null });
+
+    } catch (err) {
+      throw err;
+    }
+  };this.
+
+
+
+
+
+
+
+
+  getERC721Contract = function (_ref11) {var _ref11$contractAddres = _ref11.contractAddress,contractAddress = _ref11$contractAddres === undefined ? null : _ref11$contractAddres;
+    try {
+      return new _index.ERC721Contract({
         web3: _this.web3,
         contractAddress: contractAddress,
         acc: _this.test && !_this.localtest ? _this.account : null });
@@ -321,47 +364,60 @@ function Application(_ref)
                   * @param {Address} params.tokenAddress (Opt) If it is deployed
                   * @return {OpenerRealFvr} OpenerRealFvr
                   */ /**
-                      * @function
-                      * @description Create a StakingContract Object
-                      * @param {Object} params
-                      * @param {Address} params.contractAddress (Opt) If it is deployed
-                      * @param {Address} params.tokenAddress (Opt) If it is deployed
-                      * @return {StakingContract} StakingContract
-                      */ /**
-                          * @function
-                          * @description Create a ERC20TokenLock Object
-                          * @param {Object} params
-                          * @param {Address} params.contractAddress (Opt) If it is deployed
-                          * @param {Address} params.tokenAddress (Opt) If it is deployed
-                          * @return {ERC20TokenLock} ERC20TokenLock
-                          */ /**
-                              * @function
-                              * @description Create a BEPRONetwork Object
-                              * @param {Object} params
-                              * @param {Address} params.contractAddress (Opt) If it is deployed
-                              * @return {BEPRONetwork} BEPRONetwork
-                              */ /**
-                                  * @function
-                                  * @description Create a ERC721Collectibles Object
-                                  * @param {Object} params
-                                  * @param {Address} params.contractAddress (Opt) If it is deployed
-                                  * @return {ERC721Collectibles} ERC721Collectibles
-                                  */ /**
-                                      * @function
-                                      * @description Create a ERC20Contract Object
-                                      * @param {Object} params
-                                      * @param {Address} params.contractAddress (Opt) If it is deployed
-                                      * @return {ERC20Contract} ERC20Contract
-                                      */ /** ***** */ /** UTILS */ /** ***** */ /**
-                                                                                 * @function
-                                                                                 * @description Get ETH Network
-                                                                                 * @return {String} Network Name (Ex : Kovan)
-                                                                                 */ /**
-                                                                                     * @function
-                                                                                     * @description Get Address connected via login()
-                                                                                     * @return {Address} Address in Use
-                                                                                     */ /**
-                                                                                         * @function
-                                                                                         * @description Get ETH Balance of Address connected via login()
-                                                                                         * @return {Integer} ETH Balance
-                                                                                         */;exports.default = Application;
+                     * @function
+                     * @description Create a MarketplaceRealFvr Object
+                     * @param {Object} params
+                     * @param {Address} params.contractAddress (Opt) If it is deployed
+                     * @param {Address} params.tokenAddress (Opt) If it is deployed
+                     * @return {MarketplaceRealFvr} MarketplaceRealFvr
+                     */ /**
+                         * @function
+                         * @description Create a StakingContract Object
+                         * @param {Object} params
+                         * @param {Address} params.contractAddress (Opt) If it is deployed
+                         * @param {Address} params.tokenAddress (Opt) If it is deployed
+                         * @return {StakingContract} StakingContract
+                         */ /**
+                             * @function
+                             * @description Create a ERC20TokenLock Object
+                             * @param {Object} params
+                             * @param {Address} params.contractAddress (Opt) If it is deployed
+                             * @param {Address} params.tokenAddress (Opt) If it is deployed
+                             * @return {ERC20TokenLock} ERC20TokenLock
+                             */ /**
+                                 * @function
+                                 * @description Create a BEPRONetwork Object
+                                 * @param {Object} params
+                                 * @param {Address} params.contractAddress (Opt) If it is deployed
+                                 * @return {BEPRONetwork} BEPRONetwork
+                                 */ /**
+                                     * @function
+                                     * @description Create a ERC721Collectibles Object
+                                     * @param {Object} params
+                                     * @param {Address} params.contractAddress (Opt) If it is deployed
+                                     * @return {ERC721Collectibles} ERC721Collectibles
+                                     */ /**
+                                         * @function
+                                         * @description Create a ERC20Contract Object
+                                         * @param {Object} params
+                                         * @param {Address} params.contractAddress (Opt) If it is deployed
+                                         * @return {ERC20Contract} ERC20Contract
+                                         */ /**
+                                             * @function
+                                             * @description Create a ERC721Contract Object
+                                             * @param {Object} params
+                                             * @param {Address} params.contractAddress (Opt) If it is deployed
+                                             * @return {ERC721Contract} ERC721Contract
+                                             */ /** ***** */ /** UTILS */ /** ***** */ /**
+                                                                                        * @function
+                                                                                        * @description Get ETH Network
+                                                                                        * @return {String} Network Name (Ex : Kovan)
+                                                                                        */ /**
+                                                                                            * @function
+                                                                                            * @description Get Address connected via login()
+                                                                                            * @return {Address} Address in Use
+                                                                                            */ /**
+                                                                                                * @function
+                                                                                                * @description Get ETH Balance of Address connected via login()
+                                                                                                * @return {Integer} ETH Balance
+                                                                                                */;exports.default = Application;

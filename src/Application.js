@@ -7,8 +7,10 @@ import {
   StakingContract,
   BEPRONetwork,
   ERC20TokenLock,
+  ERC721Contract,
   ERC721Collectibles,
   OpenerRealFvr,
+  MarketplaceRealFvr
 } from './models/index';
 import Account from './utils/Account';
 
@@ -156,6 +158,28 @@ class Application {
     }
   };
 
+   /**
+   * @function
+   * @description Create a MarketplaceRealFvr Object
+   * @param {Object} params
+   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * @param {Address} params.tokenAddress (Opt) If it is deployed
+   * @return {MarketplaceRealFvr} MarketplaceRealFvr
+   */
+  getMarketplaceRealFvrContract = ({
+    contractAddress = null
+  } = {}) => {
+    try {
+      return new MarketplaceRealFvr({
+        web3: this.web3,
+        contractAddress,
+        acc: this.test && !this.localtest ? this.account : null,
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
   /**
    * @function
    * @description Create a StakingContract Object
@@ -256,6 +280,25 @@ class Application {
   getERC20Contract = ({ contractAddress = null }) => {
     try {
       return new ERC20Contract({
+        web3: this.web3,
+        contractAddress,
+        acc: this.test && !this.localtest ? this.account : null,
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  /**
+   * @function
+   * @description Create a ERC721Contract Object
+   * @param {Object} params
+   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * @return {ERC721Contract} ERC721Contract
+   */
+   getERC721Contract = ({ contractAddress = null }) => {
+    try {
+      return new ERC721Contract({
         web3: this.web3,
         contractAddress,
         acc: this.test && !this.localtest ? this.account : null,

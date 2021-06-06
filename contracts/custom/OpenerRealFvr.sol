@@ -38,6 +38,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         uint256 saleStart;
         uint256[] saleDistributionAmounts;
         address[] saleDistributionAddresses;
+        // Marketplace
         // Catalog info
         uint256 price; // in usd (1 = $0.000001)
         string serie;
@@ -63,7 +64,6 @@ contract OpenerRealFvr is  Ownable, ERC721 {
             );
         }
     }
-
 
     function setTokenURI(uint256 tokenId, string memory uri) public onlyOwner {
         _setTokenURI(tokenId, uri);

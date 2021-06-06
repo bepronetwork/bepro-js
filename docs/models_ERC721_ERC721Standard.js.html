@@ -88,7 +88,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="MarketplaceRealFvr.html">MarketplaceRealFvr</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
                 
             </nav>
         </div>
@@ -108,7 +108,6 @@
             <pre class="prettyprint source linenums"><code>import _ from 'lodash';
 import { erc721standard } from '../../interfaces';
 import IContract from '../IContract';
-import ERC20Contract from '../ERC20/ERC20Contract';
 /**
  * ERC721Contract Object
  * @class ERC721Contract
@@ -129,16 +128,6 @@ class ERC721Standard extends IContract {
     }
     /* Use ABI */
     this.params.contract.use(erc721collectibles, this.getAddress());
-
-    /* Set Token Address Contract for easy access */
-    this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
-      contractAddress: await this.purchaseToken(),
-      acc: this.acc,
-    });
-
-    /* Assert Token Contract */
-    await this.params.ERC20Contract.__assert();
   };
 
   /**
@@ -173,6 +162,24 @@ class ERC721Standard extends IContract {
   async baseURI() {
     return await this.params.contract.getContract().methods.baseURI().call();
   }
+
+    /**
+   * @function
+   * @description Get name
+   * @returns {String} Name
+   */
+     async name() {
+      return await this.params.contract.getContract().methods.name().call();
+    }
+
+       /**
+   * @function
+   * @description Get Symbol
+   * @returns {String} Symbol
+   */
+    async symbol() {
+      return await this.params.contract.getContract().methods.symbol().call();
+    }
 
   /**
    * @function
@@ -210,7 +217,6 @@ class ERC721Standard extends IContract {
     return res;
   };
 
-  getERC20Contract = () => this.params.ERC20Contract;
 }
 
 export default ERC721Standard;

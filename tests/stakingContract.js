@@ -221,7 +221,6 @@ context('Staking Contract', async () => {
       });
       startDateSubscription = res.startDate;
       endDateSubscription = res.endDate;
-      console.log('res', res);
       expect(res.startDate).to.not.equal(false);
       expect(res.endDate).to.not.equal(false);
       expect(res.amount).to.equal(individualMinimumAmount.toString());

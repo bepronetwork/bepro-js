@@ -88,7 +88,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="BEPRONetwork.html">BEPRONetwork</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Contract.html">ERC721Contract</a></li><li><a href="ExchangeContract.html">ExchangeContract</a></li><li><a href="IContract.html">IContract</a></li><li><a href="MarketplaceRealFvr.html">MarketplaceRealFvr</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li></ul></div>
                 
             </nav>
         </div>
@@ -114,8 +114,10 @@ import {
   StakingContract,
   BEPRONetwork,
   ERC20TokenLock,
+  ERC721Contract,
   ERC721Collectibles,
   OpenerRealFvr,
+  MarketplaceRealFvr
 } from './models/index';
 import Account from './utils/Account';
 
@@ -263,6 +265,28 @@ class Application {
     }
   };
 
+   /**
+   * @function
+   * @description Create a MarketplaceRealFvr Object
+   * @param {Object} params
+   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * @param {Address} params.tokenAddress (Opt) If it is deployed
+   * @return {MarketplaceRealFvr} MarketplaceRealFvr
+   */
+  getMarketplaceRealFvrContract = ({
+    contractAddress = null
+  } = {}) => {
+    try {
+      return new MarketplaceRealFvr({
+        web3: this.web3,
+        contractAddress,
+        acc: this.test &amp;&amp; !this.localtest ? this.account : null,
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
   /**
    * @function
    * @description Create a StakingContract Object
@@ -363,6 +387,25 @@ class Application {
   getERC20Contract = ({ contractAddress = null }) => {
     try {
       return new ERC20Contract({
+        web3: this.web3,
+        contractAddress,
+        acc: this.test &amp;&amp; !this.localtest ? this.account : null,
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  /**
+   * @function
+   * @description Create a ERC721Contract Object
+   * @param {Object} params
+   * @param {Address} params.contractAddress (Opt) If it is deployed
+   * @return {ERC721Contract} ERC721Contract
+   */
+   getERC721Contract = ({ contractAddress = null }) => {
+    try {
+      return new ERC721Contract({
         web3: this.web3,
         contractAddress,
         acc: this.test &amp;&amp; !this.localtest ? this.account : null,

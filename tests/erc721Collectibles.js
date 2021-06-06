@@ -211,7 +211,6 @@ context('ERC721 Collectibles', async () => {
     'should verify the current Token Metadatta URI',
     mochaAsync(async () => {
       const res = await erc721Contract.getURITokenID({ tokenID: 1000 });
-      console.log('res', res);
     }),
   );
 
