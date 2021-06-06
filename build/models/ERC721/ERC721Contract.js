@@ -57,19 +57,19 @@ ERC721Contract = function (_IContract) {(0, _inherits3.default)(ERC721Contract, 
 
 
     /**
-                                                                                                                                                                                                                                                                                       * @function
-                                                                                                                                                                                                                                                                                       * @description Get name
-                                                                                                                                                                                                                                                                                       * @returns {String} Name
-                                                                                                                                                                                                                                                                                       */ }, { key: 'name', value: function () {var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.next = 2;return (
+                                                                                                                                                                                                                                                                                        * @function
+                                                                                                                                                                                                                                                                                        * @description Get name
+                                                                                                                                                                                                                                                                                        * @returns {String} Name
+                                                                                                                                                                                                                                                                                        */ }, { key: 'name', value: function () {var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.next = 2;return (
 
                   this.params.contract.getContract().methods.name().call());case 2:return _context4.abrupt('return', _context4.sent);case 3:case 'end':return _context4.stop();}}}, _callee4, this);}));function name() {return _ref6.apply(this, arguments);}return name;}()
 
 
     /**
-                                                                                                                                                                                                                                                                              * @function
-                                                                                                                                                                                                                                                                              * @description Get Symbol
-                                                                                                                                                                                                                                                                              * @returns {String} Symbol
-                                                                                                                                                                                                                                                                              */ }, { key: 'symbol', value: function () {var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {return _regenerator2.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:_context5.next = 2;return (
+                                                                                                                                                                                                                                                                               * @function
+                                                                                                                                                                                                                                                                               * @description Get Symbol
+                                                                                                                                                                                                                                                                               * @returns {String} Symbol
+                                                                                                                                                                                                                                                                               */ }, { key: 'symbol', value: function () {var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5() {return _regenerator2.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:_context5.next = 2;return (
 
                   this.params.contract.getContract().methods.symbol().call());case 2:return _context5.abrupt('return', _context5.sent);case 3:case 'end':return _context5.stop();}}}, _callee5, this);}));function symbol() {return _ref7.apply(this, arguments);}return symbol;}()
 
@@ -109,7 +109,6 @@ ERC721Contract = function (_IContract) {(0, _inherits3.default)(ERC721Contract, 
               /* Call to Backend API */_context9.next = 11;return (
                 _this2.__assert());case 11:return _context9.abrupt('return',
               res);case 12:case 'end':return _context9.stop();}}}, _callee9, _this2);}));return function (_x6) {return _ref13.apply(this, arguments);};}();};exports.default =
-
 
 
 

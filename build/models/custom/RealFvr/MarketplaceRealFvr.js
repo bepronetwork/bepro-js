@@ -53,14 +53,13 @@ MarketplaceRealFvr = function (_IContract) {(0, _inherits3.default)(MarketplaceR
 
 
   /**
-    * @function
-    * @description Put ERC721 on Sale
-    * @param {Object} params Parameters
-    * @param {String} params.tokenId Token Id
-    * @param {String} params.price Price (Token Amount)
-    * @returns {TransactionObject} Success the Tx Object if operation was successful
-    */
-
+     * @function
+     * @description Put ERC721 on Sale
+     * @param {Object} params Parameters
+     * @param {String} params.tokenId Token Id
+     * @param {String} params.price Price (Token Amount)
+     * @returns {TransactionObject} Success the Tx Object if operation was successful
+     */
 
 
 
@@ -70,99 +69,99 @@ MarketplaceRealFvr = function (_IContract) {(0, _inherits3.default)(MarketplaceR
 
 
   /**
-          * @function
-          * @description Remove ERC721 from Sale
-          * @param {Object} params Parameters
-          * @param {String} params.tokenid Token Id
-          * @returns {TransactionObject} Success the Tx Object if operation was successful
-        */
+           * @function
+           * @description Remove ERC721 from Sale
+           * @param {Object} params Parameters
+           * @param {String} params.tokenid Token Id
+           * @returns {TransactionObject} Success the Tx Object if operation was successful
+         */
 
 
 
 
   /**
-            * @function
-            * @description Buy ERC721 from Sale
-            * @param {Object} params Parameters
-            * @param {String} params.tokenid Token Id
-            * @returns {TransactionObject} Success the Tx Object if operation was successful
-           */
+             * @function
+             * @description Buy ERC721 from Sale
+             * @param {Object} params Parameters
+             * @param {String} params.tokenid Token Id
+             * @returns {TransactionObject} Success the Tx Object if operation was successful
+            */
 
 
 
 
   /**
-               * @function
-               * @description Change ERC20 Address
-               * @param {Object} params Parameters
-               * @param {String} params.erc20TokenAddress ERC20TokenAddress
-               * @returns {TransactionObject} Success the Tx Object if operation was successful
-              */
+                * @function
+                * @description Change ERC20 Address
+                * @param {Object} params Parameters
+                * @param {String} params.erc20TokenAddress ERC20TokenAddress
+                * @returns {TransactionObject} Success the Tx Object if operation was successful
+               */
 
 
 
 
   /**
-                  * @function
-                  * @description Change ERC20 Address
-                  * @param {Object} params Parameters
-                  * @param {String} params.erc721TokenAddress ERC721TokenAddress
-                  * @returns {TransactionObject} Success the Tx Object if operation was successful
-                 */
+                   * @function
+                   * @description Change ERC20 Address
+                   * @param {Object} params Parameters
+                   * @param {String} params.erc721TokenAddress ERC721TokenAddress
+                   * @returns {TransactionObject} Success the Tx Object if operation was successful
+                  */
 
 
 
 
   /**
-                     * @function
-                     * @description Change ERC20 Address
-                     * @param {Object} params Parameters
-                     * @param {String} params.feeAddress Fee Address
-                     * @param {String} params.feePercentage Fee Percentage (1 = 1%)
-                     * @returns {TransactionObject} Success the Tx Object if operation was successful
-                    */
+                      * @function
+                      * @description Change ERC20 Address
+                      * @param {Object} params Parameters
+                      * @param {String} params.feeAddress Fee Address
+                      * @param {String} params.feePercentage Fee Percentage (1 = 1%)
+                      * @returns {TransactionObject} Success the Tx Object if operation was successful
+                     */
 
 
 
 
   /**
-                        * @function
-                        * @description Get ERC20 Token Address
-                        * @returns {Address} Token Address
-                        */
+                         * @function
+                         * @description Get ERC20 Token Address
+                         * @returns {Address} Token Address
+                         */
 
 
   /**
-                            * @function
-                            * @description Get ERC721 Token Address
-                            * @returns {Address} Token Address
-                            */
+                             * @function
+                             * @description Get ERC721 Token Address
+                             * @returns {Address} Token Address
+                             */
 
 
   /**
-                                * @function
-                                * @description Get FeeAddress
-                                * @returns {Address} Fee Address
-                               */
+                                 * @function
+                                 * @description Get FeeAddress
+                                 * @returns {Address} Fee Address
+                                */
 
 
   /**
-                                   * @function
-                                   * @description Get Amount of ERC721s ever in sale
-                                   * @returns {Integer} Amount of NFTs in Sale
-                                   */
+                                    * @function
+                                    * @description Get Amount of ERC721s ever in sale
+                                    * @returns {Integer} Amount of NFTs in Sale
+                                    */
 
 
 
 
   /**
-                                       * @function
-                                       * @description User deploys the contract
-                                       * @param {Object} params Parameters
-                                       * @param {Address} params.erc20TokenAddress Address of the Contract
-                                       * @param {Address} params.erc721TokenAddress Address of the Contract
-                                       * @returns {Boolean} Success the Tx Object if operation was successful
-                                       */return MarketplaceRealFvr;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.__assert = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {return _regenerator2.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:if (_this2.getAddress()) {_context.next = 2;break;}throw new Error('Contract is not deployed, first deploy it and provide a contract address');case 2: // Use ABI
+                                        * @function
+                                        * @description User deploys the contract
+                                        * @param {Object} params Parameters
+                                        * @param {Address} params.erc20TokenAddress Address of the Contract
+                                        * @param {Address} params.erc721TokenAddress Address of the Contract
+                                        * @returns {Boolean} Success the Tx Object if operation was successful
+                                        */return MarketplaceRealFvr;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.__assert = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {return _regenerator2.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:if (_this2.getAddress()) {_context.next = 2;break;}throw new Error('Contract is not deployed, first deploy it and provide a contract address');case 2: // Use ABI
             _this2.params.contract.use(_interfaces.marketplaceRealFvr, _this2.getAddress());_context.next = 5;return _this2.getERC20TokenAddress();case 5:_this2.params.tokenAddress = _context.sent;_context.next = 8;return _this2.getERC721TokenAddress();case 8:_this2.params.erc721Address = _context.sent; // Set Token Address Contract for easy access
             _this2.params.ERC20Contract = new _ERC20Contract2.default({ web3: _this2.web3, contractAddress: _this2.params.tokenAddress, acc: _this2.acc }); // Set Token Address Contract for easy access
             _this2.params.ERC721Contract = new _ERC721Contract2.default({ web3: _this2.web3, contractAddress: _this2.params.tokenAddress, acc: _this2.acc });_context.prev = 11;_context.next = 14;return _this2.params.ERC20Contract.__assert();case 14:_context.next = 16;return _this2.params.ERC721Contract.__assert();case 16:_context.next = 21;break;case 18:_context.prev = 18;_context.t0 = _context['catch'](11);throw new Error('Problem on ERC20 Assert, confirm ERC20 \'tokenAddress\'' + _context.t0);case 21:case 'end':return _context.stop();}}}, _callee, _this2, [[11, 18]]);}));this.putERC721OnSale = function () {var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(_ref3) {var tokenId = _ref3.tokenId,price = _ref3.price;return _regenerator2.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:_context2.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.putERC721OnSale(tokenId, _Numbers2.default.toSmartContractDecimals(price, _this2.getERC20Contract().getDecimals())));case 2:return _context2.abrupt('return', _context2.sent);case 3:case 'end':return _context2.stop();}}}, _callee2, _this2);}));return function (_x2) {return _ref2.apply(this, arguments);};}();this.removeERC721FromSale = function () {var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3(_ref5) {var tokenid = _ref5.tokenid;return _regenerator2.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:_context3.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.removeERC721FromSale(tokenid));case 2:return _context3.abrupt('return', _context3.sent);case 3:case 'end':return _context3.stop();}}}, _callee3, _this2);}));return function (_x3) {return _ref4.apply(this, arguments);};}();this.buyERC721 = function () {var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4(_ref7) {var tokenid = _ref7.tokenid;return _regenerator2.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:_context4.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.buyERC721(tokenid));case 2:return _context4.abrupt('return', _context4.sent);case 3:case 'end':return _context4.stop();}}}, _callee4, _this2);}));return function (_x4) {return _ref6.apply(this, arguments);};}();this.changeERC20 = function () {var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(_ref9) {var erc20TokenAddress = _ref9.erc20TokenAddress;return _regenerator2.default.wrap(function _callee5$(_context5) {while (1) {switch (_context5.prev = _context5.next) {case 0:_context5.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.changeERC20(erc20TokenAddress));case 2:return _context5.abrupt('return', _context5.sent);case 3:case 'end':return _context5.stop();}}}, _callee5, _this2);}));return function (_x5) {return _ref8.apply(this, arguments);};}();this.changeERC721 = function () {var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(_ref11) {var erc721TokenAddress = _ref11.erc721TokenAddress;return _regenerator2.default.wrap(function _callee6$(_context6) {while (1) {switch (_context6.prev = _context6.next) {case 0:_context6.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.changeERC721(erc721TokenAddress));case 2:return _context6.abrupt('return', _context6.sent);case 3:case 'end':return _context6.stop();}}}, _callee6, _this2);}));return function (_x6) {return _ref10.apply(this, arguments);};}();this.setFixedFees = function () {var _ref12 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7(_ref13) {var feeAddress = _ref13.feeAddress,feePercentage = _ref13.feePercentage;return _regenerator2.default.wrap(function _callee7$(_context7) {while (1) {switch (_context7.prev = _context7.next) {case 0:_context7.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.setFixedFees(feeAddress, feePercentage));case 2:return _context7.abrupt('return', _context7.sent);case 3:case 'end':return _context7.stop();}}}, _callee7, _this2);}));return function (_x7) {return _ref12.apply(this, arguments);};}();this.getERC20TokenAddress = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8() {return _regenerator2.default.wrap(function _callee8$(_context8) {while (1) {switch (_context8.prev = _context8.next) {case 0:_context8.next = 2;return _this2.params.contract.getContract().methods.erc20Address().call();case 2:return _context8.abrupt('return', _context8.sent);case 3:case 'end':return _context8.stop();}}}, _callee8, _this2);}));this.getERC721TokenAddress = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9() {return _regenerator2.default.wrap(function _callee9$(_context9) {while (1) {switch (_context9.prev = _context9.next) {case 0:_context9.next = 2;return _this2.params.contract.getContract().methods.erc721Address().call();case 2:return _context9.abrupt('return', _context9.sent);case 3:case 'end':return _context9.stop();}}}, _callee9, _this2);}));this.getFeeAddress = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10() {return _regenerator2.default.wrap(function _callee10$(_context10) {while (1) {switch (_context10.prev = _context10.next) {case 0:_context10.next = 2;return _this2.params.contract.getContract().methods.feeAddress().call();case 2:return _context10.abrupt('return', _context10.sent);case 3:case 'end':return _context10.stop();}}}, _callee10, _this2);}));this.getAmountofNFTsEverInSale = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee11() {return _regenerator2.default.wrap(function _callee11$(_context11) {while (1) {switch (_context11.prev = _context11.next) {case 0:_context11.t0 = parseInt;_context11.next = 3;return _this2.params.contract.getContract().methods.saleIncrementId().call();case 3:_context11.t1 = _context11.sent;return _context11.abrupt('return', (0, _context11.t0)(_context11.t1, 10));case 5:case 'end':return _context11.stop();}}}, _callee11, _this2);}));this.deploy = function () {var _ref18 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee12(_ref19) {var erc20TokenAddress = _ref19.erc20TokenAddress,erc721TokenAddress = _ref19.erc721TokenAddress,callback = _ref19.callback;var params, res;return _regenerator2.default.wrap(function _callee12$(_context12) {while (1) {switch (_context12.prev = _context12.next) {case 0:
@@ -177,7 +176,6 @@ MarketplaceRealFvr = function (_IContract) {(0, _inherits3.default)(MarketplaceR
   getERC20Contract = function () {return _this2.params.ERC20Contract;};this.
 
   getERC721Contract = function () {return _this2.params.ERC721Contract;};};exports.default =
-
 
 
 MarketplaceRealFvr;

@@ -56,23 +56,23 @@ class ERC721Contract extends IContract {
     return await this.params.contract.getContract().methods.baseURI().call();
   }
 
-    /**
+  /**
    * @function
    * @description Get name
    * @returns {String} Name
    */
-     async name() {
-      return await this.params.contract.getContract().methods.name().call();
-    }
+  async name() {
+    return await this.params.contract.getContract().methods.name().call();
+  }
 
-       /**
+  /**
    * @function
    * @description Get Symbol
    * @returns {String} Symbol
    */
-    async symbol() {
-      return await this.params.contract.getContract().methods.symbol().call();
-    }
+  async symbol() {
+    return await this.params.contract.getContract().methods.symbol().call();
+  }
 
   /**
    * @function
@@ -91,7 +91,7 @@ class ERC721Contract extends IContract {
    */
   async mint({ to, tokenId }) {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.mint(to, tokenId)
+      this.params.contract.getContract().methods.mint(to, tokenId),
     );
   }
 
@@ -110,7 +110,6 @@ class ERC721Contract extends IContract {
     await this.__assert();
     return res;
   };
-
 }
 
 export default ERC721Contract;

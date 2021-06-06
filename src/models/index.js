@@ -17,5 +17,5 @@ export {
   ERC721Collectibles,
   BEPRONetwork,
   OpenerRealFvr,
-  ERC721Contract
+  ERC721Contract,
 };

@@ -364,60 +364,60 @@ function Application(_ref)
                   * @param {Address} params.tokenAddress (Opt) If it is deployed
                   * @return {OpenerRealFvr} OpenerRealFvr
                   */ /**
-                     * @function
-                     * @description Create a MarketplaceRealFvr Object
-                     * @param {Object} params
-                     * @param {Address} params.contractAddress (Opt) If it is deployed
-                     * @param {Address} params.tokenAddress (Opt) If it is deployed
-                     * @return {MarketplaceRealFvr} MarketplaceRealFvr
-                     */ /**
-                         * @function
-                         * @description Create a StakingContract Object
-                         * @param {Object} params
-                         * @param {Address} params.contractAddress (Opt) If it is deployed
-                         * @param {Address} params.tokenAddress (Opt) If it is deployed
-                         * @return {StakingContract} StakingContract
-                         */ /**
-                             * @function
-                             * @description Create a ERC20TokenLock Object
-                             * @param {Object} params
-                             * @param {Address} params.contractAddress (Opt) If it is deployed
-                             * @param {Address} params.tokenAddress (Opt) If it is deployed
-                             * @return {ERC20TokenLock} ERC20TokenLock
-                             */ /**
-                                 * @function
-                                 * @description Create a BEPRONetwork Object
-                                 * @param {Object} params
-                                 * @param {Address} params.contractAddress (Opt) If it is deployed
-                                 * @return {BEPRONetwork} BEPRONetwork
-                                 */ /**
-                                     * @function
-                                     * @description Create a ERC721Collectibles Object
-                                     * @param {Object} params
-                                     * @param {Address} params.contractAddress (Opt) If it is deployed
-                                     * @return {ERC721Collectibles} ERC721Collectibles
-                                     */ /**
-                                         * @function
-                                         * @description Create a ERC20Contract Object
-                                         * @param {Object} params
-                                         * @param {Address} params.contractAddress (Opt) If it is deployed
-                                         * @return {ERC20Contract} ERC20Contract
-                                         */ /**
-                                             * @function
-                                             * @description Create a ERC721Contract Object
-                                             * @param {Object} params
-                                             * @param {Address} params.contractAddress (Opt) If it is deployed
-                                             * @return {ERC721Contract} ERC721Contract
-                                             */ /** ***** */ /** UTILS */ /** ***** */ /**
-                                                                                        * @function
-                                                                                        * @description Get ETH Network
-                                                                                        * @return {String} Network Name (Ex : Kovan)
-                                                                                        */ /**
-                                                                                            * @function
-                                                                                            * @description Get Address connected via login()
-                                                                                            * @return {Address} Address in Use
-                                                                                            */ /**
-                                                                                                * @function
-                                                                                                * @description Get ETH Balance of Address connected via login()
-                                                                                                * @return {Integer} ETH Balance
-                                                                                                */;exports.default = Application;
+                      * @function
+                      * @description Create a MarketplaceRealFvr Object
+                      * @param {Object} params
+                      * @param {Address} params.contractAddress (Opt) If it is deployed
+                      * @param {Address} params.tokenAddress (Opt) If it is deployed
+                      * @return {MarketplaceRealFvr} MarketplaceRealFvr
+                      */ /**
+                          * @function
+                          * @description Create a StakingContract Object
+                          * @param {Object} params
+                          * @param {Address} params.contractAddress (Opt) If it is deployed
+                          * @param {Address} params.tokenAddress (Opt) If it is deployed
+                          * @return {StakingContract} StakingContract
+                          */ /**
+                              * @function
+                              * @description Create a ERC20TokenLock Object
+                              * @param {Object} params
+                              * @param {Address} params.contractAddress (Opt) If it is deployed
+                              * @param {Address} params.tokenAddress (Opt) If it is deployed
+                              * @return {ERC20TokenLock} ERC20TokenLock
+                              */ /**
+                                  * @function
+                                  * @description Create a BEPRONetwork Object
+                                  * @param {Object} params
+                                  * @param {Address} params.contractAddress (Opt) If it is deployed
+                                  * @return {BEPRONetwork} BEPRONetwork
+                                  */ /**
+                                      * @function
+                                      * @description Create a ERC721Collectibles Object
+                                      * @param {Object} params
+                                      * @param {Address} params.contractAddress (Opt) If it is deployed
+                                      * @return {ERC721Collectibles} ERC721Collectibles
+                                      */ /**
+                                          * @function
+                                          * @description Create a ERC20Contract Object
+                                          * @param {Object} params
+                                          * @param {Address} params.contractAddress (Opt) If it is deployed
+                                          * @return {ERC20Contract} ERC20Contract
+                                          */ /**
+                                              * @function
+                                              * @description Create a ERC721Contract Object
+                                              * @param {Object} params
+                                              * @param {Address} params.contractAddress (Opt) If it is deployed
+                                              * @return {ERC721Contract} ERC721Contract
+                                              */ /** ***** */ /** UTILS */ /** ***** */ /**
+                                                                                         * @function
+                                                                                         * @description Get ETH Network
+                                                                                         * @return {String} Network Name (Ex : Kovan)
+                                                                                         */ /**
+                                                                                             * @function
+                                                                                             * @description Get Address connected via login()
+                                                                                             * @return {Address} Address in Use
+                                                                                             */ /**
+                                                                                                 * @function
+                                                                                                 * @description Get ETH Balance of Address connected via login()
+                                                                                                 * @return {Integer} ETH Balance
+                                                                                                 */;exports.default = Application;

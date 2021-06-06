@@ -50824,7 +50824,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-06-06T12:15:47.706Z",
+  "updatedAt": "2021-06-06T12:17:38.689Z",
   "devdoc": {
     "methods": {
       "changeBEPROAddress(address)": {

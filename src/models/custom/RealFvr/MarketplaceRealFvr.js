@@ -38,10 +38,10 @@ class MarketplaceRealFvr extends IContract {
 
     // Set Token Address Contract for easy access
     this.params.ERC721Contract = new ERC721Standard({
-        web3: this.web3,
-        contractAddress: this.params.tokenAddress,
-        acc: this.acc,
-      });
+      web3: this.web3,
+      contractAddress: this.params.tokenAddress,
+      acc: this.acc,
+    });
 
     try {
       // Assert Token Contract
@@ -52,7 +52,7 @@ class MarketplaceRealFvr extends IContract {
     }
   };
 
-   /**
+  /**
    * @function
    * @description Put ERC721 on Sale
    * @param {Object} params Parameters
@@ -61,12 +61,11 @@ class MarketplaceRealFvr extends IContract {
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
   putERC721OnSale = async ({ tokenId, price }) => await this.__sendTx(
-      this.params.contract.getContract().methods.putERC721OnSale(tokenId,
-          Numbers.toSmartContractDecimals(
-              price,
-              this.getERC20Contract().getDecimals()
-          )
-      )
+    this.params.contract.getContract().methods.putERC721OnSale(tokenId,
+      Numbers.toSmartContractDecimals(
+        price,
+        this.getERC20Contract().getDecimals(),
+      )),
   );
 
   /**
@@ -77,7 +76,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
     removeERC721FromSale = async ({ tokenid }) => await this.__sendTx(
-        this.params.contract.getContract().methods.removeERC721FromSale(tokenid)
+      this.params.contract.getContract().methods.removeERC721FromSale(tokenid),
     );
 
     /**
@@ -88,7 +87,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
     buyERC721 = async ({ tokenid }) => await this.__sendTx(
-        this.params.contract.getContract().methods.buyERC721(tokenid)
+      this.params.contract.getContract().methods.buyERC721(tokenid),
     );
 
     /**
@@ -99,7 +98,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
     changeERC20 = async ({ erc20TokenAddress }) => await this.__sendTx(
-        this.params.contract.getContract().methods.changeERC20(erc20TokenAddress)
+      this.params.contract.getContract().methods.changeERC20(erc20TokenAddress),
     );
 
     /**
@@ -110,8 +109,8 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
     */
      changeERC721 = async ({ erc721TokenAddress }) => await this.__sendTx(
-        this.params.contract.getContract().methods.changeERC721(erc721TokenAddress)
-    );
+       this.params.contract.getContract().methods.changeERC721(erc721TokenAddress),
+     );
 
     /**
      * @function
@@ -122,7 +121,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
     */
     setFixedFees = async ({ feeAddress, feePercentage }) => await this.__sendTx(
-        this.params.contract.getContract().methods.setFixedFees(feeAddress, feePercentage)
+      this.params.contract.getContract().methods.setFixedFees(feeAddress, feePercentage),
     );
 
     /**
@@ -152,7 +151,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {Integer} Amount of NFTs in Sale
      */
     getAmountofNFTsEverInSale = async () => parseInt(
-        await this.params.contract.getContract().methods.saleIncrementId().call(), 10,
+      await this.params.contract.getContract().methods.saleIncrementId().call(), 10,
     );
 
     /**
@@ -164,20 +163,19 @@ class MarketplaceRealFvr extends IContract {
      * @returns {Boolean} Success the Tx Object if operation was successful
      */
     deploy = async ({
-        erc20TokenAddress, erc721TokenAddress, callback,
+      erc20TokenAddress, erc721TokenAddress, callback,
     }) => {
-        const params = [erc20TokenAddress, erc721TokenAddress];
-        const res = await this.__deploy(params, callback);
-        this.params.contractAddress = res.contractAddress;
-        /* Call to Backend API */
-        await this.__assert();
-        return res;
+      const params = [erc20TokenAddress, erc721TokenAddress];
+      const res = await this.__deploy(params, callback);
+      this.params.contractAddress = res.contractAddress;
+      /* Call to Backend API */
+      await this.__assert();
+      return res;
     };
 
     getERC20Contract = () => this.params.ERC20Contract;
 
     getERC721Contract = () => this.params.ERC721Contract;
-
 }
 
 export default MarketplaceRealFvr;

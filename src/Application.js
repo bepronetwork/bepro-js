@@ -10,7 +10,7 @@ import {
   ERC721Contract,
   ERC721Collectibles,
   OpenerRealFvr,
-  MarketplaceRealFvr
+  MarketplaceRealFvr,
 } from './models/index';
 import Account from './utils/Account';
 
@@ -158,7 +158,7 @@ class Application {
     }
   };
 
-   /**
+  /**
    * @function
    * @description Create a MarketplaceRealFvr Object
    * @param {Object} params
@@ -167,7 +167,7 @@ class Application {
    * @return {MarketplaceRealFvr} MarketplaceRealFvr
    */
   getMarketplaceRealFvrContract = ({
-    contractAddress = null
+    contractAddress = null,
   } = {}) => {
     try {
       return new MarketplaceRealFvr({
@@ -297,20 +297,20 @@ class Application {
    * @return {ERC721Contract} ERC721Contract
    */
    getERC721Contract = ({ contractAddress = null }) => {
-    try {
-      return new ERC721Contract({
-        web3: this.web3,
-        contractAddress,
-        acc: this.test && !this.localtest ? this.account : null,
-      });
-    } catch (err) {
-      throw err;
-    }
-  };
+     try {
+       return new ERC721Contract({
+         web3: this.web3,
+         contractAddress,
+         acc: this.test && !this.localtest ? this.account : null,
+       });
+     } catch (err) {
+       throw err;
+     }
+   };
 
-  /** ***** */
-  /** UTILS */
-  /** ***** */
+   /** ***** */
+   /** UTILS */
+   /** ***** */
 
   /**
    * @function
