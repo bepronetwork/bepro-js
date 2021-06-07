@@ -150,9 +150,11 @@ class MarketplaceRealFvr extends IContract {
      * @description Get Amount of ERC721s ever in sale
      * @returns {Integer} Amount of NFTs in Sale
      */
-    getAmountofNFTsEverInSale = async () => parseInt(
-      await this.params.contract.getContract().methods.saleIncrementId().call(), 10,
-    );
+    getAmountofNFTsEverInSale = async () => {
+      parseInt(
+        await this.params.contract.getContract().methods.saleIncrementId().call(), 10
+      ) - 1;
+    }
 
     /**
      * @function
