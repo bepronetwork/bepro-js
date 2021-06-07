@@ -50002,7 +50002,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-06-06T12:18:13.004Z",
+  "updatedAt": "2021-06-07T08:46:28.753Z",
   "devdoc": {
     "details": "Interface of the ERC20 standard + mint & burn",
     "methods": {
