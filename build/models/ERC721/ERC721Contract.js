@@ -91,24 +91,37 @@ ERC721Contract = function (_IContract) {(0, _inherits3.default)(ERC721Contract, 
                                                                                                                                                                                                                                                                                                            */value: function () {var _ref8 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(_ref9) {var
         to = _ref9.to,tokenId = _ref9.tokenId;return _regenerator2.default.wrap(function _callee6$(_context6) {while (1) {switch (_context6.prev = _context6.next) {case 0:_context6.next = 2;return (
                   this.__sendTx(
-                  this.params.contract.getContract().methods.mint(to, tokenId)));case 2:return _context6.abrupt('return', _context6.sent);case 3:case 'end':return _context6.stop();}}}, _callee6, this);}));function mint(_x4) {return _ref8.apply(this, arguments);}return mint;}() }]);return ERC721Contract;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.__assert = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7() {return _regenerator2.default.wrap(function _callee7$(_context7) {while (1) {switch (_context7.prev = _context7.next) {case 0:if (_this2.getAddress()) {_context7.next = 2;break;}throw new Error('Contract is not deployed, first deploy it and provide a contract address');case 2: /* Use ABI */_this2.params.contract.use(_interfaces.erc721contract, _this2.getAddress());case 3:case 'end':return _context7.stop();}}}, _callee7, _this2);}));this.setBaseTokenURI = function () {var _ref11 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8(_ref12) {var URI = _ref12.URI;return _regenerator2.default.wrap(function _callee8$(_context8) {while (1) {switch (_context8.prev = _context8.next) {case 0:_context8.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.setBaseURI(URI));case 2:return _context8.abrupt('return', _context8.sent);case 3:case 'end':return _context8.stop();}}}, _callee8, _this2);}));return function (_x5) {return _ref11.apply(this, arguments);};}();this.
+                  this.params.contract.getContract().methods.mint(to, tokenId)));case 2:return _context6.abrupt('return', _context6.sent);case 3:case 'end':return _context6.stop();}}}, _callee6, this);}));function mint(_x4) {return _ref8.apply(this, arguments);}return mint;}()
 
 
 
-  deploy = function () {var _ref13 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9(_ref14) {var name = _ref14.name,symbol = _ref14.symbol,callback = _ref14.callback;var params, res;return _regenerator2.default.wrap(function _callee9$(_context9) {while (1) {switch (_context9.prev = _context9.next) {case 0:if (
-              name) {_context9.next = 2;break;}throw (
+    /**
+                                                                                                                                                                                                                                                                                       * @function
+                                                                                                                                                                                                                                                                                       * @description Approve Use of TokenID
+                                                                                                                                                                                                                                                                                       * @param {Object} params
+                                                                                                                                                                                                                                                                                       * @param {Address} to Address to send to
+                                                                                                                                                                                                                                                                                       * @param {Integer} tokenId Token Id to use
+                                                                                                                                                                                                                                                                                       */ }, { key: 'approve', value: function () {var _ref10 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7(_ref11) {var
+        to = _ref11.to,tokenId = _ref11.tokenId;return _regenerator2.default.wrap(function _callee7$(_context7) {while (1) {switch (_context7.prev = _context7.next) {case 0:_context7.next = 2;return (
+                  this.__sendTx(
+                  this.params.contract.getContract().methods.approve(to, tokenId)));case 2:return _context7.abrupt('return', _context7.sent);case 3:case 'end':return _context7.stop();}}}, _callee7, this);}));function approve(_x5) {return _ref10.apply(this, arguments);}return approve;}() }]);return ERC721Contract;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.__assert = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee8() {return _regenerator2.default.wrap(function _callee8$(_context8) {while (1) {switch (_context8.prev = _context8.next) {case 0:if (_this2.getAddress()) {_context8.next = 2;break;}throw new Error('Contract is not deployed, first deploy it and provide a contract address');case 2: /* Use ABI */_this2.params.contract.use(_interfaces.erc721contract, _this2.getAddress());case 3:case 'end':return _context8.stop();}}}, _callee8, _this2);}));this.setBaseTokenURI = function () {var _ref13 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee9(_ref14) {var URI = _ref14.URI;return _regenerator2.default.wrap(function _callee9$(_context9) {while (1) {switch (_context9.prev = _context9.next) {case 0:_context9.next = 2;return _this2.__sendTx(_this2.params.contract.getContract().methods.setBaseURI(URI));case 2:return _context9.abrupt('return', _context9.sent);case 3:case 'end':return _context9.stop();}}}, _callee9, _this2);}));return function (_x6) {return _ref13.apply(this, arguments);};}();this.
+
+
+
+  deploy = function () {var _ref15 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee10(_ref16) {var name = _ref16.name,symbol = _ref16.symbol,callback = _ref16.callback;var params, res;return _regenerator2.default.wrap(function _callee10$(_context10) {while (1) {switch (_context10.prev = _context10.next) {case 0:if (
+              name) {_context10.next = 2;break;}throw (
                 new Error('Please provide a name'));case 2:if (
 
 
-              symbol) {_context9.next = 4;break;}throw (
+              symbol) {_context10.next = 4;break;}throw (
                 new Error('Please provide a symbol'));case 4:
 
-              params = [name, symbol];_context9.next = 7;return (
-                _this2.__deploy(params, callback));case 7:res = _context9.sent;
+              params = [name, symbol];_context10.next = 7;return (
+                _this2.__deploy(params, callback));case 7:res = _context10.sent;
               _this2.params.contractAddress = res.contractAddress;
-              /* Call to Backend API */_context9.next = 11;return (
-                _this2.__assert());case 11:return _context9.abrupt('return',
-              res);case 12:case 'end':return _context9.stop();}}}, _callee9, _this2);}));return function (_x6) {return _ref13.apply(this, arguments);};}();};exports.default =
+              /* Call to Backend API */_context10.next = 11;return (
+                _this2.__assert());case 11:return _context10.abrupt('return',
+              res);case 12:case 'end':return _context10.stop();}}}, _callee10, _this2);}));return function (_x7) {return _ref15.apply(this, arguments);};}();};exports.default =
 
 
 

@@ -386,7 +386,7 @@
         "id": 1125,
         "nodeType": "ImportDirective",
         "scope": 1535,
-        "sourceUnit": 9671,
+        "sourceUnit": 9683,
         "src": "26:57:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -397,7 +397,7 @@
         "id": 1126,
         "nodeType": "ImportDirective",
         "scope": 1535,
-        "sourceUnit": 8689,
+        "sourceUnit": 8701,
         "src": "84:55:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -408,7 +408,7 @@
         "id": 1127,
         "nodeType": "ImportDirective",
         "scope": 1535,
-        "sourceUnit": 7801,
+        "sourceUnit": 7813,
         "src": "140:29:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -423,10 +423,10 @@
               "id": 1128,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 7800,
+              "referencedDeclaration": 7812,
               "src": "201:7:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$7800",
+                "typeIdentifier": "t_contract$_Ownable_$7812",
                 "typeString": "contract Ownable"
               }
             },
@@ -436,7 +436,7 @@
           }
         ],
         "contractDependencies": [
-          7800
+          7812
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -444,7 +444,7 @@
         "id": 1534,
         "linearizedBaseContracts": [
           1534,
-          7800
+          7812
         ],
         "name": "ERC721Marketplace",
         "nodeType": "ContractDefinition",
@@ -456,10 +456,10 @@
               "id": 1130,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 8204,
+              "referencedDeclaration": 8216,
               "src": "222:8:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$8204",
+                "typeIdentifier": "t_contract$_SafeMath_$8216",
                 "typeString": "library SafeMath"
               }
             },
@@ -488,7 +488,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ERC20_$8688",
+              "typeIdentifier": "t_contract$_ERC20_$8700",
               "typeString": "contract ERC20"
             },
             "typeName": {
@@ -496,10 +496,10 @@
               "id": 1133,
               "name": "ERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 8688,
+              "referencedDeclaration": 8700,
               "src": "249:5:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC20_$8688",
+                "typeIdentifier": "t_contract$_ERC20_$8700",
                 "typeString": "contract ERC20"
               }
             },
@@ -518,7 +518,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ERC721_$9670",
+              "typeIdentifier": "t_contract$_ERC721_$9682",
               "typeString": "contract ERC721"
             },
             "typeName": {
@@ -526,10 +526,10 @@
               "id": 1135,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 9670,
+              "referencedDeclaration": 9682,
               "src": "280:6:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$9670",
+                "typeIdentifier": "t_contract$_ERC721_$9682",
                 "typeString": "contract ERC721"
               }
             },
@@ -1003,7 +1003,7 @@
                       "referencedDeclaration": 1134,
                       "src": "881:12:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC20_$8688",
+                        "typeIdentifier": "t_contract$_ERC20_$8700",
                         "typeString": "contract ERC20"
                       }
                     },
@@ -1018,13 +1018,13 @@
                       "referencedDeclaration": 1171,
                       "src": "896:13:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC20_$8688",
+                        "typeIdentifier": "t_contract$_ERC20_$8700",
                         "typeString": "contract ERC20"
                       }
                     },
                     "src": "881:28:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC20_$8688",
+                      "typeIdentifier": "t_contract$_ERC20_$8700",
                       "typeString": "contract ERC20"
                     }
                   },
@@ -1049,7 +1049,7 @@
                       "referencedDeclaration": 1136,
                       "src": "919:13:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC721_$9670",
+                        "typeIdentifier": "t_contract$_ERC721_$9682",
                         "typeString": "contract ERC721"
                       }
                     },
@@ -1064,13 +1064,13 @@
                       "referencedDeclaration": 1173,
                       "src": "935:14:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC721_$9670",
+                        "typeIdentifier": "t_contract$_ERC721_$9682",
                         "typeString": "contract ERC721"
                       }
                     },
                     "src": "919:30:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC721_$9670",
+                      "typeIdentifier": "t_contract$_ERC721_$9682",
                       "typeString": "contract ERC721"
                     }
                   },
@@ -1103,7 +1103,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ERC20_$8688",
+                    "typeIdentifier": "t_contract$_ERC20_$8700",
                     "typeString": "contract ERC20"
                   },
                   "typeName": {
@@ -1111,10 +1111,10 @@
                     "id": 1170,
                     "name": "ERC20",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 8688,
+                    "referencedDeclaration": 8700,
                     "src": "815:5:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC20_$8688",
+                      "typeIdentifier": "t_contract$_ERC20_$8700",
                       "typeString": "contract ERC20"
                     }
                   },
@@ -1132,7 +1132,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ERC721_$9670",
+                    "typeIdentifier": "t_contract$_ERC721_$9682",
                     "typeString": "contract ERC721"
                   },
                   "typeName": {
@@ -1140,10 +1140,10 @@
                     "id": 1172,
                     "name": "ERC721",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 9670,
+                    "referencedDeclaration": 9682,
                     "src": "841:6:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC721_$9670",
+                      "typeIdentifier": "t_contract$_ERC721_$9682",
                       "typeString": "contract ERC721"
                     }
                   },
@@ -1463,7 +1463,7 @@
                               "referencedDeclaration": 1136,
                               "src": "1277:13:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ERC721_$9670",
+                                "typeIdentifier": "t_contract$_ERC721_$9682",
                                 "typeString": "contract ERC721"
                               }
                             },
@@ -1474,7 +1474,7 @@
                             "lValueRequested": false,
                             "memberName": "ownerOf",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 8901,
+                            "referencedDeclaration": 8913,
                             "src": "1277:21:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -1728,7 +1728,7 @@
                         "referencedDeclaration": 1136,
                         "src": "1357:13:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ERC721_$9670",
+                          "typeIdentifier": "t_contract$_ERC721_$9682",
                           "typeString": "contract ERC721"
                         }
                       },
@@ -1739,7 +1739,7 @@
                       "lValueRequested": false,
                       "memberName": "transferFrom",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9180,
+                      "referencedDeclaration": 9192,
                       "src": "1357:26:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -3162,7 +3162,7 @@
                         "referencedDeclaration": 1136,
                         "src": "2121:13:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ERC721_$9670",
+                          "typeIdentifier": "t_contract$_ERC721_$9682",
                           "typeString": "contract ERC721"
                         }
                       },
@@ -3173,7 +3173,7 @@
                       "lValueRequested": false,
                       "memberName": "transferFrom",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9180,
+                      "referencedDeclaration": 9192,
                       "src": "2121:26:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -3822,7 +3822,7 @@
                             "referencedDeclaration": 1134,
                             "src": "2511:12:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ERC20_$8688",
+                              "typeIdentifier": "t_contract$_ERC20_$8700",
                               "typeString": "contract ERC20"
                             }
                           },
@@ -3833,7 +3833,7 @@
                           "lValueRequested": false,
                           "memberName": "transferFrom",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 8394,
+                          "referencedDeclaration": 8406,
                           "src": "2511:25:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -4274,7 +4274,7 @@
                                   "referencedDeclaration": 1134,
                                   "src": "2738:12:4",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_ERC20_$8688",
+                                    "typeIdentifier": "t_contract$_ERC20_$8700",
                                     "typeString": "contract ERC20"
                                   }
                                 },
@@ -4285,7 +4285,7 @@
                                 "lValueRequested": false,
                                 "memberName": "transferFrom",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 8394,
+                                "referencedDeclaration": 8406,
                                 "src": "2738:25:4",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -4718,7 +4718,7 @@
                             "referencedDeclaration": 1134,
                             "src": "3029:12:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ERC20_$8688",
+                              "typeIdentifier": "t_contract$_ERC20_$8700",
                               "typeString": "contract ERC20"
                             }
                           },
@@ -4729,7 +4729,7 @@
                           "lValueRequested": false,
                           "memberName": "transferFrom",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 8394,
+                          "referencedDeclaration": 8406,
                           "src": "3029:25:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -4946,7 +4946,7 @@
                         "referencedDeclaration": 1136,
                         "src": "3251:13:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ERC721_$9670",
+                          "typeIdentifier": "t_contract$_ERC721_$9682",
                           "typeString": "contract ERC721"
                         }
                       },
@@ -4957,7 +4957,7 @@
                       "lValueRequested": false,
                       "memberName": "transferFrom",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9180,
+                      "referencedDeclaration": 9192,
                       "src": "3251:26:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -5245,7 +5245,7 @@
                       "referencedDeclaration": 1134,
                       "src": "3479:12:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC20_$8688",
+                        "typeIdentifier": "t_contract$_ERC20_$8700",
                         "typeString": "contract ERC20"
                       }
                     },
@@ -5260,13 +5260,13 @@
                       "referencedDeclaration": 1476,
                       "src": "3494:13:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC20_$8688",
+                        "typeIdentifier": "t_contract$_ERC20_$8700",
                         "typeString": "contract ERC20"
                       }
                     },
                     "src": "3479:28:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC20_$8688",
+                      "typeIdentifier": "t_contract$_ERC20_$8700",
                       "typeString": "contract ERC20"
                     }
                   },
@@ -5291,7 +5291,7 @@
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 7773,
+                  "referencedDeclaration": 7785,
                   "src": "3459:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -5320,7 +5320,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ERC20_$8688",
+                    "typeIdentifier": "t_contract$_ERC20_$8700",
                     "typeString": "contract ERC20"
                   },
                   "typeName": {
@@ -5328,10 +5328,10 @@
                     "id": 1475,
                     "name": "ERC20",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 8688,
+                    "referencedDeclaration": 8700,
                     "src": "3431:5:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC20_$8688",
+                      "typeIdentifier": "t_contract$_ERC20_$8700",
                       "typeString": "contract ERC20"
                     }
                   },
@@ -5376,7 +5376,7 @@
                       "referencedDeclaration": 1136,
                       "src": "3592:13:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC721_$9670",
+                        "typeIdentifier": "t_contract$_ERC721_$9682",
                         "typeString": "contract ERC721"
                       }
                     },
@@ -5391,13 +5391,13 @@
                       "referencedDeclaration": 1488,
                       "src": "3608:14:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC721_$9670",
+                        "typeIdentifier": "t_contract$_ERC721_$9682",
                         "typeString": "contract ERC721"
                       }
                     },
                     "src": "3592:30:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC721_$9670",
+                      "typeIdentifier": "t_contract$_ERC721_$9682",
                       "typeString": "contract ERC721"
                     }
                   },
@@ -5422,7 +5422,7 @@
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 7773,
+                  "referencedDeclaration": 7785,
                   "src": "3572:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -5451,7 +5451,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ERC721_$9670",
+                    "typeIdentifier": "t_contract$_ERC721_$9682",
                     "typeString": "contract ERC721"
                   },
                   "typeName": {
@@ -5459,10 +5459,10 @@
                     "id": 1487,
                     "name": "ERC721",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 9670,
+                    "referencedDeclaration": 9682,
                     "src": "3542:6:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC721_$9670",
+                      "typeIdentifier": "t_contract$_ERC721_$9682",
                       "typeString": "contract ERC721"
                     }
                   },
@@ -5881,7 +5881,7 @@
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 7773,
+                  "referencedDeclaration": 7785,
                   "src": "3709:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -6003,7 +6003,7 @@
         "id": 1125,
         "nodeType": "ImportDirective",
         "scope": 1535,
-        "sourceUnit": 9671,
+        "sourceUnit": 9683,
         "src": "26:57:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -6014,7 +6014,7 @@
         "id": 1126,
         "nodeType": "ImportDirective",
         "scope": 1535,
-        "sourceUnit": 8689,
+        "sourceUnit": 8701,
         "src": "84:55:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -6025,7 +6025,7 @@
         "id": 1127,
         "nodeType": "ImportDirective",
         "scope": 1535,
-        "sourceUnit": 7801,
+        "sourceUnit": 7813,
         "src": "140:29:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -6040,10 +6040,10 @@
               "id": 1128,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 7800,
+              "referencedDeclaration": 7812,
               "src": "201:7:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$7800",
+                "typeIdentifier": "t_contract$_Ownable_$7812",
                 "typeString": "contract Ownable"
               }
             },
@@ -6053,7 +6053,7 @@
           }
         ],
         "contractDependencies": [
-          7800
+          7812
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -6061,7 +6061,7 @@
         "id": 1534,
         "linearizedBaseContracts": [
           1534,
-          7800
+          7812
         ],
         "name": "ERC721Marketplace",
         "nodeType": "ContractDefinition",
@@ -6073,10 +6073,10 @@
               "id": 1130,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 8204,
+              "referencedDeclaration": 8216,
               "src": "222:8:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$8204",
+                "typeIdentifier": "t_contract$_SafeMath_$8216",
                 "typeString": "library SafeMath"
               }
             },
@@ -6105,7 +6105,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ERC20_$8688",
+              "typeIdentifier": "t_contract$_ERC20_$8700",
               "typeString": "contract ERC20"
             },
             "typeName": {
@@ -6113,10 +6113,10 @@
               "id": 1133,
               "name": "ERC20",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 8688,
+              "referencedDeclaration": 8700,
               "src": "249:5:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC20_$8688",
+                "typeIdentifier": "t_contract$_ERC20_$8700",
                 "typeString": "contract ERC20"
               }
             },
@@ -6135,7 +6135,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ERC721_$9670",
+              "typeIdentifier": "t_contract$_ERC721_$9682",
               "typeString": "contract ERC721"
             },
             "typeName": {
@@ -6143,10 +6143,10 @@
               "id": 1135,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 9670,
+              "referencedDeclaration": 9682,
               "src": "280:6:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$9670",
+                "typeIdentifier": "t_contract$_ERC721_$9682",
                 "typeString": "contract ERC721"
               }
             },
@@ -6620,7 +6620,7 @@
                       "referencedDeclaration": 1134,
                       "src": "881:12:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC20_$8688",
+                        "typeIdentifier": "t_contract$_ERC20_$8700",
                         "typeString": "contract ERC20"
                       }
                     },
@@ -6635,13 +6635,13 @@
                       "referencedDeclaration": 1171,
                       "src": "896:13:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC20_$8688",
+                        "typeIdentifier": "t_contract$_ERC20_$8700",
                         "typeString": "contract ERC20"
                       }
                     },
                     "src": "881:28:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC20_$8688",
+                      "typeIdentifier": "t_contract$_ERC20_$8700",
                       "typeString": "contract ERC20"
                     }
                   },
@@ -6666,7 +6666,7 @@
                       "referencedDeclaration": 1136,
                       "src": "919:13:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC721_$9670",
+                        "typeIdentifier": "t_contract$_ERC721_$9682",
                         "typeString": "contract ERC721"
                       }
                     },
@@ -6681,13 +6681,13 @@
                       "referencedDeclaration": 1173,
                       "src": "935:14:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC721_$9670",
+                        "typeIdentifier": "t_contract$_ERC721_$9682",
                         "typeString": "contract ERC721"
                       }
                     },
                     "src": "919:30:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC721_$9670",
+                      "typeIdentifier": "t_contract$_ERC721_$9682",
                       "typeString": "contract ERC721"
                     }
                   },
@@ -6720,7 +6720,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ERC20_$8688",
+                    "typeIdentifier": "t_contract$_ERC20_$8700",
                     "typeString": "contract ERC20"
                   },
                   "typeName": {
@@ -6728,10 +6728,10 @@
                     "id": 1170,
                     "name": "ERC20",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 8688,
+                    "referencedDeclaration": 8700,
                     "src": "815:5:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC20_$8688",
+                      "typeIdentifier": "t_contract$_ERC20_$8700",
                       "typeString": "contract ERC20"
                     }
                   },
@@ -6749,7 +6749,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ERC721_$9670",
+                    "typeIdentifier": "t_contract$_ERC721_$9682",
                     "typeString": "contract ERC721"
                   },
                   "typeName": {
@@ -6757,10 +6757,10 @@
                     "id": 1172,
                     "name": "ERC721",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 9670,
+                    "referencedDeclaration": 9682,
                     "src": "841:6:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC721_$9670",
+                      "typeIdentifier": "t_contract$_ERC721_$9682",
                       "typeString": "contract ERC721"
                     }
                   },
@@ -7080,7 +7080,7 @@
                               "referencedDeclaration": 1136,
                               "src": "1277:13:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ERC721_$9670",
+                                "typeIdentifier": "t_contract$_ERC721_$9682",
                                 "typeString": "contract ERC721"
                               }
                             },
@@ -7091,7 +7091,7 @@
                             "lValueRequested": false,
                             "memberName": "ownerOf",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 8901,
+                            "referencedDeclaration": 8913,
                             "src": "1277:21:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -7345,7 +7345,7 @@
                         "referencedDeclaration": 1136,
                         "src": "1357:13:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ERC721_$9670",
+                          "typeIdentifier": "t_contract$_ERC721_$9682",
                           "typeString": "contract ERC721"
                         }
                       },
@@ -7356,7 +7356,7 @@
                       "lValueRequested": false,
                       "memberName": "transferFrom",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9180,
+                      "referencedDeclaration": 9192,
                       "src": "1357:26:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -8779,7 +8779,7 @@
                         "referencedDeclaration": 1136,
                         "src": "2121:13:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ERC721_$9670",
+                          "typeIdentifier": "t_contract$_ERC721_$9682",
                           "typeString": "contract ERC721"
                         }
                       },
@@ -8790,7 +8790,7 @@
                       "lValueRequested": false,
                       "memberName": "transferFrom",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9180,
+                      "referencedDeclaration": 9192,
                       "src": "2121:26:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -9439,7 +9439,7 @@
                             "referencedDeclaration": 1134,
                             "src": "2511:12:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ERC20_$8688",
+                              "typeIdentifier": "t_contract$_ERC20_$8700",
                               "typeString": "contract ERC20"
                             }
                           },
@@ -9450,7 +9450,7 @@
                           "lValueRequested": false,
                           "memberName": "transferFrom",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 8394,
+                          "referencedDeclaration": 8406,
                           "src": "2511:25:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -9891,7 +9891,7 @@
                                   "referencedDeclaration": 1134,
                                   "src": "2738:12:4",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_contract$_ERC20_$8688",
+                                    "typeIdentifier": "t_contract$_ERC20_$8700",
                                     "typeString": "contract ERC20"
                                   }
                                 },
@@ -9902,7 +9902,7 @@
                                 "lValueRequested": false,
                                 "memberName": "transferFrom",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 8394,
+                                "referencedDeclaration": 8406,
                                 "src": "2738:25:4",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -10335,7 +10335,7 @@
                             "referencedDeclaration": 1134,
                             "src": "3029:12:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ERC20_$8688",
+                              "typeIdentifier": "t_contract$_ERC20_$8700",
                               "typeString": "contract ERC20"
                             }
                           },
@@ -10346,7 +10346,7 @@
                           "lValueRequested": false,
                           "memberName": "transferFrom",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 8394,
+                          "referencedDeclaration": 8406,
                           "src": "3029:25:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -10563,7 +10563,7 @@
                         "referencedDeclaration": 1136,
                         "src": "3251:13:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ERC721_$9670",
+                          "typeIdentifier": "t_contract$_ERC721_$9682",
                           "typeString": "contract ERC721"
                         }
                       },
@@ -10574,7 +10574,7 @@
                       "lValueRequested": false,
                       "memberName": "transferFrom",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9180,
+                      "referencedDeclaration": 9192,
                       "src": "3251:26:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -10862,7 +10862,7 @@
                       "referencedDeclaration": 1134,
                       "src": "3479:12:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC20_$8688",
+                        "typeIdentifier": "t_contract$_ERC20_$8700",
                         "typeString": "contract ERC20"
                       }
                     },
@@ -10877,13 +10877,13 @@
                       "referencedDeclaration": 1476,
                       "src": "3494:13:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC20_$8688",
+                        "typeIdentifier": "t_contract$_ERC20_$8700",
                         "typeString": "contract ERC20"
                       }
                     },
                     "src": "3479:28:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC20_$8688",
+                      "typeIdentifier": "t_contract$_ERC20_$8700",
                       "typeString": "contract ERC20"
                     }
                   },
@@ -10908,7 +10908,7 @@
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 7773,
+                  "referencedDeclaration": 7785,
                   "src": "3459:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -10937,7 +10937,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ERC20_$8688",
+                    "typeIdentifier": "t_contract$_ERC20_$8700",
                     "typeString": "contract ERC20"
                   },
                   "typeName": {
@@ -10945,10 +10945,10 @@
                     "id": 1475,
                     "name": "ERC20",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 8688,
+                    "referencedDeclaration": 8700,
                     "src": "3431:5:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC20_$8688",
+                      "typeIdentifier": "t_contract$_ERC20_$8700",
                       "typeString": "contract ERC20"
                     }
                   },
@@ -10993,7 +10993,7 @@
                       "referencedDeclaration": 1136,
                       "src": "3592:13:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC721_$9670",
+                        "typeIdentifier": "t_contract$_ERC721_$9682",
                         "typeString": "contract ERC721"
                       }
                     },
@@ -11008,13 +11008,13 @@
                       "referencedDeclaration": 1488,
                       "src": "3608:14:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ERC721_$9670",
+                        "typeIdentifier": "t_contract$_ERC721_$9682",
                         "typeString": "contract ERC721"
                       }
                     },
                     "src": "3592:30:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC721_$9670",
+                      "typeIdentifier": "t_contract$_ERC721_$9682",
                       "typeString": "contract ERC721"
                     }
                   },
@@ -11039,7 +11039,7 @@
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 7773,
+                  "referencedDeclaration": 7785,
                   "src": "3572:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -11068,7 +11068,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ERC721_$9670",
+                    "typeIdentifier": "t_contract$_ERC721_$9682",
                     "typeString": "contract ERC721"
                   },
                   "typeName": {
@@ -11076,10 +11076,10 @@
                     "id": 1487,
                     "name": "ERC721",
                     "nodeType": "UserDefinedTypeName",
-                    "referencedDeclaration": 9670,
+                    "referencedDeclaration": 9682,
                     "src": "3542:6:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ERC721_$9670",
+                      "typeIdentifier": "t_contract$_ERC721_$9682",
                       "typeString": "contract ERC721"
                     }
                   },
@@ -11498,7 +11498,7 @@
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 7773,
+                  "referencedDeclaration": 7785,
                   "src": "3709:9:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -11599,7 +11599,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-06-06T10:37:12.721Z",
+  "updatedAt": "2021-06-08T12:27:08.742Z",
   "devdoc": {
     "methods": {
       "transferOwnership(address)": {
