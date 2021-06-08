@@ -317,7 +317,7 @@ contract Network is Pausable, Governed{
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
         require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
-        require(isMergeApproved(_issueID, _mergeID), "Issue has to have passed voting");
+        require(isMergeApproved(_issueID, _mergeID), "Issue has to have passed oracling");
         require(!isMergeDisputed(_issueID, _mergeID), "Merge has been disputed");
         require(isMergeTheOneWithMoreOracles(_issueID, _mergeID), "There is a merge proposal with more oracles");
 
