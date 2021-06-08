@@ -36,7 +36,7 @@ contract ERC721Marketplace is Ownable {
 
     event SaleCreated(uint256 indexed tokenId, uint256 price, address indexed creator);
     event SaleCanceled(uint256 indexed tokenId, address indexed creator);
-    event SaleDone(uint256 indexed tokenId, address indexed buyer);
+    event SaleDone(uint256 indexed tokenId, address indexed buyer,  address indexed creator, uint256 price);
 
     function putERC721OnSale(uint256 _tokenId, uint256 _price) public {
         require(erc721Address.ownerOf(_tokenId) == msg.sender, "Not Owner of the NFT");
@@ -86,7 +86,7 @@ contract ERC721Marketplace is Ownable {
         erc721Address.transferFrom(address(this), msg.sender, _tokenId);
 
         sales[_tokenId].sold = true;
-        emit SaleDone(_tokenId, msg.sender);
+        emit SaleDone(_tokenId, msg.sender, sales[_tokenId].seller, sales[_tokenId].price);
     }
 
     function changeERC20(ERC20 _erc20Address) public onlyOwner {
