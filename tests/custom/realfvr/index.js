@@ -88,4 +88,42 @@ context('Marketplace RealFvr', async () => {
       deployed_marketplaceAddress = contractAddress;
     }),
   );
+
+  it(
+    'should mint, approve and add to sale NFT',
+    mochaAsync(async () => {
+      /* Mint */
+      const res = await erc721Contract.mint({
+        tokenId : 1,
+        to : userAddress
+      });
+      expect(res).to.not.equal(false);
+    }),
+  );
+
+
+  it(
+    'should approve  NFT',
+    mochaAsync(async () => {
+      /* Approve */
+      const res = await erc721Contract.approve({
+        tokenId : 1,
+        to : marketplaceContract.getAddress()
+      });
+      expect(res).to.not.equal(false);
+    }),
+  );
+
+
+  it(
+    'should put NFT in sale',
+    mochaAsync(async () => {
+      /* Put in Sale */
+      const res = await marketplaceContract.putERC721OnSale({
+        tokenId : 1,
+        price : 1000
+      });
+      expect(res).to.not.equal(false);
+    }),
+  );
 });
