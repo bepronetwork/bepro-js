@@ -5,54 +5,31 @@ import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
+
 /**
- * @typedef {Object} TokensNetwork~Options
+ * @typedef {Object} Network~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
  * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
- * @property {string} [tokenAddress]
- * */
+ */
 
 /**
- * TokensNetwork Object
- * @class TokensNetwork
- * @param {TokensNetwork~Options} options
+ * Network Object
+ * @class Network
+ * @param {Network~Options} options
  */
+
 class Network extends IContract {
-  /**
-   * @typedef {Object} TokensNetwork~Issue
-   * @property {boolean} finalized: boolean
-   * @property {boolean} canceled
-   * @property {number} votesForApprove
-   * @property {number} TokensStaked
-   * @property {Address} issueGenerator
-   * @property {number} mergeProposalsAmount
-   * @property {number} _id
-   * @property {Date} creationDate
-   */
-
-  /**
-   * @typedef {Object} TokensNetwork~MergedIssue
-   * @property {Address[]} prAddresses
-   * @property {number[]} prAmounts
-   * @property {number} votes
-   * @property {number} disputes
-   * @property {Address} proposalAddress
-   * @property {number} _id
-   * @param params
-   */
-
   constructor(params) {
     super({ abi: network, ...params });
   }
 
+
   /**
-   * Asserts using the current contract
-   * followed by setting a new {@link ERC20Contract} to this instances public params, asserting it.
-   * @async
+   * Asserts the 2 {@link ERC20Contract} on the current address
    * @function
-   * @void
+   * @return {Promise<void>}
    * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
    */
   __assert = async () => {
@@ -106,10 +83,7 @@ class Network extends IContract {
    */
   async getAmountofIssuesOpened() {
     return parseInt(
-      await this.params.contract
-        .getContract()
-        .methods.incrementIssueID()
-        .call(),
+      await this.params.contract.getContract().methods.incrementIssueID().call(),
       10,
     );
   }
@@ -126,7 +100,7 @@ class Network extends IContract {
   }
 
   /**
-   * Get Amount of percentage Needed for Approve
+   * Get Amount of Needed for Approve
    * @returns {Promise<number>}
    */
   async percentageNeededForApprove() {
@@ -140,7 +114,7 @@ class Network extends IContract {
   }
 
   /**
-   * @description Get Amount of percentage Needed for Dispute
+   * @description Get Amount of Needed for Dispute
    * @returns {Promise<number>}
    */
   async percentageNeededForDispute() {
@@ -155,7 +129,7 @@ class Network extends IContract {
 
 
   /**
-   * Get Amount of percentage Needed for Merge
+   * Get Amount of Needed for Merge
    * @returns {Promise<number>}
    */
   async percentageNeededForMerge() {
@@ -169,10 +143,10 @@ class Network extends IContract {
   }
 
   /**
-   * Get Total Amount of Tokens Staked for Tickets in the network
+   * Get Total Amount of BEPRO Staked for Tickets in the network
    * @returns {Promise<number>}
    */
-  async getTokensStaked() {
+  async getBEPROStaked() {
     return Numbers.fromDecimals(
       await this.params.contract.getContract().methods.totalStaked().call(),
       18,
@@ -193,22 +167,23 @@ class Network extends IContract {
   }
 
   /**
-   * Get Total Amount of Tokens Staked for Tickets in the network
+   * Get Total Amount of Tokens Staked in the network
    * @returns {Promise<number>}
    */
-  async TokensVotesStaked() {
+  async votesStaked() {
     return Numbers.fromDecimals(
       await this.params.contract
         .getContract()
-        .methods.TokensVotesStaked()
+        .methods.votesStaked()
         .call(),
       18,
     );
   }
 
+
   /**
-   * Get Transactional Token Address (Address of token used to pay for bounties)
-   * @returns {Promise<number>}
+   * Get Transaction Token Address
+   * @returns {Promise<address>}
    */
   async getTransactionTokenAddress() {
     return await this.params.contract
@@ -218,8 +193,8 @@ class Network extends IContract {
   }
 
   /**
-   * Get Settle Token Address (Address of token to decide use of bounties)
-   * @returns {Promise<number>}
+   * Get Settler Token Address
+   * @returns {Promise<address>}
    */
   async getSettlerTokenAddress() {
     return await this.params.contract
@@ -228,43 +203,16 @@ class Network extends IContract {
       .call();
   }
 
+
   /**
-   * Get Total Amount of Tokens Staked for Council in the network
-   * @returns {Promise<number>}
+   * Get Amount Needed for Council
+   * @returns {Promise<Integer>}
    */
   async COUNCIL_AMOUNT() {
     return Numbers.fromDecimals(
       await this.params.contract
         .getContract()
         .methods.COUNCIL_AMOUNT()
-        .call(),
-      18,
-    );
-  }
-
-  /**
-   * Get Total Amount of Tokens Staked for Operator in the network
-   * @returns {Promise<number>}
-   */
-  async OPERATOR_AMOUNT() {
-    return Numbers.fromDecimals(
-      await this.params.contract
-        .getContract()
-        .methods.OPERATOR_AMOUNT()
-        .call(),
-      18,
-    );
-  }
-
-  /**
-   * Get Total Amount of Tokens Staked for Developer in the network
-   * @returns {Promise<number>}
-   */
-  async DEVELOPER_AMOUNT() {
-    return Numbers.fromDecimals(
-      await this.params.contract
-        .getContract()
-        .methods.DEVELOPER_AMOUNT()
         .call(),
       18,
     );
@@ -338,12 +286,6 @@ class Network extends IContract {
     return Numbers.fromDecimals(r, 18);
   }
 
-  /**
-   * Get Issue Id Info
-   * @param {Object} params
-   * @param {number} params.issue_id
-   * @return {Promise<TokensNetwork~Issue>}
-   */
   async getIssueById({ issue_id }) {
     const r = await this.__sendTx(
       this.params.contract.getContract().methods.getIssueById(issue_id),
@@ -611,7 +553,9 @@ class Network extends IContract {
    * Deploys current contract and awaits for {@link TokensNetwork#__assert}
    * @function
    * @param {Object} params
-   * @param {string} params.tokenAddress
+   * @param {string} params.settlerTokenAddress
+   * @param {string} params.transactionTokenAddress
+   * @param {string} params.governanceAddress
    * @param {function():void} params.callback
    * @return {Promise<*|undefined>}
    */
