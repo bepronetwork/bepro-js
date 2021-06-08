@@ -157,7 +157,7 @@ class MarketplaceRealFvr extends IContract {
 
     /**
      * @function
-     * @description Put ERC721 on Sale
+     * @description Approve ERC721 to be put on Sale
      * @param {Object} params Parameters
      * @param {Address} params.to Address To
      * @param {String} params.tokenId Token Id
