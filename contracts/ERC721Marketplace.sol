@@ -72,15 +72,14 @@ contract ERC721Marketplace is Ownable {
 
         if(feeAddress != address(0)){
             // Transfer fee to fee address
-            require(erc20Address.transferFrom(
-                    address(this),
+            require(erc20Address.transfer(
                     feeAddress,
                     (feePercentage * sales[_tokenId].price) / 100
             ), "Contract was not allowed to do the transfer");
         }
       
         //Transfer ERC20 to seller
-        require(erc20Address.transferFrom(address(this), sales[_tokenId].seller, ((100-feePercentage) * sales[_tokenId].price) / 100), "Wasnt able to transfer the ERC20 to the seller");
+        require(erc20Address.transfer(sales[_tokenId].seller, ((100-feePercentage) * sales[_tokenId].price) / 100), "Wasnt able to transfer the ERC20 to the seller");
         
         //Transfer ERC721 to buyer
         erc721Address.transferFrom(address(this), msg.sender, _tokenId);

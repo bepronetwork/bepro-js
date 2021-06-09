@@ -152,7 +152,7 @@ class MarketplaceRealFvr extends IContract {
      */
     getAmountofNFTsEverInSale = async () => {
       parseInt(
-        await this.params.contract.getContract().methods.saleIncrementId().call(), 10
+        await this.params.contract.getContract().methods.saleIncrementId().call(), 10,
       ) - 1;
     }
 
