@@ -234,10 +234,11 @@ contract Network is Pausable, Governed{
         issue.finalized = false;
         issues[incrementIssueID] = issue;
         myIssues[msg.sender].push(incrementIssueID);
-        // Transfer Transaction Token
-        require(transactionToken.transferFrom(msg.sender, address(this), _tokenAmount), "Needs Allowance");
         totalStaked = totalStaked.add(_tokenAmount);
         incrementIssueID = incrementIssueID + 1;
+        // Transfer Transaction Token
+        require(transactionToken.transferFrom(msg.sender, address(this), _tokenAmount), "Needs Allowance");
+    
         emit OpenIssue(incrementIssueID, msg.sender, _tokenAmount);
     }
 
