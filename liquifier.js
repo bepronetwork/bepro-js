@@ -31,15 +31,13 @@ const hideBin = require(`yargs/helpers`).hideBin;
  * @property {Contract~AbiOption[]} abi
  */
 
-// **
-
 const arguments = yargs(hideBin(process.argv))
   .usage(`Usage: $0 [options]`)
   .alias(`f`, `file`)
   .nargs(`f`, 1)
   .describe(`f`, `File to parse`)
   .alias(`d`, `dir`)
-  .default(`d`, `./`)
+  .default(`d`, `./src/models/`)
   .describe(`d`, `Output dir`)
   .alias(`i`, `interface-dir`)
   .describe(`i`, `Folder to create the interface file on`)
@@ -63,10 +61,8 @@ const arguments = yargs(hideBin(process.argv))
   .demandOption([`f`,])
   .help(`h`)
   .alias(`h`, `help`)
-  // .epilog('copyright bepro')
   .argv;
 
-// **
 
 if (arguments.SHOWOFF)
   arguments.showoff = true;
