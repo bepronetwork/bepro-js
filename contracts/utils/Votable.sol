@@ -6,8 +6,8 @@ contract Votable {
     using SafeMath for uint256;
 
     /* EVENTS */
-    event voteCasted(address voter, uint pollID, uint256 vote, uint256 weight);
-    event pollCreated(address creator, uint pollID, string description, uint votingLength);
+    event voteCasted(address indexed voter, uint indexed pollID, uint256 vote, uint256 weight);
+    event pollCreated(address indexed creator, uint indexed pollID, string description, uint votingLength);
     event pollStatusUpdate(bool status);
 
     /* Determine the current state of a poll */
@@ -72,7 +72,7 @@ contract Votable {
             curPoll.options[i] = options[i];
         }
         curPoll.optionsSize = options.length;
-        curPoll.expirationTime = now + _voteLength * 1 seconds;
+        curPoll.expirationTime = now.add(_voteLength).mul(1 seconds);
         curPoll.description = _description;
 
         emit pollCreated(msg.sender, pollCount, _description, _voteLength);
@@ -151,16 +151,15 @@ contract Votable {
     * Casts a vote for a given poll.
     */
     function castVote(uint _pollID, uint256 _voteId) external validPoll(_pollID) {
-        require(polls[_pollID].status == PollStatus.IN_PROGRESS, "Poll has expired.");
+        Poll storage curPoll = polls[_pollID];
+        require(curPoll.status == PollStatus.IN_PROGRESS, "Poll has expired.");
         require(!userHasVoted(_pollID, msg.sender), "User has already voted.");
-        require(polls[_pollID].expirationTime > now);
-        require(_voteId < polls[_pollID].optionsSize, "Vote option is not availble");
+        require(curPoll.expirationTime > now);
+        require(_voteId < curPoll.optionsSize, "Vote option is not availble");
         
         // update token bank
         bank[msg.sender].lockedTokens[_pollID] = getTokenStake(msg.sender);
         bank[msg.sender].participatedPolls.push(_pollID);
-
-        Poll storage curPoll = polls[_pollID];
 
         curPoll.votesPerOption[_voteId] = curPoll.votesPerOption[_voteId].add(getTokenStake(msg.sender));
 

@@ -20,6 +20,7 @@ interface _IERC20 is IERC20  {
     */
     function burn(address account, uint256 amount) external;
 
+    function decimals() external returns (uint256);
 }
 
 
@@ -127,7 +128,7 @@ contract Network is Pausable, Governed{
         }
 
         require(settlerToken.transfer(msg.sender, _tokenAmount), "Transfer didnt work");
-        oraclesStaked.sub(_tokenAmount);
+        oraclesStaked = oraclesStaked.sub(_tokenAmount);
     }
 
     function delegateOracles(uint256 _tokenAmount, address _delegatedTo) internal {
@@ -194,29 +195,25 @@ contract Network is Pausable, Governed{
 
     function isIssueApprovable(uint256 _issueID) public returns (bool){
         // Only if in the open window
+        require(issues[_issueID].creationDate != 0, "Issue does not exist");
         return (issues[_issueID].creationDate.add(timeOpenForIssueApprove) < block.timestamp);
     }
 
     function isIssueApproved(uint256 _issueID) public returns (bool) {
+        require(issues[_issueID].creationDate != 0, "Issue does not exist");
         return (issues[_issueID].oraclesForApprove >= oraclesStaked.mul(percentageNeededForApprove).div(100));
     }
 
     function isMergeDisputed(uint256 _issueID, uint256 _mergeID) public returns (bool) {
+        require(issues[_issueID].creationDate != 0, "Issue does not exist");
+        require(issues[_issueID].mergeProposals[_mergeID].proposalAddress != address(0), "Merge does not exist");
         return (issues[_issueID].mergeProposals[_mergeID].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100));
     }
 
     function isMergeApproved(uint256 _issueID, uint256 _mergeID) public returns (bool) {
+        require(issues[_issueID].creationDate != 0, "Issue does not exist");
+        require(issues[_issueID].mergeProposals[_mergeID].proposalAddress != address(0), "Merge does not exist");
         return (issues[_issueID].mergeProposals[_mergeID].oracles >= oraclesStaked.mul(percentageNeededForMerge).div(100));
-    }
-    
-    function isMergeTheOneWithMoreOracles(uint256 _issueID, uint256 _mergeID) public returns (bool) {
-        uint256 thisMergeOracles = issues[_issueID].mergeProposals[_mergeID].oracles;
-        for(uint8 i = 0; i < issues[_issueID].mergeIDIncrement; i++){
-            if(issues[_issueID].mergeProposals[i].oracles > thisMergeOracles){
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -243,12 +240,16 @@ contract Network is Pausable, Governed{
     }
 
     function redeemIssue(uint256 _issueId) public whenNotPaused {
-        require(issues[_issueId].issueGenerator == msg.sender, "Has to be the issue creator");
+        Issue storage issue = issues[_issueId];
+        require(issue.issueGenerator == msg.sender, "Has to be the issue creator");
         require(!isIssueApproved(_issueId), "Issue has to not be approved");
         require(!isIssueApprovable(_issueId), "Time for approving has to be already passed");
+        require(!issue.finalized, "Issue was already finalized");
+        require(!issue.canceled, "Issue was already canceled");
+
         issues[_issueId].finalized = true;
         issues[_issueId].canceled = true;
-        require(transactionToken.transfer(msg.sender, issues[_issueId].tokensStaked), "Transfer not sucessful");
+        require(transactionToken.transfer(msg.sender, issue.tokensStaked), "Transfer not sucessful");
     }
 
     /**
@@ -285,7 +286,7 @@ contract Network is Pausable, Governed{
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
         require(_prAmounts.length == _prAddresses.length, "Amounts has to equal addresses length");
-        require(transactionToken.balanceOf(msg.sender) > COUNCIL_AMOUNT*10**18, "To propose merges the proposer has to be a Council (COUNCIL_AMOUNT)");
+        require(transactionToken.balanceOf(msg.sender) > COUNCIL_AMOUNT*10**settlerToken.decimals(), "To propose merges the proposer has to be a Council (COUNCIL_AMOUNT)");
 
         MergeProposal memory mergeProposal;
         mergeProposal._id = issue.mergeIDIncrement;
@@ -320,7 +321,6 @@ contract Network is Pausable, Governed{
         require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
         require(isMergeApproved(_issueID, _mergeID), "Issue has to have passed oracling");
         require(!isMergeDisputed(_issueID, _mergeID), "Merge has been disputed");
-        require(isMergeTheOneWithMoreOracles(_issueID, _mergeID), "There is a merge proposal with more oracles");
 
         // Closes the issue
         issues[_issueID].finalized = true;
@@ -357,13 +357,6 @@ contract Network is Pausable, Governed{
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, uint256, address[] memory, uint256[] memory, address){
         MergeProposal memory merge = issues[_issueID].mergeProposals[_mergeId];
         return (merge._id, merge.oracles, merge.disputes, merge.prAddresses, merge.prAmounts, merge.proposalAddress);
-    }
-
-    /**
-     * @dev Change Transaction Token Address (Upgrade)
-     */
-    function changeTransactionToken(address _newToken) public onlyGovernor {
-        transactionToken = _IERC20(_newToken);
     }
 
     /**
@@ -411,8 +404,8 @@ contract Network is Pausable, Governed{
      * @dev changeTimeOpenForIssueApprove
     */
     function changeCOUNCIL_AMOUNT(uint256 _COUNCIL_AMOUNT) public onlyGovernor {
-        require(_COUNCIL_AMOUNT > 100000*10**18, "Council Amount has to higher than 100k");
-        require(_COUNCIL_AMOUNT < 100000000*10**18, "Council Amount has to lower than 50M");
+        require(_COUNCIL_AMOUNT > 100000*10**settlerToken.decimals(), "Council Amount has to higher than 100k");
+        require(_COUNCIL_AMOUNT < 100000000*10**settlerToken.decimals(), "Council Amount has to lower than 50M");
         COUNCIL_AMOUNT = _COUNCIL_AMOUNT;
     }
 

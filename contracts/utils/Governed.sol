@@ -7,6 +7,7 @@ pragma solidity >=0.6.0;
  * functions, this simplifies the implementation of "gov permissions".
  */
 contract Governed {
+    address public _proposedGovernor;
     address public _governor;
     event GovernorTransferred(address indexed previousGovernor, address indexed newGovernor);
 
@@ -27,14 +28,16 @@ contract Governed {
         _;
     }
 
-    /**
-    * @dev Allows the current governor to transfer control of the contract to a newGovernor.
-    * @param newGovernor The address to transfer governorship to.
-    */
-    function transferGovernor(address newGovernor) public onlyGovernor {
-        require(newGovernor != address(0));
-        emit GovernorTransferred(newGovernor, newGovernor);
-        _governor = newGovernor;
+    function proposeGovernor(address proposedGovernor) public onlyGovernor {
+        require(msg.sender != proposedGovernor);
+        _proposedGovernor = proposedGovernor;
+    }
+    
+    function claimGovernor() public{
+        require(msg.sender == _proposedGovernor);
+        emit GovernorTransferred(_governor, _proposedGovernor);
+        _governor = _proposedGovernor;
+        _proposedGovernor = address(0);
     }
  
 }
