@@ -40,7 +40,7 @@ contract Network is Pausable, Governed{
     uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to the merge proposal creator
     uint256 public percentageNeededForApprove = 0; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public percentageNeededForDispute = 3; // (%) - Amount needed to approve a PR and distribute the rewards
-    uint256 public timeOpenForIssueApprove = 3 days;
+    uint256 public disputableTime = 3 days;
     uint256 public percentageNeededForMerge = 20; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public oraclesStaked = 0;
 
@@ -55,6 +55,7 @@ contract Network is Pausable, Governed{
 
     struct MergeProposal {
         uint256 _id;
+        uint256 creationDate;
         mapping(address => uint256) oraclesForMergeByAddress; // Address -> oracles for that merge
         mapping(address => uint256) disputesForMergeByAddress; // Address -> oracles for that merge
         uint256 oracles; // Amount of oracles set
@@ -196,7 +197,7 @@ contract Network is Pausable, Governed{
     function isIssueApprovable(uint256 _issueID) public returns (bool){
         // Only if in the open window
         require(issues[_issueID].creationDate != 0, "Issue does not exist");
-        return (issues[_issueID].creationDate.add(timeOpenForIssueApprove) < block.timestamp);
+        return (issues[_issueID].creationDate.add(disputableTime) < block.timestamp);
     }
 
     function isIssueApproved(uint256 _issueID) public returns (bool) {
@@ -212,6 +213,7 @@ contract Network is Pausable, Governed{
 
     function isMergeApproved(uint256 _issueID, uint256 _mergeID) public returns (bool) {
         require(issues[_issueID].creationDate != 0, "Issue does not exist");
+        require(issues[_issueID].mergeProposals[_mergeID].creationDate.add(disputableTime) < block.timestamp, "Dispute Time still open");
         require(issues[_issueID].mergeProposals[_mergeID].proposalAddress != address(0), "Merge does not exist");
         return (issues[_issueID].mergeProposals[_mergeID].oracles >= oraclesStaked.mul(percentageNeededForMerge).div(100));
     }
@@ -392,12 +394,12 @@ contract Network is Pausable, Governed{
     }
 
      /**
-     * @dev changeTimeOpenForIssueApprove
+     * @dev changedisputableTime
      */
-    function changeTimeOpenForIssueApprove(uint256 _timeOpenForIssueApprove) public onlyGovernor {
-        require(_timeOpenForIssueApprove < 20 days, "Time open for issue has to be higher than lower than 20 days");
-        require(_timeOpenForIssueApprove >= 1 minutes, "Time open for issue has to be higher than 1 minutes");
-        timeOpenForIssueApprove = _timeOpenForIssueApprove;
+    function changeDisputableTime(uint256 _disputableTime) public onlyGovernor {
+        require(_disputableTime < 20 days, "Time open for issue has to be higher than lower than 20 days");
+        require(_disputableTime >= 1 minutes, "Time open for issue has to be higher than 1 minutes");
+        disputableTime = _disputableTime;
     }
 
     /**
