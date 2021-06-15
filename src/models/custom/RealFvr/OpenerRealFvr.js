@@ -53,6 +53,17 @@ class OpenerRealFvr extends IContract {
     this.params.contract.getContract().methods.buyPack(packId),
   );
 
+   /**
+   * @function
+   * @description Buy Packs
+   * @param {Object} params Parameters
+   * @param {Array | Integer} params.packIds Pack Id
+   * @returns {Transaction} Transaction
+   */
+    buyPacks = async ({ packIds }) => await this.__sendTx(
+      this.params.contract.getContract().methods.buyPacks(packIds),
+    );
+
   /**
    * @function
    * @description Open Pack
@@ -63,6 +74,17 @@ class OpenerRealFvr extends IContract {
    openPack = async ({ packId }) => await this.__sendTx(
      this.params.contract.getContract().methods.openPack(packId),
    );
+
+   /**
+   * @function
+   * @description Open Packs
+   * @param {Object} params Parameters
+   * @param {Array | Integer} params.packIds Pack Id
+   * @returns {Transaction} Transaction
+   */
+  openPacks = async ({ packIds }) => await this.__sendTx(
+    this.params.contract.getContract().methods.openPacks(packIds),
+  );
 
   /**
    * @function
@@ -90,6 +112,8 @@ class OpenerRealFvr extends IContract {
    * @param {Date} params.saleStart Start Date
    * @param {Address | Array} params.saleDistributionAddresses Revenue Addresses of the First Purchase
    * @param {Integer | Array} params.saleDistributionAmounts Revenue Amounts of the First Purchase
+   * @param {Address | Array} params.marketplaceDistributionAddresses Revenue Addresses of the Marketplace Sales
+   * @param {Integer | Array} params.marketplaceDistributionAmounts Revenue Amounts of the Marketplace Sales
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
   createPack = async ({
@@ -101,6 +125,8 @@ class OpenerRealFvr extends IContract {
     saleStart,
     saleDistributionAddresses,
     saleDistributionAmounts,
+    marketplaceDistributionAddresses,
+    marketplaceDistributionAmounts
   }) => await this.__sendTx(
     this.params.contract
       .getContract()
@@ -113,6 +139,8 @@ class OpenerRealFvr extends IContract {
         Numbers.timeToSmartContractTime(saleStart),
         saleDistributionAddresses,
         saleDistributionAmounts,
+        marketplaceDistributionAddresses,
+        marketplaceDistributionAmounts
       ),
   );
 
@@ -266,15 +294,37 @@ class OpenerRealFvr extends IContract {
   /**
    * @function
    * @description Get Token IDs that were already bought via a pack
+   * @param {Object} params Parameters
+   * @param {Address} params.address
    * @returns {Array | Integer} TokensRegistered
    */
-  getRegisteredTokens = async () => {
+  getRegisteredTokens = async ({address}) => {
     const res = await this.params.contract
       .getContract()
-      .methods.getRegisteredIDs()
+      .methods.getRegisteredIDs(address)
       .call();
 
     return res.map(a => parseInt(a, 10));
+  };
+
+  /**
+   * @function
+   * @description Get Distribution Sales Description for ERC721 Marketplace Sales
+   * @param {Object} params Parameters
+   * @param {Integer} params.tokenid Token Id
+   * @returns {Array | Integer} Distribution Amounts
+   * @returns {Array | Address} Distribution Addresses
+   */
+   getMarketplaceDistributionForERC721 = async ({tokenId}) => {
+    const res = await this.params.contract
+      .getContract()
+      .methods.getMarketplaceDistributionForERC721(tokenId)
+      .call();
+
+    return {
+      distributionAmounts : res[0].map(a => parseInt(a, 10)),
+      distributionAddresses : res[1]
+    }
   };
 
   /**

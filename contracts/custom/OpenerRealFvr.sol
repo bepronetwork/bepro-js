@@ -16,11 +16,14 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     mapping(address => mapping(uint256 => bool)) public registeredIDs;
     mapping(address => uint256[]) public registeredIDsArray;
     mapping(uint256 => bool) public alreadyMinted;
+    
     mapping(uint256 => Pack) public packs;
+    mapping(uint256 => MarketplaceDistribution) private marketplaceDistributions;
+
     uint256 public packIncrementId = 1;
     uint256 public lastNFTID = 1;
 
-    event PackCreated(uint256 packId, uint256  nftsAmount, string indexed serie, string indexed packType, string indexed drop);
+    event PackCreated(uint256 packId, string indexed serie, string indexed packType, string indexed drop);
     event PackBought(address indexed by, uint256 indexed packId);
     event PackOpened(address indexed by, uint256 indexed packId);
     event PackDelete(uint256 indexed packId);
@@ -47,6 +50,11 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         bool opened;
         //external info
         address buyer;
+    }
+
+    struct MarketplaceDistribution {
+        uint256[] marketplaceDistributionAmounts;
+        address[] marketplaceDistributionAddresses;
     }
   
     constructor (string memory name, string memory symbol, ERC20 _purchaseToken) public ERC721(name, symbol) {}
@@ -90,6 +98,10 @@ contract OpenerRealFvr is  Ownable, ERC721 {
             pack.saleDistributionAddresses, pack.saleDistributionAmounts, pack.opened);
     }
 
+    function getMarketplaceDistributionForERC721(uint256 _tokenId) public view returns(uint256[] memory, address[] memory) {
+        return (marketplaceDistributions[_tokenId].marketplaceDistributionAmounts, marketplaceDistributions[_tokenId].marketplaceDistributionAddresses);
+    }
+
     function getPackPriceInFVR(uint256 packId) public returns (uint256) {
         return packs[packId].price.mul(_realFvrTokenPriceUSD).div(10**3);
     }
@@ -119,6 +131,12 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         emit PackBought(from, packId);
     }
 
+    function buyPacks(uint256[] memory packIds) public {
+        for(uint i = 0; i < packIds.length; i++){
+            buyPack(packIds[i]);
+        } 
+    }
+
     function openPack(uint256 packId) public {
         require(!_closed, "Opener is locked");
         require(!packs[packId].opened, "Opened Already");
@@ -130,10 +148,17 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         emit PackOpened(msg.sender, packId);
     }
 
+    function openPacks(uint256[] memory packIds) public {
+        for(uint i = 0; i < packIds.length; i++){
+            openPack(packIds[i]);
+        } 
+    }
 
     function createPack(uint256 nftAmount, uint256 price /* 1 = ($1) */, 
         string memory serie, string memory packType, string memory drop, uint256 saleStart,
-        address[] memory saleDistributionAddresses,  uint256[] memory saleDistributionAmounts /* [1;98;1]*/
+        address[] memory saleDistributionAddresses,  uint256[] memory saleDistributionAmounts, /* [1;98;1]*/
+        address[] memory marketplaceDistributionAddresses,  uint256[] memory marketplaceDistributionAmounts /* [1;98;1]*/
+
     ) public onlyOwner {
 
         require(saleDistributionAmounts.length == saleDistributionAddresses.length, "saleDistribution Lenghts are not the same");
@@ -143,7 +168,15 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         }
         require(totalFees == 100, "Sum of all amounts has to equal 100");
 
-        Pack memory pack = packs[packIncrementId];
+
+        require(marketplaceDistributionAddresses.length == marketplaceDistributionAmounts.length, "marketplaceDistribution Lenghts are not the same");
+        totalFees = 0;
+        for(uint i = 0; i < marketplaceDistributionAddresses.length; i++){
+            totalFees += marketplaceDistributionAmounts[i];
+        }
+        require(totalFees == 100, "Sum of all amounts has to equal 100");
+
+        Pack memory pack;
         pack.packId = packIncrementId;
         pack.nftAmount = nftAmount;
         pack.saleStart = saleStart;
@@ -156,7 +189,14 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         pack.packType = packType;
         packs[packIncrementId] = pack;
 
-        emit PackCreated(packIncrementId, nftAmount, serie, packType, drop);
+        
+        for(uint j = 1; j <= nftAmount; j++){
+            // Marketplace Distributions
+            MarketplaceDistribution memory marketplaceDistribution = MarketplaceDistribution(marketplaceDistributionAmounts, marketplaceDistributionAddresses);
+            marketplaceDistributions[lastNFTID+j] = marketplaceDistribution;
+        }
+
+        emit PackCreated(packIncrementId, serie, packType, drop);
         lastNFTID = lastNFTID + nftAmount;
         packIncrementId = packIncrementId+1;
     }

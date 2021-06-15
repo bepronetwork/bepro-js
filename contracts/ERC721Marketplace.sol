@@ -9,7 +9,7 @@ contract ERC721Marketplace is Ownable {
     using SafeMath for uint256;
 
     ERC20 public erc20Address;
-    ERC721 public erc721Address;
+    IERC721 private erc721Address;
     address public feeAddress;
     uint256 public feePercentage = 0; // 1 = 1%
     uint256 public saleIncrementId = 1;
@@ -29,7 +29,7 @@ contract ERC721Marketplace is Ownable {
     }
 
     constructor(ERC20 _erc20Address, 
-    ERC721 _erc721Address) public {
+    IERC721 _erc721Address) public {
         erc20Address = _erc20Address;
         erc721Address = _erc721Address;
     }
@@ -92,7 +92,7 @@ contract ERC721Marketplace is Ownable {
         erc20Address = _erc20Address;
     }
 
-    function changeERC721(ERC721 _erc721Address) public onlyOwner {
+    function changeERC721(IERC721 _erc721Address) public onlyOwner {
         erc721Address = _erc721Address;
     }
 
