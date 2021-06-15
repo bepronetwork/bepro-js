@@ -271,8 +271,8 @@ contract Network is Pausable, Governed{
             require(transactionToken.transferFrom(msg.sender, address(this), _newTokenAmount.sub(previousAmount)), "Needs Allowance");
             totalStaked = totalStaked.add(_newTokenAmount.sub(previousAmount));
         }else{
-            require(transactionToken.transfer(msg.sender, previousAmount.sub(_newTokenAmount)), "Transfer not sucessful");
             totalStaked = totalStaked.sub(previousAmount.sub(_newTokenAmount));
+            require(transactionToken.transfer(msg.sender, previousAmount.sub(_newTokenAmount)), "Transfer not sucessful");
         }
     }
 
