@@ -53,7 +53,7 @@ class OpenerRealFvr extends IContract {
     this.params.contract.getContract().methods.buyPack(packId),
   );
 
-   /**
+  /**
    * @function
    * @description Buy Packs
    * @param {Object} params Parameters
@@ -64,7 +64,7 @@ class OpenerRealFvr extends IContract {
       this.params.contract.getContract().methods.buyPacks(packIds),
     );
 
-  /**
+    /**
    * @function
    * @description Open Pack
    * @param {Object} params Parameters
@@ -126,7 +126,7 @@ class OpenerRealFvr extends IContract {
     saleDistributionAddresses,
     saleDistributionAmounts,
     marketplaceDistributionAddresses,
-    marketplaceDistributionAmounts
+    marketplaceDistributionAmounts,
   }) => await this.__sendTx(
     this.params.contract
       .getContract()
@@ -140,7 +140,7 @@ class OpenerRealFvr extends IContract {
         saleDistributionAddresses,
         saleDistributionAmounts,
         marketplaceDistributionAddresses,
-        marketplaceDistributionAmounts
+        marketplaceDistributionAmounts,
       ),
   );
 
@@ -298,7 +298,7 @@ class OpenerRealFvr extends IContract {
    * @param {Address} params.address
    * @returns {Array | Integer} TokensRegistered
    */
-  getRegisteredTokens = async ({address}) => {
+  getRegisteredTokens = async ({ address }) => {
     const res = await this.params.contract
       .getContract()
       .methods.getRegisteredIDs(address)
@@ -315,17 +315,17 @@ class OpenerRealFvr extends IContract {
    * @returns {Array | Integer} Distribution Amounts
    * @returns {Array | Address} Distribution Addresses
    */
-   getMarketplaceDistributionForERC721 = async ({tokenId}) => {
-    const res = await this.params.contract
-      .getContract()
-      .methods.getMarketplaceDistributionForERC721(tokenId)
-      .call();
+   getMarketplaceDistributionForERC721 = async ({ tokenId }) => {
+     const res = await this.params.contract
+       .getContract()
+       .methods.getMarketplaceDistributionForERC721(tokenId)
+       .call();
 
-    return {
-      distributionAmounts : res[0].map(a => parseInt(a, 10)),
-      distributionAddresses : res[1]
-    }
-  };
+     return {
+       distributionAmounts: res[0].map(a => parseInt(a, 10)),
+       distributionAddresses: res[1],
+     };
+   };
 
   /**
    * @function
