@@ -158,7 +158,6 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         string memory serie, string memory packType, string memory drop, uint256 saleStart,
         address[] memory saleDistributionAddresses,  uint256[] memory saleDistributionAmounts, /* [1;98;1]*/
         address[] memory marketplaceDistributionAddresses,  uint256[] memory marketplaceDistributionAmounts /* [1;98;1]*/
-
     ) public onlyOwner {
 
         require(saleDistributionAmounts.length == saleDistributionAddresses.length, "saleDistribution Lenghts are not the same");
@@ -170,11 +169,6 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
 
         require(marketplaceDistributionAddresses.length == marketplaceDistributionAmounts.length, "marketplaceDistribution Lenghts are not the same");
-        totalFees = 0;
-        for(uint i = 0; i < marketplaceDistributionAddresses.length; i++){
-            totalFees += marketplaceDistributionAmounts[i];
-        }
-        require(totalFees == 100, "Sum of all amounts has to equal 100");
 
         Pack memory pack;
         pack.packId = packIncrementId;
