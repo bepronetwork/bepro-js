@@ -50,13 +50,11 @@ class ERC20Distribution extends IContract {
    * @param {Address} params.address ERC20 Address
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-   setTokenAddress = async ({ address }) => {
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.setTokenAddress(address),
-    );
-  };
+   setTokenAddress = async ({ address }) => await this.__sendTx(
+     this.params.contract
+       .getContract()
+       .methods.setTokenAddress(address),
+   );
 
    /**
    * (Admin only) Get All tokens from the Distribution Contract
@@ -65,13 +63,11 @@ class ERC20Distribution extends IContract {
    * @param {Address} params.address Address to transfer the ERC20 tokens to
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-    safeGuardAllTokens = async ({ address }) => {
-        return await this.__sendTx(
-          this.params.contract
-            .getContract()
-            .methods.safeGuardAllTokens(address),
-        );
-    };
+    safeGuardAllTokens = async ({ address }) => await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.safeGuardAllTokens(address),
+    );
 
     /**
    * (Admin only) Set the Token Generation Event
@@ -80,15 +76,13 @@ class ERC20Distribution extends IContract {
    * @param {Integer} params.time Time to set the TGE to (Token Generation Event)
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-    setTGEDate = async ({ time }) => {
-        return await this.__sendTx(
-          this.params.contract
-            .getContract()
-            .methods.setTGEDate(Numbers.timeToSmartContractTime(time)),
-        );
-    };
+    setTGEDate = async ({ time }) => await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.setTGEDate(Numbers.timeToSmartContractTime(time)),
+    );
 
-      /**
+    /**
    * (Admin only) Set Initial Distribution (Call the amount of times necessary)
    * @function
    * @param {Object} params
@@ -98,30 +92,28 @@ class ERC20Distribution extends IContract {
    * @returns {Promise<boolean>} Success True if operation was successful
    */
     setInitialDistribution = async ({ address, tokenAmount, unlockTime }) => {
-        let tokenAmountWithDecimals =  Numbers.toSmartContractDecimals(
-            tokenAmount,
-            this.getERC20Contract().getDecimals(),
-        );
-        return await this.__sendTx(
-          this.params.contract
-            .getContract()
-            .methods.setInitialDistribution(address, tokenAmountWithDecimals, Numbers.timeToSmartContractTime(unlockTime)),
-        );
+      const tokenAmountWithDecimals = Numbers.toSmartContractDecimals(
+        tokenAmount,
+        this.getERC20Contract().getDecimals(),
+      );
+      return await this.__sendTx(
+        this.params.contract
+          .getContract()
+          .methods.setInitialDistribution(address, tokenAmountWithDecimals, Numbers.timeToSmartContractTime(unlockTime)),
+      );
     };
 
-       /**
+    /**
    * Trigger Token - should be called every month
    * @function
    * @param {Object} params
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-    triggerTokenSend = async () => {
-        return await this.__sendTx(
-            this.params.contract
-            .getContract()
-            .methods.triggerTokenSend(),
-        );
-    };
+    triggerTokenSend = async () => await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.triggerTokenSend(),
+    );
 
     /**
      *
@@ -129,24 +121,24 @@ class ERC20Distribution extends IContract {
      * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
      */
     __assert = async () => {
-        if (!this.getAddress()) {
+      if (!this.getAddress()) {
         throw new Error(
-            'Contract is not deployed, first deploy it and provide a contract address',
+          'Contract is not deployed, first deploy it and provide a contract address',
         );
-        }
+      }
 
-        /* Use ABI */
-        this.params.contract.use(erc20distribution, this.getAddress());
+      /* Use ABI */
+      this.params.contract.use(erc20distribution, this.getAddress());
 
-        /* Set Token Address Contract for easy access */
-        if (!this.params.ERC20Contract) {
+      /* Set Token Address Contract for easy access */
+      if (!this.params.ERC20Contract) {
         this.params.ERC20Contract = new ERC20Contract({
-            web3Connection: this.web3Connection,
-            contractAddress: await this.erc20(),
+          web3Connection: this.web3Connection,
+          contractAddress: await this.erc20(),
         });
-        }
-        /* Assert Token Contract */
-        await this.params.ERC20Contract.__assert();
+      }
+      /* Assert Token Contract */
+      await this.params.ERC20Contract.__assert();
     };
 
     /**
@@ -158,12 +150,12 @@ class ERC20Distribution extends IContract {
      * @throws {Error} No Token Address Provided
      */
     deploy = async ({ callback } = {}) => {
-        const params = [];
-        const res = await this.__deploy(params, callback);
-        this.params.contractAddress = res.contractAddress;
-        /* Call to Backend API */
-        await this.__assert();
-        return res;
+      const params = [];
+      const res = await this.__deploy(params, callback);
+      this.params.contractAddress = res.contractAddress;
+      /* Call to Backend API */
+      await this.__assert();
+      return res;
     };
 
     /**
