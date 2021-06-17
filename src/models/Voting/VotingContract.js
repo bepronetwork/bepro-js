@@ -13,7 +13,7 @@ import Numbers from '../../utils/Numbers';
  */
 
 /**
- * Staking Contract Object
+ * Voting Contract Object
  * @class VotingContract
  * @param {VotingContract~Options} options
  */
