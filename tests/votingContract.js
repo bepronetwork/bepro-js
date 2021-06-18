@@ -2,8 +2,8 @@ import { expect, assert } from "chai";
 import moment from "moment";
 import delay from "delay";
 import { mochaAsync } from "./utils";
-import { ERC20Contract, VotingContract } from "..";
-import Numbers from "../src/utils/Numbers";
+import { ERC20Contract, VotingContract } from "../build";
+import Numbers from "../build/utils/Numbers";
 
 let deployed_tokenAddress;
 const testConfig = {

@@ -2,8 +2,8 @@ import { expect, assert } from "chai";
 import moment from "moment";
 import delay from "delay";
 import { mochaAsync } from "./utils";
-import { ERC20Contract, ERC721Collectibles } from "..";
-import Numbers from "../src/utils/Numbers";
+import { ERC20Contract, ERC721Collectibles } from "../build";
+import Numbers from "../build/utils/Numbers";
 
 var userPrivateKey =
   "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
