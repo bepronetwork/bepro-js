@@ -353,7 +353,7 @@ contract Network is Pausable, Governed{
     
     function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, uint256, bool, bool){
         Issue memory issue = issues[_issueID];
-        return (issue._id, issue.cid, issue.tokensStaked, issue.creationDate, issue.issueGenerator, issue.oraclesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
+        return (issue._id, issue.cid, issue.creationDate, issue.tokensStaked, issue.issueGenerator, issue.oraclesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
     }
 
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, uint256, address[] memory, uint256[] memory, address){
