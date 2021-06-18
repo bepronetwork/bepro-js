@@ -289,11 +289,11 @@ class Network extends IContract {
   }
 
 
-   /**
+  /**
    * Get Issue By Id
    * @param {Object} params
    * @param {Address} params.issueId
-   * @returns {Promise<TokensNetwork~Issue>} 
+   * @returns {Promise<TokensNetwork~Issue>}
    */
   async getIssueById({ issueId }) {
     const r = await this.__sendTx(
@@ -409,7 +409,7 @@ class Network extends IContract {
 
 
      return await this.__sendTx(
-       this.params.contract.getContract().methods.lock( Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
+       this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
      );
    }
 
@@ -446,7 +446,7 @@ class Network extends IContract {
      return await this.__sendTx(
        this.params.contract
          .getContract()
-         .methods.unlock( Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
+         .methods.unlock(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
      );
    }
 
@@ -523,7 +523,7 @@ class Network extends IContract {
      return await this.__sendTx(
        this.params.contract
          .getContract()
-         .methods.updateIssue(issueID,  Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
+         .methods.updateIssue(issueID, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
      );
    }
 
