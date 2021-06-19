@@ -312,6 +312,7 @@ class VotingContract extends IContract {
     }
 
     /* Assert Token Contract */
+    await this.params.ERC20Contract.login();
     await this.params.ERC20Contract.__assert();
   };
 
