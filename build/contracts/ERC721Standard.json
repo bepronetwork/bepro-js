@@ -16950,7 +16950,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-06-22T10:39:33.585Z",
+  "updatedAt": "2021-06-22T16:48:17.663Z",
   "devdoc": {
     "methods": {
       "approve(address,uint256)": {

@@ -11690,7 +11690,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2021-06-22T10:39:33.606Z",
+  "updatedAt": "2021-06-22T16:48:17.681Z",
   "devdoc": {
     "methods": {
       "transferOwnership(address)": {
