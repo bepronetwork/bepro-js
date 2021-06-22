@@ -454,7 +454,7 @@ class Network extends IContract {
    * open Issue
    * @param {Object} params
    * @param {number} params.tokenAmount
-   * @param {Address} params.address
+   * @param {String} params.cid
    * @throws {Error} Tokens Amount has to be higher than 0
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
