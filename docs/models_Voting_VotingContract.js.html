@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BEPRO Network Dev Docs models/Voting/VotingContract.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="./doc-styles.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+             
+                <a class="image" href="index.html">
+                    <img src="//avatars.githubusercontent.com/u/49488487?s=200&v=4" alt="logo">
+                </a>
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">BEPRO Network Documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/bepronetwork/bepro-js"
+                        >
+                            Github
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.bepro.network/blog"
+                        >
+                            Blog
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DexStorage.html">DexStorage</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Standard.html">ERC721Standard</a></li><li><a href="IContract.html">IContract</a></li><li><a href="Network.html">Network</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="StakingContract.html">StakingContract</a></li><li><a href="VotingContract.html">VotingContract</a></li><li><a href="Web3Connection.html">Web3Connection</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>models/Voting/VotingContract.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import _ from 'lodash';
+import { voting } from '../../interfaces';
+import ERC20Contract from '../ERC20/ERC20Contract';
+import IContract from '../IContract';
+import Numbers from '../../utils/Numbers';
+
+/**
+ * @typedef {Object} VotingContract~Options
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
+ * @property {string} [contractAddress]
+ */
+
+/**
+ * Voting Contract Object
+ * @class VotingContract
+ * @param {VotingContract~Options} options
+ */
+class VotingContract extends IContract {
+  constructor(params = {}) {
+    try {
+      super({ ...params, abi: voting });
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /**
+   * Get ERC20 Address of the Contract
+   * @returns {Promise&lt;Address>}
+   */
+  async erc20() {
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.erc20(),
+      true,
+    );
+  }
+
+  /**
+   * Creates a Pool
+   * @param {String} params.description
+   * @param {Integer} params.expirationTime
+   * @param {Array | Integer} params.options
+   * @return {Promise&lt;TransactionObject>}
+   */
+  async createPool({
+    description,
+    expirationTime,
+    options,
+  }) {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.createPoll(
+          description,
+          Numbers.timeToSmartContractTime(expirationTime),
+          options,
+        ),
+    );
+  }
+
+  /**
+   * Creates a Pool
+   * @param {Integer} params.poolId
+   * @return {Promise&lt;TransactionObject>}
+   */
+  async endPool({
+    poolId,
+  }) {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.endPool(
+          poolId,
+        ),
+    );
+  }
+
+  /**
+     * Cast Vote
+     * @param {Integer} params.poolId Pool Id
+     * @param {Integer} params.voteId Vote Position on Length
+     * @return {Promise&lt;TransactionObject>}
+     */
+  async castVote({
+    poolId,
+    voteId,
+  }) {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.castVote(
+          poolId,
+          voteId,
+        ),
+    );
+  }
+
+  /**
+     * Stake Voting Tokens
+     * @param {Integer} params.tokens Tokens
+     * @return {Promise&lt;TransactionObject>}
+     */
+  async stakeVotingTokens({
+    tokens,
+  }) {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.stakeVotingTokens(
+          Numbers.toSmartContractDecimals(
+            tokens,
+            this.getERC20Contract().getDecimals(),
+          ),
+        ),
+    );
+  }
+
+  /**
+   * @typedef {Object} VotingContract~Pool
+   * @property {Address} creator
+   * @property {Bool} status
+   * @property {Integer} optionsSize
+   * @property {String} description
+   * @property {Array | Address} voters
+   * @property {Date} expirationTime
+   */
+
+    /**
+     * Get Pool Information
+     * @function
+     * @param {Object} params
+     * @param {Integer} params.poolId
+     * @return {Promise&lt;VotingContract~Pool>}
+     */
+    getPoolInformation = async ({ poolId }) => {
+      const res = await this.__sendTx(
+        this.params.contract.getContract().methods.getPoolInformation(poolId),
+        true,
+      );
+
+      return {
+        _id: poolId,
+        creator: res[0],
+        status: res[1],
+        optionsSize: parseInt(res[2], 10),
+        descripton: res[3],
+        voters: res[4],
+        expirationTime: Numbers.fromSmartContractTimeToMinutes(res[5]),
+      };
+    };
+
+    /**
+     * Get Pool Winner
+     * @function
+     * @param {Object} params
+     * @param {Integer} params.poolId
+     * @return {Integer} Winner Id
+     * @return {Integer} Winner Id Index
+     */
+     getPoolWinner = async ({ poolId }) => {
+       const res = await this.__sendTx(
+         this.params.contract.getContract().methods.getPoolWinner(poolId),
+         true,
+       );
+
+       return {
+         winnerId: parseInt(res[0], 10),
+         optionId: parseInt(res[1], 10),
+       };
+     };
+
+     /**
+     * Get Pool Winner
+     * @function
+     * @param {Object} params
+     * @param {Integer} params.poolId Pool Id
+     * @param {Integer} params.optionIndex Option Id for Pool
+     * @return {Integer} Option Id
+     */
+     getPollOptionById = async ({ poolId, optionIndex }) => {
+       const res = await this.__sendTx(
+         this.params.contract.getContract().methods.getPollOptionById(poolId, optionIndex),
+         true,
+       );
+
+       return parseInt(res[0], 10);
+     };
+
+     /**
+     * Get Pool History for Address
+     * @function
+     * @param {Object} params
+     * @param {Address} params.address
+     * @return {Array | Integer} Pool Ids
+     */
+      getPollHistory = async ({ address }) => {
+        const res = await this.__sendTx(
+          this.params.contract.getContract().methods.getPollHistory(address),
+          true,
+        );
+
+        return {
+          pools: res[0].map(r => parseInt(r, 10)),
+        };
+      };
+
+    /**
+     * Get Pool Info for Voter
+     * @function
+     * @param {Object} params
+     * @param {Integer} params.poolId
+     * @param {Address} params.voter
+     * @return {Integer} Vote
+     * @return {Integer} Weigth (Token Value)
+     */
+    getPollInfoForVoter = async ({ poolId, voter }) => {
+      const res = await this.__sendTx(
+        this.params.contract.getContract().methods.getPollInfoForVoter(poolId, voter),
+        true,
+      );
+
+      return {
+        vote: parseInt(res[0], 10),
+        weigth: Numbers.toSmartContractDecimals(
+          res[1],
+          this.getERC20Contract().getDecimals(),
+        ),
+      };
+    };
+
+    /**
+     * Check if a User has voted
+     * @function
+     * @param {Object} params
+     * @param {Integer} params.poolId
+     * @param {Address} params.voter
+     * @return {Bool} HasVoted
+     */
+     userHasVoted = async ({ poolId, voter }) => {
+       const res = await this.__sendTx(
+         this.params.contract.getContract().methods.userHasVoted(poolId, voter),
+         true,
+       );
+
+       return res[0];
+     };
+
+
+     /**
+     * Get Locked Amount
+     * @function
+     * @param {Object} params
+     * @param {Address} params.voter
+     * @return {Integer} Locked Amount
+     */
+     getLockedAmount = async ({ voter }) => {
+       const res = await this.__sendTx(
+         this.params.contract.getContract().methods.getLockedAmount(voter),
+         true,
+       );
+
+       return Numbers.toSmartContractDecimals(
+         res[0],
+         this.getERC20Contract().getDecimals(),
+       );
+     };
+
+     /**
+     * Withdraw Tokens from Voting
+     * @param {Integer} params.tokens Tokens
+     * @return {Promise&lt;TransactionObject>}
+     */
+     async withdrawTokens({
+       tokens,
+     }) {
+       return await this.__sendTx(
+         this.params.contract
+           .getContract()
+           .methods.withdrawTokens(
+             Numbers.toSmartContractDecimals(
+               tokens,
+               this.getERC20Contract().getDecimals(),
+             ),
+           ),
+       );
+     }
+
+  /**
+   * @async
+   * @function
+   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
+   * @void
+   */
+  __assert = async () => {
+    if (!this.getAddress()) {
+      throw new Error(
+        'Contract is not deployed, first deploy it and provide a contract address',
+      );
+    }
+
+    /* Use ABI */
+    this.params.contract.use(voting, this.getAddress());
+
+    /* Set Token Address Contract for easy access */
+    if (!this.params.ERC20Contract) {
+      this.params.ERC20Contract = new ERC20Contract({
+        web3Connection: this.web3Connection,
+        contractAddress: await this.erc20(),
+      });
+    }
+
+    /* Assert Token Contract */
+    await this.params.ERC20Contract.login();
+    await this.params.ERC20Contract.__assert();
+  };
+
+  /**
+   * Deploy the Staking Contract
+   * @function
+   * @param [Object] params
+   * @param {Address} params.erc20Contract
+   * @param {function():void} params.callback
+   * @return {Promise&lt;*>}
+   */
+  deploy = async ({ erc20Contract, callback } = {}) => {
+    const params = [erc20Contract];
+    const res = await this.__deploy(params, callback);
+    this.params.contractAddress = res.contractAddress;
+    /* Call to Backend API */
+    await this.__assert();
+    return res;
+  };
+
+  /**
+   * @function
+   * @return ERC20Contract|undefined
+   */
+  getERC20Contract = () => this.params.ERC20Contract;
+}
+
+export default VotingContract;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

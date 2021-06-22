@@ -103,7 +103,12 @@ class ERC20Contract extends IContract {
           .call(),
         this.getDecimals(),
       );
-      return approvedAmount >= amount;
+
+      const amountWithDecimals = Numbers.fromDecimals(
+        amount,
+        this.getDecimals()
+      );
+      return approvedAmount >= amountWithDecimals;
     } catch (err) {
       throw err;
     }
