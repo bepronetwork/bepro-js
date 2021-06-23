@@ -219,14 +219,10 @@ contract PredictionMarket {
     address oracle;
     uint resolvedOutcomeId;
 
-    mapping(address => uint) holdersIndexes;
     mapping(address => uint) holdersShares;
-    address[] holders;
 
-    mapping(address => uint) liquidityIndexes;
     mapping(address => uint) liquidityShares;
     mapping(address => bool) liquidityClaims; // wether participant has claimed liquidity winnings
-    address[] liquidityHolders;
 
     // fees
     uint fee; // fee taken from every transaction
@@ -251,9 +247,7 @@ contract PredictionMarket {
     uint256 available; // available shares
 
     mapping(address => uint) holdersShares;
-    mapping(address => uint) holdersIndexes;
     mapping(address => bool) holdersClaims; // wether participant has claimed liquidity winnings
-    address[] holders;
   }
 
   uint[] marketIds;
@@ -352,12 +346,6 @@ contract PredictionMarket {
     market.liquidityTotal = msg.value;
     market.liquidityAvailable = msg.value;
 
-    // adding liquidity tokens to market creator
-    if (market.liquidityShares[msg.sender] == 0) {
-      market.liquidityHolders.push(msg.sender);
-      market.liquidityIndexes[msg.sender] = market.liquidityHolders.length - 1;
-    }
-
     // TODO review: only valid for 50-50 start
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].add(msg.value);
 
@@ -442,18 +430,6 @@ contract PredictionMarket {
     require(shares > 0, "Can't be 0");
     require(outcome.shares.available >= shares, "Can't buy more shares than the ones available");
 
-    // new participant, push into the array
-    if (market.holdersShares[msg.sender] == 0) {
-      market.holders.push(msg.sender);
-      market.holdersIndexes[msg.sender] = market.holders.length - 1;
-    }
-
-    // doing it for both market and market outcomes
-    if (outcome.shares.holdersShares[msg.sender] == 0) {
-      outcome.shares.holders.push(msg.sender);
-      outcome.shares.holdersIndexes[msg.sender] = market.holders.length - 1;
-    }
-
     outcome.shares.holdersShares[msg.sender] = outcome.shares.holdersShares[msg.sender].add(shares);
     market.holdersShares[msg.sender] = market.holdersShares[msg.sender].add(shares);
 
@@ -487,22 +463,6 @@ contract PredictionMarket {
     // removing shares
     outcome.shares.holdersShares[msg.sender] = outcome.shares.holdersShares[msg.sender].sub(shares);
     market.holdersShares[msg.sender] = market.holdersShares[msg.sender].sub(shares);
-
-    // removing participant from participants list
-    if (market.holdersShares[msg.sender] == 0) {
-      uint index = market.holdersIndexes[msg.sender];
-      require(index < market.holders.length);
-      market.holders[index] = market.holders[market.holders.length-1];
-      market.holders.length--;
-    }
-
-    // doing it for both market and market outcomes
-    if (outcome.shares.holdersShares[msg.sender] == 0) {
-      uint index = outcome.shares.holdersIndexes[msg.sender];
-      require(index < outcome.shares.holders.length);
-      outcome.shares.holders[index] = outcome.shares.holders[outcome.shares.holders.length-1];
-      outcome.shares.holders.length--;
-    }
 
     // adding shares back to pool
     outcome.shares.available = outcome.shares.available.add(shares);
@@ -587,12 +547,6 @@ contract PredictionMarket {
 
     market.liquidityAvailable = market.liquidityAvailable.add(liquidityRatio);
 
-    // adding liquidity tokens to market creator
-    if (market.liquidityShares[msg.sender] == 0) {
-      market.liquidityHolders.push(msg.sender);
-      market.liquidityIndexes[msg.sender] = market.liquidityHolders.length - 1;
-    }
-
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].add(liquidityRatio);
 
     // equal outcome split, no need to buy shares
@@ -636,13 +590,6 @@ contract PredictionMarket {
 
     // removing liquidity tokens from market creator
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].sub(shares);
-
-    if (market.liquidityShares[msg.sender] == 0) {
-      uint index = market.liquidityIndexes[msg.sender];
-      require(index < market.liquidityHolders.length);
-      market.liquidityHolders[index] = market.liquidityHolders[market.liquidityHolders.length-1];
-      market.liquidityHolders.length--;
-    }
 
     // part of the liquidity is exchanged for outcome shares if not 50-50 market
     // getting liquidity ratio
