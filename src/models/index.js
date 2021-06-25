@@ -5,6 +5,8 @@ import ERC721Collectibles from './ERC721/ERC721Collectibles';
 import ERC721Standard from './ERC721/ERC721Standard';
 import OpenerRealFvr from './custom/RealFvr/OpenerRealFvr';
 import Network from './BEPRO/Network';
+import VotingContract from './Voting/VotingContract';
+
 
 export {
   ERC20Contract,
@@ -13,5 +15,6 @@ export {
   ERC721Collectibles,
   ERC721Standard,
   Network,
+  VotingContract,
   OpenerRealFvr,
 };

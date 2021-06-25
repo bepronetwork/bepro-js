@@ -6,8 +6,8 @@ contract Votable {
     using SafeMath for uint256;
 
     /* EVENTS */
-    event voteCasted(address voter, uint pollID, uint256 vote, uint256 weight);
-    event pollCreated(address creator, uint pollID, string description, uint votingLength);
+    event voteCasted(address indexed voter, uint indexed pollID, uint256 vote, uint256 weight);
+    event pollCreated(address indexed creator, uint indexed pollID, string description, uint votingLength);
     event pollStatusUpdate(bool status);
 
     /* Determine the current state of a poll */
@@ -46,12 +46,12 @@ contract Votable {
     mapping(address => TokenManager) public bank;
 
     uint256 public pollCount;
-    ERC20 public token;
+    ERC20 public erc20;
 
     /* CONSTRUCTOR */
     constructor(address _token) public {
         require(_token != address(0));
-        token = ERC20(_token);
+        erc20 = ERC20(_token);
     }
 
     /* POLL OPERATIONS */
@@ -72,7 +72,7 @@ contract Votable {
             curPoll.options[i] = options[i];
         }
         curPoll.optionsSize = options.length;
-        curPoll.expirationTime = now + _voteLength * 1 seconds;
+        curPoll.expirationTime = now.add(_voteLength).mul(1 seconds);
         curPoll.description = _description;
 
         emit pollCreated(msg.sender, pollCount, _description, _voteLength);
@@ -151,16 +151,15 @@ contract Votable {
     * Casts a vote for a given poll.
     */
     function castVote(uint _pollID, uint256 _voteId) external validPoll(_pollID) {
-        require(polls[_pollID].status == PollStatus.IN_PROGRESS, "Poll has expired.");
+        Poll storage curPoll = polls[_pollID];
+        require(curPoll.status == PollStatus.IN_PROGRESS, "Poll has expired.");
         require(!userHasVoted(_pollID, msg.sender), "User has already voted.");
-        require(polls[_pollID].expirationTime > now);
-        require(_voteId < polls[_pollID].optionsSize, "Vote option is not availble");
+        require(curPoll.expirationTime > now);
+        require(_voteId < curPoll.optionsSize, "Vote option is not availble");
         
         // update token bank
         bank[msg.sender].lockedTokens[_pollID] = getTokenStake(msg.sender);
         bank[msg.sender].participatedPolls.push(_pollID);
-
-        Poll storage curPoll = polls[_pollID];
 
         curPoll.votesPerOption[_voteId] = curPoll.votesPerOption[_voteId].add(getTokenStake(msg.sender));
 
@@ -201,8 +200,8 @@ contract Votable {
     *  _numTokens is denominated in *wei*.
     */
     function stakeVotingTokens(uint256 _numTokens) external {
-        require(token.balanceOf(msg.sender) >= _numTokens, "User does not have enough tokens");
-        require(token.transferFrom(msg.sender, address(this), _numTokens), "User did not approve token transfer.");
+        require(erc20.balanceOf(msg.sender) >= _numTokens, "User does not have enough tokens");
+        require(erc20.transferFrom(msg.sender, address(this), _numTokens), "User did not approve token transfer.");
         bank[msg.sender].tokenBalance += _numTokens;
     }
 
@@ -214,7 +213,7 @@ contract Votable {
         uint largest = getLockedAmount(msg.sender);
         require(getTokenStake(msg.sender) - largest >= _numTokens, "User is trying to withdraw too many tokens.");
         bank[msg.sender].tokenBalance -= _numTokens;
-        require(token.transfer(msg.sender, _numTokens));
+        require(erc20.transfer(msg.sender, _numTokens));
     }
 
     /*

@@ -58,8 +58,10 @@ class Network extends IContract {
       contractAddress: settlerAddresss,
     });
     // Assert Token Contract
+    await this.params.transactionalToken.login();
     await this.params.transactionalToken.__assert();
     // Assert Token Contract
+    await this.params.settlerToken.login();
     await this.params.settlerToken.__assert();
   };
 
@@ -286,21 +288,29 @@ class Network extends IContract {
     return Numbers.fromDecimals(r, 18);
   }
 
-  async getIssueById({ issue_id }) {
+
+  /**
+   * Get Issue By Id
+   * @param {Object} params
+   * @param {Address} params.issueId
+   * @returns {Promise<TokensNetwork~Issue>}
+   */
+  async getIssueById({ issueId }) {
     const r = await this.__sendTx(
-      this.params.contract.getContract().methods.getIssueById(issue_id),
+      this.params.contract.getContract().methods.getIssueById(issueId),
       true,
     );
 
     return {
       _id: Numbers.fromHex(r[0]),
-      tokensStaked: Numbers.fromDecimals(r[1], 18),
+      cid: r[1],
       creationDate: Numbers.fromSmartContractTimeToMinutes(r[2]),
-      issueGenerator: r[3],
-      votesForApprove: Numbers.fromDecimals(r[4], 18),
-      mergeProposalsAmount: parseInt(r[5], 10),
-      finalized: r[6],
-      canceled: r[7],
+      tokensStaked: Numbers.fromDecimals(r[3], 18),
+      issueGenerator: r[4],
+      votesForApprove: Numbers.fromDecimals(r[5], 18),
+      mergeProposalsAmount: parseInt(r[6], 10),
+      finalized: r[7],
+      canceled: r[8],
     };
   }
 
@@ -399,7 +409,7 @@ class Network extends IContract {
 
 
      return await this.__sendTx(
-       this.params.contract.getContract().methods.lock(tokenAmount),
+       this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
      );
    }
 
@@ -417,7 +427,7 @@ class Network extends IContract {
      }
 
      return await this.__sendTx(
-       this.params.contract.getContract().methods.unlock(tokenAmount, from),
+       this.params.contract.getContract().methods.unlock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()), from),
      );
    }
 
@@ -436,7 +446,7 @@ class Network extends IContract {
      return await this.__sendTx(
        this.params.contract
          .getContract()
-         .methods.unlock(tokenAmount, delegatedTo),
+         .methods.unlock(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
      );
    }
 
@@ -455,7 +465,7 @@ class Network extends IContract {
      }
 
      return await this.__sendTx(
-       this.params.contract.getContract().methods.openIssue(cid, tokenAmount),
+       this.params.contract.getContract().methods.openIssue(cid, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
      );
    }
 
@@ -513,7 +523,7 @@ class Network extends IContract {
      return await this.__sendTx(
        this.params.contract
          .getContract()
-         .methods.updateIssue(issueID, tokenAmount),
+         .methods.updateIssue(issueID, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
      );
    }
 

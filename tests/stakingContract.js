@@ -2,8 +2,8 @@ import { expect, assert } from "chai";
 import moment from "moment";
 import delay from "delay";
 import { mochaAsync } from "./utils";
-import { ERC20Contract, StakingContract } from "..";
-import Numbers from "../src/utils/Numbers";
+import { ERC20Contract, StakingContract } from "../build";
+import Numbers from "../build/utils/Numbers";
 let userPrivateKey =
   "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 const tokenAddress = "0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2";

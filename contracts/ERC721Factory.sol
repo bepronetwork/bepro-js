@@ -76,7 +76,6 @@ contract Opener is  Ownable {
         }
 
         _currentTokenId += amount;
-        _pricePerPack = _pricePerPack*109/100;
     }
 
     function _distributePackShares(address from, uint256 amount) internal {
