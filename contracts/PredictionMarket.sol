@@ -1,5 +1,7 @@
 pragma solidity 0.5.8;
 
+import "./RealitioERC20.sol";
+
 // File: openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /**
@@ -157,6 +159,29 @@ library SafeMath {
     }
 }
 
+library PMHelpers {
+  // fetched from uniswap: https://github.com/Uniswap/uniswap-v2-core/blob/v1.0.1/contracts/libraries/Math.sol
+  // babylonian method (https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method)
+  function sqrt(uint y) internal pure returns (uint z) {
+    if (y > 3) {
+      z = y;
+      uint x = y / 2 + 1;
+      while (x < z) {
+        z = x;
+        x = (y / x + x) / 2;
+      }
+    } else if (y != 0) {
+      z = 1;
+    }
+  }
+
+  // formats question for realitio
+  function formatQuestion(string memory name, string memory outcome1, string memory outcome2) internal pure returns (string memory)
+  {
+    return string(abi.encodePacked(name, '␟', '"', outcome1, ",", outcome2, '"␟misc␟en'));
+  }
+}
+
 /// @title Market Contract Factory
 contract PredictionMarket {
   using SafeMath for uint;
@@ -215,9 +240,9 @@ contract PredictionMarket {
     MarketState state;
 
     // resolution variables
-    string oracleUrl;
     address oracle;
     uint resolvedOutcomeId;
+    bytes32 questionId; // realitio questionId
 
     mapping(address => uint) holdersShares;
 
@@ -251,9 +276,14 @@ contract PredictionMarket {
   }
 
   uint[] marketIds;
-  uint public fee; // fee % taken from every transaction, can be updated by contract owner
   mapping(uint256 => Market) public markets;
   uint public marketIndex;
+
+  // governance
+  uint public fee; // fee % taken from every transaction, can be updated by contract owner
+  // realitio configs
+  address public realitioAddress;
+  uint public realitioTimeout;
 
   // ------ Modifiers ------
 
@@ -342,6 +372,20 @@ contract PredictionMarket {
     market.fee = fee;
     // setting intial value to an integer that does not map to any outcomeId
     market.resolvedOutcomeId = MAX_UINT_256;
+
+    // creating question in realitio
+    RealitioERC20 realitio = RealitioERC20(realitioAddress);
+    string memory question = PMHelpers.formatQuestion(name, outcome1, outcome2);
+
+    market.questionId = realitio.askQuestionERC20(
+      2,
+      question,
+      oracle,
+      uint32(realitioTimeout),
+      uint32(closesAt),
+      0,
+      0
+    );
 
     market.liquidityTotal = msg.value;
     market.liquidityAvailable = msg.value;
@@ -482,7 +526,7 @@ contract PredictionMarket {
     uint value = (oppositeSharesAvailable**2).add((market.liquidityAvailable**(market.outcomeIds.length)).mul(4));
     value = value.add(outcome.shares.available**2);
     value = value.sub(oppositeSharesAvailable.mul(2).mul(outcome.shares.available));
-    value = sqrt(value);
+    value = PMHelpers.sqrt(value);
     value = oppositeSharesAvailable.add(outcome.shares.available).sub(value);
     value = value.div(2);
 
@@ -653,21 +697,26 @@ contract PredictionMarket {
   /// Determine the result of the market
   /// @dev Only allowed by oracle
   /// @return Id of the outcome
-  function resolveMarketOutcome(uint marketId, uint outcomeId) public
+  function resolveMarketOutcome(uint marketId) public
     timeTransitions(marketId)
     atState(marketId, MarketState.closed)
     transitionNext(marketId)
     returns(uint)
   {
     Market storage market = markets[marketId];
-    MarketOutcome storage outcome = market.outcomes[outcomeId];
 
-    // assuring action is performed by oracle
-    require(market.oracle == msg.sender, "Market resolution needs to be performed by oracle");
     require(market.resolvedOutcomeId == MAX_UINT_256, "Market already resolved");
+
+    RealitioERC20 realitio = RealitioERC20(realitioAddress);
+    // will throw an error if question is not finalized
+    uint outcomeId = uint(realitio.resultFor(market.questionId));
+
+    MarketOutcome storage outcome = market.outcomes[outcomeId];
 
     // assuring outcome is valid
     require(outcome.marketId == marketId, "Market is not valid");
+
+    // TODO: accept INVALID outcome
 
     market.resolvedOutcomeId = outcomeId;
     emit MarketResolved(market.oracle, marketId, outcomeId);
@@ -813,6 +862,18 @@ contract PredictionMarket {
     fee = feeValue;
   }
 
+  function updateRealitioERC20(address addr) public
+    // onlyOwner()
+  {
+    realitioAddress = addr;
+  }
+
+  function updateRealitioTimeout(uint timeout) public
+    // onlyOwner()
+  {
+    realitioTimeout = timeout;
+  }
+
   // ------ Governance Functions End ------
 
   // ------ Getters ------
@@ -945,6 +1006,19 @@ contract PredictionMarket {
     );
   }
 
+  function getMarketQuestion(uint marketId)
+    public view
+    returns(
+      bytes32
+    )
+  {
+    Market storage market = markets[marketId];
+
+    return (
+      market.questionId
+    );
+  }
+
 
   function getMarketPrices(uint marketId)
     public view
@@ -1027,23 +1101,5 @@ contract PredictionMarket {
       outcome.shares.available,
       outcome.shares.total
     );
-  }
-
-  // ------ Getters ------
-
-  // TODO: move to library
-  // fetched from uniswap: https://github.com/Uniswap/uniswap-v2-core/blob/v1.0.1/contracts/libraries/Math.sol
-  // babylonian method (https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method)
-  function sqrt(uint y) internal pure returns (uint z) {
-    if (y > 3) {
-      z = y;
-      uint x = y / 2 + 1;
-      while (x < z) {
-        z = x;
-        x = (y / x + x) / 2;
-      }
-    } else if (y != 0) {
-      z = 1;
-    }
   }
 }
