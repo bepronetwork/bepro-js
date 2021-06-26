@@ -238,7 +238,7 @@ contract Network is Pausable, Governed{
         // Transfer Transaction Token
         require(transactionToken.transferFrom(msg.sender, address(this), _tokenAmount), "Needs Allowance");
     
-        emit OpenIssue(incrementIssueID, msg.sender, _tokenAmount);
+        emit OpenIssue(issue._id, msg.sender, _tokenAmount);
     }
 
     function redeemIssue(uint256 _issueId) public whenNotPaused {
