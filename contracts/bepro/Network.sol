@@ -38,10 +38,8 @@ contract Network is Pausable, Governed{
     uint256 public closedIdsCount = 0;
     uint256 public totalStaked = 0;
     uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to the merge proposal creator
-    uint256 public percentageNeededForApprove = 0; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public percentageNeededForDispute = 3; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public disputableTime = 3 days;
-    uint256 public percentageNeededForMerge = 20; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public oraclesStaked = 0;
 
     uint256 public COUNCIL_AMOUNT = 25000000; // 25M
@@ -56,7 +54,6 @@ contract Network is Pausable, Governed{
     struct MergeProposal {
         uint256 _id;
         uint256 creationDate;
-        mapping(address => uint256) oraclesForMergeByAddress; // Address -> oracles for that merge
         mapping(address => uint256) disputesForMergeByAddress; // Address -> oracles for that merge
         uint256 oracles; // Amount of oracles set
         uint256 disputes; // Amount of oracles set
@@ -71,8 +68,6 @@ contract Network is Pausable, Governed{
         uint256 creationDate;
         uint256 tokensStaked;
         address issueGenerator;
-        mapping(address => uint256) oraclesForApproveByAddress;
-        uint256 oraclesForApprove;
         mapping(uint256 => MergeProposal) mergeProposals; // Id -> Merge Proposal
         uint256 mergeIDIncrement;
         bool finalized;
@@ -87,10 +82,8 @@ contract Network is Pausable, Governed{
     }
 
     event OpenIssue(uint256 indexed id, address indexed opener, uint256 indexed amount);
-    event ApproveIssue(uint256 indexed id, uint256 indexed oracles, address indexed approver);
     event MergeProposalCreated(uint256 indexed id, uint256 indexed mergeID, address indexed creator);
     event DisputeMerge(uint256 indexed id, uint256 indexed mergeID, uint256 oracles, address indexed disputer);
-    event ApproveMerge(uint256 indexed id, uint256 indexed mergeID, uint256 oracles, address indexed approver);
     event CloseIssue(uint256 indexed id, uint256 indexed mergeID, address[] indexed addresses);
 
     constructor(address _settlerToken, address _transactionToken, address _governor) public { 
@@ -148,36 +141,6 @@ contract Network is Pausable, Governed{
         oraclers[_delegatedTo].oraclesDelegatedByOthers = oraclers[_delegatedTo].oraclesDelegatedByOthers.add(_tokenAmount);
     }
 
-    function approveIssue(uint256 _issueID) public {
-        Oracler memory oracler = oraclers[msg.sender];
-        Issue memory issue = issues[_issueID];
-        require(issue._id != 0, "Issue does not exist");
-        require(isIssueApprovable(_issueID));
-        require(issues[_issueID].oraclesForApproveByAddress[msg.sender] == 0, "Has already oracled");
-
-        uint256 oraclesToAdd = getOraclesByAddress(msg.sender);
-        issues[_issueID].oraclesForApprove = issues[_issueID].oraclesForApprove.add(oraclesToAdd);
-        issues[_issueID].oraclesForApproveByAddress[msg.sender] = oraclesToAdd;
-
-        emit ApproveIssue(_issueID, oraclesToAdd, msg.sender);
-    }
-
-    function approveMerge(uint256 _issueID, uint256 _mergeID) public {
-        Oracler memory oracler = oraclers[msg.sender];
-        Issue memory issue = issues[_issueID];
-        MergeProposal storage merge = issues[_issueID].mergeProposals[_mergeID];
-        require(issue._id != 0, "Issue does not exist");
-        require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
-        require(merge.oraclesForMergeByAddress[msg.sender] == 0, "Has already oracled");
-
-        uint256 oraclesToAdd = getOraclesByAddress(msg.sender);
-        
-        issues[_issueID].mergeProposals[_mergeID].oracles = merge.oracles.add(oraclesToAdd);
-        issues[_issueID].mergeProposals[_mergeID].oraclesForMergeByAddress[msg.sender] = oraclesToAdd;
-        
-        emit ApproveMerge(_issueID, _mergeID, oraclesToAdd, msg.sender);
-    }
-
     function disputeMerge(uint256 _issueID, uint256 _mergeID) public {
         Oracler memory oracler = oraclers[msg.sender];
         Issue memory issue = issues[_issueID];
@@ -194,15 +157,10 @@ contract Network is Pausable, Governed{
         emit DisputeMerge(_issueID, _mergeID, oraclesToAdd, msg.sender);
     }
 
-    function isIssueApprovable(uint256 _issueID) public returns (bool){
+    function isIssueInDraft(uint256 _issueID) public returns (bool){
         // Only if in the open window
         require(issues[_issueID].creationDate != 0, "Issue does not exist");
         return (issues[_issueID].creationDate.add(disputableTime) < block.timestamp);
-    }
-
-    function isIssueApproved(uint256 _issueID) public returns (bool) {
-        require(issues[_issueID].creationDate != 0, "Issue does not exist");
-        return (issues[_issueID].oraclesForApprove >= oraclesStaked.mul(percentageNeededForApprove).div(100));
     }
 
     function isMergeDisputed(uint256 _issueID, uint256 _mergeID) public returns (bool) {
@@ -211,12 +169,6 @@ contract Network is Pausable, Governed{
         return (issues[_issueID].mergeProposals[_mergeID].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100));
     }
 
-    function isMergeApproved(uint256 _issueID, uint256 _mergeID) public returns (bool) {
-        require(issues[_issueID].creationDate != 0, "Issue does not exist");
-        require(issues[_issueID].mergeProposals[_mergeID].creationDate.add(disputableTime) < block.timestamp, "Dispute Time still open");
-        require(issues[_issueID].mergeProposals[_mergeID].proposalAddress != address(0), "Merge does not exist");
-        return (issues[_issueID].mergeProposals[_mergeID].oracles >= oraclesStaked.mul(percentageNeededForMerge).div(100));
-    }
 
     /**
      * @dev open an Issue with transaction Tokens owned
@@ -244,8 +196,7 @@ contract Network is Pausable, Governed{
     function redeemIssue(uint256 _issueId) public whenNotPaused {
         Issue storage issue = issues[_issueId];
         require(issue.issueGenerator == msg.sender, "Has to be the issue creator");
-        require(!isIssueApproved(_issueId), "Issue has to not be approved");
-        require(!isIssueApprovable(_issueId), "Time for approving has to be already passed");
+        require(isIssueInDraft(_issueId), "Draft Issue Time has already passed");
         require(!issue.finalized, "Issue was already finalized");
         require(!issue.canceled, "Issue was already canceled");
 
@@ -261,7 +212,7 @@ contract Network is Pausable, Governed{
     function updateIssue(uint256 _issueId, uint256 _newTokenAmount) public whenNotPaused {
         require(issues[_issueId].tokensStaked != 0, "Issue has to exist");
         require(issues[_issueId].issueGenerator == msg.sender, "Has to be the issue creator");
-        require(!isIssueApproved(_issueId), "Issue is already Approved");
+        require(isIssueInDraft(_issueId), "Draft Issue Time has already passed");
 
         uint256 previousAmount = issues[_issueId].tokensStaked;
         // Update Issue
@@ -321,7 +272,7 @@ contract Network is Pausable, Governed{
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
         require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
-        require(isMergeApproved(_issueID, _mergeID), "Issue has to have passed oracling");
+        require(!isIssueInDraft(_issueID), "Issue cant be in Draft Mode");
         require(!isMergeDisputed(_issueID, _mergeID), "Merge has been disputed");
 
         // Closes the issue
@@ -351,9 +302,9 @@ contract Network is Pausable, Governed{
         return oracler.oraclesDelegatedByOthers.add(oracler.oraclesDelegated[_address]);
     }
     
-    function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, uint256, bool, bool){
+    function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, bool, bool){
         Issue memory issue = issues[_issueID];
-        return (issue._id, issue.cid, issue.creationDate, issue.tokensStaked, issue.issueGenerator, issue.oraclesForApprove, issue.mergeIDIncrement, issue.finalized, issue.canceled);
+        return (issue._id, issue.cid, issue.creationDate, issue.tokensStaked, issue.issueGenerator, issue.mergeIDIncrement, issue.finalized, issue.canceled);
     }
 
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, uint256, address[] memory, uint256[] memory, address){
@@ -369,28 +320,12 @@ contract Network is Pausable, Governed{
         mergeCreatorFeeShare = _mergeCreatorFeeShare;
     }
 
-       /**
-     * @dev changePercentageNeededForApprove
-    */
-    function changePercentageNeededForApprove(uint256 _percentageNeededForApprove) public onlyGovernor {
-        require(_percentageNeededForApprove < 80, "Approve % Needed can´t be higher than 80");
-        percentageNeededForApprove = _percentageNeededForApprove;
-    }
-
     /**
      * @dev changePercentageNeededForDispute
      */
     function changePercentageNeededForDispute(uint256 _percentageNeededForDispute) public onlyGovernor {
         require(_percentageNeededForDispute < 15, "Dispute % Needed can´t be higher than 15");
         percentageNeededForDispute = _percentageNeededForDispute;
-    }
-
-    /**
-     * @dev changePercentageNeededForMerge
-     */
-    function changePercentageNeededForMerge(uint256 _percentageNeededForMerge) public onlyGovernor {
-        require(_percentageNeededForMerge < 80, "Approve for Merge % Needed can´t be higher than 80");
-        percentageNeededForMerge = _percentageNeededForMerge;
     }
 
      /**

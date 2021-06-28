@@ -221,28 +221,15 @@ class Network extends IContract {
   }
 
   /**
-   * Is issue Approved
+   * Verify if Issue is still in Draft Mode (Available to use the redeemIssue Action)
    * @param {Object} params
    * @param {number} params.issueId
    * @returns {Promise<boolean>}
    */
-  async isIssueApproved({ issueId }) {
+  async isIssueinDraft({ issueId }) {
     return await this.params.contract
       .getContract()
-      .methods.isIssueApproved(issueId)
-      .call();
-  }
-
-  /**
-   * Is issue available to be approved (time wise)
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @returns {Promise<boolean>}
-   */
-  async isIssueApprovable({ issueId }) {
-    return await this.params.contract
-      .getContract()
-      .methods.isIssueApprovable(issueId)
+      .methods.isIssueinDraft(issueId)
       .call();
   }
 
@@ -307,10 +294,9 @@ class Network extends IContract {
       creationDate: Numbers.fromSmartContractTimeToMinutes(r[2]),
       tokensStaked: Numbers.fromDecimals(r[3], 18),
       issueGenerator: r[4],
-      votesForApprove: Numbers.fromDecimals(r[5], 18),
-      mergeProposalsAmount: parseInt(r[6], 10),
-      finalized: r[7],
-      canceled: r[8],
+      mergeProposalsAmount: parseInt(r[5], 10),
+      finalized: r[6],
+      canceled: r[7],
     };
   }
 
@@ -470,18 +456,6 @@ class Network extends IContract {
    }
 
    /**
-   * open Issue
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @return {Promise<TransactionObject>}
-   */
-   async approveIssue({ issueId }) {
-     return await this.__sendTx(
-       this.params.contract.getContract().methods.approveIssue(issueId),
-     );
-   }
-
-   /**
    * redeem Issue
    * @param {Object} params
    * @param {number} params.issueId
@@ -493,18 +467,6 @@ class Network extends IContract {
      );
    }
 
-   /**
-   * open Issue
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @param {number} params.mergeId
-   * @return {Promise<TransactionObject>}
-   */
-   async approveMerge({ issueId, mergeId }) {
-     return await this.__sendTx(
-       this.params.contract.getContract().methods.approveMerge(issueId, mergeId),
-     );
-   }
 
    /**
    * open Issue
