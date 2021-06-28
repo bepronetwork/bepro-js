@@ -18,9 +18,8 @@ const actions = {
  * Exchange Contract Object
  * @constructor ExchangeContract
  * @param {Web3} web3
- * @param {Address} tokenAddress
  * @param {Integer} decimals
- * @param {Address} contractAddress ? (opt)
+ * @param {Address} contractAddress
  */
 
 class PredictionMarketContract extends IContract {
