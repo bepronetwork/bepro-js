@@ -1,7 +1,7 @@
 import _ from "lodash";
 import moment from "moment";
 
-import { prediction } from "../interfaces";
+import { realitio } from "../interfaces";
 import Numbers from "../utils/Numbers";
 import IContract from './IContract';
 
@@ -15,7 +15,7 @@ import IContract from './IContract';
 
 class RealitioERC20Contract extends IContract {
 	constructor(params) {
-		super({abi: prediction, ...params});
+		super({abi: realitio, ...params});
 	}
 
 	/**
