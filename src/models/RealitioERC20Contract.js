@@ -29,6 +29,16 @@ class RealitioERC20Contract extends IContract {
 	}
 
 	/**
+	 * @function getQuestion
+	 * @description getQuestionBestAnswer
+   * @param {bytes32} questionId
+	 * @returns {Object} question
+	 */
+	async getQuestion({ questionId }) {
+		return await this.getContract().methods.questions(questionId).call();
+	}
+
+	/**
 	 * @function getQuestionBestAnswer
 	 * @description getQuestionBestAnswer
    * @param {bytes32} questionId
@@ -44,8 +54,34 @@ class RealitioERC20Contract extends IContract {
    * @param {bytes32} questionId
 	 * @returns {bytes32} answerId
 	 */
-	async getQuestionBestAnswer({ questionId }) {
+	async getResultForQuestion({ questionId }) {
 		return await this.getContract().methods.resultFor(questionId).call();
+	}
+
+	/**
+	 * @function getQuestionBondsByAnswer
+	 * @description getQuestionBondsByAnswer - throws an error if question is not finalized
+   * @param {bytes32} questionId
+	 * @returns {Object} bonds
+	 */
+	async getQuestionBondsByAnswer({ questionId, user }) {
+		const bonds = {};
+
+		const answers = await this.getContract().getPastEvents('LogNewAnswer', {
+			fromBlock: 0,
+			toBlock: 'latest',
+			filter: { question_id: questionId, user }
+		});
+
+		answers.forEach((answer) => {
+			const answerId = answer.returnValues.answer;
+
+			if (!bonds[answerId]) bonds[answerId] = 0;
+
+			bonds[answerId] += Numbers.fromDecimalsNumber(answer.returnValues.bond, 18);
+		});
+
+		return bonds;
 	}
 
 	/**
