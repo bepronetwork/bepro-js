@@ -20,7 +20,7 @@ class Contract {
               })
               .encodeABI(),
             from: account.getAddress(),
-            gasPrice: 180000000000,
+            gasPrice: 5000000000,
             gas: 8913388,
           });
           this.web3.eth
@@ -63,7 +63,7 @@ class Contract {
           // Error: Node error: {"message":"base fee exceeds gas limit","code":-32000,"data":{"stack":"Error: base fee exceeds gas limit
           // ,gasPrice : 180000000000
           // ,gas : 5913388
-          gasPrice: 20000000000,
+          gasPrice: 500000000,
           gas: 5913388, // 6721975
         })
         .on('confirmation', (confirmationNumber, receipt) => {
@@ -100,7 +100,7 @@ class Contract {
         from: account.address,
         to: this.address,
         gas: 4430000,
-        gasPrice: 200000000000,
+        gasPrice: 5000000000,
         value: value || '0x0',
       };
 
