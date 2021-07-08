@@ -72,6 +72,42 @@ context('Prediction Market Contract', async () => {
             const marketIds = await predictionMarketContract.getMarkets();
             expect(marketIds.length).to.equal(2);
         }));
+
+        it('should create another Market', mochaAsync(async () => {
+            try {
+                const res = await predictionMarketContract.createMarket({
+                    name: 'Will Real Madrid win the Champions League?',
+                    oracleAddress: '0x0000000000000000000000000000000000000000', // TODO
+                    duration: moment('2021-05-29').diff(moment(), 'seconds'),
+                    outcome1Name: 'Yes',
+                    outcome2Name: 'No',
+                    ethAmount: ethAmount
+                });
+                expect(res.status).to.equal(true);
+            } catch(e) {
+                // TODO: review this
+            }
+
+            const marketIds = await predictionMarketContract.getMarkets();
+            marketId = marketIds[marketIds.length - 1];
+            expect(marketIds.length).to.equal(3);
+            expect(marketIds[marketIds.length - 1]).to.equal(marketId);
+        }));
+
+        it('should create another Market', mochaAsync(async () => {
+            const res = await predictionMarketContract.createMarket({
+                name: 'Will temperature in Stockholm hit 18ºC on April 30th 2021?',
+                oracleAddress: '0x0000000000000000000000000000000000000000', // TODO
+                duration: moment('2021-04-30').diff(moment(), 'seconds'),
+                outcome1Name: 'Yes',
+                outcome2Name: 'No',
+                ethAmount: ethAmount
+            });
+            expect(res.status).to.equal(true);
+
+            const marketIds = await predictionMarketContract.getMarkets();
+            expect(marketIds.length).to.equal(4);
+        }));
     });
 
     context('Market Data', async () => {
