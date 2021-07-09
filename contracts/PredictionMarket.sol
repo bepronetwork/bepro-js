@@ -75,6 +75,7 @@ contract PredictionMarket is OwnableUpgradeable {
   enum MarketAction { buy, sell, addLiquidity, removeLiquidity, claimWinnings, claimLiquidity }
 
   struct Market {
+    // market details
     string name;
     uint closedDateTime;
 
@@ -115,7 +116,6 @@ contract PredictionMarket is OwnableUpgradeable {
 
   struct MarketOutcome {
     uint marketId;
-    uint256 index;
     uint256 id;
     string name;
     Shares shares;
@@ -160,11 +160,6 @@ contract PredictionMarket is OwnableUpgradeable {
 
   modifier notAtState(uint marketId, MarketState state) {
     require(markets[marketId].state != state);
-    _;
-  }
-
-  modifier onlyBy(address addr) {
-    require(addr != address(0) && addr == msg.sender);
     _;
   }
 
@@ -248,7 +243,6 @@ contract PredictionMarket is OwnableUpgradeable {
       MarketOutcome storage outcome = market.outcomes[i];
 
       outcome.marketId = marketId;
-      outcome.index = i;
       outcome.id = i;
       outcome.name = outcomes[i];
 
