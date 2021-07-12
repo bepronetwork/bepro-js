@@ -104,27 +104,6 @@ class PredictionMarketContract extends IContract {
 	}
 
 	/**
-	 * @function getMyMarketShares
-	 * @description Get My Market Shares
-	 * @param {Integer} marketId
-	 * @returns {Integer} Liquidity Shares
-	 * @returns {Array} Outcome Shares
-	 */
-	async getMyMarketShares({marketId}) {
-		const liquidityShares = await this.__sendTx(this.getContract().methods.myLiquidityShares(marketId), true);
-		const outcome1Shares = await this.__sendTx(this.getContract().methods.myShares(marketId, 0), true);
-		const outcome2Shares = await this.__sendTx(this.getContract().methods.myShares(marketId, 1), true);
-
-		return  {
-			liquidityShares: Numbers.fromDecimalsNumber(liquidityShares, 18),
-			outcomeShares: {
-				0: Numbers.fromDecimalsNumber(outcome1Shares, 18),
-				1: Numbers.fromDecimalsNumber(outcome2Shares, 18),
-			}
-		};
-	}
-
-	/**
 	 * @function getAverageOutcomeBuyPrice
 	 * @description Calculates average buy price of market outcome based on user events
 	 * @param {Array} events

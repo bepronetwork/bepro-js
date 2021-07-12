@@ -120,8 +120,8 @@ contract PredictionMarket is OwnableUpgradeable {
   struct Shares {
     uint256 total; // number of shares
     uint256 available; // available shares
-    mapping(address => uint256) holdersShares;
-    mapping(address => bool) holdersClaims; // wether participant has claimed liquidity winnings
+    mapping(address => uint256) holders;
+    mapping(address => bool) claims; // wether participant has claimed winnings
   }
 
   uint256[] marketIds;
@@ -163,7 +163,7 @@ contract PredictionMarket is OwnableUpgradeable {
     uint256 outcomeId,
     address sender
   ) {
-    require(markets[marketId].outcomes[outcomeId].shares.holdersShares[sender] > 0);
+    require(markets[marketId].outcomes[outcomeId].shares.holders[sender] > 0);
     _;
   }
 
@@ -320,7 +320,7 @@ contract PredictionMarket is OwnableUpgradeable {
     require(shares > 0, "Can't be 0");
     require(outcome.shares.available >= shares, "Can't buy more shares than the ones available");
 
-    outcome.shares.holdersShares[msg.sender] = outcome.shares.holdersShares[msg.sender].add(shares);
+    outcome.shares.holders[msg.sender] = outcome.shares.holders[msg.sender].add(shares);
 
     outcome.shares.available = outcome.shares.available.sub(shares);
     market.sharesAvailable = market.sharesAvailable.sub(shares);
@@ -350,13 +350,13 @@ contract PredictionMarket is OwnableUpgradeable {
     MarketOutcome storage outcome = market.outcomes[outcomeId];
 
     // Invariant check: make sure the stake is <= than user's stake
-    require(myShares(marketId, outcomeId) >= shares);
+    require(outcome.shares.holders[msg.sender] >= shares);
 
     // Invariant check: make sure the market's stake is smaller than the stake
     require((outcome.shares.total - outcome.shares.available) >= shares);
 
     // removing shares
-    outcome.shares.holdersShares[msg.sender] = outcome.shares.holdersShares[msg.sender].sub(shares);
+    outcome.shares.holders[msg.sender] = outcome.shares.holders[msg.sender].sub(shares);
 
     // adding shares back to pool
     outcome.shares.available = outcome.shares.available.add(shares);
@@ -473,7 +473,7 @@ contract PredictionMarket is OwnableUpgradeable {
     Market storage market = markets[marketId];
 
     // Invariant check: make sure the stake is <= than user's stake
-    require(myLiquidityShares(marketId) >= shares);
+    require(market.liquidityShares[msg.sender] >= shares);
 
     // ETH to transfer to user from liquidity removal
     uint256 value;
@@ -582,27 +582,27 @@ contract PredictionMarket is OwnableUpgradeable {
     Market storage market = markets[marketId];
     MarketOutcome storage resolvedOutcome = market.outcomes[market.resolution.outcomeId];
 
-    require(resolvedOutcome.shares.holdersShares[msg.sender] > 0, "Participant does not hold resolved outcome shares");
+    require(resolvedOutcome.shares.holders[msg.sender] > 0, "Participant does not hold resolved outcome shares");
     require(
-      resolvedOutcome.shares.holdersClaims[msg.sender] == false,
+      resolvedOutcome.shares.claims[msg.sender] == false,
       "Participant already claimed resolved outcome winnings"
     );
 
     // 1 share = 1 ETH
-    uint256 value = resolvedOutcome.shares.holdersShares[msg.sender];
+    uint256 value = resolvedOutcome.shares.holders[msg.sender];
 
     // assuring market has enough funds
     require(market.balance >= value, "Market does not have enough balance");
 
     market.balance = market.balance.sub(value);
-    resolvedOutcome.shares.holdersClaims[msg.sender] = true;
+    resolvedOutcome.shares.claims[msg.sender] = true;
 
     emit ParticipantAction(
       msg.sender,
       MarketAction.claimWinnings,
       marketId,
       market.resolution.outcomeId,
-      resolvedOutcome.shares.holdersShares[msg.sender],
+      resolvedOutcome.shares.holders[msg.sender],
       value,
       now
     );
@@ -622,7 +622,7 @@ contract PredictionMarket is OwnableUpgradeable {
     require(market.liquidityClaims[msg.sender] == false, "Participant already claimed liquidity winnings");
 
     // value = total resolved outcome pool shares * pool share (%)
-    uint256 value = resolvedOutcome.shares.available.mul(myLiquidityPoolShare(marketId)).div(ONE);
+    uint256 value = resolvedOutcome.shares.available.mul(getUserLiquidityPoolShare(marketId, msg.sender)).div(ONE);
 
     // assuring market has enough funds
     require(market.balance >= value, "Market does not have enough balance");
@@ -652,6 +652,8 @@ contract PredictionMarket is OwnableUpgradeable {
       market.fees.claimed[msg.sender] = market.fees.claimed[msg.sender].add(claimableFees);
       msg.sender.transfer(claimableFees);
     }
+
+    // TODO: trigger event
   }
 
   function addTransactionToFeesPool(uint256 marketId, uint256 value) internal returns (uint256) {
@@ -703,43 +705,21 @@ contract PredictionMarket is OwnableUpgradeable {
 
   // ------ Governance Functions Start ------
 
-  function updateFee(uint256 feeValue) public onlyOwner() {
+  function setFee(uint256 feeValue) public onlyOwner() {
     fee = feeValue;
   }
 
-  function updateRealitioERC20(address addr) public onlyOwner() {
+  function setRealitioERC20(address addr) public onlyOwner() {
     realitioAddress = addr;
   }
 
-  function updateRealitioTimeout(uint256 timeout) public onlyOwner() {
+  function setRealitioTimeout(uint256 timeout) public onlyOwner() {
     realitioTimeout = timeout;
   }
 
   // ------ Governance Functions End ------
 
   // ------ Getters ------
-
-  /// @return stake of the `msg.sender` in the market outcome
-  function myShares(uint256 marketId, uint256 outcomeId) public view returns (uint256) {
-    Market storage market = markets[marketId];
-    MarketOutcome storage outcome = market.outcomes[outcomeId];
-
-    return outcome.shares.holdersShares[msg.sender];
-  }
-
-  // @return liquidity stake of the `msg.sender` in the market
-  function myLiquidityShares(uint256 marketId) public view returns (uint256) {
-    Market storage market = markets[marketId];
-
-    return market.liquidityShares[msg.sender];
-  }
-
-  // @return % of liquidity pool stake
-  function myLiquidityPoolShare(uint256 marketId) public view returns (uint256) {
-    Market storage market = markets[marketId];
-
-    return market.liquidityShares[msg.sender].mul(ONE).div(market.liquidity);
-  }
 
   function myMarketShares(uint256 marketId)
     public
@@ -779,8 +759,8 @@ contract PredictionMarket is OwnableUpgradeable {
 
     return (
       market.liquidityShares[participant],
-      market.outcomes[0].shares.holdersShares[participant],
-      market.outcomes[1].shares.holdersShares[participant]
+      market.outcomes[0].shares.holders[participant],
+      market.outcomes[1].shares.holders[participant]
     );
   }
 
@@ -803,11 +783,18 @@ contract PredictionMarket is OwnableUpgradeable {
     MarketOutcome storage outcome = market.outcomes[market.resolution.outcomeId];
 
     return (
-      outcome.shares.holdersShares[participant] > 0,
-      outcome.shares.holdersClaims[participant],
+      outcome.shares.holders[participant] > 0,
+      outcome.shares.claims[participant],
       market.liquidityShares[participant] > 0,
       market.liquidityClaims[participant]
     );
+  }
+
+  // @return % of liquidity pool stake
+  function getUserLiquidityPoolShare(uint256 marketId, address participant) public view returns (uint256) {
+    Market storage market = markets[marketId];
+
+    return market.liquidityShares[participant].mul(ONE).div(market.liquidity);
   }
 
   function getUserClaimableFees(uint256 marketId, address participant) public view returns (uint256) {
@@ -916,9 +903,9 @@ contract PredictionMarket is OwnableUpgradeable {
       "Total # available shares has to be equal or higher than outcome available shares"
     );
 
-    uint256 holdersShares = market.sharesAvailable.sub(outcome.shares.available);
+    uint256 holders = market.sharesAvailable.sub(outcome.shares.available);
 
-    return holdersShares.mul(ONE).div(market.sharesAvailable);
+    return holders.mul(ONE).div(market.sharesAvailable);
   }
 
   function getMarketOutcomeData(uint256 marketId, uint256 marketOutcomeId)
