@@ -83,16 +83,14 @@ contract PredictionMarket is OwnableUpgradeable {
     // market details
     string name;
     uint256 closedDateTime;
-    uint256 liquidityTotal; // total stake (ETH)
-    uint256 liquidityAvailable; // stake held (ETH)
+    uint256 balance; // total stake (ETH)
+    uint256 liquidity; // stake held (ETH)
     uint256 sharesTotal; // total shares (all outcomes)
     uint256 sharesAvailable; // shares held (all outcomes)
     mapping(address => uint256) liquidityShares;
     mapping(address => bool) liquidityClaims; // wether participant has claimed liquidity winnings
-    MarketState state;
-    // resolution variables
-    MarketResolution resolution;
-    // fees
+    MarketState state; // resolution variables
+    MarketResolution resolution; // fees
     MarketFees fees;
     // market outcomes
     uint256[] outcomeIds;
@@ -233,8 +231,8 @@ contract PredictionMarket is OwnableUpgradeable {
       0
     );
 
-    market.liquidityTotal = msg.value;
-    market.liquidityAvailable = msg.value;
+    market.balance = msg.value;
+    market.liquidity = msg.value;
 
     // TODO review: only valid for 50-50 start
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].add(msg.value);
@@ -286,9 +284,9 @@ contract PredictionMarket is OwnableUpgradeable {
     }
 
     MarketOutcome storage outcome = market.outcomes[outcomeId];
-    market.liquidityTotal = parentAction == MarketAction.removeLiquidity
-      ? market.liquidityTotal.sub(value)
-      : market.liquidityTotal.add(value);
+    market.balance = parentAction == MarketAction.removeLiquidity
+      ? market.balance.sub(value)
+      : market.balance.add(value);
 
     uint256 newProductBalance = 1;
 
@@ -314,10 +312,10 @@ contract PredictionMarket is OwnableUpgradeable {
         : market.sharesAvailable.add(value);
     }
 
-    // productBalance = market.liquidityAvailable**(market.outcomeIds.length);
+    // productBalance = market.liquidity**(market.outcomeIds.length);
     // newSharesAvailable = outcome.shares.available.mul(productBalance).div(newProductBalance);
     uint256 shares = outcome.shares.available -
-      outcome.shares.available.mul(market.liquidityAvailable**(market.outcomeIds.length)).div(newProductBalance);
+      outcome.shares.available.mul(market.liquidity**(market.outcomeIds.length)).div(newProductBalance);
 
     require(shares > 0, "Can't be 0");
     require(outcome.shares.available >= shares, "Can't buy more shares than the ones available");
@@ -374,8 +372,8 @@ contract PredictionMarket is OwnableUpgradeable {
     // a = # opposite shares available
     // b = product balance
 
-    // productBalance = market.liquidityAvailable**(market.outcomeIds.length);
-    uint256 value = (oppositeSharesAvailable**2).add((market.liquidityAvailable**(market.outcomeIds.length)).mul(4));
+    // productBalance = market.liquidity**(market.outcomeIds.length);
+    uint256 value = (oppositeSharesAvailable**2).add((market.liquidity**(market.outcomeIds.length)).mul(4));
     value = value.add(outcome.shares.available**2);
     value = value.sub(oppositeSharesAvailable.mul(2).mul(outcome.shares.available));
     value = PMHelpers.sqrt(value);
@@ -386,7 +384,7 @@ contract PredictionMarket is OwnableUpgradeable {
 
     // Invariant check: make sure the contract has enough balance to be withdrawn from.
     require(address(this).balance >= value);
-    require(market.liquidityTotal >= value);
+    require(market.balance >= value);
 
     // Rebalancing market shares
     for (uint256 i = 0; i < market.outcomeIds.length; i++) {
@@ -400,7 +398,7 @@ contract PredictionMarket is OwnableUpgradeable {
       market.sharesAvailable = market.sharesAvailable.sub(value);
     }
 
-    market.liquidityTotal = market.liquidityTotal.sub(value);
+    market.balance = market.balance.sub(value);
 
     // subtracting fee from transaction value
     value = addTransactionToFeesPool(marketId, value);
@@ -433,18 +431,18 @@ contract PredictionMarket is OwnableUpgradeable {
       }
     }
 
-    uint256 liquidityRatio = minShares.mul(msg.value).div(market.liquidityAvailable);
+    uint256 liquidityRatio = minShares.mul(msg.value).div(market.liquidity);
 
     // re-balancing fees pool
     rebalanceFeesPool(marketId, liquidityRatio, MarketAction.addLiquidity);
 
-    market.liquidityAvailable = market.liquidityAvailable.add(liquidityRatio);
+    market.liquidity = market.liquidity.add(liquidityRatio);
 
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].add(liquidityRatio);
 
     // equal outcome split, no need to buy shares
     if (liquidityRatio == msg.value) {
-      market.liquidityTotal = market.liquidityTotal.add(liquidityRatio);
+      market.balance = market.balance.add(liquidityRatio);
       for (uint256 i = 0; i < market.outcomeIds.length; i++) {
         uint256 outcomeId = market.outcomeIds[i];
         MarketOutcome storage outcome = market.outcomes[outcomeId];
@@ -462,7 +460,7 @@ contract PredictionMarket is OwnableUpgradeable {
     }
 
     emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityRatio, value, now);
-    emit MarketLiquidity(marketId, market.liquidityAvailable, getMarketLiquidityPrice(marketId), now);
+    emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
   }
 
   function removeLiquidity(uint256 marketId, uint256 shares)
@@ -501,7 +499,7 @@ contract PredictionMarket is OwnableUpgradeable {
       }
     }
 
-    uint256 liquidityRatio = minShares.mul(shares).div(market.liquidityAvailable);
+    uint256 liquidityRatio = minShares.mul(shares).div(market.liquidity);
 
     // re-balancing fees pool
     rebalanceFeesPool(marketId, shares, MarketAction.removeLiquidity);
@@ -509,8 +507,8 @@ contract PredictionMarket is OwnableUpgradeable {
     // equal outcome split, no need to buy shares
     if (liquidityRatio == shares) {
       // removing liquidity from market
-      market.liquidityTotal = market.liquidityTotal.sub(liquidityRatio);
-      market.liquidityAvailable = market.liquidityAvailable.sub(liquidityRatio);
+      market.balance = market.balance.sub(liquidityRatio);
+      market.liquidity = market.liquidity.sub(liquidityRatio);
 
       for (uint256 i = 0; i < market.outcomeIds.length; i++) {
         uint256 outcomeId = market.outcomeIds[i];
@@ -529,10 +527,10 @@ contract PredictionMarket is OwnableUpgradeable {
       uint256 outcomeId = minOutcomeId == 0 ? 1 : 0;
 
       // value received: Total Liquidity / Shares Outcome * Liquidity Removed
-      value = market.liquidityAvailable.mul(shares).div(market.outcomes[outcomeId].shares.available);
+      value = market.liquidity.mul(shares).div(market.outcomes[outcomeId].shares.available);
 
       // removing liquidity from market (shares = value)
-      market.liquidityAvailable = market.liquidityAvailable.sub(shares);
+      market.liquidity = market.liquidity.sub(shares);
 
       buy(marketId, outcomeId, value, MarketAction.removeLiquidity);
       // msg.sender.transfer(value);
@@ -542,7 +540,7 @@ contract PredictionMarket is OwnableUpgradeable {
     msg.sender.transfer(value);
 
     emit ParticipantAction(msg.sender, MarketAction.removeLiquidity, marketId, 0, shares, value, now);
-    emit MarketLiquidity(marketId, market.liquidityAvailable, getMarketLiquidityPrice(marketId), now);
+    emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
   }
 
   /// Determine the result of the market
@@ -573,8 +571,8 @@ contract PredictionMarket is OwnableUpgradeable {
     // emitting 0 price event for loser outcome
     emit MarketOutcomePrice(marketId, (outcomeId == 0 ? 1 : 0), 0, now);
     // final liquidity price = outcome shares / liquidity shares
-    uint256 liquidityPrice = outcome.shares.available.mul(ONE).div(market.liquidityAvailable);
-    emit MarketLiquidity(marketId, market.liquidityAvailable, liquidityPrice, now);
+    uint256 liquidityPrice = outcome.shares.available.mul(ONE).div(market.liquidity);
+    emit MarketLiquidity(marketId, market.liquidity, liquidityPrice, now);
 
     return market.resolution.outcomeId;
   }
@@ -594,9 +592,9 @@ contract PredictionMarket is OwnableUpgradeable {
     uint256 value = resolvedOutcome.shares.holdersShares[msg.sender];
 
     // assuring market has enough funds
-    require(market.liquidityTotal >= value, "Market does not have enough balance");
+    require(market.balance >= value, "Market does not have enough balance");
 
-    market.liquidityTotal = market.liquidityTotal.sub(value);
+    market.balance = market.balance.sub(value);
     resolvedOutcome.shares.holdersClaims[msg.sender] = true;
 
     emit ParticipantAction(
@@ -627,9 +625,9 @@ contract PredictionMarket is OwnableUpgradeable {
     uint256 value = resolvedOutcome.shares.available.mul(myLiquidityPoolShare(marketId)).div(ONE);
 
     // assuring market has enough funds
-    require(market.liquidityTotal >= value, "Market does not have enough balance");
+    require(market.balance >= value, "Market does not have enough balance");
 
-    market.liquidityTotal = market.liquidityTotal.sub(value);
+    market.balance = market.balance.sub(value);
     market.liquidityClaims[msg.sender] = true;
 
     emit ParticipantAction(
@@ -673,7 +671,7 @@ contract PredictionMarket is OwnableUpgradeable {
   ) internal returns (uint256) {
     Market storage market = markets[marketId];
 
-    uint256 poolWeight = liquidityShares.mul(market.fees.poolWeight).div(market.liquidityAvailable);
+    uint256 poolWeight = liquidityShares.mul(market.fees.poolWeight).div(market.liquidity);
 
     if (action == MarketAction.addLiquidity) {
       market.fees.poolWeight = market.fees.poolWeight.add(poolWeight);
@@ -698,7 +696,7 @@ contract PredictionMarket is OwnableUpgradeable {
     }
 
     // liquidity shares also change value
-    emit MarketLiquidity(marketId, market.liquidityAvailable, getMarketLiquidityPrice(marketId), now);
+    emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
   }
 
   // ------ Core Functions End ------
@@ -740,7 +738,7 @@ contract PredictionMarket is OwnableUpgradeable {
   function myLiquidityPoolShare(uint256 marketId) public view returns (uint256) {
     Market storage market = markets[marketId];
 
-    return market.liquidityShares[msg.sender].mul(ONE).div(market.liquidityAvailable);
+    return market.liquidityShares[msg.sender].mul(ONE).div(market.liquidity);
   }
 
   function myMarketShares(uint256 marketId)
@@ -815,7 +813,7 @@ contract PredictionMarket is OwnableUpgradeable {
   function getUserClaimableFees(uint256 marketId, address participant) public view returns (uint256) {
     Market storage market = markets[marketId];
 
-    uint256 rawAmount = market.fees.poolWeight.mul(market.liquidityShares[participant]).div(market.liquidityAvailable);
+    uint256 rawAmount = market.fees.poolWeight.mul(market.liquidityShares[participant]).div(market.liquidity);
     return rawAmount.sub(market.fees.claimed[participant]);
   }
 
@@ -844,8 +842,8 @@ contract PredictionMarket is OwnableUpgradeable {
       market.name,
       market.state,
       market.closedDateTime,
-      market.liquidityAvailable,
-      market.liquidityTotal,
+      market.liquidity,
+      market.balance,
       market.sharesAvailable,
       getMarketResolvedOutcome(marketId)
     );
@@ -875,11 +873,11 @@ contract PredictionMarket is OwnableUpgradeable {
     if (market.state == MarketState.resolved) {
       // resolved market, price is either 0 or 1
       // final liquidity price = outcome shares / liquidity shares
-      return market.outcomes[market.resolution.outcomeId].shares.available.mul(ONE).div(market.liquidityAvailable);
+      return market.outcomes[market.resolution.outcomeId].shares.available.mul(ONE).div(market.liquidity);
     }
 
     // liquidity price = # liquidity shares / # outcome shares * # outcomes
-    return market.liquidityAvailable.mul(ONE * market.outcomeIds.length).div(market.sharesAvailable);
+    return market.liquidity.mul(ONE * market.outcomeIds.length).div(market.sharesAvailable);
   }
 
   function getMarketResolvedOutcome(uint256 marketId) public view returns (int256) {
