@@ -159,13 +159,16 @@ class PredictionMarketContract extends IContract {
 	 * @returns {Array} Outcome Shares
 	 */
 	async getMyPortfolio() {
+		const account = await this.getMyAccount();
+		if (!account) return [];
+
 		const marketIds = await this.getMarkets();
 		const events = await this.getMyActions();
 
 		// TODO: improve this (avoid looping through all markets)
 		return await marketIds.reduce(async (obj, marketId) => {
-			const marketShares = await this.getContract().methods.myMarketShares(marketId).call();
-			const claimStatus = await this.getContract().methods.myClaimStatus(marketId).call();
+			const marketShares = await this.getContract().methods.getUserMarketShares(marketId, account).call();
+			const claimStatus = await this.getContract().methods.getUserClaimStatus(marketId, account).call();
 
 			const portfolio = {
 				liquidity: {

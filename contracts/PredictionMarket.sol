@@ -721,31 +721,6 @@ contract PredictionMarket is OwnableUpgradeable {
 
   // ------ Getters ------
 
-  function myMarketShares(uint256 marketId)
-    public
-    view
-    returns (
-      uint256,
-      uint256,
-      uint256
-    )
-  {
-    return getUserMarketShares(marketId, msg.sender);
-  }
-
-  function myClaimStatus(uint256 marketId)
-    public
-    view
-    returns (
-      bool,
-      bool,
-      bool,
-      bool
-    )
-  {
-    return getUserClaimStatus(marketId, msg.sender);
-  }
-
   function getUserMarketShares(uint256 marketId, address participant)
     public
     view
