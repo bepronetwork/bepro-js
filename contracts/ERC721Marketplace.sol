@@ -10,7 +10,7 @@ contract ERC721Marketplace is Ownable {
 
     ERC20 public erc20Address;
     IERC721 private erc721Address;
-    address public feeAddress;
+    address payable public feeAddress;
     uint256 public feePercentage = 0; // 1 = 1%
     uint256 public saleIncrementId = 1;
     
@@ -21,7 +21,7 @@ contract ERC721Marketplace is Ownable {
         uint256 saleId;
         uint256 tokenId;
         uint256 price;
-        address seller;
+        address payable seller;
         address buyer;
         uint256 date;
         bool canceled;
@@ -30,13 +30,18 @@ contract ERC721Marketplace is Ownable {
 
     constructor(ERC20 _erc20Address, 
     IERC721 _erc721Address) public {
-        erc20Address = _erc20Address;
-        erc721Address = _erc721Address;
+            erc20Address = _erc20Address;
+            erc721Address = _erc721Address;
     }
 
     event SaleCreated(uint256 indexed tokenId, uint256 price, address indexed creator);
     event SaleCanceled(uint256 indexed tokenId, address indexed creator);
     event SaleDone(uint256 indexed tokenId, address indexed buyer,  address indexed creator, uint256 price);
+
+
+    function isNativeTransaction() public returns (bool){
+        return (address(erc20Address) == address(0));
+    }
 
     function putERC721OnSale(uint256 _tokenId, uint256 _price) public {
         require(erc721Address.ownerOf(_tokenId) == msg.sender, "Not Owner of the NFT");
@@ -63,24 +68,39 @@ contract ERC721Marketplace is Ownable {
         emit SaleCanceled(_tokenId, msg.sender);
     }
 
-    function buyERC721(uint256 _tokenId) public virtual {
+    function buyERC721(uint256 _tokenId) payable public virtual {
         require(sales[_tokenId].tokenId == _tokenId, "NFT is not in sale");
         require(!sales[_tokenId].sold, "NFT has to be available for purchase" );
-
-        //Transfer ERC20 to contract
-        require(erc20Address.transferFrom(msg.sender, address(this), sales[_tokenId].price), "Contract was not allowed to do the transfer");
-
-        if(feeAddress != address(0)){
-            // Transfer fee to fee address
-            require(erc20Address.transfer(
-                    feeAddress,
-                    (feePercentage * sales[_tokenId].price) / 100
-            ), "Contract was not allowed to do the transfer");
-        }
-      
-        //Transfer ERC20 to seller
-        require(erc20Address.transfer(sales[_tokenId].seller, ((100-feePercentage) * sales[_tokenId].price) / 100), "Wasnt able to transfer the ERC20 to the seller");
         
+        if(isNativeTransaction()){
+            //Transfer Native ETH to contract
+            require(sales[_tokenId].price == msg.value, "Require Amount of Native Currency to be correct");
+
+            if(feeAddress != address(0)){
+                // Transfer fee to fee address
+                require(feeAddress.send(
+                        (feePercentage * sales[_tokenId].price) / 100
+                ), "Contract was not allowed to do the transfer");
+            }
+        
+            //Transfer ERC20 to seller
+            require(sales[_tokenId].seller.send(((100-feePercentage) * sales[_tokenId].price) / 100), "Wasnt able to transfer the Native Currency to the seller");
+        }else{
+            //Transfer ERC20 to contract
+            require(erc20Address.transferFrom(msg.sender, address(this), sales[_tokenId].price), "Contract was not allowed to do the transfer");
+
+            if(feeAddress != address(0)){
+                // Transfer fee to fee address
+                require(erc20Address.transfer(
+                        feeAddress,
+                        (feePercentage * sales[_tokenId].price) / 100
+                ), "Contract was not allowed to do the transfer");
+            }
+        
+            //Transfer ERC20 to seller
+            require(erc20Address.transfer(sales[_tokenId].seller, ((100-feePercentage) * sales[_tokenId].price) / 100), "Wasnt able to transfer the ERC20 to the seller");
+        }
+
         //Transfer ERC721 to buyer
         erc721Address.transferFrom(address(this), msg.sender, _tokenId);
 
@@ -96,7 +116,7 @@ contract ERC721Marketplace is Ownable {
         erc721Address = _erc721Address;
     }
 
-    function setFixedFees(address _feeAddress, uint256 _feePercentage) public onlyOwner {
+    function setFixedFees(address payable _feeAddress, uint256 _feePercentage) public onlyOwner {
         require(_feeAddress != address(0), "Address cant be null");
         require(_feePercentage < 100, "Fee Percentage has to be lower than 100");
         feeAddress = _feeAddress;

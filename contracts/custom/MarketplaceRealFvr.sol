@@ -19,7 +19,7 @@ contract MarketplaceRealFvr is ERC721Marketplace {
         erc721Address = _erc721Address;
     }
 
-    function buyERC721(uint256 _tokenId) public virtual override {
+    function buyERC721(uint256 _tokenId) payable public virtual override {
         require(sales[_tokenId].tokenId == _tokenId, "NFT is not in sale");
         require(!sales[_tokenId].sold, "NFT has to be available for purchase" );
 
@@ -29,32 +29,58 @@ contract MarketplaceRealFvr is ERC721Marketplace {
 
         (distributionAmounts, distributionAddresses) = erc721Address.getMarketplaceDistributionForERC721(_tokenId);
 
-        //Transfer ERC20 to contract
-        require(erc20Address.transferFrom(msg.sender, address(this), sales[_tokenId].price), "Contract was not allowed to do the transfer");
+        if(isNativeTransaction()){
+            //Transfer Native ETH to contract
+            require(sales[_tokenId].price == msg.value, "Require Amount of Native Currency to be correct");   
+            
+            uint256 totalFee = 0;
+            for(uint i = 0; i < distributionAmounts.length; i++){
+                if(distributionAddresses[i] != address(0)){
+                    // Transfer fee to fee address
+                    require(payable(distributionAddresses[i]).send(
+                            (distributionAmounts[i] * sales[_tokenId].price) / 100
+                    ), "Contract was not allowed to do the transfer");
+                    totalFee = totalFee + distributionAmounts[i];
+                }
+            }
 
+            if(feeAddress != address(0)){
+                // Transfer fee to fee address
+                require(feeAddress.send(
+                        (feePercentage * sales[_tokenId].price) / 100
+                ), "Contract was not allowed to do the transfer");
+            }
+        
+            //Transfer Native Currency to seller
+            require(sales[_tokenId].seller.send(((100-feePercentage-totalFee) * sales[_tokenId].price) / 100), "Wasnt able to transfer the Native Currency to the seller");
+        
+        }else{
+            //Transfer ERC20 to contract
+            require(erc20Address.transferFrom(msg.sender, address(this), sales[_tokenId].price), "Contract was not allowed to do the transfer");
 
-        uint256 totalFee = 0;
-        for(uint i = 0; i < distributionAmounts.length; i++){
-            if(distributionAddresses[i] != address(0)){
+            uint256 totalFee = 0;
+            for(uint i = 0; i < distributionAmounts.length; i++){
+                if(distributionAddresses[i] != address(0)){
+                    // Transfer fee to fee address
+                    require(erc20Address.transfer(
+                            distributionAddresses[i],
+                            (distributionAmounts[i] * sales[_tokenId].price) / 100
+                    ), "Contract was not allowed to do the transfer");
+                    totalFee = totalFee + distributionAmounts[i];
+                }
+            }
+
+            if(feeAddress != address(0)){
                 // Transfer fee to fee address
                 require(erc20Address.transfer(
-                        distributionAddresses[i],
-                        (distributionAmounts[i] * sales[_tokenId].price) / 100
+                        feeAddress,
+                        (feePercentage * sales[_tokenId].price) / 100
                 ), "Contract was not allowed to do the transfer");
-                totalFee = totalFee + distributionAmounts[i];
             }
+        
+            //Transfer ERC20 to seller
+            require(erc20Address.transfer(sales[_tokenId].seller, ((100-feePercentage-totalFee) * sales[_tokenId].price) / 100), "Wasnt able to transfer the ERC20 to the seller");
         }
-
-        if(feeAddress != address(0)){
-            // Transfer fee to fee address
-            require(erc20Address.transfer(
-                    feeAddress,
-                    (feePercentage * sales[_tokenId].price) / 100
-            ), "Contract was not allowed to do the transfer");
-        }
-      
-        //Transfer ERC20 to seller
-        require(erc20Address.transfer(sales[_tokenId].seller, ((100-feePercentage-totalFee) * sales[_tokenId].price) / 100), "Wasnt able to transfer the ERC20 to the seller");
         
         //Transfer ERC721 to buyer
         erc721Address.transferFrom(address(this), msg.sender, _tokenId);
