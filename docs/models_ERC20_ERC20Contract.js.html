@@ -211,11 +211,11 @@ class ERC20Contract extends IContract {
         this.getDecimals(),
       );
 
-      const amountWithDecimals = Numbers.fromDecimals(
+      const amountWithDecimal = Numbers.fromDecimals(
         amount,
         this.getDecimals(),
       );
-      return approvedAmount >= amountWithDecimals;
+      return approvedAmount >= amountWithDecimal;
     } catch (err) {
       throw err;
     }

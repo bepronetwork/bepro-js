@@ -171,12 +171,12 @@ class MarketplaceRealFvr extends IContract {
      * @function
      * @description User deploys the contract
      * @param {Object} params Parameters
-     * @param {Address} params.erc20TokenAddress Address of the Contract
+     * @param {Address} params.erc20TokenAddress Address of the Contract - Optional (Dont insert if you want to use ETH or BNB or the native currency)
      * @param {Address} params.erc721TokenAddress Address of the Contract
      * @returns {Boolean} Success the Tx Object if operation was successful
      */
     deploy = async ({
-      erc20TokenAddress="0x0000000000000000000000000000000000000000", erc721TokenAddress, callback,
+      erc20TokenAddress = '0x0000000000000000000000000000000000000000', erc721TokenAddress, callback,
     }) => {
       const params = [erc20TokenAddress, erc721TokenAddress];
       const res = await this.__deploy(params, callback);
