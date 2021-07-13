@@ -171,7 +171,7 @@ MarketplaceRealFvr = function (_IContract) {(0, _inherits3.default)(MarketplaceR
                                            * @function
                                            * @description User deploys the contract
                                            * @param {Object} params Parameters
-                                           * @param {Address} params.erc20TokenAddress Address of the Contract
+                                           * @param {Address} params.erc20TokenAddress Address of the Contract - Optional (Dont insert if you want to use ETH or BNB or the native currency)
                                            * @param {Address} params.erc721TokenAddress Address of the Contract
                                            * @returns {Boolean} Success the Tx Object if operation was successful
                                            */return MarketplaceRealFvr;}(_IContract3.default);var _initialiseProps = function _initialiseProps() {var _this2 = this;this.__assert = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {return _regenerator2.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:if (_this2.getAddress()) {_context.next = 2;break;}throw new Error('Contract is not deployed, first deploy it and provide a contract address');case 2: // Use ABI
