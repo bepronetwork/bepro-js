@@ -33,7 +33,7 @@ library PMHelpers {
 }
 
 /// @title Market Contract Factory
-contract PredictionMarket is OwnableUpgradeable {
+contract PredictionMarket is Initializable, OwnableUpgradeable {
   using SafeMath for uint256;
 
   // ------ Events ------
@@ -181,8 +181,10 @@ contract PredictionMarket is OwnableUpgradeable {
 
   // ------ Modifiers End ------
 
-  /// Empty constructor
-  constructor() public {}
+  // Initializer function (replaces constructor)
+  function initialize() public initializer {
+    __Ownable_init();
+  }
 
   // ------ Core Functions ------
 
