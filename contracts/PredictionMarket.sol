@@ -1,4 +1,5 @@
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 import "./RealitioERC20.sol";
 
@@ -87,7 +88,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     uint256 closedDateTime;
     uint256 balance; // total stake (ETH)
     uint256 liquidity; // stake held (ETH)
-    uint256 sharesTotal; // total shares (all outcomes)
     uint256 sharesAvailable; // shares held (all outcomes)
     mapping(address => uint256) liquidityShares;
     mapping(address => bool) liquidityClaims; // wether participant has claimed liquidity winnings
@@ -197,15 +197,12 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     string memory name,
     uint256 closesAt,
     address oracle,
-    string memory outcome1,
-    string memory outcome2
+    string[] memory outcomes
   ) public payable returns (uint256) {
     uint256 marketId = marketIndex;
     marketIds.push(marketId);
 
     Market storage market = markets[marketId];
-
-    string[2] memory outcomes = [outcome1, outcome2];
 
     require(msg.value > 0, "The stake has to be greater than 0.");
     require(closesAt >= now, "Market has to close after the current date");
@@ -223,7 +220,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     // creating question in realitio
     RealitioERC20 realitio = RealitioERC20(realitioAddress);
-    string memory question = PMHelpers.formatQuestion(name, outcome1, outcome2);
+    string memory question = PMHelpers.formatQuestion(name, outcomes[0], outcomes[1]);
 
     market.resolution.questionId = realitio.askQuestionERC20(
       2,
@@ -251,11 +248,10 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       outcome.name = outcomes[i];
 
       // TODO review: only valid for 50-50 start
-      // price starts at .5 ETH
+      // price starts at 0.5 ETH
       outcome.shares.available = msg.value;
       outcome.shares.total = msg.value;
 
-      market.sharesTotal = market.sharesTotal.add(msg.value);
       market.sharesAvailable = market.sharesAvailable.add(msg.value);
     }
 
@@ -308,9 +304,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       newProductBalance = newProductBalance.mul(marketOutcome.shares.available);
 
       // only adding to market total shares, the available remains
-      market.sharesTotal = parentAction == MarketAction.removeLiquidity
-        ? market.sharesTotal.sub(value)
-        : market.sharesTotal.add(value);
       market.sharesAvailable = parentAction == MarketAction.removeLiquidity
         ? market.sharesAvailable.sub(value)
         : market.sharesAvailable.add(value);
@@ -398,7 +391,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       marketOutcome.shares.total = marketOutcome.shares.total.sub(value);
 
       // only adding to market total shares, the available remains
-      market.sharesTotal = market.sharesTotal.sub(value);
       market.sharesAvailable = market.sharesAvailable.sub(value);
     }
 
@@ -454,7 +446,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
         outcome.shares.available = outcome.shares.available.add(liquidityRatio);
         outcome.shares.total = outcome.shares.total.add(liquidityRatio);
 
-        market.sharesTotal = market.sharesTotal.add(liquidityRatio);
         market.sharesAvailable = market.sharesAvailable.add(liquidityRatio);
         value = msg.value;
       }
@@ -521,7 +512,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
         outcome.shares.available = outcome.shares.available.sub(liquidityRatio);
         outcome.shares.total = outcome.shares.total.sub(liquidityRatio);
 
-        market.sharesTotal = market.sharesTotal.sub(liquidityRatio);
         market.sharesAvailable = market.sharesAvailable.sub(liquidityRatio);
       }
 
