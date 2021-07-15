@@ -54,20 +54,15 @@ class PredictionMarketContract extends IContract {
 	 * @returns {Array} outcomeIds
 	 */
 	async getMarketData({marketId}) {
-		// TODO: move all calls to same function
-		const name = await this.__sendTx(this.getContract().methods.getMarketName(marketId), true);
-		const closeDateTime = await this.__sendTx(this.getContract().methods.getMarketClosedDateTime(marketId), true);
-		const state = await this.__sendTx(this.getContract().methods.getMarketState(marketId), true);
-		const oracleAddress = await this.__sendTx(this.getContract().methods.getMarketOracle(marketId), true);
-		const liquidity = await this.__sendTx(this.getContract().methods.getMarketAvailableLiquidity(marketId), true);
+		const marketData = await this.params.contract.getContract().methods.getMarketData(marketId).call();
 		const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
 
 		return {
-			name,
-			closeDateTime: moment.unix(closeDateTime).format("YYYY-MM-DD HH:mm"),
-			state,
-			oracleAddress,
-			liquidity: Numbers.fromDecimalsNumber(liquidity, 18),
+			name: marketData[0],
+			closeDateTime: moment.unix(marketData[2]).format("YYYY-MM-DD HH:mm"),
+			state: parseInt(marketData[1]),
+			oracleAddress: '0x0000000000000000000000000000000000000000',
+			liquidity: Numbers.fromDecimalsNumber(marketData[3], 18),
 			outcomeIds: outcomeIds.map((outcomeId) => Numbers.fromBigNumberToInteger(outcomeId, 18))
 		};
 	}
@@ -82,14 +77,12 @@ class PredictionMarketContract extends IContract {
 	 * @returns {Integer} sahres
 	 */
 	async getOutcomeData({marketId, outcomeId}) {
-		const name = await this.__sendTx(this.getContract().methods.getMarketOutcomeName(marketId, outcomeId), true);
-		const price = await this.__sendTx(this.getContract().methods.getMarketOutcomePrice(marketId, outcomeId), true);
-		const shares = await this.__sendTx(this.getContract().methods.getMarketOutcomeAvailableShares(marketId, outcomeId), true);
+		const outcomeData = await this.params.contract.getContract().methods.getMarketOutcomeData(marketId, outcomeId).call();
 
 		return {
-			name,
-			price: Numbers.fromDecimalsNumber(price, 18),
-			shares: Numbers.fromDecimalsNumber(shares, 18),
+			name: outcomeData[0],
+			price: Numbers.fromDecimalsNumber(outcomeData[1], 18),
+			shares: Numbers.fromDecimalsNumber(outcomeData[2], 18),
 		};
 	}
 	/**
@@ -200,6 +193,28 @@ class PredictionMarketContract extends IContract {
 		}, {});
 	}
 
+	/**
+	 * @function getMyMarketShares
+	 * @description Get My Market Shares
+	 * @param {Integer} marketId
+	 * @returns {Integer} Liquidity Shares
+	 * @returns {Array} Outcome Shares
+	 */
+	 async getMyMarketShares({marketId}) {
+		const account = await this.getMyAccount();
+		if (!account) return [];
+
+		const marketShares = await this.getContract().methods.getUserMarketShares(marketId, account).call();
+
+		return  {
+			liquidityShares: Numbers.fromDecimalsNumber(marketShares[0], 18),
+			outcomeShares: {
+				0: Numbers.fromDecimalsNumber(marketShares[1], 18),
+				1: Numbers.fromDecimalsNumber(marketShares[2], 18),
+			}
+		};
+	}
+
 	async getMyActions() {
 		const account = await this.getMyAccount();
 		if (!account) return [];
@@ -282,15 +297,14 @@ class PredictionMarketContract extends IContract {
 	 * @param {String} outcome2Name
 	 * @param {Integer} ethAmount
 	 */
-	 createMarket = async ({name, duration, oracleAddress, outcome1Name, outcome2Name, ethAmount}) => {
+	 createMarket = async ({name, duration, oracleAddress, outcomes, ethAmount}) => {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
 			this.getContract().methods.createMarket(
 				name,
 				duration,
 				oracleAddress,
-				outcome1Name,
-				outcome2Name,
+				outcomes
 			),
 			false,
 			ethToWei
@@ -377,19 +391,6 @@ class PredictionMarketContract extends IContract {
 			this.getContract().methods.claimLiquidity(marketId),
 			false,
 		);
-	};
-
-	/**
-	* @function deploy
-	* @description Deploy the Pool Contract
-	*/
-	deploy = async ({callback}) => {
-		let params = [];
-		let res = await this.__deploy(params, callback);
-		this.params.contractAddress = res.contractAddress;
-		/* Call to Backend API */
-		this.__assert();
-		return res;
 	};
 }
 

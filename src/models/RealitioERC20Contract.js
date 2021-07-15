@@ -104,19 +104,6 @@ class RealitioERC20Contract extends IContract {
 			false
 		);
   }
-
-	/**
-	* @function deploy
-	* @description Deploy the export default RealitioERC20 Contract
-	*/
-	deploy = async ({callback}) => {
-		let params = [];
-		let res = await this.__deploy(params, callback);
-		this.params.contractAddress = res.contractAddress;
-		/* Call to Backend API */
-		this.__assert();
-		return res;
-	};
 }
 
 export default RealitioERC20Contract;

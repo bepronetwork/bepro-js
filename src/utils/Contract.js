@@ -11,27 +11,32 @@ class Contract {
 		this.contract = new web3.eth.Contract(contract_json.abi, address);
 	}
 
-	async deploy(account, abi, byteCode, args = [], callback=()=>{}) {
-		var res;
-		this.contract = new this.web3.eth.Contract(abi);
-		if(account){	
-			res = await this.web3.eth.sendSignedTransaction(
-				(await account.getAccount().signTransaction({
-					data : this.contract.deploy({
-						data : byteCode,
-						arguments: args
-					}).encodeABI(),
-					from  : account.getAddress(),
-					gas : 5913388
-				}
-			)).rawTransaction);
-		}else{
-			const accounts = await this.web3.eth.getAccounts();
-			res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0], callback});
+	async deploy(account, abi, byteCode, args = [], callback = () => {}) {
+		try {
+			this.contract = new this.web3.eth.Contract(abi);
+			if (account) {
+				return this.contract.deploy({
+						data: byteCode,
+						arguments: args,
+					}).send({
+						from: account.getAddress(),
+						gas: 5913388,
+					});
+			} else {
+				const accounts = await this.web3.eth.getAccounts();
+				const res = await this.__metamaskDeploy({
+					byteCode,
+					args,
+					acc: accounts[0],
+					callback,
+				});
+				this.address = res.contractAddress;
+				resolve(res);
+			}
+		} catch (err) {
+			reject(err);
 		}
-		this.address = res.contractAddress;
-		return res;
-	}
+  }
 
 	__metamaskDeploy = async ({byteCode, args, acc, callback = () => {}}) => {
 		return new Promise ((resolve, reject) => {
@@ -41,7 +46,7 @@ class Contract {
 					data: byteCode,
 					arguments: args,
 				}).send({from : acc})
-				.on('confirmation', (confirmationNumber, receipt) => { 
+				.on('confirmation', (confirmationNumber, receipt) => {
 					callback(confirmationNumber)
 					if(confirmationNumber > 0){
 						resolve(receipt);
@@ -74,10 +79,10 @@ class Contract {
 				gasPrice : 20000000000,
 				value: value ? value : '0x0'
 			}
-	
+
 			let result = await account.signTransaction(tx);
 			this.web3.eth.sendSignedTransaction(result.rawTransaction)
-			.on('confirmation', (confirmationNumber, receipt) => { 
+			.on('confirmation', (confirmationNumber, receipt) => {
 				callback(confirmationNumber);
 				if(confirmationNumber > 0){
 					resolve(receipt);
@@ -85,9 +90,9 @@ class Contract {
 			})
 			.on('error', err => {reject(err)});
 		})
-       
+
 	}
-	
+
 	getContract() {
 		return this.contract;
 	}
