@@ -18,6 +18,15 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 1
+        }
+      }
     }
-  }
+  },
+  plugins: [
+    'truffle-contract-size'
+  ]
 };

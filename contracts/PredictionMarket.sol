@@ -160,20 +160,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     _;
   }
 
-  modifier participantHasShares(
-    uint256 marketId,
-    uint256 outcomeId,
-    address sender
-  ) {
-    require(markets[marketId].outcomes[outcomeId].shares.holders[sender] > 0);
-    _;
-  }
-
-  modifier participantHasLiquidity(uint256 marketId, address sender) {
-    require(markets[marketId].liquidityShares[sender] > 0);
-    _;
-  }
-
   modifier transitionNext(uint256 marketId) {
     _;
     nextState(marketId);
@@ -187,6 +173,21 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   }
 
   // ------ Core Functions ------
+
+  // TODO fix: temp solution, while fixing outcomes[] arg
+  function createMarket(
+    string memory name,
+    uint256 closesAt,
+    address oracle,
+    string memory outcome1Name,
+    string memory outcome2Name
+  ) public payable returns (uint256) {
+    string[] memory outcomes = new string[](2);
+    outcomes[0] = outcome1Name;
+    outcomes[1] = outcome2Name;
+
+    return createMarket(name, closesAt, oracle, outcomes);
+  }
 
   /// Create a new Market contract
   /// @dev The new Market contract is then saved in the array of this contract for future reference.
@@ -265,7 +266,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     return marketId;
   }
 
-  function buy(uint256 marketId, uint256 outcomeId) public payable {
+  function buy(uint256 marketId, uint256 outcomeId) external payable {
     buy(marketId, outcomeId, msg.value, MarketAction.buy);
   }
 
@@ -336,13 +337,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     uint256 marketId,
     uint256 outcomeId,
     uint256 shares
-  )
-    public
-    payable
-    timeTransitions(marketId)
-    atState(marketId, MarketState.open)
-    participantHasShares(marketId, outcomeId, msg.sender)
-  {
+  ) external payable timeTransitions(marketId) atState(marketId, MarketState.open) {
     Market storage market = markets[marketId];
     MarketOutcome storage outcome = market.outcomes[outcomeId];
 
@@ -406,7 +401,12 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     emitMarketOutcomePriceEvents(marketId);
   }
 
-  function addLiquidity(uint256 marketId) public payable timeTransitions(marketId) atState(marketId, MarketState.open) {
+  function addLiquidity(uint256 marketId)
+    external
+    payable
+    timeTransitions(marketId)
+    atState(marketId, MarketState.open)
+  {
     Market storage market = markets[marketId];
 
     require(msg.value > 0, "The stake has to be greater than 0.");
@@ -459,10 +459,9 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   }
 
   function removeLiquidity(uint256 marketId, uint256 shares)
-    public
+    external
     payable
     timeTransitions(marketId)
-    participantHasLiquidity(marketId, msg.sender)
     atState(marketId, MarketState.open)
   {
     Market storage market = markets[marketId];
