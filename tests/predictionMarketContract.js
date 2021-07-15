@@ -9,7 +9,7 @@ import { Application } from '..';
 context('Prediction Market Contract', async () => {
     let app;
     let predictionMarketContract;
-    let contractAddress;
+    let realitioERC20Contract
 
     // market / outcome ids we'll make unit tests with
     let marketId = 0;
@@ -28,11 +28,24 @@ context('Prediction Market Contract', async () => {
 
         it('should deploy Prediction Market Contract', mochaAsync(async () => {
             // Create Contract
-            predictionMarketContract = app.getPredictionMarketContract({contractAddress : contractAddress});
-            // Deploy
-            const res = await predictionMarketContract.deploy({});
-            contractAddress = predictionMarketContract.getAddress();
-            expect(res).to.not.equal(false);
+            predictionMarketContract = app.getPredictionMarketContract({});
+            realitioERC20Contract = app.getRealitioERC20Contract({});
+            // // Deploy
+            await predictionMarketContract.deploy({});
+            await realitioERC20Contract.deploy({});
+
+            const predictionMarketContractAddress = predictionMarketContract.getAddress();
+            const realitioContractAddress = realitioERC20Contract.getAddress();
+            const accountAddress = await predictionMarketContract.getMyAccount();
+
+            expect(predictionMarketContractAddress).to.not.equal(null);
+            expect(realitioContractAddress).to.not.equal(null);
+
+            // setting predictionMarket ownable vars
+            await predictionMarketContract.getContract().methods.initialize().send({ from: accountAddress });
+            // // setting realitioERC20 governance vars
+            await predictionMarketContract.getContract().methods.setRealitioERC20(realitioContractAddress).send({ from: accountAddress });
+            await predictionMarketContract.getContract().methods.setRealitioTimeout(86400).send({ from: accountAddress });
         }));
     });
 
@@ -41,10 +54,9 @@ context('Prediction Market Contract', async () => {
             try {
                 const res = await predictionMarketContract.createMarket({
                     name: 'Will BTC price close above 100k$ on May 1st 2022',
-                    oracleAddress: '0x0000000000000000000000000000000000000000', // TODO
-                    duration: moment('2022-05-01').diff(moment(), 'seconds'),
-                    outcome1Name: 'Yes',
-                    outcome2Name: 'No',
+                    oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
+                    duration: moment('2022-05-01').unix(),
+                    outcomes: ['Yes', 'No'],
                     ethAmount: ethAmount
                 });
                 expect(res.status).to.equal(true);
@@ -61,10 +73,9 @@ context('Prediction Market Contract', async () => {
         it('should create another Market', mochaAsync(async () => {
             const res = await predictionMarketContract.createMarket({
                 name: 'Will ETH price close above 10k$ on May 1st 2022',
-                oracleAddress: '0x0000000000000000000000000000000000000000', // TODO
-                duration: moment('2022-05-01').diff(moment(), 'seconds'),
-                outcome1Name: 'Yes',
-                outcome2Name: 'No',
+                oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
+                duration: moment('2022-05-01').unix(),
+                outcomes: ['Yes', 'No'],
                 ethAmount: ethAmount
             });
             expect(res.status).to.equal(true);
@@ -77,10 +88,9 @@ context('Prediction Market Contract', async () => {
             try {
                 const res = await predictionMarketContract.createMarket({
                     name: 'Will Real Madrid win the Champions League?',
-                    oracleAddress: '0x0000000000000000000000000000000000000000', // TODO
-                    duration: moment('2021-05-29').diff(moment(), 'seconds'),
-                    outcome1Name: 'Yes',
-                    outcome2Name: 'No',
+                    oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
+                    duration: moment('2022-05-29').unix(),
+                    outcomes: ['Yes', 'No'],
                     ethAmount: ethAmount
                 });
                 expect(res.status).to.equal(true);
@@ -96,11 +106,10 @@ context('Prediction Market Contract', async () => {
 
         it('should create another Market', mochaAsync(async () => {
             const res = await predictionMarketContract.createMarket({
-                name: 'Will temperature in Stockholm hit 18ºC on April 30th 2021?',
-                oracleAddress: '0x0000000000000000000000000000000000000000', // TODO
-                duration: moment('2021-04-30').diff(moment(), 'seconds'),
-                outcome1Name: 'Yes',
-                outcome2Name: 'No',
+                name: 'Will temperature in Stockholm hit 18ºC on April 30th 2022?',
+                oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
+                duration: moment('2022-04-30').unix(),
+                outcomes: ['Yes', 'No'],
                 ethAmount: ethAmount
             });
             expect(res.status).to.equal(true);
@@ -112,7 +121,7 @@ context('Prediction Market Contract', async () => {
 
     context('Market Data', async () => {
         it('should get Market data', mochaAsync(async () => {
-            const res = await predictionMarketContract.getMarketData({marketId});
+            const res = await predictionMarketContract.getMarketData({marketId: 0});
             expect(res).to.eql({
                 name: 'Will BTC price close above 100k$ on May 1st 2022',
                 closeDateTime: '2022-05-01 00:00',
