@@ -52,7 +52,7 @@ class MarketplaceRealFvr extends IContract {
     }
   };
 
-  isETHTransaction = async () => await this.getERC20TokenAddress() == "0x0000000000000000000000000000000000000000";
+  isETHTransaction = async () => await this.getERC20TokenAddress() == '0x0000000000000000000000000000000000000000';
 
   /**
    * @function
@@ -63,14 +63,14 @@ class MarketplaceRealFvr extends IContract {
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
   putERC721OnSale = async ({ tokenId, price }) => {
-    let valueWithDecimals =  Numbers.toSmartContractDecimals(
+    const valueWithDecimals = Numbers.toSmartContractDecimals(
       price,
       await this.isETHTransaction() ? 18 : this.getERC20Contract().getDecimals(),
     );
-  
+
     return await this.__sendTx(
-      this.params.contract.getContract().methods.putERC721OnSale(tokenId,  valueWithDecimals)
-    )
+      this.params.contract.getContract().methods.putERC721OnSale(tokenId, valueWithDecimals),
+    );
   };
 
   /**
@@ -167,10 +167,10 @@ class MarketplaceRealFvr extends IContract {
      * @description Approve ERC721 to be put on Sale
      * @param {Object} params Parameters
      * @param {Address} params.to Address To
-     * @param {String} params.tokenId Token Id
+     * @param {Bool} params.approve If to Approve
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-    approveERC721use = async ({ to, tokenId }) => await this.getERC721Contract().approve({ to, tokenId })
+    approveERC721use = async ({ to, approve=true }) => await this.getERC721Contract().setApprovalForAll({ to, approve })
 
     /**
      * @function

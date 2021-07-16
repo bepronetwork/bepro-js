@@ -159,6 +159,8 @@ class MarketplaceRealFvr extends IContract {
     }
   };
 
+  isETHTransaction = async () => await this.getERC20TokenAddress() == '0x0000000000000000000000000000000000000000';
+
   /**
    * @function
    * @description Put ERC721 on Sale
@@ -167,13 +169,16 @@ class MarketplaceRealFvr extends IContract {
    * @param {String} params.price Price (Token Amount)
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  putERC721OnSale = async ({ tokenId, price }) => await this.__sendTx(
-    this.params.contract.getContract().methods.putERC721OnSale(tokenId,
-      Numbers.toSmartContractDecimals(
-        price,
-        this.getERC20Contract().getDecimals(),
-      )),
-  );
+  putERC721OnSale = async ({ tokenId, price }) => {
+    const valueWithDecimals = Numbers.toSmartContractDecimals(
+      price,
+      await this.isETHTransaction() ? 18 : this.getERC20Contract().getDecimals(),
+    );
+
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.putERC721OnSale(tokenId, valueWithDecimals),
+    );
+  };
 
   /**
      * @function
