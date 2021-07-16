@@ -274,10 +274,10 @@ class MarketplaceRealFvr extends IContract {
      * @description Approve ERC721 to be put on Sale
      * @param {Object} params Parameters
      * @param {Address} params.to Address To
-     * @param {String} params.tokenId Token Id
+     * @param {Bool} params.approve If to Approve
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-    approveERC721use = async ({ to, tokenId }) => await this.getERC721Contract().approve({ to, tokenId })
+    approveERC721use = async ({ to, approve = true }) => await this.getERC721Contract().setApprovalForAll({ to, approve })
 
     /**
      * @function
