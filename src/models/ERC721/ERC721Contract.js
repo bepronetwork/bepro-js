@@ -121,6 +121,19 @@ class ERC721Contract extends IContract {
     );
   }
 
+  /**
+   * @function
+   * @description Approve All Use
+   * @param {Object} params
+   * @param {Address} from Address to approve from
+   * @param {Address} to Address to approve to
+   */
+   async isApprovedForAll({ from, to }) {
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.isApprovedForAll(from, to),
+    );
+  }
+
   deploy = async ({ name, symbol, callback }) => {
     if (!name) {
       throw new Error('Please provide a name');
