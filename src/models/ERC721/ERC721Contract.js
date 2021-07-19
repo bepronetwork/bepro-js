@@ -129,7 +129,7 @@ class ERC721Contract extends IContract {
    * @param {Address} to Address to approve to
    */
   async isApprovedForAll({ from, to }) {
-    return await this.params.contract.getContract().methods.isApprovedForAll(from, to);
+    return await this.params.contract.getContract().methods.isApprovedForAll(from, to).call();
   }
 
   deploy = async ({ name, symbol, callback }) => {
