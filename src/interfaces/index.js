@@ -8,6 +8,9 @@ const index = {
   erc721standard: require('../contracts/ERC721Standard.json'),
   network: require('../contracts/Network.json'),
   openerRealFvr: require('../contracts/OpenerRealFvr.json'),
+  sablier: require('../contracts/Sablier.json'),
+  cerc20mock: require('../contracts/CERC20Mock.json'),
+  erc20mock: require('../contracts/ERC20Mock.json'),
 };
 
 module.exports = index;
