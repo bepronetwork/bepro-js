@@ -89,10 +89,11 @@ class MarketplaceRealFvr extends IContract {
      * @description Buy ERC721 from Sale
      * @param {Object} params Parameters
      * @param {String} params.tokenId Token Id
+     * @param {Integer} params.value If Native ETH, value = 0.1 ETH; if ERC20 value is 0 or optional
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-    buyERC721 = async ({ tokenId }) => await this.__sendTx(
-      this.params.contract.getContract().methods.buyERC721(tokenId),
+    buyERC721 = async ({ tokenId, value=0 }) => await this.__sendTx(
+      this.params.contract.getContract().methods.buyERC721(tokenId), false, Numbers.toSmartContractDecimals(value, 18)
     );
 
     /**
