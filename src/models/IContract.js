@@ -55,20 +55,18 @@ class IContract {
 	};
 
 	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
-		return new Promise( (resolve, reject) => {
-			f.send({
-				from: acc,
-				value: value,
-			})
-			.on("confirmation", (confirmationNumber, receipt) => {
-				callback(confirmationNumber)
-				if (confirmationNumber > 0) {
-					resolve(receipt);
-				}
-			})
-			.on("error", (err) => {
-				reject(err);
-			});
+		return f.send({
+			from: acc,
+			value: value,
+		})
+		.on("confirmation", (confirmationNumber, receipt) => {
+			callback(confirmationNumber)
+			if (confirmationNumber > 0) {
+				resolve(receipt);
+			}
+		})
+		.on("error", (err) => {
+			reject(err);
 		});
 	};
 
