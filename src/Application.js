@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import { ExchangeContract, ERC20Contract, PredictionMarketContract, RealitioERC20Contract } from "./models/index";
+import { ERC20Contract, PredictionMarketContract, RealitioERC20Contract } from "./models/index";
 import Account from './utils/Account';
 
 const ETH_URL_MAINNET =
@@ -88,23 +88,6 @@ export default class Application {
 	/*************/
 	/** GETTERS **/
 	/*************/
-
-	/**
-	 * @name getExchangeContract
-	 * @param {Address} ContractAddress (Opt) If it is deployed
-	 * @description Create a Exchange Contract
-	 */
-	getExchangeContract = ({contractAddress=null}={}) => {
-		try {
-			return new ExchangeContract({
-				web3: this.web3,
-				contractAddress: contractAddress,
-				acc : this.test ? this.account : null
-			});
-		} catch(err) {
-			throw err;
-		}
-	};
 
 	/**
 	 * @name getPredictionMarketContract

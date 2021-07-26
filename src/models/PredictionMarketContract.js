@@ -15,8 +15,8 @@ const actions = {
 }
 
 /**
- * Exchange Contract Object
- * @constructor ExchangeContract
+ * PredictionMarket Contract Object
+ * @constructor PredictionMarketContract
  * @param {Web3} web3
  * @param {Integer} decimals
  * @param {Address} contractAddress

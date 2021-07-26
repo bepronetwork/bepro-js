@@ -6,7 +6,7 @@ import Numbers from "../utils/Numbers";
 import IContract from './IContract';
 
 /**
- * Exchange Contract Object
+ * RealitioERC20 Contract Object
  * @constructor RealitioERC20Contract
  * @param {Web3} web3
  * @param {Integer} decimals
