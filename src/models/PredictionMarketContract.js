@@ -372,9 +372,9 @@ class PredictionMarketContract extends IContract {
 		);
 	};
 
-	resolveMarketOutcome = async ({marketId, outcomeId}) => {
+	resolveMarketOutcome = async ({marketId}) => {
 		return await this.__sendTx(
-			this.getContract().methods.resolveMarketOutcome(marketId, outcomeId),
+			this.getContract().methods.resolveMarketOutcome(marketId),
 			false,
 		);
 	};
