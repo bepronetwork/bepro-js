@@ -739,13 +739,15 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       bool,
       bool,
       bool,
-      bool
+      bool,
+      uint256
     )
   {
     Market storage market = markets[marketId];
+
     // market still not resolved
     if (market.state != MarketState.resolved) {
-      return (false, false, false, false);
+      return (false, false, false, false, getUserClaimableFees(marketId, participant));
     }
 
     MarketOutcome storage outcome = market.outcomes[market.resolution.outcomeId];
@@ -754,7 +756,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       outcome.shares.holders[participant] > 0,
       outcome.shares.claims[participant],
       market.liquidityShares[participant] > 0,
-      market.liquidityClaims[participant]
+      market.liquidityClaims[participant],
+      getUserClaimableFees(marketId, participant)
     );
   }
 

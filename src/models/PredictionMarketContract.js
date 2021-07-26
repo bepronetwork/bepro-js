@@ -182,7 +182,8 @@ class PredictionMarketContract extends IContract {
 					winningsToClaim: claimStatus[0],
 					winningsClaimed: claimStatus[1],
 					liquidityToClaim: claimStatus[2],
-					liquidityClaimed: claimStatus[3]
+					liquidityClaimed: claimStatus[3],
+					liquidityFees: Numbers.fromDecimalsNumber(claimStatus[4], 18)
 				}
 			};
 
