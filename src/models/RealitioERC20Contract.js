@@ -92,14 +92,12 @@ class RealitioERC20Contract extends IContract {
 	 * @param {Integer} amount
 	 */
 	submitAnswerERC20 = async({ questionId, answerId, amount }) => {
-    let amountInDecimals = Numbers.toSmartContractDecimals(amount, 18);
-
 		return await this.__sendTx(
 			this.getContract().methods.submitAnswerERC20(
         questionId,
         answerId,
         0,
-        amountInDecimals
+        amount
       ),
 			false
 		);
