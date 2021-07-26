@@ -804,6 +804,22 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     );
   }
 
+  function getMarketAltData(uint marketId)
+    public
+    view
+    returns (
+      uint256,
+      bytes32
+    )
+  {
+    Market storage market = markets[marketId];
+
+    return (
+      market.fees.value,
+      market.resolution.questionId
+    );
+  }
+
   function getMarketQuestion(uint256 marketId) public view returns (bytes32) {
     Market storage market = markets[marketId];
 
