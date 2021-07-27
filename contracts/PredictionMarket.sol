@@ -60,8 +60,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   event MarketResolved(address indexed oracle, uint256 indexed marketId, uint256 outcomeId);
 
-  event ClaimFees(address indexed participant, uint256 indexed marketId, uint256 value);
-
   // ------ Events End ------
 
   uint256 public constant MAX_UINT_256 = 115792089237316195423570985008687907853269984665640564039457584007913129639935;
@@ -79,7 +77,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     addLiquidity,
     removeLiquidity,
     claimWinnings,
-    claimLiquidity
+    claimLiquidity,
+    claimFees
   }
 
   struct Market {
@@ -646,7 +645,15 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       msg.sender.transfer(claimableFees);
     }
 
-    emit ClaimFees(msg.sender, marketId, claimableFees);
+    emit ParticipantAction(
+      msg.sender,
+      MarketAction.claimFees,
+      marketId,
+      0,
+      market.liquidityShares[msg.sender],
+      claimableFees,
+      now
+    );
   }
 
   function addTransactionToFeesPool(uint256 marketId, uint256 value) internal returns (uint256) {
@@ -807,20 +814,10 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     );
   }
 
-  function getMarketAltData(uint marketId)
-    public
-    view
-    returns (
-      uint256,
-      bytes32
-    )
-  {
+  function getMarketAltData(uint256 marketId) public view returns (uint256, bytes32) {
     Market storage market = markets[marketId];
 
-    return (
-      market.fees.value,
-      market.resolution.questionId
-    );
+    return (market.fees.value, market.resolution.questionId);
   }
 
   function getMarketQuestion(uint256 marketId) public view returns (bytes32) {
