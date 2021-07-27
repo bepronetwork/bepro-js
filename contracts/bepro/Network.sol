@@ -301,6 +301,22 @@ contract Network is Pausable, Governed{
         Oracler storage oracler = oraclers[_address];
         return oracler.oraclesDelegatedByOthers.add(oracler.oraclesDelegated[_address]);
     }
+
+    function getOraclesSummary(address _address) public returns (uint256, uint256[] memory, address[] memory, uint256){
+
+    
+        Oracler storage oracler = oraclers[_address];
+
+        uint256[] memory amounts = new uint256[](oracler.delegatedOraclesAddresses.length);
+        address[] memory addresses = new address[](oracler.delegatedOraclesAddresses.length);
+
+        for(uint i=0; i < oracler.delegatedOraclesAddresses.length; i++){
+            addresses[i] = (oracler.delegatedOraclesAddresses[i]);
+            amounts[i] = (oracler.oraclesDelegated[oracler.delegatedOraclesAddresses[i]]);
+        }
+
+        return (oracler.oraclesDelegatedByOthers, amounts, addresses, oracler.tokensLocked);
+    }
     
     function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, bool, bool){
         Issue memory issue = issues[_issueID];

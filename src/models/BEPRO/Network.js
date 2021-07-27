@@ -234,45 +234,40 @@ class Network extends IContract {
   }
 
   /**
-   * Can this issue be merged
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @param {number} params.mergeId
-   * @returns {Promise<boolean>}
-   */
-  async isIssueMergeable({ issueId, mergeId }) {
-    return await this.params.contract
-      .getContract()
-      .methods.isIssueMergeable(issueId, mergeId)
-      .call();
-  }
-
-  /**
-   * Can this issue be merged
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @param {number} params.mergeId
-   * @returns {Promise<boolean>}
-   */
-  async isMergeTheOneWithMoreVotes({ issueId, mergeId }) {
-    return await this.params.contract
-      .getContract()
-      .methods.isMergeTheOneWithMoreVotes(issueId, mergeId)
-      .call();
-  }
-
-  /**
    * Get Issue Id Info
    * @param {Object} params
    * @param {Address} params.address
    * @returns {Promise<number>} Number of votes
    */
-  async getVotesByAddress({ address }) {
+  async getOraclesByAddress({ address }) {
     const r = await this.params.contract
       .getContract()
-      .methods.getVotesByAddress(address)
+      .methods.getOraclesByAddress(address)
       .call();
     return Numbers.fromDecimals(r, 18);
+  }
+
+  /**
+   * Get Oralces By Address
+   * @param {Object} params
+   * @param {Address} params.address
+   * @returns {Integer} oraclesDelegatedByOthers
+   * @returns {Array | Integer} amounts
+   * @returns {Array | Address} addresses
+   * @returns {Integer} tokensLocked
+   */
+  async getOraclesSummary({ address }) {
+    const r = await this.params.contract
+      .getContract()
+      .methods.getOraclesSummary(address)
+      .call();
+
+    return {
+      oraclesDelegatedByOthers: Numbers.fromDecimals(r[0], 18),
+      amounts: r[1] ? r[1].map(a => Numbers.fromDecimals(a, 18)) : [],
+      addresses:r[2] ? r[2].map(a => a) : [],
+      tokensLocked: Numbers.fromDecimals(r[3], 18)
+    };
   }
 
 
