@@ -12,6 +12,7 @@ const actions = {
 	3: 'Remove Liquidity',
 	4: 'Claim Winnings',
 	5: 'Claim Liquidity',
+	6: 'Claim Fees',
 }
 
 /**
