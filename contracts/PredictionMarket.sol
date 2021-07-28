@@ -58,7 +58,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     uint256 timestamp
   );
 
-  event MarketResolved(address indexed oracle, uint256 indexed marketId, uint256 outcomeId);
+  event MarketResolved(address indexed oracle, uint256 indexed marketId, uint256 outcomeId, uint256 timestamp);
 
   // ------ Events End ------
 
@@ -557,7 +557,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     market.resolution.outcomeId = outcomeId;
 
-    emit MarketResolved(market.resolution.oracle, marketId, outcomeId);
+    emit MarketResolved(msg.sender, marketId, outcomeId, now);
     // emitting 1 price event for winner outcome
     emit MarketOutcomePrice(marketId, outcomeId, ONE, now);
     // emitting 0 price event for loser outcome
