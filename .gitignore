@@ -3,7 +3,6 @@ node_modules/
 package-lock.json
 .idea
 xunit.xml
-build/
 docs/
 
 xunit.xml
