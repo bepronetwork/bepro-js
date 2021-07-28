@@ -438,7 +438,7 @@ class Network extends IContract {
      return await this.__sendTx(
        this.params.contract
          .getContract()
-         .methods.unlock(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
+         .methods.delegateOracles(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
      );
    }
 
