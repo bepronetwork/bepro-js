@@ -135,7 +135,7 @@ contract Network is Pausable, Governed{
         require(_delegatedTo != msg.sender, "Cannot transfer to itself");
 
         require(oracler.tokensLocked >= _tokenAmount, "Has to have tokens to unlock");
-        require(oracler.oraclesDelegated[msg.sender] >= _tokenAmount, "From has to have tokens to unlock");
+        require(oracler.oraclesDelegated[msg.sender] >= _tokenAmount, "From has to have tokens to use to delegate");
 
         oraclers[msg.sender].oraclesDelegated[msg.sender] = oracler.oraclesDelegated[msg.sender].sub(_tokenAmount);
         oraclers[msg.sender].oraclesDelegated[_delegatedTo] = oracler.oraclesDelegated[_delegatedTo].add(_tokenAmount);

@@ -155,16 +155,16 @@ class Network extends IContract {
     );
   }
 
-    /**
+  /**
    * Get Total Amount of BEPRO Staked for Oracles
    * @returns {Promise<number>}
    */
   async getBEPROStaked() {
-  return Numbers.fromDecimals(
-    await this.params.contract.getContract().methods.oraclesStaked().call(),
-    18,
-  );
-}
+    return Numbers.fromDecimals(
+      await this.params.contract.getContract().methods.oraclesStaked().call(),
+      18,
+    );
+  }
 
   /**
    * GetTotal amount of time where an issue has to be approved
