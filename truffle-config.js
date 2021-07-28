@@ -1,9 +1,25 @@
+require('dotenv').config()
+var HDWalletProvider = require("truffle-hdwallet-provider");
+var mnemonic = process.env.TRUFFLE_MNEMONIC;
+
 module.exports = {
   networks: {
     development: {
       host: "127.0.0.1",
       port: 8545,
       network_id: "*" // Match any network id
+    },
+    moonalpha: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://rpc.testnet.moonbeam.network");
+      },
+      network_id: 1287
+    },
+    kovan: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://kovan.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc");
+      },
+      network_id: 42
     }
   },
   // Configure your compilers
