@@ -265,8 +265,8 @@ class Network extends IContract {
     return {
       oraclesDelegatedByOthers: Numbers.fromDecimals(r[0], 18),
       amounts: r[1] ? r[1].map(a => Numbers.fromDecimals(a, 18)) : [],
-      addresses:r[2] ? r[2].map(a => a) : [],
-      tokensLocked: Numbers.fromDecimals(r[3], 18)
+      addresses: r[2] ? r[2].map(a => a) : [],
+      tokensLocked: Numbers.fromDecimals(r[3], 18),
     };
   }
 

@@ -108,6 +108,8 @@ contract Network is Pausable, Governed{
             oracler.oraclesDelegated[msg.sender] = _tokenAmount;
             oraclersArray.push(msg.sender);
         }
+
+        oraclesStaked = oraclesStaked.add(_tokenAmount);
     }
 
     function unlock(uint256 _tokenAmount, address _from) public {
@@ -117,6 +119,7 @@ contract Network is Pausable, Governed{
 
         oraclers[msg.sender].tokensLocked = oracler.tokensLocked.sub(_tokenAmount);
         oraclers[msg.sender].oraclesDelegated[_from] = oracler.oraclesDelegated[_from].sub(_tokenAmount);
+
         if(msg.sender != _from){
             oraclers[_from].oraclesDelegatedByOthers = oraclers[_from].oraclesDelegatedByOthers.sub(_tokenAmount);
         }
