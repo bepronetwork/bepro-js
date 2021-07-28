@@ -7,6 +7,7 @@ import ERC721Collectibles from './models/ERC721/ERC721Collectibles';
 import ERC721Standard from './models/ERC721/ERC721Standard';
 import Network from './models/BEPRO/Network';
 import { VotingContract } from './models';
+import Sablier from './models/Sablier/Sablier';
 
 export {
   Application,
@@ -18,4 +19,5 @@ export {
   ERC20TokenLock,
   ERC721Collectibles,
   ERC721Standard,
+  Sablier,
 };

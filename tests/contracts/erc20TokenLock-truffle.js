@@ -5,6 +5,7 @@ const { assert } = require('chai');
 // const truffleAssert = require('truffle-assertions');
 const { expect } = require('chai');
 const moment = require('moment');
+const traveler = require("ganache-time-traveler");
 // const Numbers = require('../src/utils/Numbers');
 
 const TEST_CONTRACT_NAME = 'ERC20TokenLock'; // require("./common.js");
@@ -34,8 +35,21 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
   let erc20Lock; // erc20 token lock contract
 
   // 'beforeEach' function will run before each test creating a new instance of the contract each time
+  let snapshotId;
 
+  /*before(async () => {
+	console.log('--- erc20tokenlock.setup_before ---' + process.cwd());
+	const snapshot = await traveler.takeSnapshot();
+	snapshotId = snapshot.result;
+  });*/
+
+  /*after(async () => {
+    console.log('--- erc20tokenlock.setup_after ---' + process.cwd());
+    await traveler.revertToSnapshot(snapshotId);
+  });*/
+  
   before('setup contract for each test', async () => {
+	console.log('--- erc20tokenlock setup_before ---' + process.cwd());
     // let ffc = await FiatToken.deployed();
 
     erc20Test = await ERC20Test.new(name, symbol, cap, { from: owner });
