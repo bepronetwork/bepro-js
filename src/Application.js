@@ -173,7 +173,8 @@ export default class Application {
 	 * @returns {Integer} Balance
 	 */
 	getETHBalance = async () => {
-		let wei = await this.web3.eth.getBalance(await this.getAddress());
+		const address = await this.getAddress();
+		let wei = await window.web3.eth.getBalance(address);
 		return this.web3.utils.fromWei(wei, "ether");
 	};
 }
