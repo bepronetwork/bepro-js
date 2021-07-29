@@ -115,7 +115,7 @@ contract Network is Pausable, Governed{
     function unlock(uint256 _tokenAmount, address _from) public {
         Oracler storage oracler = oraclers[msg.sender];
         require(oracler.tokensLocked >= _tokenAmount, "Has to have tokens to unlock");
-        require(oracler.oraclesDelegated[_from] >= _tokenAmount, "From has to have tokens to unlock");
+        require(oracler.oraclesDelegated[_from] >= _tokenAmount, "From has to have enough tokens to unlock");
 
         oraclers[msg.sender].tokensLocked = oracler.tokensLocked.sub(_tokenAmount);
         oraclers[msg.sender].oraclesDelegated[_from] = oracler.oraclesDelegated[_from].sub(_tokenAmount);
