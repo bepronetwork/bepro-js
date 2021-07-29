@@ -129,7 +129,7 @@ contract Network is Pausable, Governed{
         oraclesStaked = oraclesStaked.sub(_tokenAmount);
     }
 
-    function delegateOracles(uint256 _tokenAmount, address _delegatedTo) internal {
+    function delegateOracles(uint256 _tokenAmount, address _delegatedTo) public {
         Oracler storage oracler = oraclers[msg.sender];
 
         require(_delegatedTo != address(0), "Cannot transfer to the zero address");
