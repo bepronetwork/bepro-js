@@ -82,6 +82,7 @@ contract Network is Pausable, Governed{
     }
 
     event OpenIssue(uint256 indexed id, address indexed opener, uint256 indexed amount);
+    event RedeemIssue(uint256 indexed id);
     event MergeProposalCreated(uint256 indexed id, uint256 indexed mergeID, address indexed creator);
     event DisputeMerge(uint256 indexed id, uint256 indexed mergeID, uint256 oracles, address indexed disputer);
     event CloseIssue(uint256 indexed id, uint256 indexed mergeID, address[] indexed addresses);
@@ -206,6 +207,8 @@ contract Network is Pausable, Governed{
         issues[_issueId].finalized = true;
         issues[_issueId].canceled = true;
         require(transactionToken.transfer(msg.sender, issue.tokensStaked), "Transfer not sucessful");
+
+        emit RedeemIssue(_issueId);
     }
 
     /**
