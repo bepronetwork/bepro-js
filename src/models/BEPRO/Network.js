@@ -244,6 +244,21 @@ class Network extends IContract {
       .call();
   }
 
+
+  /**
+   * Verify if Merge is disputed (i.e. was rejected by the network holders)
+   * @param {Object} params
+   * @param {number} params.issueId
+   * @param {number} params.mergeId
+   * @returns {Promise<boolean>}
+   */
+   async isMergeDisputed({ issueId, mergeId }) {
+    return await this.params.contract
+      .getContract()
+      .methods.isMergeDisputed(issueId, mergeId)
+      .call();
+  }
+
   /**
    * Get Issue Id Info
    * @param {Object} params
@@ -526,6 +541,19 @@ class Network extends IContract {
        this.params.contract.getContract().methods.closeIssue(issueID, mergeID),
      );
    }
+
+     /**
+   * Dispute Merge
+   * @param {Object} params
+   * @param {number} params.issueID
+   * @param {number} params.mergeID
+   * @return {Promise<TransactionObject>}
+   */
+  async disputeMerge({ issueID, mergeID }) {
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.disputeMerge(issueID, mergeID),
+    );
+  }
 
   /**
    * Deploys current contract and awaits for {@link TokensNetwork#__assert}
