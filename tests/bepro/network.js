@@ -22,6 +22,7 @@ context("Network Contract", async () => {
 
   before(async () => {
     networkContract = new Network(testConfig);
+    console.log("Network", networkContract)
     userAddress = await networkContract.getUserAddress(); //local test with ganache
     console.log("stakingContract.userAddress: " + userAddress);
   });
