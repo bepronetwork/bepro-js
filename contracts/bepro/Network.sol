@@ -161,10 +161,10 @@ contract Network is Pausable, Governed{
         emit DisputeMerge(_issueID, _mergeID, oraclesToAdd, msg.sender);
     }
 
-    function isIssueInDraft(uint256 _issueID) public returns (bool){
+    function isIssueInDraft(uint256 _issueID) public view returns (bool){
         // Only if in the open window
         require(issues[_issueID].creationDate != 0, "Issue does not exist");
-        return (issues[_issueID].creationDate.add(disputableTime) < block.timestamp);
+        return (block.timestamp <= issues[_issueID].creationDate.add(disputableTime));
     }
 
     function isMergeDisputed(uint256 _issueID, uint256 _mergeID) public returns (bool) {

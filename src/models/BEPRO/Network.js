@@ -237,7 +237,7 @@ class Network extends IContract {
    * @param {number} params.issueId
    * @returns {Promise<boolean>}
    */
-  async isIssueinDraft({ issueId }) {
+  async isIssueInDraft({ issueId }) {
     return await this.params.contract
       .getContract()
       .methods.isIssueInDraft(issueId)

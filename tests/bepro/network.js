@@ -141,10 +141,9 @@ context("Network Contract", async () => {
       var res = await networkContract.approveTransactionalERC20Token();
       expect(res).to.not.equal(false);
       /* Call the function */
-      res = await networkContract.isIssueinDraft({
-        issueId : 0
+      res = await networkContract.isIssueInDraft({
+        issueId : 1
       });
-      console.log("res", res)
       expect(res).to.equal(true);
       /* Get result */
     })
