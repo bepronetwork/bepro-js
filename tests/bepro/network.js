@@ -132,4 +132,21 @@ context("Network Contract", async () => {
       /* Get result */
     })
   );
+
+
+  it(
+    "verify if issue is in Draft",
+    mochaAsync(async () => {
+      /* Approve tokens lock */
+      var res = await networkContract.approveTransactionalERC20Token();
+      expect(res).to.not.equal(false);
+      /* Call the function */
+      res = await networkContract.isIssueinDraft({
+        issueId : 0
+      });
+      console.log("res", res)
+      expect(res).to.equal(true);
+      /* Get result */
+    })
+  );
 });

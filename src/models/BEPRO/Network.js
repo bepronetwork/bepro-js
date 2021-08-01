@@ -240,7 +240,7 @@ class Network extends IContract {
   async isIssueinDraft({ issueId }) {
     return await this.params.contract
       .getContract()
-      .methods.isIssueinDraft(issueId)
+      .methods.isIssueInDraft(issueId)
       .call();
   }
 
@@ -252,7 +252,7 @@ class Network extends IContract {
    * @param {number} params.mergeId
    * @returns {Promise<boolean>}
    */
-   async isMergeDisputed({ issueId, mergeId }) {
+  async isMergeDisputed({ issueId, mergeId }) {
     return await this.params.contract
       .getContract()
       .methods.isMergeDisputed(issueId, mergeId)
@@ -542,18 +542,18 @@ class Network extends IContract {
      );
    }
 
-     /**
+   /**
    * Dispute Merge
    * @param {Object} params
    * @param {number} params.issueID
    * @param {number} params.mergeID
    * @return {Promise<TransactionObject>}
    */
-  async disputeMerge({ issueID, mergeID }) {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.disputeMerge(issueID, mergeID),
-    );
-  }
+   async disputeMerge({ issueID, mergeID }) {
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.disputeMerge(issueID, mergeID),
+     );
+   }
 
   /**
    * Deploys current contract and awaits for {@link TokensNetwork#__assert}
