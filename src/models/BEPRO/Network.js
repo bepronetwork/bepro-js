@@ -237,7 +237,7 @@ class Network extends IContract {
    * @param {number} params.issueId
    * @returns {Promise<boolean>}
    */
-  async isIssueInDraft({ issueId }) {
+  isIssueInDraft = async ({ issueId }) => {
     return await this.params.contract
       .getContract()
       .methods.isIssueInDraft(issueId)
@@ -409,12 +409,10 @@ class Network extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-   async lock({ tokenAmount }) {
+    async lock({ tokenAmount }) {
      if (tokenAmount <= 0) {
        throw new Error('Token Amount has to be higher than 0');
      }
-
-
      return await this.__sendTx(
        this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
      );
