@@ -146,14 +146,14 @@ import {
 } from 'bepro-js';
 
 /* 1.1 - Instantiate the App for Metamask functionality (MAINNET) */
-let app = new Application({ opt : { web3Connection : 'WEB3_LINK' } });
+const app = new Application({ opt : { web3Connection : 'WEB3_LINK' } });
 
 /* 1.2 - Instantiate StakingContract Object or any other in a similar way (Staking, ERC20 etc..) */
 // - MAINNET
-let staking = new StakingContract({ contractAddress : null, /* Contract Address (optional) */
+const staking = new StakingContract({ contractAddress : null, /* Contract Address (optional) */
                                     opt : { web3Connection : 'WEB3_LINK' } });
 // - TEST net e.g. Rinkeby
-let stakingTest = new StakingContract({ test : true, contractAddress : /* Contract Address (optional) */ });
+const stakingTest = new StakingContract({ test : true, contractAddress : /* Contract Address (optional) */ });
 
 /* 2 - Connect the App/Contract to the Metamask Web3 Injected wallet*/
 await app.login();
@@ -174,6 +174,21 @@ await staking.availableTokens();
 await stakingTest.availableTokens();
 
 ```
+
+## Parsing Solidity Contracts
+After having made your `X.sol` file and having compiled the solution you may want to parse that contract, so you have a 
+Javascript template class that comunicates with its counter on the chain, to do this you can issue:
+
+```logtalk
+$ > npm run liquifier -- -f ./build/contracts/path/to/file.json
+```
+
+This will read the contract and export a file under `./src/models/` with your contract as a Javascript file and export
+its json interface from `./src/interfaces`.
+
+The filenames will be based on the `contractName` available on the Solidity json contract.
+
+You can see a complete list of the flags and options using `npm run liquifier -- -h`
 
 ## Contribution
 

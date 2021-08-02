@@ -28,7 +28,8 @@
         "lint:fix": "eslint ./src --fix",
         "ganache:start": "ganache-cli -p 8545 -q",
         "watch": "onchange 'src/**/*.js' -- npm run build",
-        "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"Already built\""
+        "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"Already built\"",
+        "liquifier": "node liquifier.js"
     },
     "pre-commit": [
         "lint:fix",
@@ -90,7 +91,8 @@
         "pre-commit": "^1.2.2",
         "should": "^7.1.0",
         "supertest": "^1.0.0",
-        "truffle": "5.1.7"
+        "truffle": "5.1.7",
+        "yargs": "^17.0.1"
     },
     "babel": {
         "presets": [
