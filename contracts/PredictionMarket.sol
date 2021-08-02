@@ -29,7 +29,7 @@ library PMHelpers {
     string memory outcome1,
     string memory outcome2
   ) internal pure returns (string memory) {
-    return string(abi.encodePacked(name, "␟", '"', outcome1, "\",\"", outcome2, '"␟misc␟en'));
+    return string(abi.encodePacked(name, "␟", '"', outcome1, '","', outcome2, '"␟misc␟en'));
   }
 }
 
@@ -814,10 +814,18 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     );
   }
 
-  function getMarketAltData(uint256 marketId) public view returns (uint256, bytes32) {
+  function getMarketAltData(uint256 marketId)
+    public
+    view
+    returns (
+      uint256,
+      bytes32,
+      uint256
+    )
+  {
     Market storage market = markets[marketId];
 
-    return (market.fees.value, market.resolution.questionId);
+    return (market.fees.value, market.resolution.questionId, uint256(market.resolution.questionId));
   }
 
   function getMarketQuestion(uint256 marketId) public view returns (bytes32) {
