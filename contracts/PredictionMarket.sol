@@ -29,7 +29,7 @@ library PMHelpers {
     string memory outcome1,
     string memory outcome2
   ) internal pure returns (string memory) {
-    return string(abi.encodePacked(name, "␟", '"', outcome1, ",", outcome2, '"␟misc␟en'));
+    return string(abi.encodePacked(name, "␟", '"', outcome1, "\",\"", outcome2, '"␟misc␟en'));
   }
 }
 

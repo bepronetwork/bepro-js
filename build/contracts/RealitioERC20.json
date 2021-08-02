@@ -69267,6 +69267,12 @@
     "version": "0.6.2+commit.bacdbe57.Emscripten.clang"
   },
   "networks": {
+    "42": {
+      "events": {},
+      "links": {},
+      "address": "0x1346800bc8915536b9eaa388fa9a6b93398e5999",
+      "transactionHash": "0x2807785e2df85aab5a2936b8307674fa8c7e50ffc7a61d16c5b7e42d85b0ea3d"
+    },
     "344": {
       "events": {},
       "links": {},
@@ -69275,7 +69281,7 @@
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-07-28T15:00:18.365Z",
+  "updatedAt": "2021-08-02T10:45:04.663Z",
   "devdoc": {
     "methods": {
       "askQuestion(uint256,string,address,uint32,uint32,uint256)": {

@@ -4603,7 +4603,7 @@
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-07-28T15:00:18.458Z",
+  "updatedAt": "2021-08-02T10:45:04.756Z",
   "devdoc": {
     "details": "{ERC20} token, including: *  - ability for holders to burn (destroy) their tokens - a minter role that allows for token minting (creation) - a pauser role that allows to stop all token transfers * This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. * The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
     "methods": {
