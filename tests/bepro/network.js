@@ -134,6 +134,37 @@ context("Network Contract", async () => {
     })
   );
 
+  it(
+    "should lock tokens",
+    mochaAsync(async () => {
+      /* Approve tokens lock */
+      var res = await networkContract.approveTransactionalERC20Token();
+      expect(res).to.not.equal(false);
+      /* Call the function */
+      res = await networkContract.lock({
+        tokenAmount : 1000
+      });
+      expect(res).to.not.equal(false);
+      /* Get result */
+    })
+  );
+
+  it(
+    "should delegate tokens",
+    mochaAsync(async () => {
+      /* Approve tokens lock */
+      var res = await networkContract.approveTransactionalERC20Token();
+      expect(res).to.not.equal(false);
+      /* Call the function */
+      res = await networkContract.delegateOracles({
+        tokenAmount : 100,
+        delegatedTo : "0x139F33B91cF790524dD72c1F9B96E7949A5Bb798"
+      });
+      expect(res).to.not.equal(false);
+      /* Get result */
+    })
+  );
+
 
   it(
     "verify if issue is in Draft",
