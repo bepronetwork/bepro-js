@@ -770,6 +770,259 @@
           }
         }
       }
+    },
+    "3532bce9327772a0a933e71ea66f336172f8367287754b212f15d588f6f6457f": {
+      "address": "0xd5AAe1070E44d48A4ff72C58f107a4f8004785a7",
+      "txHash": "0x139c8d7ddb3cbc953e9efca178d1bdec85da710fe38ae30b43799ea250efbad9",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "../@openzeppelin/contracts-upgradeable/proxy/Initializable.sol:25"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "../@openzeppelin/contracts-upgradeable/proxy/Initializable.sol:30"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "../@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:31"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:20"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:74"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "marketIds",
+            "type": "t_array(t_uint256)dyn_storage",
+            "src": "PredictionMarket.sol:128"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "markets",
+            "type": "t_mapping(t_uint256,t_struct(Market)252_storage)",
+            "src": "PredictionMarket.sol:129"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "marketIndex",
+            "type": "t_uint256",
+            "src": "PredictionMarket.sol:130"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "fee",
+            "type": "t_uint256",
+            "src": "PredictionMarket.sol:133"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "realitioAddress",
+            "type": "t_address",
+            "src": "PredictionMarket.sol:135"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "realitioTimeout",
+            "type": "t_uint256",
+            "src": "PredictionMarket.sol:136"
+          }
+        ],
+        "types": {
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_uint256,t_struct(Market)252_storage)": {
+            "label": "mapping(uint256 => struct PredictionMarket.Market)"
+          },
+          "t_struct(Market)252_storage": {
+            "label": "struct PredictionMarket.Market",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "closedDateTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "balance",
+                "type": "t_uint256"
+              },
+              {
+                "label": "liquidity",
+                "type": "t_uint256"
+              },
+              {
+                "label": "sharesAvailable",
+                "type": "t_uint256"
+              },
+              {
+                "label": "liquidityShares",
+                "type": "t_mapping(t_address,t_uint256)"
+              },
+              {
+                "label": "liquidityClaims",
+                "type": "t_mapping(t_address,t_bool)"
+              },
+              {
+                "label": "state",
+                "type": "t_enum(MarketState)212"
+              },
+              {
+                "label": "resolution",
+                "type": "t_struct(MarketResolution)270_storage"
+              },
+              {
+                "label": "fees",
+                "type": "t_struct(MarketFees)261_storage"
+              },
+              {
+                "label": "outcomeIds",
+                "type": "t_array(t_uint256)dyn_storage"
+              },
+              {
+                "label": "outcomes",
+                "type": "t_mapping(t_uint256,t_struct(MarketOutcome)279_storage)"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_enum(MarketState)212": {
+            "label": "enum PredictionMarket.MarketState",
+            "members": [
+              "open",
+              "closed",
+              "resolved"
+            ]
+          },
+          "t_struct(MarketResolution)270_storage": {
+            "label": "struct PredictionMarket.MarketResolution",
+            "members": [
+              {
+                "label": "oracle",
+                "type": "t_address"
+              },
+              {
+                "label": "resolved",
+                "type": "t_bool"
+              },
+              {
+                "label": "outcomeId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "questionId",
+                "type": "t_bytes32"
+              }
+            ]
+          },
+          "t_struct(MarketFees)261_storage": {
+            "label": "struct PredictionMarket.MarketFees",
+            "members": [
+              {
+                "label": "value",
+                "type": "t_uint256"
+              },
+              {
+                "label": "poolWeight",
+                "type": "t_uint256"
+              },
+              {
+                "label": "claimed",
+                "type": "t_mapping(t_address,t_uint256)"
+              }
+            ]
+          },
+          "t_mapping(t_uint256,t_struct(MarketOutcome)279_storage)": {
+            "label": "mapping(uint256 => struct PredictionMarket.MarketOutcome)"
+          },
+          "t_struct(MarketOutcome)279_storage": {
+            "label": "struct PredictionMarket.MarketOutcome",
+            "members": [
+              {
+                "label": "marketId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "shares",
+                "type": "t_struct(Shares)292_storage"
+              }
+            ]
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_struct(Shares)292_storage": {
+            "label": "struct PredictionMarket.Shares",
+            "members": [
+              {
+                "label": "total",
+                "type": "t_uint256"
+              },
+              {
+                "label": "available",
+                "type": "t_uint256"
+              },
+              {
+                "label": "holders",
+                "type": "t_mapping(t_address,t_uint256)"
+              },
+              {
+                "label": "claims",
+                "type": "t_mapping(t_address,t_bool)"
+              }
+            ]
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
     }
   }
 }

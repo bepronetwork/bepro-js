@@ -1295,7 +1295,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-08-02T14:29:37.808Z",
+  "updatedAt": "2021-08-02T15:24:45.849Z",
   "devdoc": {
     "details": "ERC20 token with pausable token transfers, minting and burning. * Useful for scenarios such as preventing trades until the end of an evaluation period, or having an emergency switch for freezing all token transfers in the event of a large bug.",
     "methods": {

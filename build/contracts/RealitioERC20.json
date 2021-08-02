@@ -69281,7 +69281,7 @@
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-08-02T14:29:37.693Z",
+  "updatedAt": "2021-08-02T15:24:45.723Z",
   "devdoc": {
     "methods": {
       "askQuestion(uint256,string,address,uint32,uint32,uint256)": {
