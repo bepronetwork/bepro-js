@@ -180,4 +180,21 @@ context("Network Contract", async () => {
       /* Get result */
     })
   );
+
+  it(
+    "create Merge Proposal on Issue",
+    mochaAsync(async () => {
+      /* Approve tokens lock */
+      var res = await networkContract.approveTransactionalERC20Token();
+      expect(res).to.not.equal(false);
+      /* Call the function */
+      res = await networkContract.proposeIssueMerge({
+        issueID : 1,
+        prAddresses : ["0x139F33B91cF790524dD72c1F9B96E7949A5Bb798", "0x139F33B91cF790524dD72c1F9B96E7949A5Bb798"],
+        prAmounts : [800, 200]
+      });
+      expect(res).to.not.equal(false);
+      /* Get result */
+    })
+  );
 });
