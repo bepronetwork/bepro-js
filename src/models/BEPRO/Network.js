@@ -510,7 +510,7 @@ class Network extends IContract {
      );
    }
 
-  /**
+   /**
  * Propose Merge of Issue
  * @param {Object} params
  * @param {number} params.issueID
@@ -518,18 +518,18 @@ class Network extends IContract {
  * @param {number[]} params.prAmounts
  * @return {Promise<TransactionObject>}
  */
-  async proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
-    if (prAddresses.length !== prAmounts.length) {
-      throw new Error('prAddresses dont match prAmounts size');
-    }
-    let prAmountsWithDecimals = prAmounts.map( p =>  Numbers.toSmartContractDecimals(p, this.getTransactionTokenContract().getDecimals()));
+   async proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
+     if (prAddresses.length !== prAmounts.length) {
+       throw new Error('prAddresses dont match prAmounts size');
+     }
+     const prAmountsWithDecimals = prAmounts.map(p => Numbers.toSmartContractDecimals(p, this.getTransactionTokenContract().getDecimals()));
 
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.proposeIssueMerge(issueID, prAddresses, prAmountsWithDecimals),
-    );
-  }
+     return await this.__sendTx(
+       this.params.contract
+         .getContract()
+         .methods.proposeIssueMerge(issueID, prAddresses, prAmountsWithDecimals),
+     );
+   }
 
    /**
    * close Issue

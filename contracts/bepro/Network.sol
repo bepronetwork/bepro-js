@@ -173,7 +173,6 @@ contract Network is Pausable, Governed{
         return (issues[_issueID].mergeProposals[_mergeID].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100));
     }
 
-
     /**
      * @dev open an Issue with transaction Tokens owned
      * 1st step
