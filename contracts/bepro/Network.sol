@@ -258,7 +258,7 @@ contract Network is Pausable, Governed{
             total = total.add((_prAmounts[i] * (100-mergeCreatorFeeShare)) / 100);
         }
 
-        require(total == issues[_issueID].tokensStaked, "PrAmounts & TokensStaked dont match");
+        //require(total == issues[_issueID].tokensStaked, "PrAmounts & TokensStaked dont match");
 
         issues[_issueID].mergeProposals[issue.mergeIDIncrement] = mergeProposal;
         issues[_issueID].mergeIDIncrement = issues[_issueID].mergeIDIncrement + 1;
