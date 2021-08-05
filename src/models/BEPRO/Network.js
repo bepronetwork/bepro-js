@@ -100,6 +100,17 @@ class Network extends IContract {
       10,
     );
   }
+  
+    /**
+   * Get Amount of Disputers (people who locked BEPRO) in the network
+   * @returns {Promise<number>}
+   */
+     async getAmountOfDisputers() {
+      return parseInt(
+        await this.params.contract.getContract().methods.oraclersArray().call(),
+        10,
+      );
+    }
 
   /**
    * Get Amount of Needed for Approve
@@ -116,7 +127,7 @@ class Network extends IContract {
   }
 
   /**
-   * @description Get Amount of Needed for Dispute
+   * @description Get Amount of % Needed for Dispute
    * @returns {Promise<number>}
    */
   async percentageNeededForDispute() {
@@ -124,6 +135,48 @@ class Network extends IContract {
       await this.params.contract
         .getContract()
         .methods.percentageNeededForDispute()
+        .call(),
+      10,
+    );
+  }
+
+   /**
+   * @description Get Amount of Merge Fee Share
+   * @returns {Promise<number>}
+   */
+    async mergeCreatorFeeShare() {
+      return parseInt(
+        await this.params.contract
+          .getContract()
+          .methods.mergeCreatorFeeShare()
+          .call(),
+        10,
+      );
+    }
+
+   /**
+   * @description Get Time of disputableTime
+   * @returns {Promise<Date>}
+   */
+    async disputableTime() {
+      return Numbers.fromSmartContractTimeToMinutes(
+        await this.params.contract
+          .getContract()
+          .methods.disputableTime()
+          .call(),
+        10,
+      );
+    }
+
+      /**
+   * @description Get Time of redeemTime
+   * @returns {Promise<Date>}
+   */
+    async redeemTime() {
+    return Numbers.redeemTime(
+      await this.params.contract
+        .getContract()
+        .methods.redeemTime()
         .call(),
       10,
     );
@@ -166,18 +219,6 @@ class Network extends IContract {
     );
   }
 
-  /**
-   * GetTotal amount of time where an issue has to be approved
-   * @returns {Promise<Date>}
-   */
-  async timeOpenForIssueApprove() {
-    return Numbers.fromSmartContractTimeToMinutes(
-      await this.params.contract
-        .getContract()
-        .methods.timeOpenForIssueApprove()
-        .call(),
-    );
-  }
 
   /**
    * Get Total Amount of Tokens Staked in the network
@@ -205,15 +246,15 @@ class Network extends IContract {
   }
 
 
-   /**
+  /**
    * Verify if Address is Council
    * @param {Object} params
    * @param {number} params.address
    * @returns {Promise<address>}
    */
-  async isCouncil({address}) {
-    return this.getOraclesByAddress({address}) >= await this.COUNCIL_AMOUNT();
-  }  
+  async isCouncil({ address }) {
+    return this.getOraclesByAddress({ address }) >= await this.COUNCIL_AMOUNT();
+  }
 
   /**
    * Get Settler Token Address
