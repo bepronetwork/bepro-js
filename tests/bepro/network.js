@@ -111,7 +111,7 @@ context("Network Contract", async () => {
       expect(res).to.not.equal(false);
       /* Call the function */
       res = await networkContract.lock({
-        tokenAmount : 1000
+        tokenAmount : 25000000
       });
       expect(res).to.not.equal(false);
       /* Get result */

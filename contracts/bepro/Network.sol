@@ -40,6 +40,7 @@ contract Network is Pausable, Governed{
     uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to the merge proposal creator
     uint256 public percentageNeededForDispute = 3; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public disputableTime = 3 days;
+    uint256 public redeemTime = 1 days;
     uint256 public oraclesStaked = 0;
 
     uint256 public COUNCIL_AMOUNT = 25000000; // 25M
@@ -164,7 +165,13 @@ contract Network is Pausable, Governed{
     function isIssueInDraft(uint256 _issueID) public view returns (bool){
         // Only if in the open window
         require(issues[_issueID].creationDate != 0, "Issue does not exist");
-        return (block.timestamp <= issues[_issueID].creationDate.add(disputableTime));
+        return (block.timestamp <= issues[_issueID].creationDate.add(redeemTime));
+    }
+
+    function isMergeInDraft(uint256 _issueID, uint256 _mergeID) public returns (bool) {
+        require(issues[_issueID].creationDate != 0, "Issue does not exist");
+        require(issues[_issueID].mergeProposals[_mergeID].proposalAddress != address(0), "Merge does not exist");
+        return (block.timestamp <= issues[_issueID].mergeProposals[_mergeID].creationDate.add(disputableTime));
     }
 
     function isMergeDisputed(uint256 _issueID, uint256 _mergeID) public returns (bool) {
@@ -239,12 +246,15 @@ contract Network is Pausable, Governed{
      * @param _prAmounts PR Amounts
      */
     function proposeIssueMerge(uint256 _issueID, address[] memory _prAddresses, uint256[] memory _prAmounts) public whenNotPaused {
-        
+
         Issue memory issue = issues[_issueID];
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
         require(_prAmounts.length == _prAddresses.length, "Amounts has to equal addresses length");
-        require(transactionToken.balanceOf(msg.sender) > COUNCIL_AMOUNT*10**settlerToken.decimals(), "To propose merges the proposer has to be a Council (COUNCIL_AMOUNT)");
+
+        uint256 oracles = getOraclesByAddress(msg.sender);
+
+        require(oracles >= COUNCIL_AMOUNT*10**settlerToken.decimals(), "To propose merges the proposer has to be a Council (COUNCIL_AMOUNT)");
 
         MergeProposal memory mergeProposal;
         mergeProposal._id = issue.mergeIDIncrement;
@@ -266,7 +276,6 @@ contract Network is Pausable, Governed{
     }
 
 
-
     /**
      * @dev Owner finalizes the issue and distributes the transaction tokens or rejects the PR
      * @param _issueID issue id (mapping with github)
@@ -278,6 +287,7 @@ contract Network is Pausable, Governed{
         require(issue.finalized == false, "Issue has to be opened");
         require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
         require(!isIssueInDraft(_issueID), "Issue cant be in Draft Mode");
+        require(!isMergeInDraft(_issueID, _mergeID), "Merge cant be in Draft Mode");
         require(!isMergeDisputed(_issueID, _mergeID), "Merge has been disputed");
 
         // Closes the issue
@@ -308,8 +318,6 @@ contract Network is Pausable, Governed{
     }
 
     function getOraclesSummary(address _address) public returns (uint256, uint256[] memory, address[] memory, uint256){
-
-    
         Oracler storage oracler = oraclers[_address];
 
         uint256[] memory amounts = new uint256[](oracler.delegatedOraclesAddresses.length);
@@ -353,9 +361,18 @@ contract Network is Pausable, Governed{
      * @dev changedisputableTime
      */
     function changeDisputableTime(uint256 _disputableTime) public onlyGovernor {
-        require(_disputableTime < 20 days, "Time open for issue has to be higher than lower than 20 days");
-        require(_disputableTime >= 1 minutes, "Time open for issue has to be higher than 1 minutes");
+        require(_disputableTime < 20 days, "Time has to be lower than 20 days");
+        require(_disputableTime >= 1 minutes, "Time has to be higher than 1 minutes");
         disputableTime = _disputableTime;
+    }
+
+      /**
+     * @dev changeRedeemTime
+     */
+    function changeRedeemTime(uint256 _redeemTime) public onlyGovernor {
+        require(_redeemTime < 20 days, "Time has to be lower than 20 days");
+        require(_redeemTime >= 1 minutes, "Time has to be higher than 1 minutes");
+        redeemTime = _redeemTime;
     }
 
     /**
@@ -363,7 +380,7 @@ contract Network is Pausable, Governed{
     */
     function changeCOUNCIL_AMOUNT(uint256 _COUNCIL_AMOUNT) public onlyGovernor {
         require(_COUNCIL_AMOUNT > 100000*10**settlerToken.decimals(), "Council Amount has to higher than 100k");
-        require(_COUNCIL_AMOUNT < 100000000*10**settlerToken.decimals(), "Council Amount has to lower than 50M");
+        require(_COUNCIL_AMOUNT < 50000000*10**settlerToken.decimals(), "Council Amount has to lower than 50M");
         COUNCIL_AMOUNT = _COUNCIL_AMOUNT;
     }
 

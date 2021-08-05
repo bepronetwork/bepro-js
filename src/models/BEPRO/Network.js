@@ -193,7 +193,6 @@ class Network extends IContract {
     );
   }
 
-
   /**
    * Get Transaction Token Address
    * @returns {Promise<address>}
@@ -204,6 +203,17 @@ class Network extends IContract {
       .methods.transactionToken()
       .call();
   }
+
+
+   /**
+   * Verify if Address is Council
+   * @param {Object} params
+   * @param {number} params.address
+   * @returns {Promise<address>}
+   */
+  async isCouncil({address}) {
+    return this.getOraclesByAddress({address}) >= await this.COUNCIL_AMOUNT();
+  }  
 
   /**
    * Get Settler Token Address
