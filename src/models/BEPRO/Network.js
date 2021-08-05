@@ -100,17 +100,17 @@ class Network extends IContract {
       10,
     );
   }
-  
-    /**
+
+  /**
    * Get Amount of Disputers (people who locked BEPRO) in the network
    * @returns {Promise<number>}
    */
-     async getAmountOfDisputers() {
-      return parseInt(
-        await this.params.contract.getContract().methods.oraclersArray().call(),
-        10,
-      );
-    }
+  async getAmountOfDisputers() {
+    return parseInt(
+      await this.params.contract.getContract().methods.oraclersArray().call(),
+      10,
+    );
+  }
 
   /**
    * Get Amount of Needed for Approve
@@ -140,39 +140,39 @@ class Network extends IContract {
     );
   }
 
-   /**
+  /**
    * @description Get Amount of Merge Fee Share
    * @returns {Promise<number>}
    */
-    async mergeCreatorFeeShare() {
-      return parseInt(
-        await this.params.contract
-          .getContract()
-          .methods.mergeCreatorFeeShare()
-          .call(),
-        10,
-      );
-    }
+  async mergeCreatorFeeShare() {
+    return parseInt(
+      await this.params.contract
+        .getContract()
+        .methods.mergeCreatorFeeShare()
+        .call(),
+      10,
+    );
+  }
 
-   /**
+  /**
    * @description Get Time of disputableTime
    * @returns {Promise<Date>}
    */
-    async disputableTime() {
-      return Numbers.fromSmartContractTimeToMinutes(
-        await this.params.contract
-          .getContract()
-          .methods.disputableTime()
-          .call(),
-        10,
-      );
-    }
+  async disputableTime() {
+    return Numbers.fromSmartContractTimeToMinutes(
+      await this.params.contract
+        .getContract()
+        .methods.disputableTime()
+        .call(),
+      10,
+    );
+  }
 
-      /**
+  /**
    * @description Get Time of redeemTime
    * @returns {Promise<Date>}
    */
-    async redeemTime() {
+  async redeemTime() {
     return Numbers.redeemTime(
       await this.params.contract
         .getContract()

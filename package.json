@@ -14,13 +14,13 @@
         "url": "https://github.com/betprotocol/bepro-js.git"
     },
     "scripts": {
-        "pretest": "npm run build && truffle compile && truffle migrate --network development",
+        "pretest": "npm run build && ./node_modules/.bin/truffle compile && ./node_modules/.bin/truffle migrate --network development",
         "test": "./node_modules/.bin/mocha --exit ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
-        "test:truffle": "truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
+        "test:truffle": "./node_modules/.bin/truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "index": "babel-node ./index.js --presets es2015,stage-2",
         "build": "npm run compile && babel ./src --out-dir lib --copy-files -d ./build",
-        "compile": "truffle compile",
-        "clean:contracts": "rimraf build/contracts && truffle compile",
+        "compile": "./node_modules/.bin/truffle compile",
+        "clean:contracts": "rimraf build/contracts && ./node_modules/.bin/truffle compile",
         "docs": "npm run build && npm run jsdoc:build && npm run jsdoc:serve",
         "jsdoc:build": "jsdoc -t ./node_modules/better-docs src -r -c docs-src/jsdoc.json",
         "jsdoc:serve": "http-server ./docs/ -o",
