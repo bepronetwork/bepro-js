@@ -79,7 +79,7 @@ class IContract {
       from: acc,
       value,
       gasPrice: 20000000000, // temp test
-      gas: 5913388, // 6721975 //temp test
+      gas: 591338, 
     })
       .on('confirmation', (confirmationNumber, receipt) => {
         callback(confirmationNumber);
