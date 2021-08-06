@@ -141,7 +141,7 @@ contract Network is Pausable, Governed{
 
         oraclers[msg.sender].oraclesDelegated[msg.sender] = oracler.oraclesDelegated[msg.sender].sub(_tokenAmount);
         oraclers[msg.sender].oraclesDelegated[_delegatedTo] = oracler.oraclesDelegated[_delegatedTo].add(_tokenAmount);
-
+        oraclers[msg.sender].delegatedOraclesAddresses.push(_delegatedTo);
         //require(oraclers[_delegatedTo].tokensLocked != uint256(0), "Delegated to has to have oracled already");
         oraclers[_delegatedTo].oraclesDelegatedByOthers = oraclers[_delegatedTo].oraclesDelegatedByOthers.add(_tokenAmount);
     }
