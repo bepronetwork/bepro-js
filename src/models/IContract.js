@@ -36,7 +36,7 @@ class IContract {
         web3Connection: this.web3Connection,
         abi,
         contractAddress,
-        tokenAddress,
+        tokenAddress
       };
 
       if (this.web3Connection.test) this._loadDataFromWeb3Connection();
@@ -78,8 +78,8 @@ class IContract {
     f.send({
       from: acc,
       value,
-      gasPrice: 20000000000, // temp test
-      gas: 591338, 
+      gasPrice: 2000000000, // temp test
+      gas: 591338,
     })
       .on('confirmation', (confirmationNumber, receipt) => {
         callback(confirmationNumber);

@@ -58,10 +58,6 @@ class Contract {
         })
         .send({
           from: acc,
-          // BUGFIX: without gas and gasPrice set here, we get the following error:
-          // Error: Node error: {"message":"base fee exceeds gas limit","code":-32000,"data":{"stack":"Error: base fee exceeds gas limit
-          // ,gasPrice : 180000000000
-          // ,gas : 5913388
           gasPrice: 20000000000,
           gas: 5913388, // 6721975
         })
