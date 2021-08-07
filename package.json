@@ -37,6 +37,8 @@
     ],
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.1",
+        "@uniswap/v3-core": "^1.0.0",
+        "@uniswap/v3-periphery": "^1.1.1",
         "abi-decoder": "^1.2.0",
         "accounting": "^0.4.1",
         "assertion-error": "^1.1.0",
@@ -94,7 +96,7 @@
         "pre-commit": "^1.2.2",
         "should": "^7.1.0",
         "supertest": "^1.0.0",
-        "truffle": "^5.1.7",
+        "truffle": "^5.4.3",
         "truffle-assertions": "^0.8.2",
         "truffle-plugin-verify": "^0.5.8"
     },
@@ -105,8 +107,7 @@
             "stage-2"
         ],
         "plugins": [
-            "transform-runtime",
-            "transform-remove-console"
+            "transform-runtime"
         ],
         "sourceMaps": true,
         "retainLines": true
