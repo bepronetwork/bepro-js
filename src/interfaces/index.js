@@ -11,6 +11,11 @@ const index = {
   sablier: require('../contracts/Sablier.json'),
   cerc20mock: require('../contracts/CERC20Mock.json'),
   erc20mock: require('../contracts/ERC20Mock.json'),
+  ethutils: require('../contracts/ETHUtils.json'),
+  loophole: require('../contracts/Loophole.json'),
+  uniswapFactory: require('../contracts/UniswapV3Factory.json'),
+  uniswapPool: require('../contracts/UniswapV3Pool.json'),
+  swapRouter: require('../contracts/SwapRouter.json'),
 };
 
 module.exports = index;

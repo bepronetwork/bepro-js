@@ -72,7 +72,7 @@ contract Votable {
             curPoll.options[i] = options[i];
         }
         curPoll.optionsSize = options.length;
-        curPoll.expirationTime = now.add(_voteLength).mul(1 seconds);
+        curPoll.expirationTime = block.timestamp.add(_voteLength).mul(1 seconds);
         curPoll.description = _description;
 
         emit pollCreated(msg.sender, pollCount, _description, _voteLength);
@@ -84,7 +84,7 @@ contract Votable {
     */
     function endPoll(uint _pollID) external validPoll(_pollID) {
         require(polls[_pollID].status == PollStatus.IN_PROGRESS, "Vote is not in progress.");
-        require(now >= polls[_pollID].expirationTime, "Voting period has not expired");
+        require(block.timestamp >= polls[_pollID].expirationTime, "Voting period has not expired");
         _countVotes(_pollID);
         polls[_pollID].status = PollStatus.ENDED;
     }
@@ -154,7 +154,7 @@ contract Votable {
         Poll storage curPoll = polls[_pollID];
         require(curPoll.status == PollStatus.IN_PROGRESS, "Poll has expired.");
         require(!userHasVoted(_pollID, msg.sender), "User has already voted.");
-        require(curPoll.expirationTime > now);
+        require(curPoll.expirationTime > block.timestamp);
         require(_voteId < curPoll.optionsSize, "Vote option is not availble");
         
         // update token bank
