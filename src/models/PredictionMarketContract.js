@@ -86,16 +86,6 @@ class PredictionMarketContract extends IContract {
 			shares: Numbers.fromDecimalsNumber(outcomeData[2], 18),
 		};
 	}
-	/**
-	 * @function getMyAccount
-	 * @description Returns connected wallet account address
-	 * @returns {String | undefined} address
-	 */
-	async getMyAccount() {
-		const accounts = await this.params.web3.eth.getAccounts();
-
-		return accounts[0];
-	}
 
 	/**
 	 * @function getAverageOutcomeBuyPrice

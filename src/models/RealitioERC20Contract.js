@@ -30,7 +30,7 @@ class RealitioERC20Contract extends IContract {
 
 	/**
 	 * @function getQuestion
-	 * @description getQuestionBestAnswer
+	 * @description getQuestion
    * @param {bytes32} questionId
 	 * @returns {Object} question
 	 */
@@ -104,6 +104,37 @@ class RealitioERC20Contract extends IContract {
 			false
 		);
   }
+
+	/**
+	 * @function getMyBonds
+	 * @description Get My Bonds
+	 * @returns {Array} Outcome Shares
+	 */
+	 async getMyBonds() {
+		const account = await this.getMyAccount();
+		if (!account) return {};
+
+		const events = await this.getContract().getPastEvents(
+			'LogNewAnswer',
+			{
+				fromBlock: 0,
+				toBlock: 'latest',
+				filter: { user: account
+			}
+		});
+
+		const bonds = {};
+
+		// iterating through every answer and summing up the bonds
+		events.forEach((event) => {
+			const questionId = event.returnValues.question_id;
+			if (!bonds[questionId]) bonds[questionId] = 0;
+
+			bonds[questionId] += Numbers.fromDecimalsNumber(event.returnValues.bond, 18);
+		});
+
+		return bonds;
+	}
 }
 
 export default RealitioERC20Contract;

@@ -251,6 +251,17 @@ class IContract {
 		let wei = await this.web3.eth.getBalance(this.getAddress());
 		return this.web3.utils.fromWei(wei, 'ether');
 	};
+
+	/**
+	 * @function getMyAccount
+	 * @description Returns connected wallet account address
+	 * @returns {String | undefined} address
+	 */
+	async getMyAccount() {
+		const accounts = await this.params.web3.eth.getAccounts();
+
+		return accounts[0];
+	}
 }
 
 export default IContract;
