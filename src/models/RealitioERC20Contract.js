@@ -19,23 +19,22 @@ class RealitioERC20Contract extends IContract {
 	}
 
 	/**
-	 * @function isQuestionFinalized
-	 * @description Get My Porfolio
-   * @param {bytes32} questionId
-	 * @returns {bool} isFinalized
-	 */
-	async isQuestionFinalized({ questionId }) {
-		return await this.getContract().methods.isFinalized(questionId).call();
-	}
-
-	/**
 	 * @function getQuestion
 	 * @description getQuestion
    * @param {bytes32} questionId
 	 * @returns {Object} question
 	 */
 	async getQuestion({ questionId }) {
-		return await this.getContract().methods.questions(questionId).call();
+		const question = await this.getContract().methods.questions(questionId).call();
+		const isFinalized = await this.getContract().methods.isFinalized(questionId).call();
+
+		return {
+			id: questionId,
+			bond: Numbers.fromDecimalsNumber(question.bond, 18),
+			bestAnswer: question.best_answer,
+			finalizeTs: question.finalize_ts,
+			isFinalized
+		};
 	}
 
 	/**
@@ -119,9 +118,9 @@ class RealitioERC20Contract extends IContract {
 			{
 				fromBlock: 0,
 				toBlock: 'latest',
-				filter: { user: account
+				filter: { user: account }
 			}
-		});
+		);
 
 		const bonds = {};
 
