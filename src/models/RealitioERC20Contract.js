@@ -127,9 +127,17 @@ class RealitioERC20Contract extends IContract {
 		// iterating through every answer and summing up the bonds
 		events.forEach((event) => {
 			const questionId = event.returnValues.question_id;
-			if (!bonds[questionId]) bonds[questionId] = 0;
 
-			bonds[questionId] += Numbers.fromDecimalsNumber(event.returnValues.bond, 18);
+			// initializing bond vars
+			if (!bonds[questionId]) bonds[questionId] = { total: 0, answers: {} };
+			if (!bonds[questionId].answers[event.returnValues.answer]) {
+				bonds[questionId].answers[event.returnValues.answer] = 0;
+			}
+
+			const bond = Numbers.fromDecimalsNumber(event.returnValues.bond, 18)
+
+			bonds[questionId].total += bond;
+			bonds[questionId].answers[event.returnValues.answer] += bond;
 		});
 
 		return bonds;
