@@ -144,6 +144,47 @@ class RealitioERC20Contract extends IContract {
 
 		return bonds;
 	}
+
+	/**
+	 * @function claimWinnings
+	 * @description claimWinnings
+	 * @param {bytes32} questionId
+	 */
+	 async claimWinnings(questionId) {
+		const question = await this.getQuestion({ questionId });
+
+		// assuring question state is finalized and not claimed
+		if (question.isClaimed || !question.isFinalized) return false;
+
+		const events = await this.getContract().getPastEvents(
+			'LogNewAnswer',
+			{
+				fromBlock: 0,
+				toBlock: 'latest',
+				filter: { question_id: questionId }
+			}
+		);
+
+		const historyHashes = events.map((event) => event.returnValues.history_hash).slice(0, -1).reverse();
+		// adding an empty hash to the history hashes
+		historyHashes.push(Numbers.nullHash());
+
+		const addrs = events.map((event) => event.returnValues.user).reverse();
+		const bonds = events.map((event) => event.returnValues.bond).reverse();
+		const answers = events.map((event) => event.returnValues.answer).reverse();
+
+		return await this.__sendTx(
+			this.getContract().methods.claimWinnings(
+        questionId,
+				// [historyHashes.length],
+				historyHashes,
+				addrs,
+				bonds,
+				answers
+      ),
+			false
+		);
+	}
 }
 
 export default RealitioERC20Contract;
