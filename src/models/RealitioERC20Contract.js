@@ -133,6 +133,17 @@ class RealitioERC20Contract extends IContract {
 			}
 		);
 
+		const withdrawEvents = await this.getContract().getPastEvents(
+			'LogWithdraw',
+			{
+				fromBlock: 0,
+				toBlock: 'latest',
+				filter: { user: account }
+			}
+		);
+
+		const lastWithdrawBlockNumber = withdrawEvents[withdrawEvents.length - 1]?.blockNumber || 0;
+
 		const bonds = {};
 
 		// iterating through every answer and summing up the bonds
@@ -157,6 +168,9 @@ class RealitioERC20Contract extends IContract {
 			const amount = Numbers.fromDecimalsNumber(event.returnValues.amount, 18)
 
 			bonds[questionId].claimed += amount;
+
+			// withdraw occurred after claim, marking as withdrawn
+			if (lastWithdrawBlockNumber >= event.blockNumber) bonds[questionId].withdrawn = true;
 		});
 
 		return bonds;
