@@ -27,13 +27,15 @@ class RealitioERC20Contract extends IContract {
 	async getQuestion({ questionId }) {
 		const question = await this.getContract().methods.questions(questionId).call();
 		const isFinalized = await this.getContract().methods.isFinalized(questionId).call();
+		const isClaimed = isFinalized && question.history_hash === Numbers.nullHash();
 
 		return {
 			id: questionId,
 			bond: Numbers.fromDecimalsNumber(question.bond, 18),
 			bestAnswer: question.best_answer,
 			finalizeTs: question.finalize_ts,
-			isFinalized
+			isFinalized,
+			isClaimed
 		};
 	}
 

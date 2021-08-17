@@ -108,6 +108,10 @@ class numbers {
     }
     return x
   }
+
+  nullHash() {
+    return '0x0000000000000000000000000000000000000000000000000000000000000000';
+  }
 }
 
 let Numbers = new numbers()
