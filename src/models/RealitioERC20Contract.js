@@ -176,6 +176,34 @@ class RealitioERC20Contract extends IContract {
 		return bonds;
 	}
 
+
+	/**
+	 * @function getMyActions
+	 * @description Get My Actions
+	 * @returns {Array} Actions
+	 */
+	async getMyActions() {
+		const account = await this.getMyAccount();
+		if (!account) return [];
+
+		const events = await this.getContract().getPastEvents('LogNewAnswer', {
+			fromBlock: 0,
+			toBlock: 'latest',
+			filter: { user: account }
+		});
+
+		return events.map(event => {
+			return {
+				action: 'Bond',
+				questionId: event.returnValues.question_id,
+				answerId: event.returnValues.answer,
+				value: Numbers.fromDecimalsNumber(event.returnValues.bond, 18),
+				timestamp: Numbers.fromBigNumberToInteger(event.returnValues.ts, 18),
+				transactionHash: event.transactionHash
+			}
+		})
+	}
+
 	/**
 	 * @function claimWinnings
 	 * @description claimWinnings
