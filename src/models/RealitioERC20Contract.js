@@ -124,6 +124,15 @@ class RealitioERC20Contract extends IContract {
 			}
 		);
 
+		const claimEvents = await this.getContract().getPastEvents(
+			'LogClaim',
+			{
+				fromBlock: 0,
+				toBlock: 'latest',
+				filter: { user: account }
+			}
+		);
+
 		const bonds = {};
 
 		// iterating through every answer and summing up the bonds
@@ -131,7 +140,7 @@ class RealitioERC20Contract extends IContract {
 			const questionId = event.returnValues.question_id;
 
 			// initializing bond vars
-			if (!bonds[questionId]) bonds[questionId] = { total: 0, answers: {} };
+			if (!bonds[questionId]) bonds[questionId] = { total: 0, answers: {}, claimed: 0, withdrawn: false };
 			if (!bonds[questionId].answers[event.returnValues.answer]) {
 				bonds[questionId].answers[event.returnValues.answer] = 0;
 			}
@@ -140,6 +149,14 @@ class RealitioERC20Contract extends IContract {
 
 			bonds[questionId].total += bond;
 			bonds[questionId].answers[event.returnValues.answer] += bond;
+		});
+
+		claimEvents.forEach((event) => {
+			const questionId = event.returnValues.question_id;
+
+			const amount = Numbers.fromDecimalsNumber(event.returnValues.amount, 18)
+
+			bonds[questionId].claimed += amount;
 		});
 
 		return bonds;
