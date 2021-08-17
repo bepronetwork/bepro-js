@@ -167,11 +167,19 @@ class RealitioERC20Contract extends IContract {
 	 * @description claimWinnings
 	 * @param {bytes32} questionId
 	 */
-	 async claimWinnings(questionId) {
+	 async claimWinningsAndWithdraw({ questionId }) {
 		const question = await this.getQuestion({ questionId });
 
-		// assuring question state is finalized and not claimed
-		if (question.isClaimed || !question.isFinalized) return false;
+		// assuring question state is finalized
+		if (!question.isFinalized) return false;
+
+		if (question.isClaimed) {
+			// question already claimed, only performing a withdraw action
+			return await this.__sendTx(
+				this.getContract().methods.withdraw(),
+				false
+			);
+		}
 
 		const events = await this.getContract().getPastEvents(
 			'LogNewAnswer',
@@ -191,9 +199,9 @@ class RealitioERC20Contract extends IContract {
 		const answers = events.map((event) => event.returnValues.answer).reverse();
 
 		return await this.__sendTx(
-			this.getContract().methods.claimWinnings(
-        questionId,
-				// [historyHashes.length],
+			this.getContract().methods.claimMultipleAndWithdrawBalance(
+				[questionId],
+				[historyHashes.length],
 				historyHashes,
 				addrs,
 				bonds,
