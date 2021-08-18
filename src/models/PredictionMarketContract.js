@@ -193,7 +193,7 @@ class PredictionMarketContract extends IContract {
 	 * @returns {Integer} Liquidity Shares
 	 * @returns {Array} Outcome Shares
 	 */
-	 async getMyMarketShares({marketId}) {
+	async getMyMarketShares({marketId}) {
 		const account = await this.getMyAccount();
 		if (!account) return [];
 
@@ -290,7 +290,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {String} outcome2Name
 	 * @param {Integer} ethAmount
 	 */
-	 async createMarket ({name, duration, oracleAddress, outcomes, ethAmount}) {
+	async createMarket ({name, duration, oracleAddress, outcomes, ethAmount}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
 			this.getContract().methods.createMarket(
@@ -311,7 +311,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} marketId
 	 * @param {Integer} ethAmount
 	 */
-	 async addLiquidity({marketId, ethAmount}) {
+	async addLiquidity({marketId, ethAmount}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
 			this.getContract().methods.addLiquidity(marketId),
@@ -326,7 +326,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} marketId
 	 * @param {Integer} shares
 	 */
-	 async removeLiquidity({marketId, shares}) {
+	async removeLiquidity({marketId, shares}) {
 		shares = Numbers.toSmartContractDecimals(shares, 18);
 		return await this.__sendTx(
 			this.getContract().methods.removeLiquidity(marketId, shares)
@@ -341,7 +341,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} outcomeId
 	 * @param {Integer} ethAmount
 	 */
-	 async buy ({ marketId, outcomeId, ethAmount}) {
+	async buy ({ marketId, outcomeId, ethAmount}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
 			this.getContract().methods.buy(marketId, outcomeId),
@@ -357,7 +357,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} outcomeId
 	 * @param {Integer} shares
 	 */
-	 async sell({marketId, outcomeId, shares}) {
+	async sell({marketId, outcomeId, shares}) {
 		shares = Numbers.toSmartContractDecimals(shares, 18);
 		return await this.__sendTx(
 			this.getContract().methods.sell(marketId, outcomeId, shares),

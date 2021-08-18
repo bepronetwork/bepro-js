@@ -59,7 +59,7 @@ class Application {
 	 * @name login
 	 * @description Login with Metamask or a web3 provider
 	 */
-	 async login() {
+	async login() {
 		try {
 			if (typeof window === "undefined") { return false; }
 			if (window.ethereum) {
@@ -78,7 +78,7 @@ class Application {
 	 * @name isLoggedIn
 	 * @description Returns wether metamask account is connected to service or not
 	 */
-	 async isLoggedIn () {
+	async isLoggedIn () {
 		try {
 			if (typeof window === "undefined" || typeof window.ethereum === "undefined") { return false; }
 			const accounts = await ethereum.request({ method: 'eth_accounts' });
@@ -153,7 +153,7 @@ class Application {
 	 * @description Access current ETH Network used
 	 * @returns {String} Eth Network
 	 */
-	 async getETHNetwork() {
+	async getETHNetwork() {
 		const netId = await this.web3.eth.net.getId();
 		const networkName = networksEnum.hasOwnProperty(netId)
 			? networksEnum[netId]
@@ -166,7 +166,7 @@ class Application {
 	 * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
 	 * @returns {Address} Address
 	 */
-	 async getAddress() {
+	async getAddress() {
 		const accounts = await this.web3.eth.getAccounts();
 		return accounts[0];
 	};
@@ -176,7 +176,7 @@ class Application {
 	 * @description Access current ETH Balance Available for the Injected Web3 Address
 	 * @returns {Integer} Balance
 	 */
-	 async getETHBalance() {
+	async getETHBalance() {
 		const address = await this.getAddress();
 		let wei = await window.web3.eth.getBalance(address);
 		return this.web3.utils.fromWei(wei, "ether");

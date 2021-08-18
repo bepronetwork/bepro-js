@@ -92,7 +92,7 @@ class RealitioERC20Contract extends IContract {
 	 * @param {bytes32} answerId
 	 * @param {Integer} amount
 	 */
-	 async submitAnswerERC20({ questionId, answerId, amount }) {
+	async submitAnswerERC20({ questionId, answerId, amount }) {
 		let amountDecimals = Numbers.toSmartContractDecimals(amount, 18);
 
 		return await this.__sendTx(
@@ -111,7 +111,7 @@ class RealitioERC20Contract extends IContract {
 	 * @description Get My Bonds
 	 * @returns {Array} Outcome Shares
 	 */
-	 async getMyBonds() {
+	async getMyBonds() {
 		const account = await this.getMyAccount();
 		if (!account) return {};
 
@@ -209,7 +209,7 @@ class RealitioERC20Contract extends IContract {
 	 * @description claimWinnings
 	 * @param {bytes32} questionId
 	 */
-	 async claimWinningsAndWithdraw({ questionId }) {
+	async claimWinningsAndWithdraw({ questionId }) {
 		const question = await this.getQuestion({ questionId });
 
 		// assuring question state is finalized
