@@ -48,10 +48,6 @@ class Application {
 		);
 		if (typeof window !== "undefined") {
 			window.web3 = this.web3;
-		} else {
-			if (!this.test) {
-				throw new Error("Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet");
-			}
 		}
 	}
 
