@@ -1,8 +1,8 @@
-import moment from 'moment'
-import accounting from 'accounting'
-import dayjs from 'dayjs'
-import BN from 'bn.js';
-import web3 from "web3";
+const moment = require('moment');
+const accounting = require('accounting');
+const dayjs = require('dayjs');
+const BN = require('bn.js');
+const web3 = require("web3");
 let Web3 = new web3();
 
 Number.prototype.noExponents = function () {
@@ -116,4 +116,4 @@ class numbers {
 
 let Numbers = new numbers()
 
-export default Numbers
+module.exports = Numbers;

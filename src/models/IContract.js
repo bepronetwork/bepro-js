@@ -1,5 +1,5 @@
-import Contract from "../utils/Contract";
-import _ from "lodash";
+const Contract = require("../utils/Contract");
+const _ = require("lodash");
 
 /**
  * Contract Object Interface
@@ -42,7 +42,7 @@ class IContract {
 		}
 	}
 
-	__init__ = async () => {
+	async __init__() {
 		try {
 			if (!this.getAddress()) {
 				throw new Error("Please add a Contract Address");
@@ -54,7 +54,7 @@ class IContract {
 		}
 	};
 
-	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
+	async __metamaskCall ({ f, acc, value, callback=()=> {} }) {
 		return f.send({
 			from: acc,
 			value: value,
@@ -70,7 +70,7 @@ class IContract {
 		});
 	};
 
-	__sendTx = async (f, call = false, value, callback=()=>{}) => {
+	async __sendTx(f, call = false, value, callback=()=>{}) {
 		try{
 			var res;
 			if (!this.acc && !call) {
@@ -94,7 +94,7 @@ class IContract {
 		}
 	};
 
-	__deploy = async (params, callback) => {
+	async __deploy(params, callback) {
 		return await this.params.contract.deploy(
 			this.acc,
 			this.params.contract.getABI(),
@@ -104,7 +104,7 @@ class IContract {
 		);
 	};
 
-	__assert = async () => {
+	async __assert() {
 		if(!this.getAddress()){
 			throw new Error("Contract is not deployed, first deploy it and provide a contract address");
 		}
@@ -116,7 +116,7 @@ class IContract {
 	 * @function deploy
 	 * @description Deploy the Contract
 	*/
-	deploy = async ({callback}) => {
+	async deploy({callback}) {
 		let params = [];
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res._address;
@@ -264,4 +264,4 @@ class IContract {
 	}
 }
 
-export default IContract;
+module.exports = IContract;

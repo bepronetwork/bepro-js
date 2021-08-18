@@ -1,8 +1,8 @@
-import ERC20Contract from './ERC20Contract';
-import PredictionMarketContract from './PredictionMarketContract';
-import RealitioERC20Contract from './RealitioERC20Contract';
+const ERC20Contract = require('./ERC20Contract').ERC20Contract;
+const PredictionMarketContract = require('./PredictionMarketContract').PredictionMarketContract;
+const RealitioERC20Contract = require('./RealitioERC20Contract').RealitioERC20Contract;
 
-export {
+module.exports = {
 	ERC20Contract,
 	PredictionMarketContract,
 	RealitioERC20Contract

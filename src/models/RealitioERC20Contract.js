@@ -1,9 +1,9 @@
-import _ from "lodash";
-import moment from "moment";
+const _ =  require("lodash");
+const moment = require("moment");
 
-import { realitio } from "../interfaces";
-import Numbers from "../utils/Numbers";
-import IContract from './IContract';
+const realitio = require("../interfaces").realitio;
+const Numbers = require( "../utils/Numbers");
+const IContract = require( './IContract');
 
 /**
  * RealitioERC20 Contract Object
@@ -92,7 +92,7 @@ class RealitioERC20Contract extends IContract {
 	 * @param {bytes32} answerId
 	 * @param {Integer} amount
 	 */
-	submitAnswerERC20 = async({ questionId, answerId, amount }) => {
+	 async submitAnswerERC20({ questionId, answerId, amount }) {
 		let amountDecimals = Numbers.toSmartContractDecimals(amount, 18);
 
 		return await this.__sendTx(
@@ -142,7 +142,7 @@ class RealitioERC20Contract extends IContract {
 			}
 		);
 
-		const lastWithdrawBlockNumber = withdrawEvents[withdrawEvents.length - 1]?.blockNumber || 0;
+		const lastWithdrawBlockNumber = withdrawEvents[withdrawEvents.length - 1].blockNumber || 0;
 
 		const bonds = {};
 
@@ -254,4 +254,4 @@ class RealitioERC20Contract extends IContract {
 	}
 }
 
-export default RealitioERC20Contract;
+module.exports = RealitioERC20Contract;
