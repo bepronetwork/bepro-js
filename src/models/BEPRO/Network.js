@@ -289,14 +289,14 @@ class Network extends IContract {
 
   /**
    * Change amount needed for Council
-   * @param value
+   * @param {number} value
    * @return {Promise<void>}
    */
-  async changeCOUNCIL_AMOUNT(value = 100000) {
+  async changeCOUNCIL_AMOUNT(value) {
     return await this.params.contract
-        .getContract()
-        .methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, 18))
-        .call()
+      .getContract()
+      .methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, 18))
+      .call();
   }
 
   /**
