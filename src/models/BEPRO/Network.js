@@ -283,6 +283,23 @@ class Network extends IContract {
   }
 
   /**
+   * Get Amount Needed for Council
+   * @returns {Promise<Integer>}
+   */
+
+  /**
+   * Change amount needed for Council
+   * @param {number} value
+   * @return {Promise<void>}
+   */
+  async changeCOUNCIL_AMOUNT(value) {
+    return await this.params.contract
+      .getContract()
+      .methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, 18))
+      .call();
+  }
+
+  /**
    * Verify if Issue is still in Draft Mode (Available to use the redeemIssue Action)
    * @param {Object} params
    * @param {number} params.issueId
