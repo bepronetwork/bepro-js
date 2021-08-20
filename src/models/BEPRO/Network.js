@@ -295,7 +295,7 @@ class Network extends IContract {
   async changeCOUNCIL_AMOUNT(value = 100000) {
     return await this.params.contract
         .getContract()
-        .methods.changeCOUNCIL_AMOUNT(Numbers.fromDecimals(value, 18))
+        .methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, 18))
         .call()
   }
 
