@@ -293,10 +293,9 @@ class Network extends IContract {
    * @return {Promise<TransactionObject>}
    */
   async changeCouncilAmount(value) {
-    return await this.params.contract
-      .getContract()
-      .methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals()))
-      .call();
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals()))
+    );
   }
 
   /**
