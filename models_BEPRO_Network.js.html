@@ -405,7 +405,7 @@ class Network extends IContract {
    */
   async changeCouncilAmount(value) {
     return await this.__sendTx(
-      this.params.contract.getContract().methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals()))
+      this.params.contract.getContract().methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals())),
     );
   }
 
