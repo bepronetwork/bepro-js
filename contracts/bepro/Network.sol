@@ -43,7 +43,7 @@ contract Network is Pausable, Governed{
     uint256 public redeemTime = 1 days;
     uint256 public oraclesStaked = 0;
 
-    uint256 public COUNCIL_AMOUNT = 25000000; // 25M
+    uint256 public COUNCIL_AMOUNT = 25000000*10**18; // 25M
 
     mapping(uint256 => Issue) public issues; /* Distribution object */
     mapping(address => uint256[]) public myIssues; /* Address Based Subcription */
@@ -254,7 +254,7 @@ contract Network is Pausable, Governed{
 
         uint256 oracles = getOraclesByAddress(msg.sender);
 
-        require(oracles >= COUNCIL_AMOUNT*10**settlerToken.decimals(), "To propose merges the proposer has to be a Council (COUNCIL_AMOUNT)");
+        require(oracles >= COUNCIL_AMOUNT, "To propose merges the proposer has to be a Council (COUNCIL_AMOUNT)");
 
         MergeProposal memory mergeProposal;
         mergeProposal._id = issue.mergeIDIncrement;
