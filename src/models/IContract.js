@@ -36,7 +36,7 @@ class IContract {
         web3Connection: this.web3Connection,
         abi,
         contractAddress,
-        tokenAddress
+        tokenAddress,
       };
 
       if (this.web3Connection.test) this._loadDataFromWeb3Connection();
