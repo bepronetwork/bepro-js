@@ -26,6 +26,7 @@
         "@openzeppelin/contracts": "^3.2.0",
         "@openzeppelin/contracts-upgradeable": "^3.2.0",
         "@openzeppelin/truffle-upgrades": "^1.7.0",
+        "@reality.eth/reality-eth-lib": "^2.0.13",
         "abi-decoder": "^1.2.0",
         "accounting": "^0.4.1",
         "babel-cli": "^6.26.0",

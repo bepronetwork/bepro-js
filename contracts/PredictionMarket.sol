@@ -22,15 +22,6 @@ library PMHelpers {
       z = 1;
     }
   }
-
-  // formats question for realitio
-  function formatQuestion(
-    string memory name,
-    string memory outcome1,
-    string memory outcome2
-  ) internal pure returns (string memory) {
-    return string(abi.encodePacked(name, "␟", '"', outcome1, '","', outcome2, '"␟misc␟en'));
-  }
 }
 
 /// @title Market Contract Factory
@@ -38,6 +29,13 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   using SafeMath for uint256;
 
   // ------ Events ------
+
+  event MarketCreated(
+    address indexed participant,
+    uint256 indexed marketId,
+    uint256 outcomes,
+    string question
+  );
 
   event ParticipantAction(
     address indexed participant,
@@ -83,7 +81,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   struct Market {
     // market details
-    string name;
+    string name; // TODO remove: deprecated;
     uint256 closedDateTime;
     uint256 balance; // total stake (ETH)
     uint256 liquidity; // stake held (ETH)
@@ -114,7 +112,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   struct MarketOutcome {
     uint256 marketId;
     uint256 id;
-    string name;
+    string name;  // TODO remove: deprecated;
     Shares shares;
   }
 
@@ -173,31 +171,17 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   // ------ Core Functions ------
 
-  // TODO fix: temp solution, while fixing outcomes[] arg
-  function createMarket(
-    string memory name,
-    uint256 closesAt,
-    address oracle,
-    string memory outcome1Name,
-    string memory outcome2Name
-  ) public payable returns (uint256) {
-    string[] memory outcomes = new string[](2);
-    outcomes[0] = outcome1Name;
-    outcomes[1] = outcome2Name;
-
-    return createMarket(name, closesAt, oracle, outcomes);
-  }
-
   /// Create a new Market contract
   /// @dev The new Market contract is then saved in the array of this contract for future reference.
-  /// @param name - Name of the market
-  /// @param closesAt - The duration of the market `open` period
-  /// @param oracle - oracle address
+  /// @param question - Market details: https://reality.eth.link/app/docs/html/contracts.html#how-questions-are-structured
+  /// @param closesAt - Timestamp of market expiration
+  /// @param oracle - Artbitrator address
+  /// @param outcomes - Number of outcomes
   function createMarket(
-    string memory name,
+    string memory question,
     uint256 closesAt,
     address oracle,
-    string[] memory outcomes
+    uint256 outcomes
   ) public payable returns (uint256) {
     uint256 marketId = marketIndex;
     marketIds.push(marketId);
@@ -208,9 +192,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     require(closesAt >= now, "Market has to close after the current date");
     require(oracle == address(oracle), "Invalid oracle address");
     // starting with secondary markets
-    require(outcomes.length == 2, "Number market outcome has to be 2");
+    require(outcomes == 2, "Number market outcome has to be 2");
 
-    market.name = name;
     market.closedDateTime = closesAt;
     market.state = MarketState.open;
     market.resolution.oracle = oracle;
@@ -220,7 +203,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     // creating question in realitio
     RealitioERC20 realitio = RealitioERC20(realitioAddress);
-    string memory question = PMHelpers.formatQuestion(name, outcomes[0], outcomes[1]);
 
     market.resolution.questionId = realitio.askQuestionERC20(
       2,
@@ -239,13 +221,12 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].add(msg.value);
 
     // creating market outcomes
-    for (uint256 i = 0; i < outcomes.length; i++) {
+    for (uint256 i = 0; i < outcomes; i++) {
       market.outcomeIds.push(i);
       MarketOutcome storage outcome = market.outcomes[i];
 
       outcome.marketId = marketId;
       outcome.id = i;
-      outcome.name = outcomes[i];
 
       // TODO review: only valid for 50-50 start
       // price starts at 0.5 ETH
@@ -258,6 +239,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // emiting initial price events
     emitMarketOutcomePriceEvents(marketId);
     emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, msg.value, msg.value, now);
+    emit MarketCreated(msg.sender, marketId, outcomes, question);
 
     // incrementing market array index
     marketIndex = marketIndex + 1;
