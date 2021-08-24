@@ -20,6 +20,7 @@ contract ERC721Marketplace is Ownable {
     struct Sale {
         uint256 saleId;
         uint256 tokenId;
+        uint256 timesSold;
         uint256 price;
         address payable seller;
         address buyer;
@@ -66,6 +67,7 @@ contract ERC721Marketplace is Ownable {
         sales[_tokenId].canceled = true;
         erc721Address.transferFrom(address(this), msg.sender, _tokenId);
         emit SaleCanceled(_tokenId, msg.sender);
+        delete sales[_tokenId];
     }
 
     function buyERC721(uint256 _tokenId) payable public virtual {
@@ -106,6 +108,7 @@ contract ERC721Marketplace is Ownable {
 
         sales[_tokenId].sold = true;
         emit SaleDone(_tokenId, msg.sender, sales[_tokenId].seller, sales[_tokenId].price);
+        delete sales[_tokenId];
     }
 
     function changeERC20(ERC20 _erc20Address) public onlyOwner {
