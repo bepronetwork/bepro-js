@@ -19,6 +19,14 @@ contract MarketplaceRealFvr is ERC721Marketplace {
         erc721Address = _erc721Address;
     }
 
+    function removeERC721FromSaleAdmin(uint256 _tokenId) public onlyOwner {
+        require(sales[_tokenId].tokenId == _tokenId, "NFT is not in sale");
+        sales[_tokenId].canceled = true;
+        erc721Address.transferFrom(address(this), sales[_tokenId].seller, _tokenId);
+        emit SaleCanceled(_tokenId, sales[_tokenId].seller);
+        delete sales[_tokenId];
+    }
+
     function buyERC721(uint256 _tokenId) payable public virtual override {
         require(sales[_tokenId].tokenId == _tokenId, "NFT is not in sale");
         require(!sales[_tokenId].sold, "NFT has to be available for purchase" );
@@ -87,6 +95,7 @@ contract MarketplaceRealFvr is ERC721Marketplace {
 
         sales[_tokenId].sold = true;
         emit SaleDone(_tokenId, msg.sender, sales[_tokenId].seller, sales[_tokenId].price);
+        delete sales[_tokenId];
     }
 
 }

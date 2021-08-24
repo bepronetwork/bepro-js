@@ -61,6 +61,7 @@ contract ERC721Marketplace is Ownable {
         saleIncrementId = saleIncrementId+1;
     }
 
+
     function removeERC721FromSale(uint256 _tokenId) public {
         require(sales[_tokenId].seller == msg.sender, "Not Owner of the NFT");
         require(sales[_tokenId].tokenId == _tokenId, "NFT is not in sale");
