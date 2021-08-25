@@ -7,6 +7,8 @@ import { mochaAsync } from './utils';
 import { Application } from '..';
 
 context('Prediction Market Contract', async () => {
+    require('dotenv').config();
+
     let app;
     let predictionMarketContract;
     let realitioERC20Contract
@@ -16,13 +18,12 @@ context('Prediction Market Contract', async () => {
     let outcomeIds = [0, 1];
     const ethAmount = 0.1;
 
-    before( async () =>  {
-        app = new Application({test : true, mainnet : false});
-    });
-
     context('Contract Deployment', async () => {
         it('should start the Application', mochaAsync(async () => {
-            app = new Application({test : true, mainnet : false});
+            app = new Application({
+                web3Provider: process.env.WEB3_PROVIDER,
+                web3PrivateKey: process.env.WEB3_PRIVATE_KEY
+            });
             expect(app).to.not.equal(null);
         }));
 
@@ -54,6 +55,8 @@ context('Prediction Market Contract', async () => {
             try {
                 const res = await predictionMarketContract.createMarket({
                     name: 'Will BTC price close above 100k$ on May 1st 2022',
+                    image: 'foo-bar',
+                    category: 'Foo;Bar',
                     oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
                     duration: moment('2022-05-01').unix(),
                     outcomes: ['Yes', 'No'],
@@ -73,6 +76,8 @@ context('Prediction Market Contract', async () => {
         it('should create another Market', mochaAsync(async () => {
             const res = await predictionMarketContract.createMarket({
                 name: 'Will ETH price close above 10k$ on May 1st 2022',
+                image: 'foo-bar',
+                category: 'Foo;Bar',
                 oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
                 duration: moment('2022-05-01').unix(),
                 outcomes: ['Yes', 'No'],
@@ -88,6 +93,8 @@ context('Prediction Market Contract', async () => {
             try {
                 const res = await predictionMarketContract.createMarket({
                     name: 'Will Real Madrid win the Champions League?',
+                    image: 'foo-bar',
+                    category: 'Foo;Bar',
                     oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
                     duration: moment('2022-05-29').unix(),
                     outcomes: ['Yes', 'No'],
@@ -107,6 +114,8 @@ context('Prediction Market Contract', async () => {
         it('should create another Market', mochaAsync(async () => {
             const res = await predictionMarketContract.createMarket({
                 name: 'Will temperature in Stockholm hit 18ºC on April 30th 2022?',
+                image: 'foo-bar',
+                category: 'Foo;Bar',
                 oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
                 duration: moment('2022-04-30').unix(),
                 outcomes: ['Yes', 'No'],
@@ -123,7 +132,7 @@ context('Prediction Market Contract', async () => {
         it('should get Market data', mochaAsync(async () => {
             const res = await predictionMarketContract.getMarketData({marketId: 0});
             expect(res).to.eql({
-                name: 'Will BTC price close above 100k$ on May 1st 2022',
+                name: '',
                 closeDateTime: '2022-05-01 00:00',
                 state: 0,
                 oracleAddress: '0x0000000000000000000000000000000000000000',
@@ -134,15 +143,13 @@ context('Prediction Market Contract', async () => {
 
         it('should get Market Outcomes data', mochaAsync(async () => {
             const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
-            expect(outcome1Data).to.eql({
-                name: 'Yes',
+            expect(outcome1Data).to.include({
                 price: 0.5,
                 shares: 0.1
             });
 
             const outcome2Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[1]});
-            expect(outcome2Data).to.eql({
-                name: 'No',
+            expect(outcome2Data).to.include({
                 price: 0.5,
                 shares: 0.1
             });
