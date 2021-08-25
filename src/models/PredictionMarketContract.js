@@ -91,6 +91,47 @@ class PredictionMarketContract extends IContract {
 	}
 
 	/**
+	 * @function getMarketDetails
+	 * @description getMarketDetails
+	 * @param {Integer} marketId
+	 * @returns {String} name
+	 * @returns {String} category
+	 * @returns {String} subcategory
+	 * @returns {String} image
+	 * @returns {Array} outcomes
+	 */
+	async getMarketDetails({marketId}) {
+		const marketData = await this.params.contract.getContract().methods.getMarketData(marketId).call();
+		const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
+
+		const events = await this.getContract().getPastEvents('MarketCreated', {
+			fromBlock: 0,
+			toBlock: 'latest',
+			filter: {marketId} // filtering by address
+		});
+
+		if (events.length === 0) {
+			// legacy record, returning empty data
+			return { name: '', category: '', subcategory: '', image: '', outcomes: [] };
+		}
+
+		// parsing question with realitio standard
+		const question = realitioLib.populatedJSONForTemplate(
+			'{"title": "%s", "type": "single-select", "outcomes": [%s], "category": "%s", "lang": "%s"}',
+			events[0].returnValues.question
+		);
+
+		return {
+			name: question.title,
+			category: question.category.split(';')[0],
+			subcategory: question.category.split(';')[1],
+			outcomes: question.outcomes,
+			image: events[0].returnValues.image
+		};
+	}
+
+
+	/**
 	 * @function getAverageOutcomeBuyPrice
 	 * @description Calculates average buy price of market outcome based on user events
 	 * @param {Array} events
@@ -308,7 +349,6 @@ class PredictionMarketContract extends IContract {
 			ethToWei
 		);
 	};
-
 
 	/**
 	 * @function addLiquidity

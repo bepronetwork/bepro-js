@@ -141,6 +141,17 @@ context('Prediction Market Contract', async () => {
             });
         }));
 
+        it('should get Market details', mochaAsync(async () => {
+            const res = await predictionMarketContract.getMarketDetails({marketId: 0});
+            expect(res).to.eql({
+                name: 'Will BTC price close above 100k$ on May 1st 2022',
+                category: 'Foo',
+                subcategory: 'Bar',
+                outcomes: ['Yes', 'No'],
+                image: 'foo-bar'
+            });
+        }));
+
         it('should get Market Outcomes data', mochaAsync(async () => {
             const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
             expect(outcome1Data).to.include({

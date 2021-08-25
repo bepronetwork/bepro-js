@@ -19,8 +19,6 @@ class Application {
 		this.web3Provider = web3Provider;
 		// IMPORTANT: this parameter should only be used for testing purposes
 		if (web3PrivateKey) {
-			console.log('got it!')
-			console.log(web3PrivateKey)
 			this.start();
 			this.login();
 			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(web3PrivateKey));
