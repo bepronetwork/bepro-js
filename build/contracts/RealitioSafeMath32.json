@@ -68036,7 +68036,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-08-25T10:19:04.767Z",
+  "updatedAt": "2021-08-25T12:00:38.236Z",
   "devdoc": {
     "details": "Math operations with safety checks that throw on errorCopy of SafeMath but for uint32 instead of uint256Deleted functions we don't use",
     "methods": {},
