@@ -34,7 +34,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     address indexed participant,
     uint256 indexed marketId,
     uint256 outcomes,
-    string question
+    string question,
+    string image
   );
 
   event ParticipantAction(
@@ -174,11 +175,13 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   /// Create a new Market contract
   /// @dev The new Market contract is then saved in the array of this contract for future reference.
   /// @param question - Market details: https://reality.eth.link/app/docs/html/contracts.html#how-questions-are-structured
+  /// @param image - image ipfs hash
   /// @param closesAt - Timestamp of market expiration
   /// @param oracle - Artbitrator address
   /// @param outcomes - Number of outcomes
   function createMarket(
     string memory question,
+    string memory image,
     uint256 closesAt,
     address oracle,
     uint256 outcomes
@@ -239,7 +242,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // emiting initial price events
     emitMarketOutcomePriceEvents(marketId);
     emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, msg.value, msg.value, now);
-    emit MarketCreated(msg.sender, marketId, outcomes, question);
+    emit MarketCreated(msg.sender, marketId, outcomes, question, image);
 
     // incrementing market array index
     marketIndex = marketIndex + 1;

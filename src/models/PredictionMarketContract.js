@@ -292,13 +292,14 @@ class PredictionMarketContract extends IContract {
 	 * @param {String} outcome2Name
 	 * @param {Integer} ethAmount
 	 */
-	async createMarket ({name, duration, oracleAddress, outcomes, category, ethAmount}) {
+	async createMarket ({name, image, duration, oracleAddress, outcomes, category, ethAmount}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		const question = realitioLib.encodeText('single-select', name, outcomes, category);
 
 		return await this.__sendTx(
 			this.getContract().methods.createMarket(
 				question,
+				image,
 				duration,
 				oracleAddress,
 				outcomes.length
