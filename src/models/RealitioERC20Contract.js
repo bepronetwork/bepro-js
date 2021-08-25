@@ -142,7 +142,9 @@ class RealitioERC20Contract extends IContract {
 			}
 		);
 
-		const lastWithdrawBlockNumber = withdrawEvents[withdrawEvents.length - 1].blockNumber || 0;
+		const lastWithdrawBlockNumber = withdrawEvents[withdrawEvents.length - 1]
+			? withdrawEvents[withdrawEvents.length - 1].blockNumber
+			: 0;
 
 		const bonds = {};
 
