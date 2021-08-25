@@ -6,13 +6,6 @@ const RealitioERC20Contract = require("./models/index").RealitioERC20Contract;
 
 const Account = require('./utils/Account');
 
-const ETH_URL_MAINNET =
-	"https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
-const ETH_URL_TESTNET =
-	"https://kovan.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
-const TEST_PRIVATE_KEY =
-	"0xfdf5475fe6be966cf39e533e5b478b2e10d04e5e966be18f45714550d2429d21";
-
 const networksEnum = Object.freeze({
 	1: "Main",
 	2: "Morden",
@@ -22,13 +15,15 @@ const networksEnum = Object.freeze({
 });
 
 class Application {
-	constructor({test=false, mainnet=true}) {
-		this.test = test;
-		this.mainnet = mainnet;
-		if (this.test) {
+	constructor({web3Provider, web3PrivateKey}) {
+		this.web3Provider = web3Provider;
+		// IMPORTANT: this parameter should only be used for testing purposes
+		if (web3PrivateKey) {
+			console.log('got it!')
+			console.log(web3PrivateKey)
 			this.start();
 			this.login();
-			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
+			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(web3PrivateKey));
 		}
 	}
 
@@ -41,11 +36,7 @@ class Application {
 	 * @description Start the Application
 	 */
 	start() {
-		this.web3 = new Web3(
-			new Web3.providers.HttpProvider(
-				(this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET
-			)
-		);
+		this.web3 = new Web3(new Web3.providers.HttpProvider(this.web3Provider));
 		if (typeof window !== "undefined") {
 			window.web3 = this.web3;
 		}
@@ -99,7 +90,7 @@ class Application {
 			return new PredictionMarketContract({
 				web3: this.web3,
 				contractAddress,
-				acc : this.test ? this.account : null
+				acc : this.account
 			});
 		} catch(err) {
 			throw err;
@@ -116,7 +107,7 @@ class Application {
 			return new RealitioERC20Contract({
 				web3: this.web3,
 				contractAddress,
-				acc : this.test ? this.account : null
+				acc : this.account
 			});
 		} catch(err) {
 			throw err;
@@ -133,7 +124,7 @@ class Application {
 			return new ERC20Contract({
 				web3: this.web3,
 				contractAddress: contractAddress,
-				acc : this.test ? this.account : null
+				acc : this.account
 			});
 		} catch(err) {
 			throw err;
