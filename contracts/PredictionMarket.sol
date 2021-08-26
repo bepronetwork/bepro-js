@@ -133,6 +133,9 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   // realitio configs
   address public realitioAddress;
   uint256 public realitioTimeout;
+  // market creation
+  IERC20 public token; // token used for rewards / market creation
+  uint256 public requiredBalance; // required balance for market creation
 
   // ------ Modifiers ------
 
@@ -163,6 +166,11 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     nextState(marketId);
   }
 
+  modifier mustHoldRequiredBalance() {
+    require(token.balanceOf(msg.sender) >= requiredBalance, "msg.sender must hold minimum erc20 balance");
+    _;
+  }
+
   // ------ Modifiers End ------
 
   // Initializer function (replaces constructor)
@@ -185,7 +193,11 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     uint256 closesAt,
     address oracle,
     uint256 outcomes
-  ) public payable returns (uint256) {
+  )
+    public payable
+    mustHoldRequiredBalance()
+    returns (uint256)
+  {
     uint256 marketId = marketIndex;
     marketIds.push(marketId);
 
@@ -690,16 +702,24 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   // ------ Governance Functions Start ------
 
-  function setFee(uint256 feeValue) public onlyOwner() {
-    fee = feeValue;
+  function setFee(uint256 _fee) public onlyOwner() {
+    fee = _fee;
   }
 
-  function setRealitioERC20(address addr) public onlyOwner() {
-    realitioAddress = addr;
+  function setRealitioERC20(address _address) public onlyOwner() {
+    realitioAddress = _address;
   }
 
   function setRealitioTimeout(uint256 timeout) public onlyOwner() {
     realitioTimeout = timeout;
+  }
+
+  function setToken(IERC20 _token) public onlyOwner() {
+    token = _token;
+  }
+
+  function setRequiredBalance(uint256 _requiredBalance) public onlyOwner() {
+    requiredBalance = _requiredBalance;
   }
 
   // ------ Governance Functions End ------

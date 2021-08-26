@@ -1276,6 +1276,274 @@
           }
         }
       }
+    },
+    "a99a01fce2bf49da18c9e195f5217ebdeb81b1e89247b952e355b7db6d1b0cb3": {
+      "address": "0xA466E6aDF7aF9B6d2bd10Fac769431Ad7e8d312E",
+      "txHash": "0xb7f09c149bbebdca0625b3020decba47d822872c619a3bd6b9c6e55b3bdd0dfa",
+      "layout": {
+        "storage": [
+          {
+            "contract": "Initializable",
+            "label": "_initialized",
+            "type": "t_bool",
+            "src": "../@openzeppelin/contracts-upgradeable/proxy/Initializable.sol:25"
+          },
+          {
+            "contract": "Initializable",
+            "label": "_initializing",
+            "type": "t_bool",
+            "src": "../@openzeppelin/contracts-upgradeable/proxy/Initializable.sol:30"
+          },
+          {
+            "contract": "ContextUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)50_storage",
+            "src": "../@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:31"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "_owner",
+            "type": "t_address",
+            "src": "../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:20"
+          },
+          {
+            "contract": "OwnableUpgradeable",
+            "label": "__gap",
+            "type": "t_array(t_uint256)49_storage",
+            "src": "../@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:74"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "marketIds",
+            "type": "t_array(t_uint256)dyn_storage",
+            "src": "PredictionMarket.sol:127"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "markets",
+            "type": "t_mapping(t_uint256,t_struct(Market)238_storage)",
+            "src": "PredictionMarket.sol:128"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "marketIndex",
+            "type": "t_uint256",
+            "src": "PredictionMarket.sol:129"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "fee",
+            "type": "t_uint256",
+            "src": "PredictionMarket.sol:132"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "realitioAddress",
+            "type": "t_address",
+            "src": "PredictionMarket.sol:134"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "realitioTimeout",
+            "type": "t_uint256",
+            "src": "PredictionMarket.sol:135"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "token",
+            "type": "t_contract(IERC20)3120",
+            "src": "PredictionMarket.sol:137"
+          },
+          {
+            "contract": "PredictionMarket",
+            "label": "requiredBalance",
+            "type": "t_uint256",
+            "src": "PredictionMarket.sol:138"
+          }
+        ],
+        "types": {
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_mapping(t_uint256,t_struct(Market)238_storage)": {
+            "label": "mapping(uint256 => struct PredictionMarket.Market)"
+          },
+          "t_struct(Market)238_storage": {
+            "label": "struct PredictionMarket.Market",
+            "members": [
+              {
+                "label": "name",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "closedDateTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "balance",
+                "type": "t_uint256"
+              },
+              {
+                "label": "liquidity",
+                "type": "t_uint256"
+              },
+              {
+                "label": "sharesAvailable",
+                "type": "t_uint256"
+              },
+              {
+                "label": "liquidityShares",
+                "type": "t_mapping(t_address,t_uint256)"
+              },
+              {
+                "label": "liquidityClaims",
+                "type": "t_mapping(t_address,t_bool)"
+              },
+              {
+                "label": "state",
+                "type": "t_enum(MarketState)198"
+              },
+              {
+                "label": "resolution",
+                "type": "t_struct(MarketResolution)256_storage"
+              },
+              {
+                "label": "fees",
+                "type": "t_struct(MarketFees)247_storage"
+              },
+              {
+                "label": "outcomeIds",
+                "type": "t_array(t_uint256)dyn_storage"
+              },
+              {
+                "label": "outcomes",
+                "type": "t_mapping(t_uint256,t_struct(MarketOutcome)265_storage)"
+              }
+            ]
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)"
+          },
+          "t_address": {
+            "label": "address"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_enum(MarketState)198": {
+            "label": "enum PredictionMarket.MarketState",
+            "members": [
+              "open",
+              "closed",
+              "resolved"
+            ]
+          },
+          "t_struct(MarketResolution)256_storage": {
+            "label": "struct PredictionMarket.MarketResolution",
+            "members": [
+              {
+                "label": "oracle",
+                "type": "t_address"
+              },
+              {
+                "label": "resolved",
+                "type": "t_bool"
+              },
+              {
+                "label": "outcomeId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "questionId",
+                "type": "t_bytes32"
+              }
+            ]
+          },
+          "t_struct(MarketFees)247_storage": {
+            "label": "struct PredictionMarket.MarketFees",
+            "members": [
+              {
+                "label": "value",
+                "type": "t_uint256"
+              },
+              {
+                "label": "poolWeight",
+                "type": "t_uint256"
+              },
+              {
+                "label": "claimed",
+                "type": "t_mapping(t_address,t_uint256)"
+              }
+            ]
+          },
+          "t_mapping(t_uint256,t_struct(MarketOutcome)265_storage)": {
+            "label": "mapping(uint256 => struct PredictionMarket.MarketOutcome)"
+          },
+          "t_struct(MarketOutcome)265_storage": {
+            "label": "struct PredictionMarket.MarketOutcome",
+            "members": [
+              {
+                "label": "marketId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "id",
+                "type": "t_uint256"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "shares",
+                "type": "t_struct(Shares)278_storage"
+              }
+            ]
+          },
+          "t_bytes32": {
+            "label": "bytes32"
+          },
+          "t_struct(Shares)278_storage": {
+            "label": "struct PredictionMarket.Shares",
+            "members": [
+              {
+                "label": "total",
+                "type": "t_uint256"
+              },
+              {
+                "label": "available",
+                "type": "t_uint256"
+              },
+              {
+                "label": "holders",
+                "type": "t_mapping(t_address,t_uint256)"
+              },
+              {
+                "label": "claims",
+                "type": "t_mapping(t_address,t_bool)"
+              }
+            ]
+          },
+          "t_contract(IERC20)3120": {
+            "label": "contract IERC20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]"
+          }
+        }
+      }
     }
   }
 }

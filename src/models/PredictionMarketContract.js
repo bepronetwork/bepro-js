@@ -33,6 +33,22 @@ class PredictionMarketContract extends IContract {
 
 	/* Get Functions */
 	/**
+	 * @function getMinimumRequiredBalance
+	 * @description Returns minimum required ERC20 balance to create markets
+	 * @returns {Integer} requiredBalance
+	 */
+	async getMinimumRequiredBalance() {
+		const requiredBalance = await this.params.contract
+			.getContract()
+			.methods
+			.requiredBalance()
+			.call();
+
+		return Numbers.fromDecimalsNumber(requiredBalance, 18)
+	}
+
+	/* Get Functions */
+	/**
 	 * @function getMarkets
 	 * @description Get Markets
 	 * @returns {Integer | Array} Get Market Ids
