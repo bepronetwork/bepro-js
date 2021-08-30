@@ -49,6 +49,22 @@ class PredictionMarketContract extends IContract {
 
 	/* Get Functions */
 	/**
+	 * @function getFee
+	 * @description Returns fee taken from every transaction to liquidity providers
+	 * @returns {Integer} fee
+	 */
+	async getFee() {
+		const fee = await this.params.contract
+			.getContract()
+			.methods
+			.fee()
+			.call();
+
+		return Numbers.fromDecimalsNumber(fee, 18)
+	}
+
+	/* Get Functions */
+	/**
 	 * @function getMarkets
 	 * @description Get Markets
 	 * @returns {Integer | Array} Get Market Ids
