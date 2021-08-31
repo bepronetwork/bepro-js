@@ -1,5 +1,3 @@
-import Application from './src/Application';
+const Application = require('./src/Application.js');
 
-export {
-    Application
-}
+module.exports = { Application };

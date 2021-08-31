@@ -1,17 +1,17 @@
-import { ierc20 } from "../interfaces";
-import Numbers from "../utils/Numbers";
-import IContract from './IContract';
+const ierc20 = require("../interfaces").ierc20;
+const Numbers = require( "../utils/Numbers");
+const IContract = require( './IContract');
 
 class ERC20Contract extends IContract {
 	constructor(params) {
 		super({abi : ierc20, ...params});
 	}
 
-	__assert = async () =>  {
+	async __assert() {
 		this.params.contract.use(ierc20, this.getAddress());
 		this.params.decimals = await this.getDecimalsAsync();
 	}
-	
+
 	getContract() {
 		return this.params.contract.getContract();
 	}
@@ -25,7 +25,7 @@ class ERC20Contract extends IContract {
 			tokenAmount,
 			this.getDecimals()
 		);
-		return await this.__sendTx( 
+		return await this.__sendTx(
 			this.params.contract
 			.getContract()
 			.methods.transfer(toAddress, amountWithDecimals)
@@ -73,7 +73,7 @@ class ERC20Contract extends IContract {
 				amount,
 				this.getDecimals()
 			);
-			let res = await this.__sendTx( 
+			let res = await this.__sendTx(
 				this.params.contract
 				.getContract()
 				.methods.approve(address, amountWithDecimals),
@@ -88,4 +88,4 @@ class ERC20Contract extends IContract {
 	}
 }
 
-export default ERC20Contract;
+module.exports = ERC20Contract;

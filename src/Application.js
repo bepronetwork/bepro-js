@@ -1,13 +1,10 @@
-import Web3 from "web3";
-import { ERC20Contract, PredictionMarketContract, RealitioERC20Contract } from "./models/index";
-import Account from './utils/Account';
+const Web3 = require("web3");
 
-const ETH_URL_MAINNET =
-	"https://mainnet.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
-const ETH_URL_TESTNET =
-	"https://kovan.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
-const TEST_PRIVATE_KEY =
-	"0xfdf5475fe6be966cf39e533e5b478b2e10d04e5e966be18f45714550d2429d21";
+const ERC20Contract = require("./models/index").ERC20Contract;
+const PredictionMarketContract = require("./models/index").PredictionMarketContract;
+const RealitioERC20Contract = require("./models/index").RealitioERC20Contract;
+
+const Account = require('./utils/Account');
 
 const networksEnum = Object.freeze({
 	1: "Main",
@@ -17,14 +14,14 @@ const networksEnum = Object.freeze({
 	42: "Kovan",
 });
 
-export default class Application {
-	constructor({test=false, mainnet=true}) {
-		this.test = test;
-		this.mainnet = mainnet;
-		if (this.test) {
+class Application {
+	constructor({web3Provider, web3PrivateKey}) {
+		this.web3Provider = web3Provider;
+		// IMPORTANT: this parameter should only be used for testing purposes
+		if (web3PrivateKey) {
 			this.start();
 			this.login();
-			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
+			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(web3PrivateKey));
 		}
 	}
 
@@ -36,18 +33,10 @@ export default class Application {
 	 * @name start
 	 * @description Start the Application
 	 */
-	start = () => {
-		this.web3 = new Web3(
-			new Web3.providers.HttpProvider(
-				(this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET
-			)
-		);
+	start() {
+		this.web3 = new Web3(new Web3.providers.HttpProvider(this.web3Provider));
 		if (typeof window !== "undefined") {
 			window.web3 = this.web3;
-		} else {
-			if (!this.test) {
-				throw new Error("Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet");
-			}
 		}
 	}
 
@@ -55,7 +44,7 @@ export default class Application {
 	 * @name login
 	 * @description Login with Metamask or a web3 provider
 	 */
-	login = async () => {
+	async login() {
 		try {
 			if (typeof window === "undefined") { return false; }
 			if (window.ethereum) {
@@ -74,7 +63,7 @@ export default class Application {
 	 * @name isLoggedIn
 	 * @description Returns wether metamask account is connected to service or not
 	 */
-	 isLoggedIn = async () => {
+	async isLoggedIn () {
 		try {
 			if (typeof window === "undefined" || typeof window.ethereum === "undefined") { return false; }
 			const accounts = await ethereum.request({ method: 'eth_accounts' });
@@ -94,12 +83,12 @@ export default class Application {
 	 * @param {Address} ContractAddress (Opt) If it is deployed
 	 * @description Create a PredictionMarket Contract
 	 */
-	 getPredictionMarketContract = ({ contractAddress = null }={}) => {
+	 getPredictionMarketContract ({ contractAddress = null }={}) {
 		try {
 			return new PredictionMarketContract({
 				web3: this.web3,
 				contractAddress,
-				acc : this.test ? this.account : null
+				acc : this.account
 			});
 		} catch(err) {
 			throw err;
@@ -111,12 +100,12 @@ export default class Application {
 	 * @param {Address} ContractAddress (Opt) If it is deployed
 	 * @description Create a RealitioERC20 Contract
 	 */
-	 getRealitioERC20Contract = ({ contractAddress = null }={}) => {
+	 getRealitioERC20Contract({ contractAddress = null }={}) {
 		try {
 			return new RealitioERC20Contract({
 				web3: this.web3,
 				contractAddress,
-				acc : this.test ? this.account : null
+				acc : this.account
 			});
 		} catch(err) {
 			throw err;
@@ -128,12 +117,12 @@ export default class Application {
 	 * @param {Address} ContractAddress (Opt) If it is deployed
 	 * @description Create a ERC20 Contract
 	 */
-	getERC20Contract =  ({contractAddress=null}) => {
+	getERC20Contract({contractAddress=null}) {
 		try {
 			return new ERC20Contract({
 				web3: this.web3,
 				contractAddress: contractAddress,
-				acc : this.test ? this.account : null
+				acc : this.account
 			});
 		} catch(err) {
 			throw err;
@@ -149,7 +138,7 @@ export default class Application {
 	 * @description Access current ETH Network used
 	 * @returns {String} Eth Network
 	 */
-	getETHNetwork = async () => {
+	async getETHNetwork() {
 		const netId = await this.web3.eth.net.getId();
 		const networkName = networksEnum.hasOwnProperty(netId)
 			? networksEnum[netId]
@@ -162,7 +151,7 @@ export default class Application {
 	 * @description Access current Address Being Used under Web3 Injector (ex : Metamask)
 	 * @returns {Address} Address
 	 */
-	getAddress = async () => {
+	async getAddress() {
 		const accounts = await this.web3.eth.getAccounts();
 		return accounts[0];
 	};
@@ -172,9 +161,11 @@ export default class Application {
 	 * @description Access current ETH Balance Available for the Injected Web3 Address
 	 * @returns {Integer} Balance
 	 */
-	getETHBalance = async () => {
+	async getETHBalance() {
 		const address = await this.getAddress();
 		let wei = await window.web3.eth.getBalance(address);
 		return this.web3.utils.fromWei(wei, "ether");
 	};
 }
+
+module.exports = Application;

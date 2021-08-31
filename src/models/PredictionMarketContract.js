@@ -1,9 +1,12 @@
-import _ from "lodash";
-import moment from "moment";
+const _ =  require("lodash");
+const moment = require("moment");
 
-import { prediction } from "../interfaces";
-import Numbers from "../utils/Numbers";
-import IContract from './IContract';
+const prediction = require("../interfaces").prediction;
+
+const Numbers = require( "../utils/Numbers");
+const IContract = require( './IContract');
+
+const realitioLib = require('@reality.eth/reality-eth-lib/formatters/question');
 
 const actions = {
 	0: 'Buy',
@@ -26,6 +29,38 @@ const actions = {
 class PredictionMarketContract extends IContract {
 	constructor(params) {
 		super({abi: prediction, ...params});
+	}
+
+	/* Get Functions */
+	/**
+	 * @function getMinimumRequiredBalance
+	 * @description Returns minimum required ERC20 balance to create markets
+	 * @returns {Integer} requiredBalance
+	 */
+	async getMinimumRequiredBalance() {
+		const requiredBalance = await this.params.contract
+			.getContract()
+			.methods
+			.requiredBalance()
+			.call();
+
+		return Numbers.fromDecimalsNumber(requiredBalance, 18)
+	}
+
+	/* Get Functions */
+	/**
+	 * @function getFee
+	 * @description Returns fee taken from every transaction to liquidity providers
+	 * @returns {Integer} fee
+	 */
+	async getFee() {
+		const fee = await this.params.contract
+			.getContract()
+			.methods
+			.fee()
+			.call();
+
+		return Numbers.fromDecimalsNumber(fee, 18)
 	}
 
 	/* Get Functions */
@@ -86,6 +121,47 @@ class PredictionMarketContract extends IContract {
 			shares: Numbers.fromDecimalsNumber(outcomeData[2], 18),
 		};
 	}
+
+	/**
+	 * @function getMarketDetails
+	 * @description getMarketDetails
+	 * @param {Integer} marketId
+	 * @returns {String} name
+	 * @returns {String} category
+	 * @returns {String} subcategory
+	 * @returns {String} image
+	 * @returns {Array} outcomes
+	 */
+	async getMarketDetails({marketId}) {
+		const marketData = await this.params.contract.getContract().methods.getMarketData(marketId).call();
+		const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
+
+		const events = await this.getContract().getPastEvents('MarketCreated', {
+			fromBlock: 0,
+			toBlock: 'latest',
+			filter: {marketId} // filtering by address
+		});
+
+		if (events.length === 0) {
+			// legacy record, returning empty data
+			return { name: '', category: '', subcategory: '', image: '', outcomes: [] };
+		}
+
+		// parsing question with realitio standard
+		const question = realitioLib.populatedJSONForTemplate(
+			'{"title": "%s", "type": "single-select", "outcomes": [%s], "category": "%s", "lang": "%s"}',
+			events[0].returnValues.question
+		);
+
+		return {
+			name: question.title,
+			category: question.category.split(';')[0],
+			subcategory: question.category.split(';')[1],
+			outcomes: question.outcomes,
+			image: events[0].returnValues.image
+		};
+	}
+
 
 	/**
 	 * @function getAverageOutcomeBuyPrice
@@ -192,7 +268,7 @@ class PredictionMarketContract extends IContract {
 	 * @returns {Integer} Liquidity Shares
 	 * @returns {Array} Outcome Shares
 	 */
-	 async getMyMarketShares({marketId}) {
+	async getMyMarketShares({marketId}) {
 		const account = await this.getMyAccount();
 		if (!account) return [];
 
@@ -289,20 +365,22 @@ class PredictionMarketContract extends IContract {
 	 * @param {String} outcome2Name
 	 * @param {Integer} ethAmount
 	 */
-	 createMarket = async ({name, duration, oracleAddress, outcomes, ethAmount}) => {
+	async createMarket ({name, image, duration, oracleAddress, outcomes, category, ethAmount}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
+		const question = realitioLib.encodeText('single-select', name, outcomes, category);
+
 		return await this.__sendTx(
 			this.getContract().methods.createMarket(
-				name,
+				question,
+				image,
 				duration,
 				oracleAddress,
-				outcomes
+				outcomes.length
 			),
 			false,
 			ethToWei
 		);
 	};
-
 
 	/**
 	 * @function addLiquidity
@@ -310,7 +388,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} marketId
 	 * @param {Integer} ethAmount
 	 */
-	addLiquidity = async ({marketId, ethAmount}) => {
+	async addLiquidity({marketId, ethAmount}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
 			this.getContract().methods.addLiquidity(marketId),
@@ -325,7 +403,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} marketId
 	 * @param {Integer} shares
 	 */
-	removeLiquidity = async ({marketId, shares}) => {
+	async removeLiquidity({marketId, shares}) {
 		shares = Numbers.toSmartContractDecimals(shares, 18);
 		return await this.__sendTx(
 			this.getContract().methods.removeLiquidity(marketId, shares)
@@ -340,7 +418,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} outcomeId
 	 * @param {Integer} ethAmount
 	 */
-	buy = async ({ marketId, outcomeId, ethAmount}) => {
+	async buy ({ marketId, outcomeId, ethAmount}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
 		return await this.__sendTx(
 			this.getContract().methods.buy(marketId, outcomeId),
@@ -356,7 +434,7 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} outcomeId
 	 * @param {Integer} shares
 	 */
-	sell = async ({marketId, outcomeId, shares}) => {
+	async sell({marketId, outcomeId, shares}) {
 		shares = Numbers.toSmartContractDecimals(shares, 18);
 		return await this.__sendTx(
 			this.getContract().methods.sell(marketId, outcomeId, shares),
@@ -364,21 +442,21 @@ class PredictionMarketContract extends IContract {
 		);
 	};
 
-	resolveMarketOutcome = async ({marketId}) => {
+	async resolveMarketOutcome({marketId}) {
 		return await this.__sendTx(
 			this.getContract().methods.resolveMarketOutcome(marketId),
 			false,
 		);
 	};
 
-	claimWinnings = async ({marketId}) => {
+	async claimWinnings({marketId}) {
 		return await this.__sendTx(
 			this.getContract().methods.claimWinnings(marketId),
 			false,
 		);
 	};
 
-	claimLiquidity = async ({marketId}) => {
+	async claimLiquidity({marketId}) {
 		return await this.__sendTx(
 			this.getContract().methods.claimLiquidity(marketId),
 			false,
@@ -386,4 +464,4 @@ class PredictionMarketContract extends IContract {
 	};
 }
 
-export default PredictionMarketContract;
+module.exports = PredictionMarketContract;

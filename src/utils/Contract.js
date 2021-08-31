@@ -38,7 +38,7 @@ class Contract {
 		}
   }
 
-	__metamaskDeploy = async ({byteCode, args, acc, callback = () => {}}) => {
+	async __metamaskDeploy ({byteCode, args, acc, callback = () => {}}) {
 		return new Promise ((resolve, reject) => {
 			try{
 				this.getContract()
@@ -110,4 +110,4 @@ class Contract {
 	}
 }
 
-export default Contract;
+module.exports = Contract;
