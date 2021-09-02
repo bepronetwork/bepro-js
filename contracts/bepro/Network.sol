@@ -72,6 +72,7 @@ contract Network is Pausable, Governed{
         mapping(uint256 => MergeProposal) mergeProposals; // Id -> Merge Proposal
         uint256 mergeIDIncrement;
         bool finalized;
+        bool recognizedAsFinished;
         bool canceled;
     }
 
@@ -87,6 +88,7 @@ contract Network is Pausable, Governed{
     event MergeProposalCreated(uint256 indexed id, uint256 indexed mergeID, address indexed creator);
     event DisputeMerge(uint256 indexed id, uint256 indexed mergeID, uint256 oracles, address indexed disputer);
     event CloseIssue(uint256 indexed id, uint256 indexed mergeID, address[] indexed addresses);
+    event RecognizedAsFinished(uint256 indexed id);
 
     constructor(address _settlerToken, address _transactionToken, address _governor) public { 
         settlerToken = _IERC20(_settlerToken);
@@ -203,6 +205,18 @@ contract Network is Pausable, Governed{
         emit OpenIssue(issue._id, msg.sender, _tokenAmount);
     }
 
+    function recognizeAsFinished(uint256 _issueId) public whenNotPaused {
+        Issue storage issue = issues[_issueId];
+        require(issue.issueGenerator == msg.sender, "Has to be the issue creator");
+        require(isIssueInDraft(_issueId), "Draft Issue Time has already passed");
+        require(!issue.finalized, "Issue was already finalized");
+        require(!issue.canceled, "Issue was already canceled");
+
+        issues[_issueId].recognizedAsFinished = true;
+
+        emit RecognizedAsFinished(_issueId);
+    }
+
     function redeemIssue(uint256 _issueId) public whenNotPaused {
         Issue storage issue = issues[_issueId];
         require(issue.issueGenerator == msg.sender, "Has to be the issue creator");
@@ -285,6 +299,7 @@ contract Network is Pausable, Governed{
         Issue memory issue = issues[_issueID];
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
+        require(issue.recognizedAsFinished, "Issue has to be recognized as finished by the creator or by the disputers");
         require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
         require(!isIssueInDraft(_issueID), "Issue cant be in Draft Mode");
         require(!isMergeInDraft(_issueID, _mergeID), "Merge cant be in Draft Mode");
