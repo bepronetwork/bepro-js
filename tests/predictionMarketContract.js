@@ -12,6 +12,7 @@ context('Prediction Market Contract', async () => {
     let app;
     let predictionMarketContract;
     let realitioERC20Contract
+    let ERC20Contract;
 
     // market / outcome ids we'll make unit tests with
     let marketId = 0;
@@ -31,12 +32,15 @@ context('Prediction Market Contract', async () => {
             // Create Contract
             predictionMarketContract = app.getPredictionMarketContract({});
             realitioERC20Contract = app.getRealitioERC20Contract({});
+            ERC20Contract = app.getERC20Contract({});
             // // Deploy
             await predictionMarketContract.deploy({});
             await realitioERC20Contract.deploy({});
+            await ERC20Contract.deploy({params: ['Polkamarkets', 'POLK']});
 
             const predictionMarketContractAddress = predictionMarketContract.getAddress();
             const realitioContractAddress = realitioERC20Contract.getAddress();
+            const ERC20ContractAddress = ERC20Contract.getAddress();
             const accountAddress = await predictionMarketContract.getMyAccount();
 
             expect(predictionMarketContractAddress).to.not.equal(null);
@@ -47,6 +51,8 @@ context('Prediction Market Contract', async () => {
             // // setting realitioERC20 governance vars
             await predictionMarketContract.getContract().methods.setRealitioERC20(realitioContractAddress).send({ from: accountAddress });
             await predictionMarketContract.getContract().methods.setRealitioTimeout(86400).send({ from: accountAddress });
+            await predictionMarketContract.getContract().methods.setToken(ERC20ContractAddress).send({ from: accountAddress });
+            // await predictionMarketContract.getContract().methods.setRequiredBalance(0).send({ from: accountAddress });
         }));
     });
 

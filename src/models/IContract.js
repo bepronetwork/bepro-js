@@ -116,8 +116,7 @@ class IContract {
 	 * @function deploy
 	 * @description Deploy the Contract
 	*/
-	async deploy({callback}) {
-		let params = [];
+	async deploy({callback, params = []}) {
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res._address;
 		/* Call to Backend API */
