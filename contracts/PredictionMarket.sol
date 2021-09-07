@@ -113,7 +113,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   struct MarketOutcome {
     uint256 marketId;
     uint256 id;
-    string name;  // TODO remove: deprecated;
+    string name; // TODO remove: deprecated;
     Shares shares;
   }
 
@@ -193,11 +193,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     uint256 closesAt,
     address oracle,
     uint256 outcomes
-  )
-    public payable
-    mustHoldRequiredBalance()
-    returns (uint256)
-  {
+  ) public payable mustHoldRequiredBalance() returns (uint256) {
     uint256 marketId = marketIndex;
     marketIds.push(marketId);
 
