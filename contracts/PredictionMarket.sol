@@ -225,9 +225,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       0
     );
 
-    market.balance = msg.value;
     market.liquidity = msg.value;
-
     // TODO review: only valid for 50-50 start
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].add(msg.value);
 
@@ -238,14 +236,11 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
       outcome.marketId = marketId;
       outcome.id = i;
-
-      // TODO review: only valid for 50-50 start
-      // price starts at 0.5 ETH
-      outcome.shares.available = msg.value;
-      outcome.shares.total = msg.value;
-
-      market.sharesAvailable = market.sharesAvailable.add(msg.value);
     }
+
+    // price starts at 0.5 ETH
+    // TODO review: only valid for 50-50 start
+    addSharesToMarket(marketId, msg.value);
 
     // emiting initial price events
     emitMarketOutcomePriceEvents(marketId);
@@ -277,31 +272,18 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     }
 
     MarketOutcome storage outcome = market.outcomes[outcomeId];
-    market.balance = parentAction == MarketAction.removeLiquidity
-      ? market.balance.sub(value)
-      : market.balance.add(value);
 
-    uint256 newProductBalance = 1;
-
-    // Funding market shares with received ETH
-    for (uint256 i = 0; i < market.outcomeIds.length; i++) {
-      MarketOutcome storage marketOutcome = market.outcomes[i];
-
-      marketOutcome.shares.available = parentAction == MarketAction.removeLiquidity
-        ? marketOutcome.shares.available.sub(value)
-        : marketOutcome.shares.available.add(value);
-      marketOutcome.shares.total = parentAction == MarketAction.removeLiquidity
-        ? marketOutcome.shares.total.sub(value)
-        : marketOutcome.shares.total.add(value);
-
-      newProductBalance = newProductBalance.mul(marketOutcome.shares.available);
-
-      // only adding to market total shares, the available remains
-      market.sharesAvailable = parentAction == MarketAction.removeLiquidity
-        ? market.sharesAvailable.sub(value)
-        : market.sharesAvailable.add(value);
+    if (parentAction == MarketAction.removeLiquidity) {
+      removeSharesFromMarket(marketId, value);
+    } else {
+      // Funding market shares with received ETH
+      addSharesToMarket(marketId, value);
     }
 
+    uint256 newProductBalance = 1;
+    for (uint256 i = 0; i < market.outcomeIds.length; i++) {
+      newProductBalance = newProductBalance.mul(market.outcomes[i].shares.available);
+    }
     // productBalance = market.liquidity**(market.outcomeIds.length);
     // newSharesAvailable = outcome.shares.available.mul(productBalance).div(newProductBalance);
     uint256 shares = outcome.shares.available -
@@ -371,17 +353,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     require(market.balance >= value);
 
     // Rebalancing market shares
-    for (uint256 i = 0; i < market.outcomeIds.length; i++) {
-      MarketOutcome storage marketOutcome = market.outcomes[i];
-
-      marketOutcome.shares.available = marketOutcome.shares.available.sub(value);
-      marketOutcome.shares.total = marketOutcome.shares.total.sub(value);
-
-      // only adding to market total shares, the available remains
-      market.sharesAvailable = market.sharesAvailable.sub(value);
-    }
-
-    market.balance = market.balance.sub(value);
+    removeSharesFromMarket(marketId, value);
 
     // subtracting fee from transaction value
     value = addTransactionToFeesPool(marketId, value);
@@ -430,17 +402,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     // equal outcome split, no need to buy shares
     if (liquidityRatio == msg.value) {
-      market.balance = market.balance.add(liquidityRatio);
-      for (uint256 i = 0; i < market.outcomeIds.length; i++) {
-        uint256 outcomeId = market.outcomeIds[i];
-        MarketOutcome storage outcome = market.outcomes[outcomeId];
-
-        outcome.shares.available = outcome.shares.available.add(liquidityRatio);
-        outcome.shares.total = outcome.shares.total.add(liquidityRatio);
-
-        market.sharesAvailable = market.sharesAvailable.add(liquidityRatio);
-        value = msg.value;
-      }
+      addSharesToMarket(marketId, msg.value);
+      value = msg.value;
     } else {
       buy(marketId, minOutcomeId, msg.value, MarketAction.addLiquidity);
       value = liquidityRatio.mul(getMarketLiquidityPrice(marketId)).div(ONE);
@@ -493,18 +456,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // equal outcome split, no need to buy shares
     if (liquidityRatio == shares) {
       // removing liquidity from market
-      market.balance = market.balance.sub(liquidityRatio);
-      market.liquidity = market.liquidity.sub(liquidityRatio);
-
-      for (uint256 i = 0; i < market.outcomeIds.length; i++) {
-        uint256 outcomeId = market.outcomeIds[i];
-        MarketOutcome storage outcome = market.outcomes[outcomeId];
-
-        outcome.shares.available = outcome.shares.available.sub(liquidityRatio);
-        outcome.shares.total = outcome.shares.total.sub(liquidityRatio);
-
-        market.sharesAvailable = market.sharesAvailable.sub(liquidityRatio);
-      }
+      removeSharesFromMarket(marketId, shares);
+      market.liquidity = market.liquidity.sub(shares);
 
       value = shares;
     } else {
@@ -692,6 +645,38 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     // liquidity shares also change value
     emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
+  }
+
+  function addSharesToMarket(uint256 marketId, uint256 shares) internal {
+    Market storage market = markets[marketId];
+
+    for (uint256 i = 0; i < market.outcomeIds.length; i++) {
+      MarketOutcome storage outcome = market.outcomes[i];
+
+      outcome.shares.available = outcome.shares.available.add(shares);
+      outcome.shares.total = outcome.shares.total.add(shares);
+
+      // only adding to market total shares, the available remains
+      market.sharesAvailable = market.sharesAvailable.add(shares);
+    }
+
+    market.balance = market.balance.add(shares);
+  }
+
+  function removeSharesFromMarket(uint256 marketId, uint256 shares) internal {
+    Market storage market = markets[marketId];
+
+    for (uint256 i = 0; i < market.outcomeIds.length; i++) {
+      MarketOutcome storage outcome = market.outcomes[i];
+
+      outcome.shares.available = outcome.shares.available.sub(shares);
+      outcome.shares.total = outcome.shares.total.sub(shares);
+
+      // only subtracting from market total shares, the available remains
+      market.sharesAvailable = market.sharesAvailable.sub(shares);
+    }
+
+    market.balance = market.balance.sub(shares);
   }
 
   // ------ Core Functions End ------
