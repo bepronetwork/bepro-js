@@ -418,10 +418,12 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} outcomeId
 	 * @param {Integer} ethAmount
 	 */
-	async buy ({ marketId, outcomeId, ethAmount}) {
+	async buy ({ marketId, outcomeId, ethAmount, minOutcomeSharesToBuy}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
+		minOutcomeSharesToBuy = Numbers.toSmartContractDecimals(minOutcomeSharesToBuy, 18);
+
 		return await this.__sendTx(
-			this.getContract().methods.buy(marketId, outcomeId),
+			this.getContract().methods.buy(marketId, outcomeId, minOutcomeSharesToBuy),
 			false,
 			ethToWei
 		);
@@ -434,10 +436,11 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} outcomeId
 	 * @param {Integer} shares
 	 */
-	async sell({marketId, outcomeId, shares}) {
-		shares = Numbers.toSmartContractDecimals(shares, 18);
+	async sell({marketId, outcomeId, ethAmount, maxOutcomeSharesToSell}) {
+		ethAmount = Numbers.toSmartContractDecimals(ethAmount, 18);
+		maxOutcomeSharesToSell = Numbers.toSmartContractDecimals(maxOutcomeSharesToSell, 18);
 		return await this.__sendTx(
-			this.getContract().methods.sell(marketId, outcomeId, shares),
+			this.getContract().methods.sell(marketId, outcomeId, ethAmount, maxOutcomeSharesToSell),
 			false,
 		);
 	};

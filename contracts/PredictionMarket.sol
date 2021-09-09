@@ -44,8 +44,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   event MarketLiquidity(
     uint256 indexed marketId,
-    uint256 value, // total liquidity (ETH)
-    uint256 price, // value of 1 liquidity share; max: 1 ETH (50-50 situation)
+    uint256 value, // total liquidity
+    uint256 price, // value of one liquidity share; max: 1 (50-50 situation)
     uint256 timestamp
   );
 
@@ -76,8 +76,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // market details
     string name; // TODO remove: deprecated;
     uint256 closedDateTime;
-    uint256 balance; // total stake (ETH)
-    uint256 liquidity; // stake held (ETH)
+    uint256 balance; // total stake
+    uint256 liquidity; // stake held
     uint256 sharesAvailable; // shares held (all outcomes)
     mapping(address => uint256) liquidityShares;
     mapping(address => bool) liquidityClaims; // wether participant has claimed liquidity winnings
@@ -284,7 +284,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   }
 
   /// Buy shares of a market outcome
-  function buy(uint256 marketId, uint256 outcomeId)
+  function buy(uint256 marketId, uint256 outcomeId, uint256 minOutcomeSharesToBuy)
     external
     payable
     timeTransitions(marketId)
@@ -293,22 +293,20 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     Market storage market = markets[marketId];
 
     uint256 value = msg.value;
-    // TODO: verify value vs shares amount
     uint256 shares = calcBuyAmount(value, marketId, outcomeId);
-    uint256 valueMinusFees;
+    require(shares >= minOutcomeSharesToBuy, "minimum buy amount not reached");
 
     // subtracting fee from transaction value
     uint256 feeAmount = value.mul(market.fees.value) / ONE;
     market.fees.poolWeight = market.fees.poolWeight.add(feeAmount);
-    valueMinusFees = value.sub(feeAmount);
+    uint256 valueMinusFees = value.sub(feeAmount);
 
     MarketOutcome storage outcome = market.outcomes[outcomeId];
 
-    // Funding market shares with received ETH
+    // Funding market shares with received funds
     addSharesToMarket(marketId, valueMinusFees);
 
-    require(shares > 0, "Can't be 0");
-    require(outcome.shares.available >= shares, "Can't buy more shares than the ones available");
+    require(outcome.shares.available >= shares, "outcome shares pool balance is too low");
 
     transferOutcomeSharesfromPool(msg.sender, marketId, outcomeId, shares);
 
@@ -320,19 +318,16 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   function sell(
     uint256 marketId,
     uint256 outcomeId,
-    uint256 value
+    uint256 value,
+    uint256 maxOutcomeSharesToSell
   ) external payable timeTransitions(marketId) atState(marketId, MarketState.open) {
     Market storage market = markets[marketId];
     MarketOutcome storage outcome = market.outcomes[outcomeId];
 
-    // TODO: verify value vs shares amount
     uint256 shares = calcSellAmount(value, marketId, outcomeId);
 
-    // Invariant check: make sure the stake is <= than user's stake
-    require(outcome.shares.holders[msg.sender] >= shares);
-
-    // Invariant check: make sure the market's stake is smaller than the stake
-    require((outcome.shares.total - outcome.shares.available) >= shares);
+    require(shares <= maxOutcomeSharesToSell, "maximum sell amount exceeded");
+    require(outcome.shares.holders[msg.sender] >= shares, "user does not have enough balance");
 
     transferOutcomeSharesToPool(msg.sender, marketId, outcomeId, shares);
 
@@ -464,7 +459,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // removing liquidity tokens from market creator
     market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].sub(shares);
 
-    // transferring user ETH from liquidity removed
+    // transferring user funds from liquidity removed
     msg.sender.transfer(liquidityAmount);
 
     emit ParticipantAction(msg.sender, MarketAction.removeLiquidity, marketId, 0, shares, liquidityAmount, now);
@@ -487,20 +482,10 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // will throw an error if question is not finalized
     uint256 outcomeId = uint256(realitio.resultFor(market.resolution.questionId));
 
-    MarketOutcome storage outcome = market.outcomes[outcomeId];
-
-    // TODO: process outcome
-
     market.resolution.outcomeId = outcomeId;
 
     emit MarketResolved(msg.sender, marketId, outcomeId, now);
-    // emitting 1 price event for winner outcome
-    emit MarketOutcomePrice(marketId, outcomeId, ONE, now);
-    // emitting 0 price event for loser outcome
-    emit MarketOutcomePrice(marketId, (outcomeId == 0 ? 1 : 0), 0, now);
-    // final liquidity price = outcome shares / liquidity shares
-    uint256 liquidityPrice = outcome.shares.available.mul(ONE).div(market.liquidity);
-    emit MarketLiquidity(marketId, market.liquidity, liquidityPrice, now);
+    emitMarketOutcomePriceEvents(marketId);
 
     return market.resolution.outcomeId;
   }
@@ -516,7 +501,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       "Participant already claimed resolved outcome winnings"
     );
 
-    // 1 share = 1 ETH
+    // 1 share => price = 1
     uint256 value = resolvedOutcome.shares.holders[msg.sender];
 
     // assuring market has enough funds

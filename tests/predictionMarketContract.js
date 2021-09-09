@@ -275,6 +275,7 @@ context('Prediction Market Contract', async () => {
 
         it('should buy outcome shares', mochaAsync(async () => {
             const outcomeId = 0;
+            const minOutcomeSharesToBuy = 0.15;
 
             const marketData = await predictionMarketContract.getMarketData({marketId});
             const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
@@ -282,7 +283,7 @@ context('Prediction Market Contract', async () => {
             const contractBalance = Number(await predictionMarketContract.getBalance());
 
             try {
-                const res = await predictionMarketContract.buy({marketId, outcomeId, ethAmount});
+                const res = await predictionMarketContract.buy({marketId, outcomeId, ethAmount, minOutcomeSharesToBuy});
                 expect(res.status).to.equal(true);
             } catch(e) {
                 // TODO: review this
@@ -430,7 +431,7 @@ context('Prediction Market Contract', async () => {
 
         it('should sell outcome shares', mochaAsync(async () => {
             const outcomeId = 0;
-            const shares = 0.1;
+            const maxOutcomeSharesToSell = 0.15;
 
             const marketData = await predictionMarketContract.getMarketData({marketId});
             const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
@@ -438,7 +439,7 @@ context('Prediction Market Contract', async () => {
             const contractBalance = Number(await predictionMarketContract.getBalance());
 
             try {
-                const res = await predictionMarketContract.sell({marketId, outcomeId, shares});
+                const res = await predictionMarketContract.sell({marketId, outcomeId, ethAmount, maxOutcomeSharesToSell});
                 expect(res.status).to.equal(true);
             } catch(e) {
                 // TODO: review this
