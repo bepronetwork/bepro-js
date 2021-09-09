@@ -430,7 +430,7 @@ context('Prediction Market Contract', async () => {
 
         it('should sell outcome shares', mochaAsync(async () => {
             const outcomeId = 0;
-            const shares = 0.15;
+            const shares = 0.1;
 
             const marketData = await predictionMarketContract.getMarketData({marketId});
             const outcome1Data = await predictionMarketContract.getOutcomeData({marketId, outcomeId: outcomeIds[0]});
