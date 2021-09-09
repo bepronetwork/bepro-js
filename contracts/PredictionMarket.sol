@@ -204,6 +204,15 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // setting intial value to an integer that does not map to any outcomeId
     market.resolution.outcomeId = MAX_UINT_256;
 
+    // creating market outcomes
+    for (uint256 i = 0; i < outcomes; i++) {
+      market.outcomeIds.push(i);
+      MarketOutcome storage outcome = market.outcomes[i];
+
+      outcome.marketId = marketId;
+      outcome.id = i;
+    }
+
     // creating question in realitio
     RealitioERC20 realitio = RealitioERC20(realitioAddress);
 
@@ -217,26 +226,11 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       0
     );
 
-    market.liquidity = msg.value;
-    // TODO review: only valid for 50-50 start
-    market.liquidityShares[msg.sender] = market.liquidityShares[msg.sender].add(msg.value);
-
-    // creating market outcomes
-    for (uint256 i = 0; i < outcomes; i++) {
-      market.outcomeIds.push(i);
-      MarketOutcome storage outcome = market.outcomes[i];
-
-      outcome.marketId = marketId;
-      outcome.id = i;
-    }
-
-    // price starts at 0.5 ETH
-    // TODO review: only valid for 50-50 start
-    addSharesToMarket(marketId, msg.value);
+    // TODO: allow unbalanced (!50-50) start
+    addLiquidity(marketId, msg.value);
 
     // emiting initial price events
     emitMarketOutcomePriceEvents(marketId);
-    emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, msg.value, msg.value, now);
     emit MarketCreated(msg.sender, marketId, outcomes, question, image);
 
     // incrementing market array index
@@ -367,32 +361,46 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     timeTransitions(marketId)
     atState(marketId, MarketState.open)
   {
+    addLiquidity(marketId, msg.value);
+  }
+
+  function addLiquidity(uint256 marketId, uint256 value)
+    private
+    timeTransitions(marketId)
+    atState(marketId, MarketState.open)
+  {
     Market storage market = markets[marketId];
 
-    require(msg.value > 0, "The stake has to be greater than 0.");
+    require(value > 0, "The stake has to be greater than 0.");
 
-    uint256 value = msg.value;
     uint256 liquidityAmount;
 
     uint256[] memory outcomesShares = getMarketOutcomesShares(marketId);
     uint256[] memory sendBackAmounts = new uint256[](outcomesShares.length);
     uint256 poolWeight = 0;
 
-    // part of the liquidity is exchanged for outcome shares if market is not balanced
-    for (uint256 i = 0; i < outcomesShares.length; i++) {
-      uint256 outcomeShares = outcomesShares[i];
-      if (poolWeight < outcomeShares) poolWeight = outcomeShares;
+    if (market.liquidity > 0) {
+      // part of the liquidity is exchanged for outcome shares if market is not balanced
+      for (uint256 i = 0; i < outcomesShares.length; i++) {
+        uint256 outcomeShares = outcomesShares[i];
+        if (poolWeight < outcomeShares) poolWeight = outcomeShares;
+      }
+
+      for (uint256 i = 0; i < outcomesShares.length; i++) {
+        uint256 remaining = value.mul(outcomesShares[i]) / poolWeight;
+        sendBackAmounts[i] = value.sub(remaining);
+      }
+
+      liquidityAmount = value.mul(market.liquidity) / poolWeight;
+
+      // re-balancing fees pool
+      rebalanceFeesPool(marketId, liquidityAmount, MarketAction.addLiquidity);
+    } else {
+      // funding market with no liquidity
+      liquidityAmount = value;
+
+      // TODO: allow unbalanced (!50-50) start
     }
-
-    for (uint256 i = 0; i < outcomesShares.length; i++) {
-      uint256 remaining = value.mul(outcomesShares[i]) / poolWeight;
-      sendBackAmounts[i] = value.sub(remaining);
-    }
-
-    liquidityAmount = value.mul(market.liquidity) / poolWeight;
-
-    // re-balancing fees pool
-    rebalanceFeesPool(marketId, liquidityAmount, MarketAction.addLiquidity);
 
     // funding market
     market.liquidity = market.liquidity.add(liquidityAmount);
