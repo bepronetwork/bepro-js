@@ -22,13 +22,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   // ------ Events ------
 
-  event MarketCreated(
-    address indexed user,
-    uint256 indexed marketId,
-    uint256 outcomes,
-    string question,
-    string image
-  );
+  event MarketCreated(address indexed user, uint256 indexed marketId, uint256 outcomes, string question, string image);
 
   event MarketActionTx(
     address indexed user,
@@ -500,10 +494,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     MarketOutcome storage resolvedOutcome = market.outcomes[market.resolution.outcomeId];
 
     require(resolvedOutcome.shares.holders[msg.sender] > 0, "user does not hold resolved outcome shares");
-    require(
-      resolvedOutcome.shares.claims[msg.sender] == false,
-      "user already claimed resolved outcome winnings"
-    );
+    require(resolvedOutcome.shares.claims[msg.sender] == false, "user already claimed resolved outcome winnings");
 
     // 1 share => price = 1
     uint256 value = resolvedOutcome.shares.holders[msg.sender];
@@ -893,11 +884,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     Market storage market = markets[marketId];
     MarketOutcome storage outcome = market.outcomes[outcomeId];
 
-    return (
-      getMarketOutcomePrice(marketId, outcomeId),
-      outcome.shares.available,
-      outcome.shares.total
-    );
+    return (getMarketOutcomePrice(marketId, outcomeId), outcome.shares.available, outcome.shares.total);
   }
 
   function getMarketOutcomesShares(uint256 marketId) private view returns (uint256[] memory) {
