@@ -49,7 +49,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     uint256 timestamp
   );
 
-  event MarketResolved(address indexed oracle, uint256 indexed marketId, uint256 outcomeId, uint256 timestamp);
+  event MarketResolved(address indexed user, uint256 indexed marketId, uint256 outcomeId, uint256 timestamp);
 
   // ------ Events End ------
 
@@ -74,7 +74,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   struct Market {
     // market details
-    string name; // TODO remove: deprecated;
     uint256 closedDateTime;
     uint256 balance; // total stake
     uint256 liquidity; // stake held
@@ -96,7 +95,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   }
 
   struct MarketResolution {
-    address oracle; // TODO remove: deprecated;
     bool resolved;
     uint256 outcomeId;
     bytes32 questionId; // realitio questionId
@@ -105,7 +103,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   struct MarketOutcome {
     uint256 marketId;
     uint256 id;
-    string name; // TODO remove: deprecated;
     Shares shares;
   }
 
@@ -172,18 +169,12 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   // ------ Core Functions ------
 
-  /// Create a new Market contract
-  /// @dev The new Market contract is then saved in the array of this contract for future reference.
-  /// @param question - Market details: https://reality.eth.link/app/docs/html/contracts.html#how-questions-are-structured
-  /// @param image - image ipfs hash
-  /// @param closesAt - Timestamp of market expiration
-  /// @param oracle - Artbitrator address
-  /// @param outcomes - Number of outcomes
+  /// @dev Creates a market, initializes the outcome shares pool and submits a question in Realitio
   function createMarket(
     string memory question,
     string memory image,
     uint256 closesAt,
-    address oracle,
+    address arbitrator,
     uint256 outcomes
   ) public payable mustHoldRequiredBalance() returns (uint256) {
     uint256 marketId = marketIndex;
@@ -191,15 +182,14 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     Market storage market = markets[marketId];
 
-    require(msg.value > 0, "The stake has to be greater than 0.");
-    require(closesAt >= now, "Market has to close after the current date");
-    require(oracle == address(oracle), "Invalid oracle address");
-    // starting with secondary markets
-    require(outcomes == 2, "Number market outcome has to be 2");
+    require(msg.value > 0, "stake needs to be > 0");
+    require(closesAt >= now, "market must resolve after the current date");
+    require(arbitrator == address(arbitrator), "invalid arbitrator address");
+    // v1 - only binary markets
+    require(outcomes == 2, "number of outcomes has to be 2");
 
     market.closedDateTime = closesAt;
     market.state = MarketState.open;
-    market.resolution.oracle = oracle;
     market.fees.value = fee;
     // setting intial value to an integer that does not map to any outcomeId
     market.resolution.outcomeId = MAX_UINT_256;
@@ -219,14 +209,13 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     market.resolution.questionId = realitio.askQuestionERC20(
       2,
       question,
-      oracle,
+      arbitrator,
       uint32(realitioTimeout),
       uint32(closesAt),
       0,
       0
     );
 
-    // TODO: allow unbalanced (!50-50) start
     addLiquidity(marketId, msg.value);
 
     // emiting initial price events
@@ -239,6 +228,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     return marketId;
   }
 
+  /// @dev Calculates the number of shares bought with "amount" balance
   function calcBuyAmount(
     uint256 amount,
     uint256 marketId,
@@ -261,6 +251,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     return buyTokenPoolBalance.add(amountMinusFees).sub(endingOutcomeBalance.ceildiv(ONE));
   }
 
+  /// @dev Calculates the number of shares needed to be sold in order to receive "amount" in balance
   function calcSellAmount(
     uint256 amount,
     uint256 marketId,
@@ -283,7 +274,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     return amountPlusFees.add(endingOutcomeBalance.ceildiv(ONE)).sub(sellTokenPoolBalance);
   }
 
-  /// Buy shares of a market outcome
+  /// @dev Buy shares of a market outcome
   function buy(
     uint256 marketId,
     uint256 outcomeId,
@@ -313,7 +304,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     emitMarketOutcomePriceEvents(marketId);
   }
 
-  /// Sell shares of a market outcome
+  /// @dev Sell shares of a market outcome
   function sell(
     uint256 marketId,
     uint256 outcomeId,
@@ -347,6 +338,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     emitMarketOutcomePriceEvents(marketId);
   }
 
+  /// @dev Adds liquidity to a market - external
   function addLiquidity(uint256 marketId)
     external
     payable
@@ -356,6 +348,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     addLiquidity(marketId, msg.value);
   }
 
+  /// @dev Private function, used by addLiquidity and CreateMarket
   function addLiquidity(uint256 marketId, uint256 value)
     private
     timeTransitions(marketId)
@@ -390,8 +383,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     } else {
       // funding market with no liquidity
       liquidityAmount = value;
-
-      // TODO: allow unbalanced (!50-50) start
     }
 
     // funding market
@@ -420,6 +411,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
   }
 
+  /// @dev Removes liquidity to a market - external
   function removeLiquidity(uint256 marketId, uint256 shares)
     external
     payable
@@ -480,9 +472,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
   }
 
-  /// Determine the result of the market
-  /// @dev Only allowed by oracle
-  /// @return Id of the outcome
+  /// @dev Fetches winning outcome from Realitio and resolves the market
   function resolveMarketOutcome(uint256 marketId)
     public
     timeTransitions(marketId)
@@ -493,7 +483,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     Market storage market = markets[marketId];
 
     RealitioERC20 realitio = RealitioERC20(realitioAddress);
-    // will throw an error if question is not finalized
+    // will fail if question is not finalized
     uint256 outcomeId = uint256(realitio.resultFor(market.resolution.questionId));
 
     market.resolution.outcomeId = outcomeId;
@@ -504,7 +494,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     return market.resolution.outcomeId;
   }
 
-  /// Allowing holders of resolved outcome shares to claim earnings.
+  /// @dev Allows holders of resolved outcome shares to claim earnings.
   function claimWinnings(uint256 marketId) public atState(marketId, MarketState.resolved) {
     Market storage market = markets[marketId];
     MarketOutcome storage resolvedOutcome = market.outcomes[market.resolution.outcomeId];
@@ -537,7 +527,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     msg.sender.transfer(value);
   }
 
-  /// Allowing liquidity providers to claim earnings from liquidity providing.
+  /// @dev Allows liquidity providers to claim earnings from liquidity providing.
   function claimLiquidity(uint256 marketId) public atState(marketId, MarketState.resolved) {
     Market storage market = markets[marketId];
     MarketOutcome storage resolvedOutcome = market.outcomes[market.resolution.outcomeId];
@@ -570,6 +560,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     msg.sender.transfer(value);
   }
 
+  /// @dev Allows liquidity providers to claim their fees share from fees pool
   function claimFees(uint256 marketId) public payable {
     Market storage market = markets[marketId];
 
@@ -591,6 +582,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     );
   }
 
+  /// @dev Rebalances the fees pool. Needed in every AddLiquidity / RemoveLiquidity call
   function rebalanceFeesPool(
     uint256 marketId,
     uint256 liquidityShares,
@@ -609,12 +601,13 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     }
   }
 
-  /// Internal function for advancing the market state.
+  /// @dev Transitions market to next state
   function nextState(uint256 marketId) private {
     Market storage market = markets[marketId];
     market.state = MarketState(uint256(market.state) + 1);
   }
 
+  /// @dev Emits a outcome price event for every outcome
   function emitMarketOutcomePriceEvents(uint256 marketId) private {
     Market storage market = markets[marketId];
 
@@ -626,6 +619,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
   }
 
+  /// @dev Adds outcome shares to shares pool
   function addSharesToMarket(uint256 marketId, uint256 shares) private {
     Market storage market = markets[marketId];
 
@@ -642,6 +636,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     market.balance = market.balance.add(shares);
   }
 
+  /// @dev Removes outcome shares from shares pool
   function removeSharesFromMarket(uint256 marketId, uint256 shares) private {
     Market storage market = markets[marketId];
 
@@ -658,6 +653,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     market.balance = market.balance.sub(shares);
   }
 
+  /// @dev Transfer outcome shares from pool to user balance
   function transferOutcomeSharesfromPool(
     address user,
     uint256 marketId,
@@ -673,6 +669,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     market.sharesAvailable = market.sharesAvailable.sub(shares);
   }
 
+  /// @dev Transfer outcome shares from user balance back to pool
   function transferOutcomeSharesToPool(
     address user,
     uint256 marketId,
@@ -692,22 +689,27 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   // ------ Governance Functions Start ------
 
+  /// @dev Sets fee taken from every buy/sell tx
   function setFee(uint256 _fee) public onlyOwner() {
     fee = _fee;
   }
 
+  /// @dev Sets Realitio smart contract address
   function setRealitioERC20(address _address) public onlyOwner() {
     realitioAddress = _address;
   }
 
+  /// @dev Sets timeout for questions submitted in Realitio
   function setRealitioTimeout(uint256 timeout) public onlyOwner() {
     realitioTimeout = timeout;
   }
 
+  /// @dev Sets ERC20 token needed for markets creation
   function setToken(IERC20 _token) public onlyOwner() {
     token = _token;
   }
 
+  /// @dev Sets needed ERC20 balance to create markets
   function setRequiredBalance(uint256 _requiredBalance) public onlyOwner() {
     requiredBalance = _requiredBalance;
   }
@@ -763,7 +765,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     );
   }
 
-  // @return % of liquidity pool stake
   function getUserLiquidityPoolShare(uint256 marketId, address participant) public view returns (uint256) {
     Market storage market = markets[marketId];
 
@@ -777,8 +778,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     return rawAmount.sub(market.fees.claimed[participant]);
   }
 
-  /// Allow retrieving the the array of created contracts
-  /// @return An array of all created Market contracts
   function getMarkets() public view returns (uint256[] memory) {
     return marketIds;
   }
@@ -787,7 +786,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     public
     view
     returns (
-      string memory,
       MarketState,
       uint256,
       uint256,
@@ -799,7 +797,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     Market storage market = markets[marketId];
 
     return (
-      market.name,
       market.state,
       market.closedDateTime,
       market.liquidity,
@@ -888,7 +885,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     public
     view
     returns (
-      string memory,
       uint256,
       uint256,
       uint256
@@ -898,7 +894,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     MarketOutcome storage outcome = market.outcomes[outcomeId];
 
     return (
-      outcome.name,
       getMarketOutcomePrice(marketId, outcomeId),
       outcome.shares.available,
       outcome.shares.total
