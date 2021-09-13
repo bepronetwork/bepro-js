@@ -23,15 +23,15 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   // ------ Events ------
 
   event MarketCreated(
-    address indexed participant,
+    address indexed user,
     uint256 indexed marketId,
     uint256 outcomes,
     string question,
     string image
   );
 
-  event ParticipantAction(
-    address indexed participant,
+  event MarketActionTx(
+    address indexed user,
     MarketAction indexed action,
     uint256 indexed marketId,
     uint256 outcomeId,
@@ -74,12 +74,12 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   struct Market {
     // market details
-    uint256 closedDateTime;
+    uint256 closesAtTimestamp;
     uint256 balance; // total stake
     uint256 liquidity; // stake held
     uint256 sharesAvailable; // shares held (all outcomes)
     mapping(address => uint256) liquidityShares;
-    mapping(address => bool) liquidityClaims; // wether participant has claimed liquidity winnings
+    mapping(address => bool) liquidityClaims; // wether user has claimed liquidity earnings
     MarketState state; // resolution variables
     MarketResolution resolution; // fees
     MarketFees fees;
@@ -110,7 +110,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     uint256 total; // number of shares
     uint256 available; // available shares
     mapping(address => uint256) holders;
-    mapping(address => bool) claims; // wether participant has claimed winnings
+    mapping(address => bool) claims; // wether user has claimed winnings
   }
 
   uint256[] marketIds;
@@ -134,7 +134,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   }
 
   modifier timeTransitions(uint256 marketId) {
-    if (now > markets[marketId].closedDateTime && markets[marketId].state == MarketState.open) {
+    if (now > markets[marketId].closesAtTimestamp && markets[marketId].state == MarketState.open) {
       nextState(marketId);
     }
     _;
@@ -188,7 +188,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // v1 - only binary markets
     require(outcomes == 2, "number of outcomes has to be 2");
 
-    market.closedDateTime = closesAt;
+    market.closesAtTimestamp = closesAt;
     market.state = MarketState.open;
     market.fees.value = fee;
     // setting intial value to an integer that does not map to any outcomeId
@@ -300,7 +300,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     transferOutcomeSharesfromPool(msg.sender, marketId, outcomeId, shares);
 
-    emit ParticipantAction(msg.sender, MarketAction.buy, marketId, outcomeId, shares, value, now);
+    emit MarketActionTx(msg.sender, MarketAction.buy, marketId, outcomeId, shares, value, now);
     emitMarketOutcomePriceEvents(marketId);
   }
 
@@ -334,7 +334,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // Transferring funds to user
     msg.sender.transfer(value);
 
-    emit ParticipantAction(msg.sender, MarketAction.sell, marketId, outcomeId, shares, value, now);
+    emit MarketActionTx(msg.sender, MarketAction.sell, marketId, outcomeId, shares, value, now);
     emitMarketOutcomePriceEvents(marketId);
   }
 
@@ -395,7 +395,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     for (uint256 i = 0; i < sendBackAmounts.length; i++) {
       if (sendBackAmounts[i] > 0) {
         transferOutcomeSharesfromPool(msg.sender, marketId, i, sendBackAmounts[i]);
-        emit ParticipantAction(
+        emit MarketActionTx(
           msg.sender,
           MarketAction.buy,
           marketId,
@@ -407,7 +407,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       }
     }
 
-    emit ParticipantAction(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityAmount, value, now);
+    emit MarketActionTx(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityAmount, value, now);
     emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
   }
 
@@ -453,7 +453,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     for (uint256 i = 0; i < outcomesShares.length; i++) {
       if (sendAmounts[i] > 0) {
         transferOutcomeSharesfromPool(msg.sender, marketId, i, sendAmounts[i]);
-        emit ParticipantAction(
+        emit MarketActionTx(
           msg.sender,
           MarketAction.buy,
           marketId,
@@ -468,7 +468,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // transferring user funds from liquidity removed
     msg.sender.transfer(liquidityAmount);
 
-    emit ParticipantAction(msg.sender, MarketAction.removeLiquidity, marketId, 0, shares, liquidityAmount, now);
+    emit MarketActionTx(msg.sender, MarketAction.removeLiquidity, marketId, 0, shares, liquidityAmount, now);
     emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
   }
 
@@ -499,10 +499,10 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     Market storage market = markets[marketId];
     MarketOutcome storage resolvedOutcome = market.outcomes[market.resolution.outcomeId];
 
-    require(resolvedOutcome.shares.holders[msg.sender] > 0, "Participant does not hold resolved outcome shares");
+    require(resolvedOutcome.shares.holders[msg.sender] > 0, "user does not hold resolved outcome shares");
     require(
       resolvedOutcome.shares.claims[msg.sender] == false,
-      "Participant already claimed resolved outcome winnings"
+      "user already claimed resolved outcome winnings"
     );
 
     // 1 share => price = 1
@@ -514,7 +514,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     market.balance = market.balance.sub(value);
     resolvedOutcome.shares.claims[msg.sender] = true;
 
-    emit ParticipantAction(
+    emit MarketActionTx(
       msg.sender,
       MarketAction.claimWinnings,
       marketId,
@@ -535,8 +535,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // claiming any pending fees
     claimFees(marketId);
 
-    require(market.liquidityShares[msg.sender] > 0, "Participant does not hold liquidity shares");
-    require(market.liquidityClaims[msg.sender] == false, "Participant already claimed liquidity winnings");
+    require(market.liquidityShares[msg.sender] > 0, "user does not hold liquidity shares");
+    require(market.liquidityClaims[msg.sender] == false, "user already claimed liquidity winnings");
 
     // value = total resolved outcome pool shares * pool share (%)
     uint256 value = resolvedOutcome.shares.available.mul(getUserLiquidityPoolShare(marketId, msg.sender)).div(ONE);
@@ -547,7 +547,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     market.balance = market.balance.sub(value);
     market.liquidityClaims[msg.sender] = true;
 
-    emit ParticipantAction(
+    emit MarketActionTx(
       msg.sender,
       MarketAction.claimLiquidity,
       marketId,
@@ -571,7 +571,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
       msg.sender.transfer(claimableFees);
     }
 
-    emit ParticipantAction(
+    emit MarketActionTx(
       msg.sender,
       MarketAction.claimFees,
       marketId,
@@ -718,7 +718,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   // ------ Getters ------
 
-  function getUserMarketShares(uint256 marketId, address participant)
+  function getUserMarketShares(uint256 marketId, address user)
     public
     view
     returns (
@@ -730,13 +730,13 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     Market storage market = markets[marketId];
 
     return (
-      market.liquidityShares[participant],
-      market.outcomes[0].shares.holders[participant],
-      market.outcomes[1].shares.holders[participant]
+      market.liquidityShares[user],
+      market.outcomes[0].shares.holders[user],
+      market.outcomes[1].shares.holders[user]
     );
   }
 
-  function getUserClaimStatus(uint256 marketId, address participant)
+  function getUserClaimStatus(uint256 marketId, address user)
     public
     view
     returns (
@@ -751,31 +751,31 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     // market still not resolved
     if (market.state != MarketState.resolved) {
-      return (false, false, false, false, getUserClaimableFees(marketId, participant));
+      return (false, false, false, false, getUserClaimableFees(marketId, user));
     }
 
     MarketOutcome storage outcome = market.outcomes[market.resolution.outcomeId];
 
     return (
-      outcome.shares.holders[participant] > 0,
-      outcome.shares.claims[participant],
-      market.liquidityShares[participant] > 0,
-      market.liquidityClaims[participant],
-      getUserClaimableFees(marketId, participant)
+      outcome.shares.holders[user] > 0,
+      outcome.shares.claims[user],
+      market.liquidityShares[user] > 0,
+      market.liquidityClaims[user],
+      getUserClaimableFees(marketId, user)
     );
   }
 
-  function getUserLiquidityPoolShare(uint256 marketId, address participant) public view returns (uint256) {
+  function getUserLiquidityPoolShare(uint256 marketId, address user) public view returns (uint256) {
     Market storage market = markets[marketId];
 
-    return market.liquidityShares[participant].mul(ONE).div(market.liquidity);
+    return market.liquidityShares[user].mul(ONE).div(market.liquidity);
   }
 
-  function getUserClaimableFees(uint256 marketId, address participant) public view returns (uint256) {
+  function getUserClaimableFees(uint256 marketId, address user) public view returns (uint256) {
     Market storage market = markets[marketId];
 
-    uint256 rawAmount = market.fees.poolWeight.mul(market.liquidityShares[participant]).div(market.liquidity);
-    return rawAmount.sub(market.fees.claimed[participant]);
+    uint256 rawAmount = market.fees.poolWeight.mul(market.liquidityShares[user]).div(market.liquidity);
+    return rawAmount.sub(market.fees.claimed[user]);
   }
 
   function getMarkets() public view returns (uint256[] memory) {
@@ -798,7 +798,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     return (
       market.state,
-      market.closedDateTime,
+      market.closesAtTimestamp,
       market.liquidity,
       market.balance,
       market.sharesAvailable,
