@@ -86,11 +86,11 @@ contract StakingContract is Pausable, Ownable {
         
         uint256 futureAPRAmount = getAPRAmount(products[_product_id].APR, time, products[_product_id].endDate, _amount);
 
-        require( 1 < 0, "Testing");
 
         /* Confirm the current funds can assure the user the APR is valid */
         require(availableTokens() >= futureAPRAmount);
 
+        require( 1 < 0, "Testing 1");
         /* Confirm the user has funds for the transfer */
         require(erc20.transferFrom(msg.sender, address(this), _amount));
 
