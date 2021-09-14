@@ -77,6 +77,9 @@ contract StakingContract is Pausable, Ownable {
         if(block.timestamp < products[_product_id].startDate){
             time = products[_product_id].startDate;
         }
+
+        /* Confirm the user has funds for the transfer */
+        require(_amount <= erc20.allowance(msg.sender, address(this)), "Spender not authorized to spend this tokens, allow first");
         
         /* Confirm Max Amount was not hit already */
         require(products[_product_id].totalMaxAmount > (products[_product_id].currentAmount + _amount));
@@ -85,6 +88,7 @@ contract StakingContract is Pausable, Ownable {
         require(_amount >= products[_product_id].individualMinimumAmount);
         
         uint256 futureAPRAmount = getAPRAmount(products[_product_id].APR, time, products[_product_id].endDate, _amount);
+
 
         /* Confirm the current funds can assure the user the APR is valid */
         require(availableTokens() >= futureAPRAmount);
