@@ -84,7 +84,7 @@ contract StakingContract is Pausable, Ownable {
         /* Confirm Amount is bigger than minimum Amount */
         require(_amount >= products[_product_id].individualMinimumAmount);
         
-        uint256 futureAPRAmount = getAPRAmount(products[_product_id].APR, time, products[_product_id].endDate, _amount);
+        uint256 futureAPRAmount = 0;
 
         /* Confirm the current funds can assure the user the APR is valid */
         require(availableTokens() >= futureAPRAmount);
