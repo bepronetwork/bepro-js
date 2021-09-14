@@ -68,10 +68,10 @@ contract StakingContract is Pausable, Ownable {
 
         uint256 time = block.timestamp;
         /* Confirm Amount is positive */
-        require(_amount > 0);
+        require(_amount > 0, "Amount has to be bigger than 0");
      
         /* Confirm product still exists */
-        require(block.timestamp < products[_product_id].endDate);
+        require(block.timestamp < products[_product_id].endDate, "Already ended the subscription");
 
         /* Confirm Subscription prior to opening */
         if(block.timestamp < products[_product_id].startDate){
@@ -82,19 +82,18 @@ contract StakingContract is Pausable, Ownable {
         require(_amount <= erc20.allowance(msg.sender, address(this)), "Spender not authorized to spend this tokens, allow first");
         
         /* Confirm Max Amount was not hit already */
-        require(products[_product_id].totalMaxAmount > (products[_product_id].currentAmount + _amount));
+        require(products[_product_id].totalMaxAmount > (products[_product_id].currentAmount + _amount), "Max Amount was already hit");
 
         /* Confirm Amount is bigger than minimum Amount */
-        require(_amount >= products[_product_id].individualMinimumAmount);
+        require(_amount >= products[_product_id].individualMinimumAmount, "Has to be highger than minimum");
         
         uint256 futureAPRAmount = getAPRAmount(products[_product_id].APR, time, products[_product_id].endDate, _amount);
 
-
         /* Confirm the current funds can assure the user the APR is valid */
-        require(availableTokens() >= futureAPRAmount);
+        require(availableTokens() >= futureAPRAmount, "Available Tokens has to be higher than the future APR Amount");
 
         /* Confirm the user has funds for the transfer */
-        require(erc20.transferFrom(msg.sender, address(this), _amount));
+        require(erc20.transferFrom(msg.sender, address(this), _amount), "Transfer Failed");
 
         /* Add to LockedTokens */
         lockedTokens = lockedTokens.add(_amount.add(futureAPRAmount));
