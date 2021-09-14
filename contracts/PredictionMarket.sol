@@ -388,6 +388,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     // transform sendBackAmounts to array of amounts added
     for (uint256 i = 0; i < sendBackAmounts.length; i++) {
       if (sendBackAmounts[i] > 0) {
+        uint256 marketShares = market.sharesAvailable;
+        uint256 outcomeShares = market.outcomes[i].shares.available;
         transferOutcomeSharesfromPool(msg.sender, marketId, i, sendBackAmounts[i]);
         emit MarketActionTx(
           msg.sender,
@@ -395,14 +397,16 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
           marketId,
           i,
           sendBackAmounts[i],
-          sendBackAmounts[i].mul(outcomesShares[i]).div(market.sharesAvailable),
+          (marketShares.sub(outcomeShares)).mul(sendBackAmounts[i]).div(market.sharesAvailable), // price * shares
           now
         );
       }
     }
 
-    emit MarketActionTx(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityAmount, value, now);
-    emit MarketLiquidity(marketId, market.liquidity, getMarketLiquidityPrice(marketId), now);
+    uint256 liquidityPrice = getMarketLiquidityPrice(marketId);
+    uint256 liquidityValue = liquidityPrice.mul(liquidityAmount) / ONE;
+    emit MarketActionTx(msg.sender, MarketAction.addLiquidity, marketId, 0, liquidityAmount, liquidityValue, now);
+    emit MarketLiquidity(marketId, market.liquidity, liquidityPrice, now);
   }
 
   /// @dev Removes liquidity to a market - external
@@ -446,6 +450,9 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
     for (uint256 i = 0; i < outcomesShares.length; i++) {
       if (sendAmounts[i] > 0) {
+        uint256 marketShares = market.sharesAvailable;
+        uint256 outcomeShares = market.outcomes[i].shares.available;
+
         transferOutcomeSharesfromPool(msg.sender, marketId, i, sendAmounts[i]);
         emit MarketActionTx(
           msg.sender,
@@ -453,7 +460,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
           marketId,
           i,
           sendAmounts[i],
-          sendAmounts[i].mul(outcomesShares[i]).div(market.sharesAvailable),
+          (marketShares.sub(outcomeShares)).mul(sendAmounts[i]).div(market.sharesAvailable), // price * shares
           now
         );
       }
