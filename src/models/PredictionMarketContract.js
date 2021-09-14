@@ -94,11 +94,11 @@ class PredictionMarketContract extends IContract {
 		const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
 
 		return {
-			name: marketData[0],
-			closeDateTime: moment.unix(marketData[2]).format("YYYY-MM-DD HH:mm"),
-			state: parseInt(marketData[1]),
+			name: '', // TODO: remove; deprecated
+			closeDateTime: moment.unix(marketData[1]).format("YYYY-MM-DD HH:mm"),
+			state: parseInt(marketData[0]),
 			oracleAddress: '0x0000000000000000000000000000000000000000',
-			liquidity: Numbers.fromDecimalsNumber(marketData[3], 18),
+			liquidity: Numbers.fromDecimalsNumber(marketData[2], 18),
 			outcomeIds: outcomeIds.map((outcomeId) => Numbers.fromBigNumberToInteger(outcomeId, 18))
 		};
 	}
@@ -116,9 +116,9 @@ class PredictionMarketContract extends IContract {
 		const outcomeData = await this.params.contract.getContract().methods.getMarketOutcomeData(marketId, outcomeId).call();
 
 		return {
-			name: outcomeData[0],
-			price: Numbers.fromDecimalsNumber(outcomeData[1], 18),
-			shares: Numbers.fromDecimalsNumber(outcomeData[2], 18),
+			name: '', // TODO: remove; deprecated
+			price: Numbers.fromDecimalsNumber(outcomeData[0], 18),
+			shares: Numbers.fromDecimalsNumber(outcomeData[1], 18),
 		};
 	}
 
@@ -287,10 +287,10 @@ class PredictionMarketContract extends IContract {
 		const account = await this.getMyAccount();
 		if (!account) return [];
 
-		const events = await this.getContract().getPastEvents('ParticipantAction', {
+		const events = await this.getContract().getPastEvents('MarketActionTx', {
 			fromBlock: 0,
 			toBlock: 'latest',
-			filter: {participant: account} // filtering by address
+			filter: {user: account} // filtering by address
 		});
 
 		// filtering by address
