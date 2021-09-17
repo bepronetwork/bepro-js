@@ -385,6 +385,7 @@ class Network extends IContract {
       mergeProposalsAmount: parseInt(r[5], 10),
       finalized: r[6],
       canceled: r[7],
+      recognizedAsFinished : r[8]
     };
   }
 
@@ -523,6 +524,20 @@ class Network extends IContract {
          .methods.delegateOracles(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
      );
    }
+
+    /**
+   * Recognize Issue as Resolved
+   * @param {Object} params
+   * @param {Number} params.issueId
+   * @return {Promise<TransactionObject>}
+   */
+     async recognizeAsFinished({ issueId }) {
+      return await this.__sendTx(
+        this.params.contract
+          .getContract()
+          .methods.recognizeAsFinished(issueId)
+      );
+    }
 
    /**
    * open Issue

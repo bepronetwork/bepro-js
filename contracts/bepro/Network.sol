@@ -346,9 +346,9 @@ contract Network is Pausable, Governed{
         return (oracler.oraclesDelegatedByOthers, amounts, addresses, oracler.tokensLocked);
     }
     
-    function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, bool, bool){
+    function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, bool, bool, bool){
         Issue memory issue = issues[_issueID];
-        return (issue._id, issue.cid, issue.creationDate, issue.tokensStaked, issue.issueGenerator, issue.mergeIDIncrement, issue.finalized, issue.canceled);
+        return (issue._id, issue.cid, issue.creationDate, issue.tokensStaked, issue.issueGenerator, issue.mergeIDIncrement, issue.finalized, issue.canceled, issue.recognizedAsFinished);
     }
 
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, uint256, address[] memory, uint256[] memory, address){
