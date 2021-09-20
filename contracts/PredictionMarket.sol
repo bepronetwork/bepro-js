@@ -5,7 +5,6 @@ import "./RealitioERC20.sol";
 
 // openzeppelin imports
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 library CeilDiv {
   // calculates ceil(x/y)
@@ -16,7 +15,7 @@ library CeilDiv {
 }
 
 /// @title Market Contract Factory
-contract PredictionMarket is Initializable, OwnableUpgradeable {
+contract PredictionMarket {
   using SafeMath for uint256;
   using CeilDiv for uint256;
 
@@ -158,9 +157,19 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
 
   // ------ Modifiers End ------
 
-  // Initializer function (replaces constructor)
-  function initialize() public initializer {
-    __Ownable_init();
+  /// @dev protocol is immutable and has no ownership
+  constructor(
+    uint256 _fee,
+    IERC20 _token,
+    uint256 _requiredBalance,
+    address _realitioAddress,
+    uint256 _realitioTimeout
+  ) public {
+    fee = _fee;
+    token = _token;
+    requiredBalance = _requiredBalance;
+    realitioAddress = _realitioAddress;
+    realitioTimeout = _realitioTimeout;
   }
 
   // ------ Core Functions ------
@@ -720,35 +729,6 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   }
 
   // ------ Core Functions End ------
-
-  // ------ Governance Functions Start ------
-
-  /// @dev Sets fee taken from every buy/sell tx
-  function setFee(uint256 _fee) public onlyOwner() {
-    fee = _fee;
-  }
-
-  /// @dev Sets Realitio smart contract address
-  function setRealitioERC20(address _address) public onlyOwner() {
-    realitioAddress = _address;
-  }
-
-  /// @dev Sets timeout for questions submitted in Realitio
-  function setRealitioTimeout(uint256 timeout) public onlyOwner() {
-    realitioTimeout = timeout;
-  }
-
-  /// @dev Sets ERC20 token needed for markets creation
-  function setToken(IERC20 _token) public onlyOwner() {
-    token = _token;
-  }
-
-  /// @dev Sets needed ERC20 balance to create markets
-  function setRequiredBalance(uint256 _requiredBalance) public onlyOwner() {
-    requiredBalance = _requiredBalance;
-  }
-
-  // ------ Governance Functions End ------
 
   // ------ Getters ------
 
