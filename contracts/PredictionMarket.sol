@@ -63,7 +63,8 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     removeLiquidity,
     claimWinnings,
     claimLiquidity,
-    claimFees
+    claimFees,
+    claimVoided
   }
 
   struct Market {
@@ -105,7 +106,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     uint256 available; // available shares
     mapping(address => uint256) holders;
     mapping(address => bool) claims; // wether user has claimed winnings
-    mapping(address => bool) voidedClaims; // wether user has claimed invalid market shares
+    mapping(address => bool) voidedClaims; // wether user has claimed voided market shares
   }
 
   uint256[] marketIds;
@@ -526,15 +527,18 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     msg.sender.transfer(value);
   }
 
-  /// @dev Allows holders of invalid outcome shares to claim balance back.
-  function claimVoidedOutcomeShares(uint256 marketId, uint256 outcomeId) public atState(marketId, MarketState.resolved) {
+  /// @dev Allows holders of voided outcome shares to claim balance back.
+  function claimVoidedOutcomeShares(uint256 marketId, uint256 outcomeId)
+    public
+    atState(marketId, MarketState.resolved)
+  {
     Market storage market = markets[marketId];
     MarketOutcome storage outcome = market.outcomes[outcomeId];
 
     require(outcome.shares.holders[msg.sender] > 0, "user does not hold outcome shares");
     require(outcome.shares.voidedClaims[msg.sender] == false, "user already claimed outcome shares");
 
-    // invalid market - shares are valued at last market price
+    // voided market - shares are valued at last market price
     uint256 price = getMarketOutcomePrice(marketId, outcomeId);
     uint256 value = price.mul(outcome.shares.holders[msg.sender]).div(ONE);
 
@@ -544,7 +548,15 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     market.balance = market.balance.sub(value);
     outcome.shares.voidedClaims[msg.sender] = true;
 
-    // TODO: event
+    emit MarketActionTx(
+      msg.sender,
+      MarketAction.claimVoided,
+      marketId,
+      market.resolution.outcomeId,
+      outcome.shares.holders[msg.sender],
+      value,
+      now
+    );
 
     msg.sender.transfer(value);
   }
@@ -863,7 +875,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
   function getMarketLiquidityPrice(uint256 marketId) public view returns (uint256) {
     Market storage market = markets[marketId];
 
-    if (market.state == MarketState.resolved && !isMarketInvalid(marketId)) {
+    if (market.state == MarketState.resolved && !isMarketVoided(marketId)) {
       // resolved market, price is either 0 or 1
       // final liquidity price = outcome shares / liquidity shares
       return market.outcomes[market.resolution.outcomeId].shares.available.mul(ONE).div(market.liquidity);
@@ -884,7 +896,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     return int256(market.resolution.outcomeId);
   }
 
-  function isMarketInvalid(uint256 marketId) public view returns (bool) {
+  function isMarketVoided(uint256 marketId) public view returns (bool) {
     Market storage market = markets[marketId];
 
     // market still not resolved, still in valid state
@@ -907,7 +919,7 @@ contract PredictionMarket is Initializable, OwnableUpgradeable {
     Market storage market = markets[marketId];
     MarketOutcome storage outcome = market.outcomes[outcomeId];
 
-    if (market.state == MarketState.resolved && !isMarketInvalid(marketId)) {
+    if (market.state == MarketState.resolved && !isMarketVoided(marketId)) {
       // resolved market, price is either 0 or 1
       return outcomeId == market.resolution.outcomeId ? ONE : 0;
     }
