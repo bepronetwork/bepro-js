@@ -253,7 +253,7 @@ class Network extends IContract {
    * @returns {Promise<address>}
    */
   async isCouncil({ address }) {
-    return this.getOraclesByAddress({ address }) >= await this.COUNCIL_AMOUNT();
+    return await this.getOraclesByAddress({ address }) >= await this.COUNCIL_AMOUNT();
   }
 
   /**
