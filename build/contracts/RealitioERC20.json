@@ -69278,10 +69278,16 @@
       "links": {},
       "address": "0xEAE767D5D670826Bf531c2692335c52c6cA7010B",
       "transactionHash": "0xbcb41b16b41dfbb6ebee3d64db5ad1b3ee6361cd1734815a616fb62fad33bf7a"
+    },
+    "1285": {
+      "events": {},
+      "links": {},
+      "address": "0xfb26E455d1449C0f60f9110b54BB14b686B07a71",
+      "transactionHash": "0x05f9ab3c3734e2b40fb6403e33e70b3494207aac32964ce70c862c463e27ee85"
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-09-20T16:39:05.384Z",
+  "updatedAt": "2021-09-20T18:01:09.370Z",
   "devdoc": {
     "methods": {
       "askQuestion(uint256,string,address,uint32,uint32,uint256)": {
