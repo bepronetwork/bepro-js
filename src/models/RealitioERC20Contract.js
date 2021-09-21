@@ -68,11 +68,7 @@ class RealitioERC20Contract extends IContract {
 	async getQuestionBondsByAnswer({ questionId, user }) {
 		const bonds = {};
 
-		const answers = await this.getContract().getPastEvents('LogNewAnswer', {
-			fromBlock: 0,
-			toBlock: 'latest',
-			filter: { question_id: questionId, user }
-		});
+		const answers = await this.getEvents('LogNewAnswer', { question_id: questionId, user });
 
 		answers.forEach((answer) => {
 			const answerId = answer.returnValues.answer;
@@ -115,32 +111,9 @@ class RealitioERC20Contract extends IContract {
 		const account = await this.getMyAccount();
 		if (!account) return {};
 
-		const events = await this.getContract().getPastEvents(
-			'LogNewAnswer',
-			{
-				fromBlock: 0,
-				toBlock: 'latest',
-				filter: { user: account }
-			}
-		);
-
-		const claimEvents = await this.getContract().getPastEvents(
-			'LogClaim',
-			{
-				fromBlock: 0,
-				toBlock: 'latest',
-				filter: { user: account }
-			}
-		);
-
-		const withdrawEvents = await this.getContract().getPastEvents(
-			'LogWithdraw',
-			{
-				fromBlock: 0,
-				toBlock: 'latest',
-				filter: { user: account }
-			}
-		);
+		const events = await this.getEvents('LogNewAnswer', { user: account });
+		const claimEvents = await this.getEvents('LogClaim', { user: account });
+		const withdrawEvents = await this.getEvents('LogWithdraw', { user: account });
 
 		const lastWithdrawBlockNumber = withdrawEvents[withdrawEvents.length - 1]
 			? withdrawEvents[withdrawEvents.length - 1].blockNumber
@@ -188,11 +161,7 @@ class RealitioERC20Contract extends IContract {
 		const account = await this.getMyAccount();
 		if (!account) return [];
 
-		const events = await this.getContract().getPastEvents('LogNewAnswer', {
-			fromBlock: 0,
-			toBlock: 'latest',
-			filter: { user: account }
-		});
+		const events = await this.getEvents('LogNewAnswer', { user: account });
 
 		return events.map(event => {
 			return {
@@ -225,14 +194,7 @@ class RealitioERC20Contract extends IContract {
 			);
 		}
 
-		const events = await this.getContract().getPastEvents(
-			'LogNewAnswer',
-			{
-				fromBlock: 0,
-				toBlock: 'latest',
-				filter: { question_id: questionId }
-			}
-		);
+		const events = await this.getEvents('LogNewAnswer', { question_id: questionId });
 
 		const historyHashes = events.map((event) => event.returnValues.history_hash).slice(0, -1).reverse();
 		// adding an empty hash to the history hashes

@@ -15,8 +15,12 @@ const networksEnum = Object.freeze({
 });
 
 class Application {
-	constructor({web3Provider, web3PrivateKey}) {
+	constructor({web3Provider, web3PrivateKey, blockConfig}) {
 		this.web3Provider = web3Provider;
+		// used to query events in chunks
+		// structure: { fromBlock, blockCount }
+		this.blockConfig = blockConfig;
+
 		// IMPORTANT: this parameter should only be used for testing purposes
 		if (web3PrivateKey) {
 			this.start();
@@ -83,12 +87,13 @@ class Application {
 	 * @param {Address} ContractAddress (Opt) If it is deployed
 	 * @description Create a PredictionMarket Contract
 	 */
-	 getPredictionMarketContract ({ contractAddress = null }={}) {
+	 getPredictionMarketContract({ contractAddress = null }={}) {
 		try {
 			return new PredictionMarketContract({
 				web3: this.web3,
 				contractAddress,
-				acc : this.account
+				acc : this.account,
+				blockConfig: this.blockConfig
 			});
 		} catch(err) {
 			throw err;
@@ -105,7 +110,8 @@ class Application {
 			return new RealitioERC20Contract({
 				web3: this.web3,
 				contractAddress,
-				acc : this.account
+				acc : this.account,
+				blockConfig: this.blockConfig
 			});
 		} catch(err) {
 			throw err;
@@ -122,7 +128,8 @@ class Application {
 			return new ERC20Contract({
 				web3: this.web3,
 				contractAddress: contractAddress,
-				acc : this.account
+				acc : this.account,
+				blockConfig: this.blockConfig
 			});
 		} catch(err) {
 			throw err;

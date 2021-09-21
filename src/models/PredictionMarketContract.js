@@ -136,11 +136,7 @@ class PredictionMarketContract extends IContract {
 		const marketData = await this.params.contract.getContract().methods.getMarketData(marketId).call();
 		const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
 
-		const events = await this.getContract().getPastEvents('MarketCreated', {
-			fromBlock: 0,
-			toBlock: 'latest',
-			filter: {marketId} // filtering by address
-		});
+		const events = await this.getEvents('MarketCreated', { marketId });
 
 		if (events.length === 0) {
 			// legacy record, returning empty data
@@ -287,11 +283,7 @@ class PredictionMarketContract extends IContract {
 		const account = await this.getMyAccount();
 		if (!account) return [];
 
-		const events = await this.getContract().getPastEvents('MarketActionTx', {
-			fromBlock: 0,
-			toBlock: 'latest',
-			filter: {user: account} // filtering by address
-		});
+		const events = await this.getEvents('MarketActionTx', { user: account });
 
 		// filtering by address
 		return events.map(event => {

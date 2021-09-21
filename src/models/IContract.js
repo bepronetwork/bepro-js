@@ -15,7 +15,8 @@ class IContract {
 		web3,
 		contractAddress = null /* If not deployed */,
 		abi,
-		acc
+		acc,
+		blockConfig
 	}) {
 		try {
 			if(!abi){
@@ -32,10 +33,11 @@ class IContract {
 			}
 
 			this.params = {
-				web3: web3,
-				abi : abi,
-				contractAddress: contractAddress,
-				contract: new Contract(web3, abi, contractAddress),
+				web3,
+				abi,
+				contractAddress,
+				blockConfig,
+				contract: new Contract(web3, abi, contractAddress)
 			};
 		} catch (err) {
 			throw err;
@@ -260,6 +262,49 @@ class IContract {
 		const accounts = await this.params.web3.eth.getAccounts();
 
 		return accounts[0];
+	}
+
+	/**
+	 * @function getEvents
+	 * @description Gets contract events
+	 * @returns {String | undefined} address
+	 */
+	async getEvents(event, filter) {
+		if (!this.params.blockConfig) {
+			const events = this.getContract().getPastEvents(event, {
+				fromBlock: 0,
+				toBlock: 'latest',
+				filter
+			});
+
+			return events;
+		}
+
+		// iterating by block numbers
+		let blockNumber = await this.web3.eth.getBlockNumber();
+		let events = [];
+		const blockRanges = []
+
+		while (blockNumber > this.params.blockConfig.fromBlock) {
+			const fromBlock = blockNumber - this.params.blockConfig.blockCount;
+
+			blockRanges.push({
+				fromBlock: fromBlock > 0 ? fromBlock : 0,
+				toBlock: blockNumber
+			});
+
+			blockNumber = fromBlock;
+		}
+
+		await Promise.all(blockRanges.map(async (blockRange) => {
+			const blockEvents = await this.getContract().getPastEvents(event, {
+				filter,
+				...blockRange
+			});
+			events = blockEvents.concat(events);
+		}));
+
+		return events.sort(event => event.blockNumber);
 	}
 }
 
