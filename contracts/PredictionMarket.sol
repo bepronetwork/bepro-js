@@ -561,7 +561,7 @@ contract PredictionMarket {
       msg.sender,
       MarketAction.claimVoided,
       marketId,
-      market.resolution.outcomeId,
+      outcomeId,
       outcome.shares.holders[msg.sender],
       value,
       now
