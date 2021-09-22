@@ -1,6 +1,4 @@
 import { expect, assert } from "chai";
-import moment from "moment";
-import delay from "delay";
 import { mochaAsync } from "../utils";
 import { ERC20Contract, Network } from "../../build";
 import Numbers from "../../build/utils/Numbers";
@@ -15,8 +13,8 @@ context("Network Contract", async () => {
   let transactionalERC20Contract;
   let settlerERC20Contract;
   let networkContract;
-  let userAddress;
   let contractAddress;
+  let userAddress;
   let app;
 
 

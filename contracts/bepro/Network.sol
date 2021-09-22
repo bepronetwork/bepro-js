@@ -37,13 +37,13 @@ contract Network is Pausable, Governed{
     uint256 public incrementIssueID = 1;
     uint256 public closedIdsCount = 0;
     uint256 public totalStaked = 0;
-    uint256 public mergeCreatorFeeShare = 1; // (%) - Share to go to the merge proposal creator
+    uint256 public mergeCreatorFeeShare = 3; // (%) - Share to go to the merge proposal creator
     uint256 public percentageNeededForDispute = 3; // (%) - Amount needed to approve a PR and distribute the rewards
     uint256 public disputableTime = 3 days;
     uint256 public redeemTime = 1 days;
     uint256 public oraclesStaked = 0;
 
-    uint256 public COUNCIL_AMOUNT = 25000000*10**18; // 25M
+    uint256 public COUNCIL_AMOUNT = 10000000*10**18; // 10M
 
     mapping(uint256 => Issue) public issues; /* Distribution object */
     mapping(address => uint256[]) public myIssues; /* Address Based Subcription */
@@ -398,6 +398,5 @@ contract Network is Pausable, Governed{
         require(_COUNCIL_AMOUNT < 50000000*10**settlerToken.decimals(), "Council Amount has to lower than 50M");
         COUNCIL_AMOUNT = _COUNCIL_AMOUNT;
     }
-
- 
 }
+

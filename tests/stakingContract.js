@@ -9,6 +9,7 @@ let userPrivateKey =
 const tokenAddress = "0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2";
 let contractAddress = "0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64";
 const totalMaxAmount = 100;
+const individualMaxAmount = 30;
 const individualMinimumAmount = 10;
 const APR = 5;
 const startDate = moment().add(1, "minutes");
@@ -103,6 +104,7 @@ context("Staking Contract", async () => {
         endDate: moment().add(10, "minutes"),
         totalMaxAmount,
         individualMinimumAmount,
+        individualMaxAmount,
         APR,
         lockedUntilFinalization: false,
       });
