@@ -94,11 +94,11 @@ class PredictionMarketContract extends IContract {
 		const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
 
 		return {
-			name: marketData[0],
-			closeDateTime: moment.unix(marketData[2]).format("YYYY-MM-DD HH:mm"),
-			state: parseInt(marketData[1]),
+			name: '', // TODO: remove; deprecated
+			closeDateTime: moment.unix(marketData[1]).format("YYYY-MM-DD HH:mm"),
+			state: parseInt(marketData[0]),
 			oracleAddress: '0x0000000000000000000000000000000000000000',
-			liquidity: Numbers.fromDecimalsNumber(marketData[3], 18),
+			liquidity: Numbers.fromDecimalsNumber(marketData[2], 18),
 			outcomeIds: outcomeIds.map((outcomeId) => Numbers.fromBigNumberToInteger(outcomeId, 18))
 		};
 	}
@@ -116,9 +116,9 @@ class PredictionMarketContract extends IContract {
 		const outcomeData = await this.params.contract.getContract().methods.getMarketOutcomeData(marketId, outcomeId).call();
 
 		return {
-			name: outcomeData[0],
-			price: Numbers.fromDecimalsNumber(outcomeData[1], 18),
-			shares: Numbers.fromDecimalsNumber(outcomeData[2], 18),
+			name: '', // TODO: remove; deprecated
+			price: Numbers.fromDecimalsNumber(outcomeData[0], 18),
+			shares: Numbers.fromDecimalsNumber(outcomeData[1], 18),
 		};
 	}
 
@@ -136,11 +136,7 @@ class PredictionMarketContract extends IContract {
 		const marketData = await this.params.contract.getContract().methods.getMarketData(marketId).call();
 		const outcomeIds = await this.__sendTx(this.getContract().methods.getMarketOutcomeIds(marketId), true);
 
-		const events = await this.getContract().getPastEvents('MarketCreated', {
-			fromBlock: 0,
-			toBlock: 'latest',
-			filter: {marketId} // filtering by address
-		});
+		const events = await this.getEvents('MarketCreated', { marketId });
 
 		if (events.length === 0) {
 			// legacy record, returning empty data
@@ -287,11 +283,7 @@ class PredictionMarketContract extends IContract {
 		const account = await this.getMyAccount();
 		if (!account) return [];
 
-		const events = await this.getContract().getPastEvents('ParticipantAction', {
-			fromBlock: 0,
-			toBlock: 'latest',
-			filter: {participant: account} // filtering by address
-		});
+		const events = await this.getEvents('MarketActionTx', { user: account });
 
 		// filtering by address
 		return events.map(event => {
@@ -418,10 +410,12 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} outcomeId
 	 * @param {Integer} ethAmount
 	 */
-	async buy ({ marketId, outcomeId, ethAmount}) {
+	async buy ({ marketId, outcomeId, ethAmount, minOutcomeSharesToBuy}) {
 		let ethToWei = Numbers.toSmartContractDecimals(ethAmount, 18);
+		minOutcomeSharesToBuy = Numbers.toSmartContractDecimals(minOutcomeSharesToBuy, 18);
+
 		return await this.__sendTx(
-			this.getContract().methods.buy(marketId, outcomeId),
+			this.getContract().methods.buy(marketId, outcomeId, minOutcomeSharesToBuy),
 			false,
 			ethToWei
 		);
@@ -434,10 +428,11 @@ class PredictionMarketContract extends IContract {
 	 * @param {Integer} outcomeId
 	 * @param {Integer} shares
 	 */
-	async sell({marketId, outcomeId, shares}) {
-		shares = Numbers.toSmartContractDecimals(shares, 18);
+	async sell({marketId, outcomeId, ethAmount, maxOutcomeSharesToSell}) {
+		ethAmount = Numbers.toSmartContractDecimals(ethAmount, 18);
+		maxOutcomeSharesToSell = Numbers.toSmartContractDecimals(maxOutcomeSharesToSell, 18);
 		return await this.__sendTx(
-			this.getContract().methods.sell(marketId, outcomeId, shares),
+			this.getContract().methods.sell(marketId, outcomeId, ethAmount, maxOutcomeSharesToSell),
 			false,
 		);
 	};

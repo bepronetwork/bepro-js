@@ -9,6 +9,12 @@ module.exports = {
       port: 8545,
       network_id: "*" // Match any network id
     },
+    moonriver: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, "https://rpc.moonriver.moonbeam.network");
+      },
+      network_id: 1285
+    },
     moonalpha: {
       provider: function() {
         return new HDWalletProvider(mnemonic, "https://rpc.testnet.moonbeam.network");
