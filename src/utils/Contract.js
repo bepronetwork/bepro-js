@@ -49,7 +49,7 @@ class Contract {
 
   __metamaskDeploy = async ({
     byteCode, args, acc, callback = () => {},
-  }) => new Promise((resolve, reject) => {
+  }) => new Promise( async (resolve, reject) => {
     try {
       this.getContract()
         .deploy({
@@ -58,7 +58,6 @@ class Contract {
         })
         .send({
           from: acc,
-          gasPrice: 20000000000,
           gas: 5913388, // 6721975
         })
         .on('confirmation', (confirmationNumber, receipt) => {
@@ -89,7 +88,7 @@ class Contract {
         from: account.address,
         to: this.address,
         gas: 4430000,
-        gasPrice: 200000000000,
+        gasPrice: await this.web3.eth.getGasPrice(),
         value: value || '0x0',
       };
 

@@ -43,7 +43,7 @@ class Network extends IContract {
     this.params.contract.use(networkFactory, this.getAddress());
 
     const beproAddress = await this.getSettlerTokenAddress();
-    
+
     // Set Token Address Contract for easy access
     this.params.settlerToken = new ERC20Contract({
       web3Connection: this.web3Connection,
@@ -66,83 +66,83 @@ class Network extends IContract {
       .call();
   }
 
-    /**
-   * Get Network By Id 
+  /**
+   * Get Network By Id
    * @param {number} id
    * @returns {Adddress}
    */
-    async getNetworkById(id) {
+  async getNetworkById(id) {
     return await this.params.contract
-        .getContract()
-        .methods.getNetworkById(id)
-        .call();
-    }
+      .getContract()
+      .methods.getNetworkById(id)
+      .call();
+  }
 
-    /**
+  /**
      * Get Amount of Networks Forked in the Protocol
      * @returns {Promise<number>}
      */
-    async getAmountofNetworksForked() {
-        return (await this.params.contract.getContract().methods.networksAmount().call());
-    }
+  async getAmountofNetworksForked() {
+    return (await this.params.contract.getContract().methods.networksAmount().call());
+  }
 
 
-    /**
+  /**
      * Get Total Amount of Tokens Locked by Operator in the Network
      * @param {Address} address
      * @returns {Promise<number>}
      */
-    async getLockedStakedByAddress(address) {
-        return Numbers.fromDecimals(
-            await this.params.contract.getContract().methods.tokensLocked(address).call(),
-            18,
-        );
-    }
+  async getLockedStakedByAddress(address) {
+    return Numbers.fromDecimals(
+      await this.params.contract.getContract().methods.tokensLocked(address).call(),
+      18,
+    );
+  }
 
-    /**
+  /**
      * Get Open Issues Available
      * @param {Address} address
      * @returns {Address[]}
      */
-    async getNetworks() {
-        const res = await this.params.contract
-        .getContract()
-        .methods.networksArray()
-        .call();
-        return res;
-    }
+  async getNetworks() {
+    const res = await this.params.contract
+      .getContract()
+      .methods.networksArray()
+      .call();
+    return res;
+  }
 
-    /**
+  /**
      * Get Total Amount of Tokens Staked in the Protocol
      * @returns {Promise<number>}
      */
-    async getBEPROLocked() {
-        return Numbers.fromDecimals(
-        await this.params.contract.getContract().methods.tokensLockedTotal().call(),
-            18,
-        );
-    }
+  async getBEPROLocked() {
+    return Numbers.fromDecimals(
+      await this.params.contract.getContract().methods.tokensLockedTotal().call(),
+      18,
+    );
+  }
 
-    /**
+  /**
      * Verify if Address is Council
      * @param {Object} params
      * @param {number} params.address
      * @returns {Promise<address>}
      */
-    async isOperator({ address }) {
-        return await this.getLockedStakedByAddress(address) >= await this.OPERATOR_AMOUNT();
-    }
+  async isOperator({ address }) {
+    return await this.getLockedStakedByAddress(address) >= await this.OPERATOR_AMOUNT();
+  }
 
-    /**
+  /**
      * Get Settler Token Address
      * @returns {Promise<address>}
      */
-    async getSettlerTokenAddress() {
-        return await this.params.contract
-        .getContract()
-        .methods.beproAddress()
-        .call();
-    }
+  async getSettlerTokenAddress() {
+    return await this.params.contract
+      .getContract()
+      .methods.beproAddress()
+      .call();
+  }
 
   /**
    * Get Amount Needed for Operator
@@ -186,7 +186,7 @@ class Network extends IContract {
     spenderAddress: this.getAddress(),
   });
 
-   /**
+  /**
    * lock tokens for operator use
    * @param {Object} params
    * @params params.tokenAmount {number}
@@ -194,41 +194,41 @@ class Network extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-   async lock({ tokenAmount }) {
-     if (tokenAmount <= 0) {
-       throw new Error('Token Amount has to be higher than 0');
-     }
+  async lock({ tokenAmount }) {
+    if (tokenAmount <= 0) {
+      throw new Error('Token Amount has to be higher than 0');
+    }
 
-     return await this.__sendTx(
-       this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
-     );
-   }
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
+    );
+  }
 
-   /**
+  /**
    * Unlock Tokens for oracles
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-   async unlock() {
-     return await this.__sendTx(
-       this.params.contract.getContract().methods.unlock(),
-     );
-   }
+  async unlock() {
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.unlock(),
+    );
+  }
 
-   /**
+  /**
    * Create Network
    * @param {Object} params
    * @param {Address} params.settlerToken
    * @param {Address} params.transactionalToken
    * @return {Promise<TransactionObject>}
    */
-   async createNetwork({ settlerToken, transactionalToken }) {
-     return await this.__sendTx(
-       this.params.contract
-         .getContract()
-         .methods.createNetwork(settlerToken, transactionalToken)
-     );
-   }
+  async createNetwork({ settlerToken, transactionalToken }) {
+    return await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.createNetwork(settlerToken, transactionalToken),
+    );
+  }
 
   /**
    * Deploys Contracts
