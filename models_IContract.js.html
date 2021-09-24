@@ -185,11 +185,10 @@ class IContract {
    */
   __metamaskCall = async ({
     f, acc, value, callback = () => {},
-  }) => new Promise((resolve, reject) => {
+  }) => new Promise( async (resolve, reject) => {
     f.send({
       from: acc,
       value,
-      gasPrice: 2000000000, // temp test
       gas: 591338,
     })
       .on('confirmation', (confirmationNumber, receipt) => {
