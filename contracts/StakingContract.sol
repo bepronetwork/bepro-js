@@ -4,6 +4,7 @@ pragma solidity >=0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./utils/Ownable.sol";
 
 contract StakingContract is Pausable, Ownable {
@@ -18,6 +19,8 @@ contract StakingContract is Pausable, Ownable {
     uint256 constant private year = 365 days;
     
     ERC20 public erc20;
+    
+    address public erc721;
 
     struct SubscriptionAPR {
         uint256 _id;
@@ -45,8 +48,9 @@ contract StakingContract is Pausable, Ownable {
         mapping(uint256 => SubscriptionAPR) subscriptions; /* Distribution object */
     }
     
-    constructor(address _tokenAddress) public {
+    constructor(address _tokenAddress, address _nftAddress) public {
         erc20 = ERC20(_tokenAddress);
+        erc721 = _nftAddress;
     }
     
     /* Current Held Tokens */
@@ -70,6 +74,9 @@ contract StakingContract is Pausable, Ownable {
         /* Confirm Amount is positive */
         require(_amount > 0);
      
+        /* Confirm user has at least one NFT */
+        require(IERC721(erc721).balanceOf(msg.sender) > 0, "Must hold at least 1 NFT");
+        
         /* Confirm product still exists */
         require(block.timestamp < products[_product_id].endDate);
 
