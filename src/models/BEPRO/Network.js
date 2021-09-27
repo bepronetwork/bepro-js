@@ -363,11 +363,37 @@ class Network extends IContract {
     };
   }
 
+  
 
   /**
    * Get Issue By Id
    * @param {Object} params
-   * @param {Address} params.issueId
+   * @param {String} params.issueCID
+   * @returns {Promise<TokensNetwork~Issue>}
+   */
+   async getIssueByCID({ issueCID }) {
+    const r = await this.__sendTx(
+      this.params.contract.getContract().methods.getIssueByCID(issueCID),
+      true,
+    );
+
+    return {
+      _id: Numbers.fromHex(r[0]),
+      cid: r[1],
+      creationDate: Numbers.fromSmartContractTimeToMinutes(r[2]),
+      tokensStaked: Numbers.fromDecimals(r[3], 18),
+      issueGenerator: r[4],
+      mergeProposalsAmount: parseInt(r[5], 10),
+      finalized: r[6],
+      canceled: r[7],
+      recognizedAsFinished: r[8],
+    };
+  }
+
+  /**
+   * Get Issue By Id
+   * @param {Object} params
+   * @param {Integer} params.issueId
    * @returns {Promise<TokensNetwork~Issue>}
    */
   async getIssueById({ issueId }) {

@@ -46,6 +46,7 @@ contract Network is Pausable, Governed{
     uint256 public COUNCIL_AMOUNT = 10000000*10**18; // 10M
 
     mapping(uint256 => Issue) public issues; /* Distribution object */
+    mapping(string => uint256) public issuesCIDtoID; /* Distribution object */
     mapping(address => uint256[]) public myIssues; /* Address Based Subcription */
 
     mapping(address => Oracler) public oraclers; 
@@ -196,6 +197,8 @@ contract Network is Pausable, Governed{
         issue.creationDate = block.timestamp;
         issue.finalized = false;
         issues[incrementIssueID] = issue;
+        issuesCIDtoID[_cid] = incrementIssueID;
+        
         myIssues[msg.sender].push(incrementIssueID);
         totalStaked = totalStaked.add(_tokenAmount);
         incrementIssueID = incrementIssueID + 1;
@@ -344,6 +347,11 @@ contract Network is Pausable, Governed{
         }
 
         return (oracler.oraclesDelegatedByOthers, amounts, addresses, oracler.tokensLocked);
+    }
+
+    function getIssueByCID(string memory _issueCID) public returns (uint256, string memory, uint256, uint256, address, uint256, bool, bool, bool){
+        Issue memory issue = issues[issuesCIDtoID[_issueCID]];
+        return (issue._id, issue.cid, issue.creationDate, issue.tokensStaked, issue.issueGenerator, issue.mergeIDIncrement, issue.finalized, issue.canceled, issue.recognizedAsFinished);
     }
     
     function getIssueById(uint256 _issueID) public returns (uint256, string memory, uint256, uint256, address, uint256, bool, bool, bool){
