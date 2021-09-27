@@ -74,7 +74,7 @@ class IContract {
    */
   __metamaskCall = async ({
     f, acc, value, callback = () => {},
-  }) => new Promise( async (resolve, reject) => {
+  }) => new Promise(async (resolve, reject) => {
     f.send({
       from: acc,
       value,

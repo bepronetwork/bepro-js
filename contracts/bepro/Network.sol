@@ -208,7 +208,7 @@ contract Network is Pausable, Governed{
     function recognizeAsFinished(uint256 _issueId) public whenNotPaused {
         Issue storage issue = issues[_issueId];
         require(issue.issueGenerator == msg.sender, "Has to be the issue creator");
-        require(isIssueInDraft(_issueId), "Draft Issue Time has already passed");
+        require(!isIssueInDraft(_issueId), "Draft Issue Time has already passed");
         require(!issue.finalized, "Issue was already finalized");
         require(!issue.canceled, "Issue was already canceled");
 

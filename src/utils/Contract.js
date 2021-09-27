@@ -49,7 +49,7 @@ class Contract {
 
   __metamaskDeploy = async ({
     byteCode, args, acc, callback = () => {},
-  }) => new Promise( async (resolve, reject) => {
+  }) => new Promise(async (resolve, reject) => {
     try {
       this.getContract()
         .deploy({
