@@ -363,7 +363,6 @@ class Network extends IContract {
     };
   }
 
-  
 
   /**
    * Get Issue By Id
@@ -371,7 +370,7 @@ class Network extends IContract {
    * @param {String} params.issueCID
    * @returns {Promise<TokensNetwork~Issue>}
    */
-   async getIssueByCID({ issueCID }) {
+  async getIssueByCID({ issueCID }) {
     const r = await this.__sendTx(
       this.params.contract.getContract().methods.getIssueByCID(issueCID),
       true,
