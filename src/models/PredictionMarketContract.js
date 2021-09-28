@@ -170,10 +170,10 @@ class PredictionMarketContract extends IContract {
 	getAverageOutcomeBuyPrice({events, marketId, outcomeId}) {
 		// filtering by marketId + outcomeId + buy action
 		events = events.filter(event => {
-      return (
-        event.action === 'Buy' &&
-        event.marketId === marketId &&
-        event.outcomeId === outcomeId
+			return (
+				event.action === 'Buy' &&
+				event.marketId === marketId &&
+				event.outcomeId === outcomeId
 			);
 		});
 
@@ -195,9 +195,9 @@ class PredictionMarketContract extends IContract {
 	 getAverageAddLiquidityPrice({events, marketId}) {
 		// filtering by marketId + add liquidity action
 		events = events.filter(event => {
-      return (
-        event.action === 'Add Liquidity' &&
-        event.marketId === marketId
+			return (
+				event.action === 'Add Liquidity' &&
+				event.marketId === marketId
 			);
 		});
 
@@ -457,6 +457,34 @@ class PredictionMarketContract extends IContract {
 			false,
 		);
 	};
+
+	async calcBuyAmount({ marketId, outcomeId, ethAmount }) {
+		ethAmount = Numbers.toSmartContractDecimals(ethAmount, 18);
+
+		const amount = await this.getContract()
+			.methods.calcBuyAmount(
+				ethAmount,
+				marketId,
+				outcomeId
+			)
+			.call();
+
+		return Numbers.fromDecimalsNumber(amount, 18);
+	}
+
+	async calcSellAmount({ marketId, outcomeId, ethAmount }) {
+		ethAmount = Numbers.toSmartContractDecimals(ethAmount, 18);
+
+		const amount = await this.getContract()
+			.methods.calcSellAmount(
+				ethAmount,
+				marketId,
+				outcomeId
+			)
+			.call();
+
+		return Numbers.fromDecimalsNumber(amount, 18);
+	}
 }
 
 module.exports = PredictionMarketContract;
