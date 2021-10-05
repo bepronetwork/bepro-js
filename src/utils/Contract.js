@@ -15,13 +15,18 @@ class Contract {
 		try {
 			this.contract = new this.web3.eth.Contract(abi);
 			if (account) {
-				return this.contract.deploy({
+				const data = this.contract.deploy({
 						data: byteCode,
 						arguments: args,
-					}).send({
-						from: account.getAddress(),
-						gas: 5913388,
 					});
+
+				const rawTransaction = (await account.getAccount().signTransaction({
+					data: data.encodeABI(),
+					from: account.getAddress(),
+					gas: 5913388,
+				})).rawTransaction;
+
+				return await this.web3.eth.sendSignedTransaction(rawTransaction);
 			} else {
 				const accounts = await this.web3.eth.getAccounts();
 				const res = await this.__metamaskDeploy({

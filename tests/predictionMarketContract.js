@@ -34,24 +34,33 @@ context('Prediction Market Contract', async () => {
             realitioERC20Contract = app.getRealitioERC20Contract({});
             ERC20Contract = app.getERC20Contract({});
             // // Deploy
-            await predictionMarketContract.deploy({});
             await realitioERC20Contract.deploy({});
             await ERC20Contract.deploy({params: ['Polkamarkets', 'POLK']});
 
-            const predictionMarketContractAddress = predictionMarketContract.getAddress();
             const realitioContractAddress = realitioERC20Contract.getAddress();
             const ERC20ContractAddress = ERC20Contract.getAddress();
             const accountAddress = await predictionMarketContract.getMyAccount();
+
+            await predictionMarketContract.deploy({
+                params: [
+                    0,
+                    ERC20ContractAddress,
+                    0,
+                    realitioContractAddress,
+                    86400
+                ]
+            });
+            const predictionMarketContractAddress = predictionMarketContract.getAddress();
 
             expect(predictionMarketContractAddress).to.not.equal(null);
             expect(realitioContractAddress).to.not.equal(null);
 
             // setting predictionMarket ownable vars
-            await predictionMarketContract.getContract().methods.initialize().send({ from: accountAddress });
+            // await predictionMarketContract.getContract().methods.initialize().send({ from: accountAddress });
             // // setting realitioERC20 governance vars
-            await predictionMarketContract.getContract().methods.setRealitioERC20(realitioContractAddress).send({ from: accountAddress });
-            await predictionMarketContract.getContract().methods.setRealitioTimeout(86400).send({ from: accountAddress });
-            await predictionMarketContract.getContract().methods.setToken(ERC20ContractAddress).send({ from: accountAddress });
+            // await predictionMarketContract.getContract().methods.setRealitioERC20(realitioContractAddress).send({ from: accountAddress });
+            // await predictionMarketContract.getContract().methods.setRealitioTimeout(86400).send({ from: accountAddress });
+            // await predictionMarketContract.getContract().methods.setToken(ERC20ContractAddress).send({ from: accountAddress });
             // await predictionMarketContract.getContract().methods.setRequiredBalance(0).send({ from: accountAddress });
         }));
     });
@@ -93,44 +102,6 @@ context('Prediction Market Contract', async () => {
 
             const marketIds = await predictionMarketContract.getMarkets();
             expect(marketIds.length).to.equal(2);
-        }));
-
-        it('should create another Market', mochaAsync(async () => {
-            try {
-                const res = await predictionMarketContract.createMarket({
-                    name: 'Will Real Madrid win the Champions League?',
-                    image: 'foo-bar',
-                    category: 'Foo;Bar',
-                    oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
-                    duration: moment('2022-05-29').unix(),
-                    outcomes: ['Yes', 'No'],
-                    ethAmount: ethAmount
-                });
-                expect(res.status).to.equal(true);
-            } catch(e) {
-                // TODO: review this
-            }
-
-            const marketIds = await predictionMarketContract.getMarkets();
-            marketId = marketIds[marketIds.length - 1];
-            expect(marketIds.length).to.equal(3);
-            expect(marketIds[marketIds.length - 1]).to.equal(marketId);
-        }));
-
-        it('should create another Market', mochaAsync(async () => {
-            const res = await predictionMarketContract.createMarket({
-                name: 'Will temperature in Stockholm hit 18ºC on April 30th 2022?',
-                image: 'foo-bar',
-                category: 'Foo;Bar',
-                oracleAddress: '0x0000000000000000000000000000000000000001', // TODO
-                duration: moment('2022-04-30').unix(),
-                outcomes: ['Yes', 'No'],
-                ethAmount: ethAmount
-            });
-            expect(res.status).to.equal(true);
-
-            const marketIds = await predictionMarketContract.getMarkets();
-            expect(marketIds.length).to.equal(4);
         }));
     });
 
