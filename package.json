@@ -11,7 +11,7 @@
         "url": "https://github.com/betprotocol/bepro-js.git"
     },
     "scripts": {
-        "test": "truffle compile && ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
+        "test": "truffle compile && ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --exit",
         "index": "babel-node ./index.js --presets es2015,stage-2",
         "build": "npm run compile && babel ./src --out-dir lib --copy-files -d ./build",
         "compile": "truffle compile",
@@ -48,7 +48,7 @@
         "mocha": "^5.1.1",
         "moment": "^2.21.0",
         "randomhex": "^0.1.5",
-        "truffle-hdwallet-provider": "^1.0.17",
+        "truffle-hdwallet-provider": "^1.5.0",
         "web3": "^1.3.6"
     },
     "devDependencies": {

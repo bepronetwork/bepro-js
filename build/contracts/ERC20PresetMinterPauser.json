@@ -4598,8 +4598,8 @@
         }
       },
       "links": {},
-      "address": "0x6F6BfF298e182882091B8D0FF40208d09aE96B62",
-      "transactionHash": "0x98aefd16c8c319a90b87e712de2c90a8f10f06b1177708d5c08fc6b6750aa93c"
+      "address": "0xc26ab6B9245441d68b6757a83aA3560AD525ba0F",
+      "transactionHash": "0x99394de5ba2eb107ea7336033245f9b3a040cc2093f28c825a8731531ab4546e"
     },
     "1285": {
       "events": {
@@ -4756,12 +4756,12 @@
         }
       },
       "links": {},
-      "address": "0x465aD221BB04Ece3d2657E3d00e172208701353b",
-      "transactionHash": "0xb7eee2aa5d40afd4a211cc1ed3354b8538a0d17db119c8e641d42634a249e5a1"
+      "address": "0xCb4a593ce512D78162C58384f0b2Fd6e802c2c47",
+      "transactionHash": "0xd296752c80f31e04bd569a56e0d9a55464f4df86984b2091e62f161c9f11d039"
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-09-22T17:10:02.107Z",
+  "updatedAt": "2021-10-05T12:04:06.697Z",
   "devdoc": {
     "details": "{ERC20} token, including: *  - ability for holders to burn (destroy) their tokens - a minter role that allows for token minting (creation) - a pauser role that allows to stop all token transfers * This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. * The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
     "methods": {

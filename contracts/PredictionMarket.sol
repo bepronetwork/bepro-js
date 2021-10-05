@@ -176,12 +176,12 @@ contract PredictionMarket {
 
   /// @dev Creates a market, initializes the outcome shares pool and submits a question in Realitio
   function createMarket(
-    string memory question,
-    string memory image,
+    string calldata question,
+    string calldata image,
     uint256 closesAt,
     address arbitrator,
     uint256 outcomes
-  ) public payable mustHoldRequiredBalance() returns (uint256) {
+  ) external payable mustHoldRequiredBalance() returns (uint256) {
     uint256 marketId = marketIndex;
     marketIds.push(marketId);
 
@@ -486,7 +486,7 @@ contract PredictionMarket {
 
   /// @dev Fetches winning outcome from Realitio and resolves the market
   function resolveMarketOutcome(uint256 marketId)
-    public
+    external
     timeTransitions(marketId)
     atState(marketId, MarketState.closed)
     transitionNext(marketId)
@@ -507,7 +507,7 @@ contract PredictionMarket {
   }
 
   /// @dev Allows holders of resolved outcome shares to claim earnings.
-  function claimWinnings(uint256 marketId) public atState(marketId, MarketState.resolved) {
+  function claimWinnings(uint256 marketId) external atState(marketId, MarketState.resolved) {
     Market storage market = markets[marketId];
     MarketOutcome storage resolvedOutcome = market.outcomes[market.resolution.outcomeId];
 
@@ -538,7 +538,7 @@ contract PredictionMarket {
 
   /// @dev Allows holders of voided outcome shares to claim balance back.
   function claimVoidedOutcomeShares(uint256 marketId, uint256 outcomeId)
-    public
+    external
     atState(marketId, MarketState.resolved)
   {
     Market storage market = markets[marketId];
@@ -571,7 +571,7 @@ contract PredictionMarket {
   }
 
   /// @dev Allows liquidity providers to claim earnings from liquidity providing.
-  function claimLiquidity(uint256 marketId) public atState(marketId, MarketState.resolved) {
+  function claimLiquidity(uint256 marketId) external atState(marketId, MarketState.resolved) {
     Market storage market = markets[marketId];
 
     // claiming any pending fees
@@ -733,7 +733,7 @@ contract PredictionMarket {
   // ------ Getters ------
 
   function getUserMarketShares(uint256 marketId, address user)
-    public
+    external
     view
     returns (
       uint256,
@@ -751,7 +751,7 @@ contract PredictionMarket {
   }
 
   function getUserClaimStatus(uint256 marketId, address user)
-    public
+    external
     view
     returns (
       bool,
@@ -779,7 +779,7 @@ contract PredictionMarket {
     );
   }
 
-  function getUserLiquidityPoolShare(uint256 marketId, address user) public view returns (uint256) {
+  function getUserLiquidityPoolShare(uint256 marketId, address user) external view returns (uint256) {
     Market storage market = markets[marketId];
 
     return market.liquidityShares[user].mul(ONE).div(market.liquidity);
@@ -792,12 +792,12 @@ contract PredictionMarket {
     return rawAmount.sub(market.fees.claimed[user]);
   }
 
-  function getMarkets() public view returns (uint256[] memory) {
+  function getMarkets() external view returns (uint256[] memory) {
     return marketIds;
   }
 
   function getMarketData(uint256 marketId)
-    public
+    external
     view
     returns (
       MarketState,
@@ -821,7 +821,7 @@ contract PredictionMarket {
   }
 
   function getMarketAltData(uint256 marketId)
-    public
+    external
     view
     returns (
       uint256,
@@ -834,14 +834,14 @@ contract PredictionMarket {
     return (market.fees.value, market.resolution.questionId, uint256(market.resolution.questionId));
   }
 
-  function getMarketQuestion(uint256 marketId) public view returns (bytes32) {
+  function getMarketQuestion(uint256 marketId) external view returns (bytes32) {
     Market storage market = markets[marketId];
 
     return (market.resolution.questionId);
   }
 
   function getMarketPrices(uint256 marketId)
-    public
+    external
     view
     returns (
       uint256,
@@ -890,7 +890,7 @@ contract PredictionMarket {
 
   // ------ Outcome Getters ------
 
-  function getMarketOutcomeIds(uint256 marketId) public view returns (uint256[] memory) {
+  function getMarketOutcomeIds(uint256 marketId) external view returns (uint256[] memory) {
     Market storage market = markets[marketId];
     return market.outcomeIds;
   }
@@ -908,7 +908,7 @@ contract PredictionMarket {
   }
 
   function getMarketOutcomeData(uint256 marketId, uint256 outcomeId)
-    public
+    external
     view
     returns (
       uint256,
