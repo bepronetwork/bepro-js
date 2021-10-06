@@ -16,6 +16,7 @@ const actions = {
 	4: 'Claim Winnings',
 	5: 'Claim Liquidity',
 	6: 'Claim Fees',
+	7: 'Claim Voided',
 }
 
 /**
@@ -447,6 +448,13 @@ class PredictionMarketContract extends IContract {
 	async claimWinnings({marketId}) {
 		return await this.__sendTx(
 			this.getContract().methods.claimWinnings(marketId),
+			false,
+		);
+	};
+
+	async claimVoidedOutcomeShares({marketId, outcomeId}) {
+		return await this.__sendTx(
+			this.getContract().methods.claimVoidedOutcomeShares(marketId, outcomeId),
 			false,
 		);
 	};
