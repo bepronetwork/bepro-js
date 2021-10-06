@@ -16,8 +16,8 @@ import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 //import "../../utils/ReentrancyGuardOptimized.sol";
 //import "../../math/SafePercentMath.sol";
 
-/// @title LoopHole Finance smart contract
-abstract contract UniswapV3Router is Context {
+/// @title UniswapV3 Router Bridge smart contract
+abstract contract UniswapV3RouterBridge is Context {
   //, ReentrancyGuardOptimized {
     using SafeMath for uint256;
     //using SafePercentMath for uint256;
@@ -26,8 +26,8 @@ abstract contract UniswapV3Router is Context {
     ISwapRouter public immutable swapRouter;
 
     // we will set the pool fee to 0.3%.
-    uint24 public constant poolFee = 3000;
-
+    //uint24 public constant poolFee = 3000;
+    
     //mapping(address => PoolInfo) pools; // pool exists toggles.
     //// Add the library methods
     //using EnumerableSet for EnumerableSet.AddressSet;
@@ -47,16 +47,23 @@ abstract contract UniswapV3Router is Context {
     /// @dev The calling address must approve this contract to spend at least `amountIn` worth of its DAI for this function to succeed.
     /// @param tokenIn TokenIn address sender wants to exchange.
     /// @param tokenOut TokenOut address sender wants to get in exchange.
+    /// @param poolFee Pool fee.
+    /// @param from Tokens owner address we transfer tokens from to be exchanged.
     /// @param amountIn The exact amount of 'tokenIn' that will be swapped for 'tokenOut'.
     /// @param amountOutMinimum The minimum amount of 'amountOut' tokens that will be returned from the swap, this is used to prevent front running attacks,
     /// proviging a pre calculated expected minimum amount.
     /// @return amountOut The amount of 'tokenOut' received.
-    function swapExactInputSingle(address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOutMinimum) internal returns (uint256 amountOut) {
-        // msg.sender must approve this contract
+    function swapExactInputSingle(
+      address tokenIn, address tokenOut, uint24 poolFee, 
+      address from, uint256 amountIn, uint256 amountOutMinimum) 
+      internal
+      returns (uint256 amountOut) {
+        // msg.sender 'from' address must approve this contract
 
         // Transfer the specified amount of 'tokenIn' to this contract.
-        TransferHelper.safeTransferFrom(tokenIn, _msgSender(), address(this), amountIn);
-
+        if (from != address(this))
+            TransferHelper.safeTransferFrom(tokenIn, from, address(this), amountIn);
+        
         // Approve the router to spend tokenIn.
         TransferHelper.safeApprove(tokenIn, address(swapRouter), amountIn);
 
@@ -67,7 +74,7 @@ abstract contract UniswapV3Router is Context {
                 tokenIn: tokenIn,
                 tokenOut: tokenOut,
                 fee: poolFee,
-                recipient: _msgSender(),
+                recipient: from,
                 deadline: block.timestamp,
                 amountIn: amountIn,
                 amountOutMinimum: amountOutMinimum,
@@ -83,12 +90,20 @@ abstract contract UniswapV3Router is Context {
     /// the calling address will need to approve for a slightly higher amount, anticipating some variance.
     /// @param tokenIn TokenIn address sender wants to exchange.
     /// @param tokenOut TokenOut address sender wants to get in exchange.
+    /// @param poolFee Pool fee.
+    /// @param from Tokens owner address we transfer tokens from to be exchanged.
     /// @param amountOut The exact amount of 'tokenOut' to receive from the swap.
     /// @param amountInMaximum The amount of 'tokenIn' we are willing to spend to receive the specified amount of 'tokenOut'.
     /// @return amountIn The amount of 'tokenIn' actually spent in the swap.
-    function swapExactOutputSingle(address tokenIn, address tokenOut, uint256 amountOut, uint256 amountInMaximum) internal returns (uint256 amountIn) {
+    function swapExactOutputSingle(
+      address tokenIn, address tokenOut, uint24 poolFee, 
+      address from, uint256 amountOut, uint256 amountInMaximum) 
+      internal 
+      returns (uint256 amountIn) {
         // Transfer the specified amount of 'tokenIn' to this contract.
-        TransferHelper.safeTransferFrom(tokenIn, _msgSender(), address(this), amountInMaximum);
+        bool differentFromTo = (from != address(this));
+        if (differentFromTo)
+            TransferHelper.safeTransferFrom(tokenIn, from, address(this), amountInMaximum);
 
         // Approve the router to spend the specifed `amountInMaximum` of 'tokenIn'.
         // In production, you should choose the maximum amount to spend based on oracles or other data sources to acheive a better swap.
@@ -99,7 +114,7 @@ abstract contract UniswapV3Router is Context {
                 tokenIn: tokenIn,
                 tokenOut: tokenOut,
                 fee: poolFee,
-                recipient: _msgSender(),
+                recipient: from,
                 deadline: block.timestamp,
                 amountOut: amountOut,
                 amountInMaximum: amountInMaximum,
@@ -113,7 +128,8 @@ abstract contract UniswapV3Router is Context {
         // If the actual amount spent (amountIn) is less than the specified maximum amount, we must refund the msg.sender and approve the swapRouter to spend 0.
         if (amountIn < amountInMaximum) {
             TransferHelper.safeApprove(tokenIn, address(swapRouter), 0);
-            TransferHelper.safeTransfer(tokenIn, _msgSender(), amountInMaximum - amountIn);
+            if (differentFromTo)
+                TransferHelper.safeTransfer(tokenIn, _msgSender(), amountInMaximum - amountIn);
         }
     }
 }
