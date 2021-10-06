@@ -2,9 +2,12 @@
 const BigNumber = require("bignumber.js");
 
 const ERC20Mock = artifacts.require("./ERC20Mock.sol");
+//const CTokenManager = artifacts.require("./CTokenManager.sol");
 const Sablier = artifacts.require("./Sablier.sol");
 
 module.exports = async (deployer, network, accounts) => {
+  //await deployer.deploy(CTokenManager);
+  
   await deployer.deploy(Sablier);
   const sablier = await Sablier.deployed();
 
