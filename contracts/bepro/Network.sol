@@ -2,8 +2,8 @@ pragma solidity >=0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "../utils/Governed.sol";
-
 
 /**
  * @dev Interface of the ERC20 standard + mint & burn
@@ -27,7 +27,7 @@ interface _IERC20 is IERC20  {
 /**
  * @title Development Network Contract Autonomous Use
  */
-contract Network is Pausable, Governed{
+contract Network is Pausable, Governed, ReentrancyGuard{
     using SafeMath for uint256;
 
     _IERC20 public settlerToken;
@@ -43,7 +43,7 @@ contract Network is Pausable, Governed{
     uint256 public redeemTime = 1 days;
     uint256 public oraclesStaked = 0;
 
-    uint256 public COUNCIL_AMOUNT = 10000000*10**18; // 10M
+    uint256 public COUNCIL_AMOUNT = 25000000*10**18; // 25M
 
     mapping(uint256 => Issue) public issues; /* Distribution object */
     mapping(string => uint256) public issuesCIDtoID; /* Distribution object */
@@ -97,7 +97,7 @@ contract Network is Pausable, Governed{
         _governor = _governor;
     }
 
-    function lock(uint256 _tokenAmount) public {
+    function lock(uint256 _tokenAmount) external {
         require(_tokenAmount > 0, "Token Amount has to be higher than 0");
         require(settlerToken.transferFrom(msg.sender, address(this), _tokenAmount), "Needs Allowance");
 
@@ -117,7 +117,7 @@ contract Network is Pausable, Governed{
         oraclesStaked = oraclesStaked.add(_tokenAmount);
     }
 
-    function unlock(uint256 _tokenAmount, address _from) public {
+    function unlock(uint256 _tokenAmount, address _from) external nonReentrant{
         Oracler storage oracler = oraclers[msg.sender];
         require(oracler.tokensLocked >= _tokenAmount, "Has to have tokens to unlock");
         require(oracler.oraclesDelegated[_from] >= _tokenAmount, "From has to have enough tokens to unlock");
@@ -133,7 +133,7 @@ contract Network is Pausable, Governed{
         oraclesStaked = oraclesStaked.sub(_tokenAmount);
     }
 
-    function delegateOracles(uint256 _tokenAmount, address _delegatedTo) public {
+    function delegateOracles(uint256 _tokenAmount, address _delegatedTo) external {
         Oracler storage oracler = oraclers[msg.sender];
 
         require(_delegatedTo != address(0), "Cannot transfer to the zero address");
@@ -149,8 +149,7 @@ contract Network is Pausable, Governed{
         oraclers[_delegatedTo].oraclesDelegatedByOthers = oraclers[_delegatedTo].oraclesDelegatedByOthers.add(_tokenAmount);
     }
 
-    function disputeMerge(uint256 _issueID, uint256 _mergeID) public {
-        Oracler memory oracler = oraclers[msg.sender];
+    function disputeMerge(uint256 _issueID, uint256 _mergeID) external {
         Issue memory issue = issues[_issueID];
         MergeProposal storage merge = issues[_issueID].mergeProposals[_mergeID];
         require(issue._id != 0, "Issue does not exist");
@@ -187,7 +186,7 @@ contract Network is Pausable, Governed{
      * @dev open an Issue with transaction Tokens owned
      * 1st step
      */
-    function openIssue(string memory _cid, uint256 _tokenAmount) public whenNotPaused {
+    function openIssue(string calldata _cid, uint256 _tokenAmount) external whenNotPaused {
         // Open Issue
         Issue memory issue;
         issue._id = incrementIssueID;
@@ -208,7 +207,7 @@ contract Network is Pausable, Governed{
         emit OpenIssue(issue._id, msg.sender, _tokenAmount);
     }
 
-    function recognizeAsFinished(uint256 _issueId) public whenNotPaused {
+    function recognizeAsFinished(uint256 _issueId) external whenNotPaused {
         Issue storage issue = issues[_issueId];
         require(issue.issueGenerator == msg.sender, "Has to be the issue creator");
         require(!isIssueInDraft(_issueId), "Draft Issue Time has already passed");
@@ -220,7 +219,7 @@ contract Network is Pausable, Governed{
         emit RecognizedAsFinished(_issueId);
     }
 
-    function redeemIssue(uint256 _issueId) public whenNotPaused {
+    function redeemIssue(uint256 _issueId) external whenNotPaused {
         Issue storage issue = issues[_issueId];
         require(issue.issueGenerator == msg.sender, "Has to be the issue creator");
         require(isIssueInDraft(_issueId), "Draft Issue Time has already passed");
@@ -238,9 +237,11 @@ contract Network is Pausable, Governed{
      * @dev update an Issue with transaction tokens owned
      * 2nd step  (optional)
      */
-    function updateIssue(uint256 _issueId, uint256 _newTokenAmount) public whenNotPaused {
+    function updateIssue(uint256 _issueId, uint256 _newTokenAmount) external whenNotPaused {
         require(issues[_issueId].tokensStaked != 0, "Issue has to exist");
         require(issues[_issueId].issueGenerator == msg.sender, "Has to be the issue creator");
+        require(!issues[_issueId].finalized, "Issue was already finalized");
+        require(!issues[_issueId].canceled, "Issue was already canceled");
         require(isIssueInDraft(_issueId), "Draft Issue Time has already passed");
 
         uint256 previousAmount = issues[_issueId].tokensStaked;
@@ -262,7 +263,7 @@ contract Network is Pausable, Governed{
      * @param _prAddresses PR Address
      * @param _prAmounts PR Amounts
      */
-    function proposeIssueMerge(uint256 _issueID, address[] memory _prAddresses, uint256[] memory _prAmounts) public whenNotPaused {
+    function proposeIssueMerge(uint256 _issueID, address[] calldata _prAddresses, uint256[] calldata _prAmounts) external whenNotPaused {
 
         Issue memory issue = issues[_issueID];
         require(issue._id != 0 , "Issue has to exist");
@@ -298,7 +299,7 @@ contract Network is Pausable, Governed{
      * @param _issueID issue id (mapping with github)
      * @param _mergeID merge id 
      */
-    function closeIssue(uint256 _issueID, uint256 _mergeID) public whenNotPaused {
+    function closeIssue(uint256 _issueID, uint256 _mergeID) external whenNotPaused {
         Issue memory issue = issues[_issueID];
         require(issue._id != 0 , "Issue has to exist");
         require(issue.finalized == false, "Issue has to be opened");
@@ -367,7 +368,7 @@ contract Network is Pausable, Governed{
     /**
      * @dev Change Merge Creator FeeShare
      */
-    function changeMergeCreatorFeeShare(uint256 _mergeCreatorFeeShare) public onlyGovernor {
+    function changeMergeCreatorFeeShare(uint256 _mergeCreatorFeeShare) external onlyGovernor {
         require(_mergeCreatorFeeShare < 20, "Merge Share can´t be higher than 20");
         mergeCreatorFeeShare = _mergeCreatorFeeShare;
     }
@@ -375,7 +376,7 @@ contract Network is Pausable, Governed{
     /**
      * @dev changePercentageNeededForDispute
      */
-    function changePercentageNeededForDispute(uint256 _percentageNeededForDispute) public onlyGovernor {
+    function changePercentageNeededForDispute(uint256 _percentageNeededForDispute) external onlyGovernor {
         require(_percentageNeededForDispute < 15, "Dispute % Needed can´t be higher than 15");
         percentageNeededForDispute = _percentageNeededForDispute;
     }
@@ -383,7 +384,7 @@ contract Network is Pausable, Governed{
      /**
      * @dev changedisputableTime
      */
-    function changeDisputableTime(uint256 _disputableTime) public onlyGovernor {
+    function changeDisputableTime(uint256 _disputableTime) external onlyGovernor {
         require(_disputableTime < 20 days, "Time has to be lower than 20 days");
         require(_disputableTime >= 1 minutes, "Time has to be higher than 1 minutes");
         disputableTime = _disputableTime;
@@ -392,7 +393,7 @@ contract Network is Pausable, Governed{
       /**
      * @dev changeRedeemTime
      */
-    function changeRedeemTime(uint256 _redeemTime) public onlyGovernor {
+    function changeRedeemTime(uint256 _redeemTime) external onlyGovernor {
         require(_redeemTime < 20 days, "Time has to be lower than 20 days");
         require(_redeemTime >= 1 minutes, "Time has to be higher than 1 minutes");
         redeemTime = _redeemTime;
@@ -401,7 +402,7 @@ contract Network is Pausable, Governed{
     /**
      * @dev changeTimeOpenForIssueApprove
     */
-    function changeCOUNCIL_AMOUNT(uint256 _COUNCIL_AMOUNT) public onlyGovernor {
+    function changeCOUNCIL_AMOUNT(uint256 _COUNCIL_AMOUNT) external onlyGovernor {
         require(_COUNCIL_AMOUNT > 100000*10**settlerToken.decimals(), "Council Amount has to higher than 100k");
         require(_COUNCIL_AMOUNT < 50000000*10**settlerToken.decimals(), "Council Amount has to lower than 50M");
         COUNCIL_AMOUNT = _COUNCIL_AMOUNT;

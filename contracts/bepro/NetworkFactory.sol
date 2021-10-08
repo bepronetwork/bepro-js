@@ -1,12 +1,13 @@
 pragma solidity >=0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./Network.sol";
 
 /**
  * @title Development Network Contract Factory 
  */
-contract NetworkFactory {
+contract NetworkFactory is ReentrancyGuard{
    using SafeMath for uint256;
 
     ERC20 public beproAddress; /* BEPRO ERC20 */
@@ -26,15 +27,15 @@ contract NetworkFactory {
         beproAddress = _beproAddress;
     }
 
-    function lock(uint256 _tokenAmount) public {
-        require(_tokenAmount > OPERATOR_AMOUNT, "Token Amount has to be higher than 0");
+    function lock(uint256 _tokenAmount) external {
+        require(_tokenAmount > 0, "Token Amount needs to be higher than 0");
         require(beproAddress.transferFrom(msg.sender, address(this), _tokenAmount), "Needs Allowance");
 
         tokensLocked[msg.sender] = tokensLocked[msg.sender].add(_tokenAmount);
         tokensLockedTotal = tokensLockedTotal.add(_tokenAmount);
     }
 
-    function createNetwork(address _settlerToken, address _transactionToken) public {
+    function createNetwork(address _settlerToken, address _transactionToken) external {
 
         require(tokensLocked[msg.sender] >= OPERATOR_AMOUNT, "Operator has to lock +1M BEPRO to fork the Network");
 
@@ -45,7 +46,7 @@ contract NetworkFactory {
         networksAmount = networksAmount.add(1);
     }
 
-    function unlock() public {
+    function unlock() external nonReentrant {
         require(tokensLocked[msg.sender] >= 0, "Needs to have tokens locked");
         require(beproAddress.transferFrom(address(this), msg.sender, tokensLocked[msg.sender]), "Needs Allowance");
         require(Network(networksByAddress[msg.sender]).oraclesStaked() == 0,"Network has to have 0 Settler Tokens");
@@ -55,15 +56,15 @@ contract NetworkFactory {
         tokensLocked[msg.sender] = 0;
     }
 
-    function getTokensLocked(address _address) public returns (uint256) {
+    function getTokensLocked(address _address) external returns (uint256) {
         return tokensLocked[_address];
     }
 
-    function getNetworkById(uint256 _id) public returns (address) {
+    function getNetworkById(uint256 _id) external returns (address) {
         return address(networks[_id]);
     }
 
-   function getNetworkByAddress(address _address) public returns (address) {
+   function getNetworkByAddress(address _address) external returns (address) {
         return address(networksByAddress[_address]);
    }
 
