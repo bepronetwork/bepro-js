@@ -304,7 +304,7 @@ class IContract {
 			events = blockEvents.concat(events);
 		}));
 
-		return events.sort(event => event.blockNumber);
+		return events.sort((a, b) => a.blockNumber - b.blockNumber);
 	}
 }
 
