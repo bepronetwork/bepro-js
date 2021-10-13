@@ -437,8 +437,6 @@ class StakingContract extends IContract {
         'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
-    this._loadDataFromWeb3Connection();
-
     /* Use ABI */
     this.params.contract.use(staking, this.getAddress());
 
