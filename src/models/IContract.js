@@ -120,7 +120,7 @@ class IContract {
 	*/
 	async deploy({callback, params = []}) {
 		let res = await this.__deploy(params, callback);
-		this.params.contractAddress = res._address;
+		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */
 		await this.__assert();
 		return res;
@@ -259,6 +259,10 @@ class IContract {
 	 * @returns {String | undefined} address
 	 */
 	async getMyAccount() {
+		if (this.acc) {
+			return this.acc.getAddress()
+		}
+
 		const accounts = await this.params.web3.eth.getAccounts();
 
 		return accounts[0];
