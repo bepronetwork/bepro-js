@@ -88,7 +88,7 @@ contract Network is Pausable, Governed, ReentrancyGuard{
     event RedeemIssue(uint256 indexed id);
     event MergeProposalCreated(uint256 indexed id, uint256 indexed mergeID, address indexed creator);
     event DisputeMerge(uint256 indexed id, uint256 indexed mergeID, uint256 oracles, address indexed disputer);
-    event CloseIssue(uint256 indexed id, uint256 indexed mergeID, address[] indexed addresses);
+    event CloseIssue(uint256 indexed id, uint256 indexed mergeID);
     event RecognizedAsFinished(uint256 indexed id);
 
     constructor(address _settlerToken, address _transactionToken, address _governor) public { 
@@ -324,7 +324,7 @@ contract Network is Pausable, Governed, ReentrancyGuard{
 
         closedIdsCount = closedIdsCount.add(1);
         totalStaked = totalStaked.sub(issue.tokensStaked);
-        emit CloseIssue(_issueID, _mergeID, merge.prAddresses);
+        emit CloseIssue(_issueID, _mergeID);
     }
 
     function getIssuesByAddress(address _address) public returns (uint256[] memory){
