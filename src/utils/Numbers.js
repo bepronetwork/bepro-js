@@ -86,17 +86,18 @@ class numbers {
   
   // convert BigNumber value to smart contract value because Number loose precision.
   // value can be BigNumber, number or string, if string it will be converted to BigNumber
+  // returns a string
   fromBNToDecimals(value, decimals) {
     let val;
-	const decimalsNr = Number(decimals);
-	const types = ['string', 'number'];
-	if (types.includes(typeof(value)))
-		val = new BigNumber(value);
-	else val = value;
-	
-	const tokens = val.shiftedBy(decimalsNr); //can have exponent like 1.2345e18
-	const tokens2 = tokens.toFixed(); //this removes exponent and has all digits
-	return tokens2;
+    const decimalsNr = Number(decimals);
+    const types = ['string', 'number'];
+    if (types.includes(typeof(value)))
+      val = new BigNumber(value);
+    else val = value;
+    
+    const tokens = val.shiftedBy(decimalsNr); //can have exponent like 1.2345e18
+    const tokens2 = tokens.toFixed(); //this removes exponent and has all digits
+    return tokens2;
   }
 
   fromBigNumberToInteger(value, decimals = 18) {
@@ -113,17 +114,17 @@ class numbers {
   // value can be BigNumber, number or string, if string it will be converted to BigNumber
   fromDecimalsToBN(value, decimals) {
     let val;
-	const decimalsNr = Number(decimals);
-	const types = ['string', 'number'];
-	if (types.includes(typeof(value)))
-		val = new BigNumber(value);
-	else val = value;
-	
+    const decimalsNr = Number(decimals);
+    const types = ['string', 'number'];
+    if (types.includes(typeof(value)))
+      val = new BigNumber(value);
+    else val = value;
+    
     return val.shiftedBy(-decimalsNr);
   }
   
   fromTokens(value, decimals) {
-	let precision = '1e' + decimals;
+	  let precision = '1e' + decimals;
     return Number(
       value / precision
     ).noExponents();

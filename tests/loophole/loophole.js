@@ -192,12 +192,14 @@ const forwardBlocks = async (nblocks) => {
 }
 
 // deploy Loophole contract
-const deployLoophole = async ({setupWeth = false, setupWbtc = false} = {}) => {
+const deployLoophole = async ({ startBlockNumber = 1, setupWeth = false, setupWbtc = false } = {}) => {
 	console.log('...deploying new Loophole contract');
 	
 	//deployedBlock = await ethUtils.blockNumber();
 	//deployedBlock = BigNumber(0);
-	initStartBlock = BigNumber(1); //0
+	if (startBlockNumber)
+		initStartBlock = startBlockNumber; //0
+	else initStartBlock = BigNumber(1); //0
 	
 	// Create Contract
 	let testConfig2 = { ...testConfig, lpTokenAddress, ethUtilsAddress, swapRouterAddress };
@@ -234,10 +236,6 @@ const deployLoophole = async ({setupWeth = false, setupWbtc = false} = {}) => {
 	if (setupWbtc) {
 		await addWbtcPool();
 	}
-	
-	it('...deployLoophole test 1', async () => {
-		console.log('...deployLoophole test 1...');
-	});
 };
 
 const addWethPool = async () => {
@@ -278,91 +276,59 @@ const approveWbtcTransfers = async (user1 = userAddress) => {
 	await wbtc.approve({ address: loopholeAddress, amount: wbtcBnMaxUint256 });
 }
 
+const approveLPTransfers = async (user1 = userAddress) => {
+	lpToken.switchWallet(user1);
+	await lpToken.approve({ address: loopholeAddress, amount: lpBnMaxUint256 });
+}
+
 const approveTransfers = async (user1 = userAddress) => {
 	await approveWethTransfers(user1);
 	await approveWbtcTransfers(user1);
 }
 
-const setupLoophole = async ({setupWeth = true, setupWbtc = true} = {}) => {
-	///>>> setup loophole, add WETH and WBTC pools
-	if (setupWeth) {
-		await addWethPool();
+// 4 normal users approve weth transfers to loophole contract
+const approveBulkWethTransfers = async (user1, user2, user3, user4) => {
+	if (!user1 && !user2 && !user3 && !user4) {
+		console.log('...approveBulkWethTransfers: no users defined');
+		return;
 	}
+	if (user1) await approveWethTransfers(user1);
+	if (user2) await approveWethTransfers(user2);
+	if (user3) await approveWethTransfers(user3);
+	if (user4) await approveWethTransfers(user4);
+}
 
-	if (setupWbtc) {
-		await addWbtcPool();
+// 4 normal users approve LP transfers to loophole contract
+const approveBulkLPTransfers = async (user1, user2, user3, user4) => {
+	if (!user1 && !user2 && !user3 && !user4) {
+		console.log('...approveBulkLPTransfers: no users defined');
+		return;
 	}
-	console.log('...Loophole ready!');
-};
+	if (user1) await approveLPTransfers(user1);
+	if (user2) await approveLPTransfers(user2);
+	if (user3) await approveLPTransfers(user3);
+	if (user4) await approveLPTransfers(user4);
+}
 
-/*const runOnlyOwner = async function (asyncFn) {
-	const ua1 = await loophole.getUserAddress();
-	console.log('runOnlyOwner-ua1: ', ua1);
+// send LP tokens to loophole contract and approve LP transfers by loophole for 4 users
+const fundLoopholeWithLP = async () => {
 	
-	loophole.switchWallet(userAddress2);
-	console.log('runOnlyOwner-bp0.userAddress2: ', userAddress2);
-	
-	const ua2 = await loophole.getUserAddress();
-	console.log('runOnlyOwner-ua2: ', ua2);
-	console.log('runOnlyOwner.asyncFn: ', asyncFn.toString());
+	lpToken.switchWallet(userAddress);
+	// transfer LP tokens to loophole contract
+	const tx = await lpToken.transferTokenAmount({ toAddress: loopholeAddress, tokenAmount: BigNumber(TOKEN_AMOUNT_1M) });
+	//console.log('---lpToken.transferTokenAmount.tx:', tx);
+}
 
-	await beproAssert.reverts(asyncFn, 'OR'); //'Owner Required'
-	loophole.switchWallet(owner);
-	console.log('runOnlyOwner-bp1');
-};*/
 
 
 const testFail = async (msg) => {
 	throw new Error(msg);
 }; 
 
-const extCallTest = async function() {
-	it('...extCallTest test 1', async () => {
-		console.log('...it.extCallTest test 1...');
-		console.log('testConfig: ', testConfig);
-	});
-	
-	it('...extCallTest test 2', async () => {
-		console.log('...it.extCallTest test 2...');
-		console.log('web3: ', (web3 !== undefined && web3 != null));
-	});
-}
-
-const extCallTest2 = async () => {
-	console.log('+++ preparing extCallTest2 +++');
-
-	it('...extCallTest test 1', async () => {
-		console.log('...it.extCallTest test 1...');
-		//console.log('testConfig: ', testConfig);
-	});
-	
-	it('...extCallTest test 2', async () => {
-		console.log('...it.extCallTest test 2...');
-		console.log('web3: ', (web3 !== undefined && web3 != null));
-	});
-}
-
 
 
 context("Loophole contract", () => {
-//const setup = () => {
   
-	/*const runOnlyOwnerInternal = async function (asyncFn) {
-		const ua1 = await loophole.getUserAddress();
-		console.log('runOnlyOwner-ua1: ', ua1);
-		
-		loophole.switchWallet(userAddress2);
-		console.log('runOnlyOwner-bp0.userAddress2: ', userAddress2);
-		
-		const ua2 = await loophole.getUserAddress();
-		console.log('runOnlyOwner-ua2: ', ua2);
-		console.log('runOnlyOwner.asyncFn: ', asyncFn.toString());
-	
-		await beproAssert.reverts(asyncFn, 'OR'); //'Owner Required'
-		loophole.switchWallet(owner);
-		console.log('runOnlyOwner-bp1');
-	};*/
-
 	before('Loophole::before_hook', async () => {
     //const loophole = new Loophole(testConfig);
     const token = new ERC20Mock(testConfig);
@@ -384,6 +350,15 @@ context("Loophole contract", () => {
       console.log('--- we only take blockchain snapshot for localtest ---');
     }
   });
+
+
+
+	//NOTE: make sure we only run these tests in local blockchain
+	before('Loophole::before_hook::checkLocalTestOnly', async () => {
+		if (!checkLocalTestOnly()) {
+			assert.fail('LOCAL_TEST_REQUIRED');
+		}
+	});
 
 
 
@@ -701,6 +676,51 @@ context("Loophole contract", () => {
 	
 	
 
+	describe('#when Loophole deployed with startBlock > block number', async () => {
+		let startBlockNumber1;
+
+		before('before::hook', async () => {
+			startBlockNumber1 = (await ethUtils.blockNumber()).plus(10);
+			console.log('---startBlockNumber1: ', startBlockNumber1);
+			await deployLoophole({ startBlockNumber: startBlockNumber1 });
+		});
+
+		it('should pick startBlock over block number when adding pool for last reward block', async () => {
+			//NOTE: add WETH pool for testing
+			loophole.switchWallet(owner);
+			await loophole.add(wethAddress, wethAllocPoint);
+			
+			//NOTE: get pool info and check lastRewardBlock
+			const p = await loophole.getPool(wethPid);
+			p.lastRewardBlock.should.be.bignumber.equal(startBlockNumber1);
+		});
+	});
+
+
+
+	describe('#when Loophole deployed with startBlock < block number', async () => {
+		let startBlockNumber1;
+
+		before('before::hook', async () => {
+			startBlockNumber1 = await ethUtils.blockNumber();
+			console.log('---startBlockNumber1: ', startBlockNumber1);
+			await deployLoophole({ startBlockNumber: startBlockNumber1 });
+		});
+
+		it('should pick block number over startBlock when adding pool for last reward block', async () => {
+			//NOTE: add WETH pool for testing
+			loophole.switchWallet(owner);
+			await loophole.add(wethAddress, wethAllocPoint);
+			
+			//NOTE: get pool info and check lastRewardBlock
+			//only 2 blocks should have passed with latest transaction, loophole deploy and add weth pool
+			const p = await loophole.getPool(wethPid);
+			p.lastRewardBlock.should.be.bignumber.equal(startBlockNumber1.plus(2));
+		});
+	});
+
+
+
 	describe('#Loophole contract deploy and check', async () => {
 		it('should deploy Loophole Contract', async () => {
 			await deployLoophole();
@@ -730,7 +750,7 @@ context("Loophole contract", () => {
 			expect(res).to.equal(true);
 
 			// should have one pool, LOOP pool
-			res = await loophole.poolLength();
+			res = await loophole.poolsCount();
 			expect(Number(res)).to.equal(1);
 
 			// get pool info at pool-id 0 for LP token pool
@@ -815,12 +835,6 @@ context("Loophole contract", () => {
 		});
 
 
-		it('should revert when trying to add existing staking pool WETH', async () => {
-			let allocPoint = 1;
-			await beproAssert.reverts(loophole.add(wethAddress, allocPoint), 'TPE'); //'Token Pool Exists'
-		});
-
-
 		it('should add new staking pools WETH and WBTC and emit PoolAdded events', async () => {
 			let allocPoint = 1;
 			let pid = await loophole.getWeb3Contract().methods.add(wethAddress, allocPoint).call();
@@ -877,11 +891,18 @@ context("Loophole contract", () => {
 			expect(res.entryStakeTotal.toString()).to.equal(BigNumber(0).toString());
 			expect(res.totalDistributedPenalty.toString()).to.equal(BigNumber(0).toString());
 		});
+
+
+		it('should revert when trying to add existing staking pool WETH', async () => {
+			let allocPoint = 1;
+			await beproAssert.reverts(loophole.add(wethAddress, allocPoint), 'TPE'); //'Token Pool Exists'
+		});
 	});
 
 
 
-	describe.skip('#Loophole staking pools SET', async () => {
+	//describe.skip
+	describe('#Loophole staking pools SET', async () => {
 		it('should revert when not owner user tries to set/update staking pool WETH', async () => {
 			loophole.switchWallet(userAddress2);
 			const pid = 1;
@@ -1049,21 +1070,19 @@ context("Loophole contract", () => {
 
 
 		// when getBlockNumber() <= pool.lastRewardBlock return
-		it('when block number <= pool.lastRewardBlock, return', async () => {
+		//NOTE: is this tests even possible??? with current design not really
+		/*it('when block number <= pool.lastRewardBlock, return', async () => {
 			//if (!checkLocalTestOnly()) return;
-			assertLocalTestOnly();
+			//assertLocalTestOnly();
 
 			//NOTE: we need a new loophole deployment before adding staking pools
 			await deployLoophole();
-
-			//NOTE: take snashot before adding staking pools
-			const snapshot = await traveler.takeSnapshot();
-      const beforePoolsSnapshotId = snapshot.result;
-
+			
+			await approveWethTransfers(userAddress);
 			await addWethPool();
 
-			//NOTE: how do we know it returned at that point and did not proceed ?
-			// 'lastRewardBlock' and 'accLPtokensPerShare' are the same before and after pool mining call
+			const blockNumber1 = await loophole.getBlockNumber();
+			console.log('---blockNumber1: ', blockNumber1);
 
 			let p = await loophole.getPool(wethPid);
 			const lastRewardBlock1 = p.lastRewardBlock;
@@ -1071,11 +1090,15 @@ context("Loophole contract", () => {
 			console.log('---lastRewardBlock1: ', lastRewardBlock1);
 			console.log('---accLPtokensPerShare1: ', accLPtokensPerShare1);
 
-			//NOTE: go back in time before adding weth pool so block number is less than pool.lastRewardBlock
-			await traveler.revertToSnapshot(beforePoolsSnapshotId);
+			//NOTE: make sure there is some stake in weth pool
+			//NOTE: stake function includes pool mine for LP rewards with 'updatePool' function call
+			await loophole.stake(wethPid, 1000);
 
 			//NOTE: pool mining test
 			await loophole.updatePool(wethPid);
+
+			const blockNumber2 = await loophole.getBlockNumber();
+			console.log('---blockNumber2: ', blockNumber2);
 
 			p = await loophole.getPool(wethPid);
 			const lastRewardBlock2 = p.lastRewardBlock;
@@ -1083,9 +1106,12 @@ context("Loophole contract", () => {
 			console.log('---lastRewardBlock2: ', lastRewardBlock2);
 			console.log('---accLPtokensPerShare2: ', accLPtokensPerShare2);
 
-			lastRewardBlock2.should.be.bignumber.equal(lastRewardBlock1);
+			//NOTE: lastRewardBlock should have increased by one
+			//NOTE: accLPtokensPerShare should still be the same
+			lastRewardBlock2.should.be.bignumber.equal(lastRewardBlock1.plus(2));
 			accLPtokensPerShare2.should.be.bignumber.equal(accLPtokensPerShare1);
-		});
+			accLPtokensPerShare2.should.be.bignumber.equal(0);
+		});*/
 
 
 		//NOTE: when totalPool is zero, only update lastRewardBlock
@@ -1095,6 +1121,12 @@ context("Loophole contract", () => {
 		it('should mine MAIN pools WETH and WBTC', async () => {
 			await deployLoophole(setupWethAndWbtcPoolsConfig);
 
+			await approveWethTransfers(userAddress);
+			await approveWbtcTransfers(userAddress);
+
+			await loophole.stake(wethPid, 1000);
+			await loophole.stake(wbtcPid, 1000);
+
 			await loophole.updatePool(wethPid); //WETH mining
 			await loophole.updatePool(wbtcPid); //WBTC mining
 		});
@@ -1103,61 +1135,129 @@ context("Loophole contract", () => {
 
 
 	describe('#when staking pool is empty', async () => {
-		let [userA, userB, userC, userD] = [0, 0, 0, 0];
-
+		
 		before('before-hook6', async () => {
 			// deploy a NEW loophole contract
 			await deployLoophole(setupWethAndWbtcPoolsConfig);
 			
-			[userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
-
-			await approveWethTransfers(userA);
-			await approveWethTransfers(userB);
-			await approveWethTransfers(userC);
-			await approveWethTransfers(userD);
+			await approveWethTransfers(userAddress);
 		});
 
 
 		const test1 = 'should not distribute any LP tokens but should still update last reward block';
 		it(test1, async () => {
 			console.log('...', test1);
-			const pid = 1; //WETH pool id
 			
-			let pool = await loophole.getPool(pid);
-			const lastRewardBlock1 = pool.lastRewardBlock;
+			let p = await loophole.getPool(wethPid);
+			const lastRewardBlock1 = p.lastRewardBlock;
+			const accLPtokensPerShare1 = p.accLPtokensPerShare;
 			console.log('---lastRewardBlock1: ', lastRewardBlock1);
+			console.log('---accLPtokensPerShare1: ', accLPtokensPerShare1);
 			
-			let tx = await loophole.updatePool(pid);
+			let tx = await loophole.updatePool(wethPid);
+			//console.log('updatePool.tx: ', tx);
 			//console.log('tx.events.PoolRewardUpdated.returnValues: ', tx.events.PoolRewardUpdated.returnValues);
 			//console.log('tx.events: ', tx.events);
 			
-			//NOTE: 6 tx take place after WETH pool was added@
+			//NOTE: 3 tx take place after WETH pool was added:
 			//1 to add WBTC
-			//4 tx to approve weth transfers
+			//1 tx to approve weth transfers
 			//1 to update/mine pool
-			const nblocks = 6;
+			const nblocks = 3;
 
-			pool = await loophole.getPool(pid);
-			const lastRewardBlock2 = pool.lastRewardBlock;
+			p = await loophole.getPool(wethPid);
+			const lastRewardBlock2 = p.lastRewardBlock;
+			const accLPtokensPerShare2 = p.accLPtokensPerShare;
 			console.log('---lastRewardBlock2: ', lastRewardBlock2);
+			console.log('---accLPtokensPerShare2: ', accLPtokensPerShare2);
 			// make sure we increased last reward block by one
 			lastRewardBlock2.should.be.bignumber.equal(lastRewardBlock1.plus(nblocks));
-			
+			accLPtokensPerShare2.should.be.bignumber.equal(accLPtokensPerShare1);
+
 			// the rest pool properties are still zero
-			pool.totalPool.should.be.bignumber.equal(0);
-      pool.entryStakeTotal.should.be.bignumber.equal(0);
-      pool.totalDistributedPenalty.should.be.bignumber.equal(0);
-      pool.accLPtokensPerShare.should.be.bignumber.equal(0);
+			p.totalPool.should.be.bignumber.equal(0);
+      p.entryStakeTotal.should.be.bignumber.equal(0);
+      p.totalDistributedPenalty.should.be.bignumber.equal(0);
+      p.accLPtokensPerShare.should.be.bignumber.equal(0);
 		});
 	});
 
 
 
-	describe.skip('#stake/unstake', async () => {
+	//describe.skip
+	describe('#currentStake', async () => {
+		//requireValidPid(pid)
+		it('should revert when trying to read user current stake of inexistent pool', async () => {
+			await beproAssert.reverts(loophole.currentStake(invalidPid, userAddress), 'PID_OORI'); //'PID Out Of Range Index'
+		});
+
+		it('should read user current stake of weth pool', async () => {
+			const userStake1 = await loophole.currentStake(wethPid, userAddress);
+			userStake1.should.be.bignumber.gte(0);
+		});
+	});
+
+
+
+	describe('#getUserInfo', async () => {
+		//requireValidPid(pid)
+		it('should revert when trying to read user info of inexistent pool', async () => {
+			await beproAssert.reverts(loophole.getUserInfo(invalidPid, userAddress), 'PID_OORI'); //'PID Out Of Range Index'
+		});
+
+		it('should read user info of weth pool', async () => {
+			const userInfo1 = await loophole.getUserInfo(wethPid, userAddress);
+			console.log('---userInfo1: ', userInfo1);
+		});
+	});
+
+
+
+	describe('#getUserReward', async () => {
+		//requireMainPool(pid)
+		it('should revert when trying to read user reward of LOOP pool', async () => {
+			await beproAssert.reverts(loophole.getUserReward(lpPid, userAddress), 'PID_LOOP'); //'PID is LOOP pool'
+		});
+
+		//requireValidPid(pid)
+		it('should revert when trying to read user reward of inexistent pool', async () => {
+			await beproAssert.reverts(loophole.getUserReward(invalidPid, userAddress), 'PID_OORI'); //'PID Out Of Range Index'
+		});
+
+		it('should read user reward of weth pool', async () => {
+			const userReward1 = await loophole.getUserReward(wethPid, userAddress);
+			console.log('---userReward1: ', userReward1);
+			userReward1.should.be.bignumber.gte(0);
+		});
+	});
+
+
+
+	describe('#getPoolReward', async () => {
+		//requireValidPid(pid)
+		it('should revert when trying to read pool reward of inexistent pool', async () => {
+			await beproAssert.reverts(loophole.getPoolReward(invalidPid, userAddress), 'PID_OORI'); //'PID Out Of Range Index'
+		});
+
+		it('should read pool reward of weth pool', async () => {
+			const poolreward1 = await loophole.getPoolReward(wethPid);
+			console.log('---poolreward1: ', poolreward1);
+			poolreward1.should.be.bignumber.gte(0);
+		});
+	});
+
+
+
+	//describe.skip
+	describe('#stake/unstake', async () => {
+		
 		before('before-#stake/unstake', async () => {
 			// deploy a NEW loophole contract
 			await deployLoophole(setupWethAndWbtcPoolsConfig);
-			await approveWethTransfers();
+			
+			await fundLoopholeWithLP();
+
+			await approveWethTransfers(userAddress);
 		});
 
 
@@ -1166,14 +1266,27 @@ context("Loophole contract", () => {
 		});
 
 
-		it.skip('should revert when trying re-entrancy attack', async () => {
-			//... pending
+		it('when stake zero tokens, pool stake should still be zero', async () => {
+			await loophole.stake(wethPid, 0);
+
+			const p = await loophole.getPool(wethPid);
+			//console.log('---p.totalPool: ', p.totalPool);
+			//console.log('---p.entryStakeTotal: ', p.entryStakeTotal);
+			p.totalPool.should.be.bignumber.equal(0);
+      p.entryStakeTotal.should.be.bignumber.equal(0);
 		});
 
 
-		//...pending... check events
-		it('should stake WETH and emit events: Transfer, Collect, TransferFrom, Deposit', async () => {
-			//TODO...
+		//NOTE: test case not needed as we work with wrapped tokens
+		//should revert when trying re-entrancy attack', async () => {
+
+
+		it('should stake WETH and emit events: Deposit', async () => {
+			
+			//NOTE: events 'Transfer' and 'TransferFrom'
+			//have to be in the smart contract for them to be defined in the transaction
+			//otherwise the tx will say 'undefined' event
+			
 			const balance1 = await weth.balanceOf(userAddress);
 			console.log('weth.userAddress.balance1: ', balance1.toString());
 
@@ -1182,7 +1295,7 @@ context("Loophole contract", () => {
 			//const allowance = await weth.allowance({ address: userAddress, spenderAddress: loopholeAddress });
 			//console.log('stakeWETH.allowance: ', allowance);
 			
-			const pid = 1; //WETH pool-id is 1
+			const pid = wethPid; //WETH pool-id is 1
 			//const amount = Numbers.fromBNToDecimals(1000, wethDecimals); //WETH_AMOUNT_1M;
 			const amount = BigNumber(1000);
 			const tx = await loophole.stake(pid, amount);
@@ -1202,13 +1315,12 @@ context("Loophole contract", () => {
 			console.log('weth.userAddress.balance2: ', balance2.toString());
 			//const expectedBalance = balance1.minus(Numbers.fromDecimalsToBN(amount, wethDecimals));
 			const expectedBalance = balance1.minus(amount);
-			//expect(balance2.eq(expectedBalance)).to.equal(true);
 			balance2.should.be.bignumber.equal(expectedBalance);
 		});
 
 
-		it('should exit/unstake WETH and emit Withdraw event', async () => {
-			//TODO...
+		it('should exit/unstake WETH and emit events: TokenExchanged and Withdraw', async () => {
+			
 			const balance1 = await weth.balanceOf(userAddress);
 			console.log('weth.userAddress.balance1: ', balance1.toString());
 			const balanceC1 = await weth.balanceOf(loopholeAddress);
@@ -1216,7 +1328,7 @@ context("Loophole contract", () => {
 			const lpBalanceC1 = await lpToken.balanceOf(loopholeAddress);
 			console.log('lpToken.loopholeAddress.lpBalanceC1: ', lpBalanceC1.toString());
 
-			const pid = 1; //weth pool-id is 1
+			const pid = wethPid; //weth pool-id is 1
 			//const amount = WETH_AMOUNT_1M;
 			//const amount = BigNumber(Numbers.fromBNToDecimals(1000, wethDecimals));
 			const amount = BigNumber(1000);
@@ -1233,10 +1345,24 @@ context("Loophole contract", () => {
 			//TODO: calculate what 'amountOutMinimum' should be with uniswap-v3-sdk/uniswap-v3-periphery libs 
 			const amountOutMinimum = 0;
 			const tx = await loophole.exit(pid, amount, amountOutMinimum);
-			
-			// should emit event Withdraw(address indexed user, uint256 indexed pid, uint256 amount, uint256 netAmount);
-			const amountDecimals = await loophole.fromBNToDecimals(amount, pid);
+			console.log('---loophole.exit.tx.events.TokenExchanged.returnValues: ', tx.events.TokenExchanged.returnValues);
+			console.log('---loophole.exit.tx.events.Withdraw.returnValues: ', tx.events.Withdraw.returnValues);
+
+			const amountDecimals = BigNumber(await loophole.fromBNToDecimals(amount, pid));
 			const withdrawAmountExpectedDecimals = await loophole.fromBNToDecimals(withdrawAmountExpectedTokens, pid);
+
+			// should emit event TokenExchanged(address indexed user, address indexed token, uint256 tokenAmount, address indexed tokenLP, uint256 tokenAmountLP);
+			const wethExitPenaltyAmountExpected = amountDecimals.times(exitPenalty / 2);
+			beproAssert.eventEmitted(tx, 'TokenExchanged');
+			//beproAssert.eventEmitted(tx, 'TokenExchanged', (ev) => {
+			//	return ev.user === userAddress 
+			//	&& ev.token == wethAddress 
+			//	&& ev.tokenAmount.toString() == wethExitPenaltyAmountExpected.toString() 
+			//	&& ev.tokenLP == lpTokenAddress 
+			//	//&& ev.tokenAmountLP.toString() == tokenAmountLPExpected.toString()
+			//});
+
+			// should emit event Withdraw(address indexed user, uint256 indexed pid, uint256 amount, uint256 netAmount);
 			beproAssert.eventEmitted(tx, 'Withdraw', (ev) => {
 				return ev.user === userAddress 
 				&& ev.pid.toString() == pid.toString() 
@@ -1263,13 +1389,11 @@ context("Loophole contract", () => {
 			//...lpBalanceC2.should.be.bignumber.equal(BigNumber(lpBalanceC1).plus(expectedLPtokensFromExitPenalty));
 
 			const expectedBalance = balance1.plus(withdrawAmountExpected);
-			//expect(balance2.eq(expectedBalance)).to.equal(true);
 			balance2.should.be.bignumber.equal(expectedBalance);
 		});
 
 
 		it('should stake LP token in LOOP pool and emit Deposit event', async () => {
-			//TODO...
 			const balance1 = await lpToken.balanceOf(userAddress);
 			console.log('lpToken.userAddress.balance1: ', balance1.toString());
 
@@ -1297,7 +1421,6 @@ context("Loophole contract", () => {
 			console.log('lpToken.userAddress.balance2: ', balance2.toString());
 			//const expectedBalance = balance1.minus(Numbers.fromDecimalsToBN(amount, lpDecimals));
 			const expectedBalance = balance1.minus(amount);
-			//expect(balance2.eq(expectedBalance)).to.equal(true);
 			balance2.should.be.bignumber.equal(expectedBalance);
 		});
 
@@ -1375,6 +1498,8 @@ context("Loophole contract", () => {
 
 			// deploy a NEW loophole contract
 			await deployLoophole(setupWethAndWbtcPoolsConfig);
+
+			await fundLoopholeWithLP();
 
 			//const investorA = wallets[0];
 			//const investorB = wallets[1];
@@ -1629,22 +1754,23 @@ context("Loophole contract", () => {
 
 
 	
-	describe.skip('#when collectRewards', async () => {
+	describe('#when collectRewards', async () => {
 		it('should revert when when collecting LP rewards from LOOP pool', async () => {
 			await beproAssert.reverts(loophole.collectRewards(lpPid), 'PID_LOOP'); //PID is LOOP pool
 		});
+
 
 		it('should revert when collecting LP rewards from inexistent pool', async () => {
 			await beproAssert.reverts(loophole.collectRewards(invalidPid), 'PID_OORI'); //'PID Out Of Range Index'
 		});
 
-		it.skip('should revert when trying re-entrancy attack', async () => {
-			//... pending
-		});
 
-		it.skip('should collect LP rewards from staking pool WETH', async () => {
-			//... pending
-		});
+		//NOTE: test case not needed as we work with wrapped tokens
+		//should revert when trying re-entrancy attack', async () => {
+		
+		//NOTE: tested below in '#distribute correct LP tokens to users'
+		//it('should collect LP rewards from staking pool WETH', async () => {
+		//});
 	});
 
 
@@ -1673,6 +1799,7 @@ context("Loophole contract", () => {
 
 
 
+	//describe.skip
 	describe('#getBlocksFromRange', async () => {
 		//getBlocksFromRange(uint256 from, uint256 to);
 		let startBlock1;
@@ -1684,6 +1811,7 @@ context("Loophole contract", () => {
 			startBlock1.should.be.bignumber.equal(1);
 		});
 
+
 		it('should revert when "from" block is greater than "to" block', async () => {
 			const to = 0;
 			const from = 1;
@@ -1691,7 +1819,7 @@ context("Loophole contract", () => {
 		});
 
 
-		it('should return 1 when "to" block is 2 and "from" block is 1', async () => {
+		it('should return 1 when "to" block is 3 and "from" block is 2', async () => {
 			//NOTE: 'from' is 2 which is greater than 'startBlock' which is 1
 			const to = 3;
 			const from = 2;
@@ -1722,11 +1850,15 @@ context("Loophole contract", () => {
 
 
 
-	describe.skip('#when user profit from others exit is greater than his own stake', async () => {
+	//describe.skip
+	describe('#when user profit from others exit is greater than his own stake', async () => {
 		beforeEach('beforeEach-hook1', async () => {
 			// deploy a NEW loophole contract
 			await deployLoophole(setupWethAndWbtcPoolsConfig);
+
+			await fundLoopholeWithLP();
 		});
+
 
 		it('should exit/unstake with no revert/error', async () => {
 			
@@ -1861,11 +1993,15 @@ context("Loophole contract", () => {
 
 
 
-	describe.skip('#when user profit from others exit is less than his own stake', async () => {
+	//describe.skip
+	describe('#when user profit from others exit is less than his own stake', async () => {
 		beforeEach('beforeEach-hook2', async () => {
 			// deploy a NEW loophole contract
 			await deployLoophole(setupWethAndWbtcPoolsConfig);
+
+			await fundLoopholeWithLP();
 		});
+
 
 		it('should exit/unstake with no revert/error', async () => {
 			
@@ -1975,7 +2111,8 @@ context("Loophole contract", () => {
 
 
 
-	describe.skip('#distribute no LP tokens after 0 blocks', async () => {
+	//describe.skip
+	describe('#distribute no LP tokens after 0 blocks', async () => {
 		
 		//NOTE: tests group is only for local environment
 		before('before-hook4', async () => {
@@ -2031,7 +2168,8 @@ context("Loophole contract", () => {
 	const blocksForward = blocks - 2; //2 tx needed to add staking pools
 	let block10; // = deployedBlock + blocksForward;
 
-	describe.skip('#distribute correct LP tokens to WETH and WBTC pools after 10 blocks', async () => {
+	//describe.skip
+	describe('#distribute correct LP tokens to WETH and WBTC pools after 10 blocks', async () => {
 
 		//NOTE: tests group is only for local environment
 		before('before-hook5', async () => {
@@ -2094,8 +2232,42 @@ context("Loophole contract", () => {
 
 
 
-	describe.skip('#distribute correct LP tokens to users', async () => {
+	const usersStake = async (pid, [userA, userB, userC, userD], [stakeA, stakeB, stakeC, stakeD]) => {
+		loophole.switchWallet(userA);
+		await loophole.stake(pid, stakeA);
+		
+		if (userB) {
+			loophole.switchWallet(userB);
+			await loophole.stake(pid, stakeB);
+		} else {
+			console.log('---usersStake.userB not defined to stake');
+		}
+		
+		if (userC) {
+			loophole.switchWallet(userC);
+			await loophole.stake(pid, stakeC);
+		} else {
+			console.log('---usersStake.userC not defined to stake');
+		}
+		
+		if (userD) {
+			loophole.switchWallet(userD);
+			await loophole.stake(pid, stakeD);
+		} else {
+			console.log('---usersStake.userD not defined to stake');
+		}
+	};
+
+
+
+	describe('#distribute correct LP tokens to users from LP mining based on MAIN pool staking - [SEQUENCE]', async () => {
 		let [userA, userB, userC, userD] = [0, 0, 0, 0];
+		let lpBalance1, lpBalance2;
+		const stakeA = Number(1000);
+		const stakeB = Number(2000);
+		const stakeC = Number(3000);
+		const stakeD = Number(4000);
+		const stakeTotal = stakeA + stakeB + stakeC + stakeD;
 
 		//NOTE: tests group is only for local environment
 		before('before-hook6a', async () => {
@@ -2106,14 +2278,15 @@ context("Loophole contract", () => {
 		before('before-hook6', async () => {
 			// deploy a NEW loophole contract
 			await deployLoophole(setupWethAndWbtcPoolsConfig);
-			
+
 			[userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
 
-			await approveWethTransfers(userA);
-			await approveWethTransfers(userB);
-			await approveWethTransfers(userC);
-			await approveWethTransfers(userD);
-
+			await fundLoopholeWithLP();
+			// approve WETH transfers for loophole contract
+			await approveBulkWethTransfers(userA, userB, userC, userD);
+			// approve LP transfers for loophole contract
+			await approveBulkLPTransfers(userA, userB, userC, userD);
+			
 			// forward blockchain to 'block10'
 			//await forwardBlocks(blocksForward);
 			//console.log('---forwardBlocks: ', blocksForward);
@@ -2124,17 +2297,13 @@ context("Loophole contract", () => {
 			//currBlock.should.be.bignumber.equal(block10);
 		});
 
+
 		const test1 = 'should distribute correct LP tokens to users';
 		it(test1, async () => {
 			console.log('...', test1);
 			//userA stakes
 			let pid = wethPid;
-			//const [userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
-			const stakeA = Number(1000);
-			const stakeB = Number(2000);
-			const stakeC = Number(3000);
-			const stakeD = Number(4000);
-			const stakeTotal = stakeA + stakeB + stakeC + stakeD;
+			
 			const lpTokensPerBlockRaw = BigNumber(Numbers.fromBNToDecimals(lpTokensPerBlock, lpDecimals));
 			const blockNumber1 = await loophole.getBlockNumber();
 			console.log('---lpTokensPerBlock   : ', lpTokensPerBlock);
@@ -2159,6 +2328,7 @@ context("Loophole contract", () => {
 			let userDreward;
 			let lpTokensReward = 15; // 1 block * 50 LP per block * 0.3 weth share = 15
 			let tx;
+			let res;
 
 			//NOTE:
 			loophole.switchWallet(userA);
@@ -2314,6 +2484,14 @@ context("Loophole contract", () => {
 
 
 
+			res = await loophole.updatePoolCall(wethPid);
+			console.log('loophole.updatePoolCall.wethPid.res: ', res);
+			// 15 is LP tokens reward per WETH pool per block, is 30% WETH pool from 50 LP reward per block
+			res.blocksElapsed.should.be.bignumber.equal(forwardXBlocks);
+			res.lpTokensReward.should.be.bignumber.equal(forwardXBlocks * 15);
+			res.accLPtokensPerShare.should.be.bignumber.gt(0);
+
+
 			//NOTE: updating pool to mine for LP tokens, adds 1 block
 			// pool update to get LP rewards
 			tx = await loophole.updatePool(pid);
@@ -2370,6 +2548,919 @@ context("Loophole contract", () => {
 			userDreward.should.be.bignumber.equal(0.0285 * 4000 - 90); //userDrewardExpected
 
 			//...
+		});
+
+
+		//NOTE: check updatePoolCall
+		it('should test updatePoolCall and return zero [from staking pool WETH]', async () => {
+			
+			loophole.switchWallet(userA);
+			const res = await loophole.updatePoolCall(wethPid);
+			console.log('loophole.updatePoolCall.wethPid.res: ', res);
+			// 15 is LP tokens reward per WETH pool per block, is 30% WETH pool from 50 LP reward per block
+			res.blocksElapsed.should.be.bignumber.equal(0);
+			res.lpTokensReward.should.be.bignumber.equal(0);
+			res.accLPtokensPerShare.should.be.bignumber.equal(0);
+		});
+
+
+		//NOTE: check collectRewards
+		it('userA should collect LP rewards [from staking pool WETH] and emit "Collect" event', async () => {
+			
+			const userAreward1 = await loophole.getUserReward(wethPid, userA);
+			console.log('---userAreward1: ', userAreward1);
+			//usually userAreward1 should be 28.5 with the transactions we had so far
+
+			loophole.switchWallet(userA);
+			const tx = await loophole.collectRewards(wethPid);
+			console.log('loophole.collectRewards.wethPid.tx: ', tx);
+			console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
+
+			//NOTE: userA has 28.5, 1 block to mine weth pool when collecting LP rewards gives userA 1.5 LP tokens
+			// as we get 15 LP per block and userA has 1k out of 10k in staking pool.
+			const rewardExpectedTokens = 28.5 + 1.5; //30;
+			//TODO: fix collectRewardsCall
+			//const rewards = await loophole.collectRewardsCall(wethPid);
+			//console.log('---collectRewardsCall.rewards: ', rewards);
+			//rewards.should.be.bignumber.equal(rewardExpectedTokens);
+
+			const rewardExpectedDecimals = await loophole.fromBNToDecimals(rewardExpectedTokens, wethPid);
+			console.log('---rewardExpectedDecimals: ', rewardExpectedDecimals);
+			beproAssert.eventEmitted(tx, 'Collect', (ev) => {
+				return ev.user === userA 
+				&& ev.pid.toString() == wethPid.toString() 
+				&& ev.reward.toString() == rewardExpectedDecimals.toString()
+			});
+		});
+
+
+		it('keep a record of userA LP tokens balance', async () => {
+			//NOTE: check LP token balance for userA before a tx
+			lpBalance1 = await lpToken.balanceOf(userA);
+			console.log('lpToken.balanceOf.userA.lpBalance1: ', lpBalance1);
+		});
+
+
+		//NOTE: check collectRewards
+		it('userA should collect LP rewards for 1 mined block [from staking pool WETH]', async () => {
+			
+			loophole.switchWallet(userA);
+			const tx = await loophole.collectRewards(wethPid);
+			console.log('loophole.collectRewards.wethPid: ', tx);
+			console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
+
+			const rewardExpectedTokens = 1.5;
+			//lpBalance2.should.be.bignumber.equal(lpBalance1.plus(rewardExpectedTokens));
+			
+			//TODO: fix collectRewardsCall
+			const rewards = await loophole.collectRewardsCall(wethPid);
+			console.log('---collectRewardsCall.rewards: ', rewards);
+			//rewards.should.be.bignumber.equal(rewardExpectedTokens);
+			
+			const rewardExpectedDecimals = await loophole.fromBNToDecimals(rewardExpectedTokens, wethPid);
+			console.log('---rewardExpectedDecimals: ', rewardExpectedDecimals);
+			beproAssert.eventEmitted(tx, 'Collect', (ev) => {
+				return ev.user === userA 
+				&& ev.pid.toString() == wethPid.toString() 
+				&& ev.reward.toString() == rewardExpectedDecimals.toString()
+			});
+		});
+
+
+		it('userA LP tokens NEW balance should matched expected value', async () => {
+			//NOTE: check LP token balance for userA after a tx
+			lpBalance2 = await lpToken.balanceOf(userA);
+			console.log('lpToken.balanceOf.userA.lpBalance2: ', lpBalance2);
+
+			const rewardExpectedTokens = 1.5;
+			lpBalance2.should.be.bignumber.equal(lpBalance1.plus(rewardExpectedTokens));
+		});
+
+
+		//NOTE: check no pending LP rewards
+		it('userA should have no pending LP rewards [from staking pool WETH]', async () => {
+			
+			loophole.switchWallet(userA);
+			const rewards = await loophole.getUserReward(wethPid, userA);
+			
+			console.log('---getUserReward.weth.userA: ', rewards);
+			rewards.should.be.bignumber.equal(0);
+		});
+
+
+		it('userA exits/unstakes all his tokens [from staking pool WETH]', async () => {
+			
+			//NOTE: check LP token balance for userA after a tx
+			lpBalance1 = await lpToken.balanceOf(userA);
+			console.log('lpToken.balanceOf.userA.lpBalance1: ', lpBalance1);
+
+			//NOTE: do NOT use amountOutMinimum = 0 in production
+			const amountOutMinimum = 0;
+			loophole.switchWallet(userA);
+			await loophole.exit(wethPid, stakeA, amountOutMinimum);
+
+			//NOTE: userA should have got paid LP rewards for 1 block in unstake tx
+			lpBalance2 = await lpToken.balanceOf(userA);
+			console.log('lpToken.balanceOf.userA.lpBalance2: ', lpBalance2);
+
+			const rewardExpectedTokens = 1.5;
+			lpBalance2.should.be.bignumber.equal(lpBalance1.plus(rewardExpectedTokens));
+
+
+			//NOTE: userA has no stake profit from other users exits as there were none yet
+			// when he exits his stake will be zero
+			const userAstake = await loophole.currentStake(wethPid, userA);
+			console.log('---currentStake.weth.userA: ', userAstake);
+			userAstake.should.be.bignumber.equal(0);
+
+			//NOTE: current entry stake should always be zero when user exits/unstakes all his tokens
+			const userAcurrentStake = await loophole.getCurrentEntryStakeUser(wethPid, userA);
+			console.log('---getCurrentEntryStakeUser.userAcurrentStake.weth: ', userAcurrentStake);
+			userAcurrentStake.should.be.bignumber.equal(0);
+
+			const userAreward = await loophole.getUserReward(wethPid, userA);
+			console.log('---getUserReward.weth.userA: ', userAreward);
+			userAreward.should.be.bignumber.equal(0);
+		});
+
+
+		it('userA should NOT collect any LP rewards at this point [from staking pool WETH]', async () => {
+			
+			loophole.switchWallet(userA);
+			const tx = await loophole.collectRewards(wethPid);
+			//console.log('loophole.collectRewards.wethPid: ', tx);
+			//console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
+
+			const rewardExpectedTokens = 0;
+			
+			//TODO: fix collectRewardsCall
+			const rewards = await loophole.collectRewardsCall(wethPid);
+			console.log('---collectRewardsCall.rewards: ', rewards);
+			//rewards.should.be.bignumber.equal(rewardExpectedTokens);
+			
+			//NOTE: emits no Collect event when user stake is zero and there is no LP reward to collect
+			beproAssert.eventNotEmitted(tx, 'Collect');
+
+			// const rewardExpectedDecimals = await loophole.fromBNToDecimals(rewardExpectedTokens, wethPid);
+			//const rewardExpectedDecimals = BigNumber(0);
+			//console.log('---rewardExpectedDecimals: ', rewardExpectedDecimals);
+			//beproAssert.eventEmitted(tx, 'Collect', (ev) => {
+			//	return ev.user === userA 
+			//	&& ev.pid.toString() == wethPid.toString() 
+			//	&& ev.reward.toString() == rewardExpectedDecimals.toString()
+			//});
+		});
+
+
+		it('remaining users should have benefited from userA exit/unstake', async () => {
+			let newStakeTotal = 9000; //10000 - 1000; //stakeTotal - stakeA;
+			
+			//NOTE: 10% (half of exit penalty) of 1000 userAstake exit goes to staking pool to other users
+			//userAstake was 1000, 100 goes to the staking pool as distributed penalty
+			newStakeTotal = 9100; //newStakeTotal + 100;
+
+			const userBstakeExpected = BigNumber('2022.222222222222222222'); //2022.22; //(2000 / 9000 * 9100);
+			const userBstake = await loophole.currentStake(wethPid, userB);
+			console.log('---currentStake.weth.userB: ', userBstake);
+			console.log('---userBstakeExpected.weth: ', userBstakeExpected);
+			userBstake.should.be.bignumber.equal(userBstakeExpected);
+
+			const userCstakeExpected = BigNumber('3033.333333333333333333'); //3033.33; //(3000 / 9000 * 9100);
+			const userCstake = await loophole.currentStake(wethPid, userC);
+			console.log('---currentStake.weth.userC: ', userCstake);
+			console.log('---userCstakeExpected.weth: ', userCstakeExpected);
+			userCstake.should.be.bignumber.equal(userCstakeExpected);
+
+			const userDstakeExpected = BigNumber('4044.444444444444444444'); //4044.44; //(4000 / 9000 * 9100);
+			const userDstake = await loophole.currentStake(wethPid, userD);
+			console.log('---currentStake.weth.userD: ', userDstake);
+			console.log('---userDstakeExpected.weth: ', userDstakeExpected);
+			userDstake.should.be.bignumber.equal(userDstakeExpected);
+		});
+
+
+		//NOTE: this test WILL FAIL due to numbers rounding error when calculating users stake amounts
+		//NOTE: userB exits, check userA has NOT benefited, userC and userD did benefit from userB exit
+		it('userB exits/unstakes all his tokens [from staking pool WETH]', async () => {
+			loophole.switchWallet(userB);
+
+			//NOTE: userB should collect LP rewards pending/left
+			let tx = await loophole.collectRewards(wethPid);
+			
+			//NOTE: makre sure userB has no pending LP rewards
+			const rewards = await loophole.getUserReward(wethPid, userB);
+			console.log('---getUserReward.weth.userB: ', rewards);
+			rewards.should.be.bignumber.equal(0);
+
+			//NOTE: check total pool
+			const p = await loophole.getPool(wethPid);
+			console.log('---p.totalPool: ', p.totalPool);
+			console.log('---p.entryStakeTotal: ', p.entryStakeTotal);
+			console.log('---p.accLPtokensPerShare : ', p.accLPtokensPerShare);
+			console.log('---p.totalDistributedPenalty: ', p.totalDistributedPenalty);
+
+			//NOTE: check LP token balance for userB after a tx
+			lpBalance1 = await lpToken.balanceOf(userB);
+			console.log('lpToken.balanceOf.userB.lpBalance1: ', lpBalance1);
+			
+			//NOTE: check userB current stake
+			const userBnewStake = BigNumber('2022.222222222222222222');
+			const userBstake1 = await loophole.currentStake(wethPid, userB);
+			userBstake1.should.be.bignumber.equal(userBnewStake);
+
+			//NOTE: do NOT use amountOutMinimum = 0 in production
+			const amountOutMinimum = 0;
+			tx = await loophole.exit(wethPid, userBnewStake, amountOutMinimum);
+			console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
+			const expectedPaidRewardDecimals = BigNumber(tx.events.Collect.returnValues.reward);
+			const expectedPaidReward = Numbers.fromDecimalsToBN(expectedPaidRewardDecimals, lpDecimals);
+
+			//NOTE: an accurate value for 'accLPtokensPerShare' at the time of executing 'exit' function
+			// since pool will be mined for 1 more block before unstaking
+			//const p = await loophole.getPool(wethPid);
+			//console.log('---p.accLPtokensPerShare: ', p.accLPtokensPerShare);
+			
+			//NOTE: weth pool reward per block is 15 (0.3 of 50), 9100 is current total pool stake
+			//accLPtokensPerShare = accLPtokensPerShare + (15 / 9100);
+			//const accLPtokensPerShare = p.accLPtokensPerShare.plus(15 / 9100); //0.0395934065923516484
+			//console.log('---newAccLPtokensPerShare: ', accLPtokensPerShare);
+
+			//NOTE: userB should have got paid LP rewards for 1 block in unstake tx
+			lpBalance2 = await lpToken.balanceOf(userB);
+			console.log('lpToken.balanceOf.userB.lpBalance2: ', lpBalance2);
+			lpBalance2.should.be.bignumber.equal(lpBalance1.plus(expectedPaidReward));
+
+			// 15 LP tokens (0.3 of 50 per block) for weth pool
+			// before userB exits we had 9100 weth and userB had 2022.222222222222222222
+			// userB expected LP rewards for 1 block = weth reward per block * (userBnewStake / totalPool)
+			// 15 * 2022.222222222222222222 / 9100 = 3.333333333333333333 (...332967032967)
+			//
+			// 2022.222222222222222222 = (2000 / 9000 * 9100)
+			// 15 * (2000 / 9000 * 9100) / 9100 = 15 * 2000 / 9000 = 3.333333333333333333
+			const rewardExpectedTokens = BigNumber('3.333333333333333333');
+			//NOTE: temporarely comment it out for testing remaining lines below
+			lpBalance2.should.be.bignumber.equal(lpBalance1.plus(rewardExpectedTokens));
+			
+			//***=> this comes out in Collect event
+			//3333333332622222222 tokens
+			//3.333333332622222222 decimal tokens
+
+			//userBstake / poolTotal = 0.2222222221748148148
+			//0.2222222221748148148 * 9100 = 2,022.22222179081481468 ??? rounding error ???
+			//0.2222222221748148148 * x = 2022.222222222222222222
+			//=> x = 2022.222222222222222222 / 0.2222222221748148148 = 9,100.0000019413333343531511114581
+
+
+			//NOTE: userB has stake profit from other users exits, from userA exit
+			// when he exits his stake will be zero
+			const userBstake = await loophole.currentStake(wethPid, userB);
+			console.log('---currentStake.weth.userB: ', userBstake);
+			userBstake.should.be.bignumber.equal(0);
+
+			//const userBcurrentStake = await loophole.getCurrentEntryStakeUser(wethPid, userB);
+			//userBcurrentStake.should.be.bignumber.equal(0);
+
+			//NOTE current entry stake should always be zero when user exits/unstakes all his tokens
+			const userBcurrentStake = await loophole.getEntryStakeAdjusted(wethPid, userB);
+			console.log('---getEntryStakeAdjusted.userBcurrentStake.weth: ', userBcurrentStake);
+			userBcurrentStake.should.be.bignumber.equal(0);
+			
+			const userBreward = await loophole.getUserReward(wethPid, userB);
+			console.log('---getUserReward.weth.userB: ', userBreward);
+			userBreward.should.be.bignumber.equal(0);
+		});
+
+
+		it('userB should NOT collect any LP rewards at this point [from staking pool WETH]', async () => {
+			
+			loophole.switchWallet(userB);
+			const tx = await loophole.collectRewards(wethPid);
+			//console.log('loophole.collectRewards.wethPid: ', tx);
+			//console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
+
+			const rewardExpectedTokens = 0;
+			
+			//TODO: fix collectRewardsCall
+			//const rewards = await loophole.collectRewardsCall(wethPid);
+			//console.log('---collectRewardsCall.rewards: ', rewards);
+			//rewards.should.be.bignumber.equal(rewardExpectedTokens);
+			
+			//NOTE: emits no Collect event when user stake is zero and there is no LP reward to collect
+			beproAssert.eventNotEmitted(tx, 'Collect');
+
+			// const rewardExpectedDecimals = await loophole.fromBNToDecimals(rewardExpectedTokens, wethPid);
+			//const rewardExpectedDecimals = BigNumber(0);
+			//console.log('---rewardExpectedDecimals: ', rewardExpectedDecimals);
+			//beproAssert.eventEmitted(tx, 'Collect', (ev) => {
+			//	return ev.user === userB 
+			//	&& ev.pid.toString() == wethPid.toString() 
+			//	&& ev.reward.toString() == rewardExpectedDecimals.toString()
+			//});
+		});
+
+
+		it('userA should not have any LP rewards pending', async () => {
+			loophole.switchWallet(userA);
+
+			//NOTE: userA should not have any LP rewards pending
+			const rewards = await loophole.getUserReward(wethPid, userA);
+			console.log('---getUserReward.weth.userA: ', rewards);
+			rewards.should.be.bignumber.equal(0);
+		});
+
+
+		it('userA should have NOT benefited from userB exit/unstake', async () => {
+			loophole.switchWallet(userA);
+
+			const userAstakeExpected = 0;
+			const userAstake = await loophole.currentStake(wethPid, userA);
+			console.log('---currentStake.weth.userA: ', userAstake);
+			console.log('---userAstakeExpected.weth: ', userAstakeExpected);
+			userAstake.should.be.bignumber.equal(userAstakeExpected);
+		});
+
+
+		it('remaining users should have benefited from userB exit/unstake', async () => {
+			//stakeTotal - stakeA - stakeB + penalties;
+			
+			//NOTE: 10% (half of exit penalty) of 2022.222222222222222222 userBstake exit goes to
+			// staking pool to other users as distributed penalty
+			//BigNumber('2022.222222222222222222');
+			const newStakeTotal = 7280; //10000 - 1000 + 100 - 2022.222222222222222222 + 202.222222222222222222;
+			const p = await loophole.getPool(wethPid);
+			const totalPoolExpected = newStakeTotal;
+			console.log('---p.totalPool.weth: ', p.totalPool);
+			console.log('---totalPoolExpected.weth: ', totalPoolExpected);
+			p.totalPool.should.be.bignumber.equal(totalPoolExpected);
+
+			const userCstakeExpected = BigNumber('3120'); //3120; //(3000 / 7000 * 7280);
+			const userCstake = await loophole.currentStake(wethPid, userC);
+			console.log('---currentStake.weth.userC: ', userCstake);
+			console.log('---userCstakeExpected.weth: ', userCstakeExpected);
+			userCstake.should.be.bignumber.equal(userCstakeExpected);
+
+			const userDstakeExpected = BigNumber('4160'); //4160; //(4000 / 7000 * 7280);
+			const userDstake = await loophole.currentStake(wethPid, userD);
+			console.log('---currentStake.weth.userD: ', userDstake);
+			console.log('---userDstakeExpected.weth: ', userDstakeExpected);
+			userDstake.should.be.bignumber.equal(userDstakeExpected);
+		});
+
+
+		it('remaining users deposit(entry stake) should still be the same as the initial amount', async () => {
+			const userCstakeExpected = 3000;
+			const userCstake = await loophole.getCurrentEntryStakeUser(wethPid, userC);
+			console.log('---getCurrentEntryStakeUser.weth.userC: ', userCstake);
+			console.log('---userCstakeExpected.weth: ', userCstakeExpected);
+			userCstake.should.be.bignumber.equal(userCstakeExpected);
+
+			const userDstakeExpected = 4000;
+			const userDstake = await loophole.getCurrentEntryStakeUser(wethPid, userD);
+			console.log('---getCurrentEntryStakeUser.weth.userD: ', userDstake);
+			console.log('---userDstakeExpected.weth: ', userDstakeExpected);
+			userDstake.should.be.bignumber.equal(userDstakeExpected);
+		});
+
+
+		it('userB should NOT benefit from past LP rewards mined and distributed before his stake', async () => {
+			
+			//NOTE: userC stakes to round up total pool stake up to 12,000 weth
+			// pool has 10280 at the moment, stake up to 12,000
+			const newStake1 = BigNumber(12000 - 10280);
+			loophole.switchWallet(userC);
+			await loophole.stake(wethPid, newStake1);
+			
+			loophole.switchWallet(userB);
+
+			//NOTE: test case process
+			//1. pool mine 3 blocks
+			//2. userB stakes 3000
+			//3. userB should NOT benefit from 3 blocks previous to his stake, only for 2 blocks (1 while staking and 1 for pool mine)
+			
+			//NOTE: mine weth pool 3 blocks (3 times)
+			await loophole.updatePool(wethPid);
+			await loophole.updatePool(wethPid);
+			await loophole.updatePool(wethPid);
+
+			//NOTE: userB stakes 3000
+			const userBnewStake = BigNumber(3000);
+			await loophole.stake(wethPid, userBnewStake);
+
+			//NOTE: at this point the pool should have plus userB new stake
+			const newStakeTotal = 12000; //10280 + userCnewStake; //7280 + 3000 + userCnewStake;
+			const p = await loophole.getPool(wethPid);
+			const totalPoolExpected = newStakeTotal;
+			console.log('---p.totalPool.weth: ', p.totalPool);
+			console.log('---totalPoolExpected.weth: ', totalPoolExpected);
+			p.totalPool.should.be.bignumber.equal(totalPoolExpected);
+
+			//NOTE: check userB LP rewards
+			let userBnewRewardsExpected = BigNumber(0);
+			let userBnewRewards = await loophole.getUserReward(wethPid, userB);
+			console.log('---getUserReward.userBnewRewards: ', userBnewRewards);
+			console.log('---userBnewRewardsExpected: ', userBnewRewardsExpected);
+			userBnewRewards.should.be.bignumber.equal(userBnewRewardsExpected);
+
+			//NOTE: mine weth pool 3 blocks (3 times)
+			const nBlocks = Number(3);
+			await loophole.updatePool(wethPid);
+			await loophole.updatePool(wethPid);
+			await loophole.updatePool(wethPid);
+
+			//NOTE: check userB LP rewards, userB gets LP rewards only from block number he staked
+			//NOTE: we get 15 LP per block for WETH pool, userB stake is 3000 of 12000 total pool 
+			// userBnewRewardsExpected = 3000 / 12000 * 15 (per block, VERY IMPORTANT)
+			const userBnewRewardsExpectedPerBlock = BigNumber('3.75'); //'4.377431906614785992');
+			userBnewRewardsExpected = userBnewRewardsExpectedPerBlock.times(nBlocks); //'4.377431906614785992');
+			userBnewRewards = await loophole.getUserReward(wethPid, userB);
+			console.log('---getUserReward.userBnewRewards: ', userBnewRewards);
+			console.log('---userBnewRewardsExpected: ', userBnewRewardsExpected);
+			userBnewRewards.should.be.bignumber.equal(userBnewRewardsExpected);
+
+			//NOTE: userB should collect LP rewards only since he staked not for previous blocks
+			const tx = await loophole.collectRewards(wethPid);
+			//console.log('loophole.collectRewards.wethPid: ', tx);
+			console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
+
+			//NOTE: check note above for userBnewRewardsExpected
+			const rewardExpectedTokens = (nBlocks + 1) * userBnewRewardsExpectedPerBlock;
+			
+			//TODO: fix collectRewardsCall
+			//const rewards = await loophole.collectRewardsCall(wethPid);
+			//console.log('---collectRewardsCall.rewards: ', rewards);
+			//rewards.should.be.bignumber.equal(rewardExpectedTokens);
+			
+			const rewardExpectedDecimals = await loophole.fromBNToDecimals(rewardExpectedTokens, wethPid);
+			console.log('---rewardExpectedDecimals: ', rewardExpectedDecimals);
+			beproAssert.eventEmitted(tx, 'Collect', (ev) => {
+				return ev.user === userB 
+				&& ev.pid.toString() == wethPid.toString() 
+				&& ev.reward.toString() == rewardExpectedDecimals.toString()
+			});
+		});
+
+
+		//IMPORTANT: SKIP this test for now
+		//TODO: find a way to convert weth from penalty exits to LP from transactions that already took place
+		it.skip('check LOOP pool LP tokens accumulated from MAIN pool exits penalty', async () => {
+			const p = await loophole.getPool(lpPid);
+			console.log('---p.totalPool: ', p.totalPool);
+			console.log('---p.entryStakeTotal: ', p.entryStakeTotal);
+			console.log('---p.totalDistributedPenalty: ', p.totalDistributedPenalty);
+			console.log('---p.accLPtokensPerShare: ', p.accLPtokensPerShare);
+      
+			//NOTE:
+			//userA exit of 1000, +100 weth
+			//userB exit of 2022.222222222222222222, +202.222222222222222222 LP = 302.222222222222222222
+			const accWethExitPenalty = BigNumber('302.222222222222222222');
+
+			//NOTE: entryStakeTotal and accLPtokensPerShare should be zero because no user staked LP tokens
+			p.entryStakeTotal.should.be.bignumber.equal(0);
+			p.accLPtokensPerShare.should.be.bignumber.equal(0);
+
+			//TODO: convert weth to LP from tx that already took place
+			const accLP = BigNumber(0); // based on 'accWethExitPenalty'
+			p.totalPool.should.be.bignumber.equal(accLP);
+			p.totalDistributedPenalty.should.be.bignumber.equal(accLP);
+		});
+
+
+		it('users should have no LP tokens profits from MAIN pool exits penalty as they did NOT stake any', async () => {
+			const userAlp = await loophole.currentStake(lpPid, userA);
+			const userBlp = await loophole.currentStake(lpPid, userB);
+			const userClp = await loophole.currentStake(lpPid, userC);
+			const userDlp = await loophole.currentStake(lpPid, userD);
+			//console.log('---userAlp: ', userAlp);
+			userAlp.should.be.bignumber.equal(0);
+			userBlp.should.be.bignumber.equal(0);
+			userClp.should.be.bignumber.equal(0);
+			userDlp.should.be.bignumber.equal(0);
+		});
+
+
+		it('users should STILL have LP tokens profits from MAIN pool exits penalty if they stake AFTER the distribution', async () => {
+			await usersStake(lpPid, [userA, userB, userC, userD], [1000, 1000, 1000, 1000]);
+
+			const userAlp1 = await loophole.getEntryStakeAdjusted(lpPid, userA);
+			const userBlp1 = await loophole.getEntryStakeAdjusted(lpPid, userB);
+			const userClp1 = await loophole.getEntryStakeAdjusted(lpPid, userC);
+			const userDlp1 = await loophole.getEntryStakeAdjusted(lpPid, userD);
+			console.log('---userAlp1.getEntryStakeAdjusted: ', userAlp1);
+			console.log('---userBlp1.getEntryStakeAdjusted: ', userBlp1);
+			console.log('---userClp1.getEntryStakeAdjusted: ', userClp1);
+			console.log('---userDlp1.getEntryStakeAdjusted: ', userDlp1);
+			
+			const userAlp = await loophole.currentStake(lpPid, userA);
+			const userBlp = await loophole.currentStake(lpPid, userB);
+			const userClp = await loophole.currentStake(lpPid, userC);
+			const userDlp = await loophole.currentStake(lpPid, userD);
+			console.log('---userAlp.currentStake: ', userAlp);
+			console.log('---userBlp.currentStake: ', userBlp);
+			console.log('---userClp.currentStake: ', userClp);
+			console.log('---userDlp.currentStake: ', userDlp);
+			
+			userAlp1.should.be.bignumber.equal(1000);
+			userBlp1.should.be.bignumber.equal(1000);
+			userClp1.should.be.bignumber.equal(1000);
+			userDlp1.should.be.bignumber.equal(1000);
+
+			userAlp.should.be.bignumber.gte(1000);
+			//NOTE: due to rounding error we get a small variation and the test will FAIL
+			userBlp.should.be.bignumber.equal(1000);
+			userClp.should.be.bignumber.equal(1000);
+			userDlp.should.be.bignumber.equal(1000);
+		});
+	});
+
+
+
+	const stakeA = Number(1000);
+	const stakeB = Number(2000);
+	const stakeC = Number(3000);
+	const stakeTotal = stakeA + stakeB + stakeC;
+	let userA, userB, userC, userD;
+	//NOTE: do NOT use amountOutMinimum = 0 in production
+	const amountOutMinimum_ZERO = 0;
+
+	
+
+	describe('#check LOOP pool LP tokens distributions from MAIN pool exits penalty', async () => {
+		
+		//NOTE: tests group is only for local environment
+		before('before-hook6a', async () => {
+			assertLocalTestOnly();
+		});
+
+		//beforeEach('beforeEach-hook6', async () => {
+		before('before-hook6', async () => {
+			// deploy a NEW loophole contract
+			await deployLoophole(setupWethAndWbtcPoolsConfig);
+
+			[userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+
+			await fundLoopholeWithLP();
+			await approveBulkWethTransfers(userA, userB, userC, userD);
+			await approveBulkLPTransfers(userA, userB, userC, userD);
+		});
+
+
+		it('users should stake some weth into WETH pool', async () => {
+			await usersStake(wethPid, [userA, userB, userC], [stakeA, stakeB, stakeC]);
+		});
+
+
+		it('users should stake some LP into LOOP pool', async () => {
+			//NOTE: use same amounts for weth and LP tokens for simplicity
+			await usersStake(lpPid, [userA, userB, userC], [stakeA, stakeB, stakeC]);
+
+			//NOTE: assert users stakes in the LOOP pool
+			const userAstake = await loophole.currentStake(lpPid, userA);
+			const userBstake = await loophole.currentStake(lpPid, userB);
+			const userCstake = await loophole.currentStake(lpPid, userC);
+			console.log('---userAstake: ', userAstake);
+			console.log('---userBstake: ', userBstake);
+			console.log('---userCstake: ', userCstake);
+			userAstake.should.be.bignumber.equal(stakeA);
+			userBstake.should.be.bignumber.equal(stakeB);
+			userCstake.should.be.bignumber.equal(stakeC);
+		});
+
+
+		it('users should exit/unstake weth from WETH pool for LP distribution testing', async () => {
+			//NOTE: use same amounts for weth and LP tokens for simplicity
+			
+			//NOTE: 10% of 1000 = 100 weth converted to LP as distribution 
+			loophole.switchWallet(userA);
+			console.log('weth.stakeA: ', stakeA);
+			await loophole.exit(wethPid, stakeA, amountOutMinimum_ZERO);
+			
+			//NOTE: userB has 2000/5000 of total weth pool 5100 = 2040 weth, 10% of that = 204 weth converted to LP as distribution 
+			loophole.switchWallet(userB);
+			const stakeBnew = await loophole.currentStake(wethPid, userB);
+			console.log('weth.stakeBnew: ', stakeBnew);
+			await loophole.exit(wethPid, stakeBnew, amountOutMinimum_ZERO);
+			
+			//NOTE: userC has 3000/3000 of total weth pool 3060+204 = 3264 weth
+			// 20% of that as userC is last to exit = 326.4*2 = 652.8 weth converted to LP as distribution
+			loophole.switchWallet(userC);
+			const stakeCnew = await loophole.currentStake(wethPid, userC);
+			console.log('weth.stakeCnew: ', stakeCnew);
+			await loophole.exit(wethPid, stakeCnew, amountOutMinimum_ZERO);
+			
+			//NOTE: assert users stakes in the WETH pool
+			const userAstake = await loophole.currentStake(wethPid, userA);
+			const userBstake = await loophole.currentStake(wethPid, userB);
+			const userCstake = await loophole.currentStake(wethPid, userC);
+			console.log('---userAstake: ', userAstake);
+			console.log('---userBstake: ', userBstake);
+			console.log('---userCstake: ', userCstake);
+			userAstake.should.be.bignumber.equal(0);
+			userBstake.should.be.bignumber.equal(0);
+			userCstake.should.be.bignumber.equal(0);
+		});
+
+
+		it('users should have correct LP tokens distribution based on their stake in LOOP pool', async () => {
+			
+			const userAlpPercent1 = BigNumber(stakeA).div(stakeTotal); // 1000/6000 = 0.16
+			const userBlpPercent1 = BigNumber(stakeB).div(stakeTotal); // 2000/6000 = 0.33
+			const userClpPercent1 = BigNumber(stakeC).div(stakeTotal); // 3000/6000 = 0.50
+			console.log('---userAlpPercent1 1000/6000 = 0.16: ', userAlpPercent1);
+			console.log('---userBlpPercent1 2000/6000 = 0.33: ', userBlpPercent1);
+			console.log('---userClpPercent1 3000/6000 = 0.50: ', userClpPercent1);
+
+			const p = await loophole.getPool(lpPid);
+			console.log('---p.totalPool: ', p.totalPool);
+			console.log('---p.entryStakeTotal: ', p.entryStakeTotal);
+			console.log('---p.totalDistributedPenalty: ', p.totalDistributedPenalty);
+			console.log('---p.accLPtokensPerShare: ', p.accLPtokensPerShare);
+      p.accLPtokensPerShare.should.be.bignumber.equal(0);
+
+			const userAnewStake = await loophole.currentStake(lpPid, userA);
+			const userBnewStake = await loophole.currentStake(lpPid, userB);
+			const userCnewStake = await loophole.currentStake(lpPid, userC);
+			console.log('---userAnewStake: ', userAnewStake);
+			console.log('---userBnewStake: ', userBnewStake);
+			console.log('---userCnewStake: ', userCnewStake);
+
+			const userAlpPercent2 = userAnewStake.div(p.totalPool);
+			const userBlpPercent2 = userBnewStake.div(p.totalPool);
+			const userClpPercent2 = userCnewStake.div(p.totalPool);
+			console.log('---userAlpPercent2 = 0.16: ', userAlpPercent2);
+			console.log('---userBlpPercent2 = 0.33: ', userBlpPercent2);
+			console.log('---userClpPercent2 = 0.50: ', userClpPercent2);
+
+			userAlpPercent1.should.be.bignumber.equal(userAlpPercent2);
+			userBlpPercent1.should.be.bignumber.equal(userBlpPercent2);
+			userClpPercent1.should.be.bignumber.equal(userClpPercent2);
+		});
+	});
+
+
+
+	//NOTE: test case => check LOOP pool LP tokens distributions from LOOP pool staking
+	//NOT needed because users get LP tokens only from MAIN pools exits/unstakes
+	/*describe.skip('#check LOOP pool LP tokens distributions from LOOP pool staking', async () => {
+		
+		//NOTE: tests group is only for local environment
+		before('before-hook6a', async () => {
+			assertLocalTestOnly();
+		});
+
+		//beforeEach('beforeEach-hook6', async () => {
+		before('before-hook6', async () => {
+			// deploy a NEW loophole contract
+			await deployLoophole(setupWethAndWbtcPoolsConfig);
+
+			[userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+
+			await fundLoopholeWithLP();
+			await approveBulkWethTransfers(userA, userB, userC, userD);
+		});
+
+
+		it('users should stake some LP into LOOP pool', async () => {
+			//NOTE: use same amounts for weth and LP tokens for simplicity
+			await usersStake(lpPid, [userA, userB, userC], [stakeA, stakeB, stakeC]);
+
+			//NOTE: assert users stakes in the LOOP pool
+			const userAstake = await loophole.currentStake(lpPid, userA);
+			const userBstake = await loophole.currentStake(lpPid, userB);
+			const userCstake = await loophole.currentStake(lpPid, userC);
+			console.log('---userAstake: ', userAstake);
+			console.log('---userBstake: ', userBstake);
+			console.log('---userCstake: ', userCstake);
+			userAstake.should.be.bignumber.equal(stakeA);
+			userBstake.should.be.bignumber.equal(stakeB);
+			userCstake.should.be.bignumber.equal(stakeC);
+		});
+
+
+		it('users should exit/unstake LP from LOOP pool for LP distribution testing', async () => {
+			
+			//NOTE: 10% of 1000 = 100 LP as distribution 
+			loophole.switchWallet(userA);
+			console.log('LP.stakeA: ', stakeA);
+			await loophole.exitLP(stakeA);
+			
+			//NOTE: userB has 2000/5000 of total LOOP pool 5100 = 2040 LP, 10% of that = 204 LP as distribution 
+			loophole.switchWallet(userB);
+			const stakeBnew = await loophole.currentStake(lpPid, userB);
+			console.log('lpPid.stakeBnew: ', stakeBnew);
+			await loophole.exitLP(stakeBnew);
+			
+			//NOTE: userC has 3000/3000 of total LOOP pool 3060+204 = 3264 LP
+			// 10% of that = 326.4 LP as distribution
+			loophole.switchWallet(userC);
+			const stakeCnew = await loophole.currentStake(lpPid, userC);
+			console.log('lpPid.stakeCnew: ', stakeCnew);
+			await loophole.exitLP(stakeCnew);
+
+			//NOTE: assert users stakes in the LOOP pool
+			const userAstake = await loophole.currentStake(lpPid, userA);
+			const userBstake = await loophole.currentStake(lpPid, userB);
+			const userCstake = await loophole.currentStake(lpPid, userC);
+			console.log('---userAstake: ', userAstake);
+			console.log('---userBstake: ', userBstake);
+			console.log('---userCstake: ', userCstake);
+			userAstake.should.be.bignumber.equal(0);
+			userBstake.should.be.bignumber.equal(0);
+			userCstake.should.be.bignumber.equal(0);
+		});
+
+
+		it('users should have correct LP tokens distribution based on their stake in LOOP pool', async () => {
+			
+			const userAlpPercent1 = stakeA / stakeTotal; // 1000/6000 = 0.16
+			const userBlpPercent1 = stakeB / stakeTotal; // 2000/6000 = 0.33
+			const userClpPercent1 = stakeC / stakeTotal; // 3000/6000 = 0.50
+			console.log('---userAlpPercent1 1000/6000 = 0.16: ', userAlpPercent1);
+			console.log('---userBlpPercent1 2000/6000 = 0.33: ', userBlpPercent1);
+			console.log('---userClpPercent1 3000/6000 = 0.50: ', userClpPercent1);
+
+			const p = await loophole.getPool(lpPid);
+			console.log('---p.totalPool: ', p.totalPool);
+			console.log('---p.entryStakeTotal: ', p.entryStakeTotal);
+			console.log('---p.totalDistributedPenalty: ', p.totalDistributedPenalty);
+			console.log('---p.accLPtokensPerShare: ', p.accLPtokensPerShare);
+      p.accLPtokensPerShare.should.be.bignumber.equal(0);
+
+			const userAnewStake = await loophole.currentStake(lpPid, userA);
+			const userBnewStake = await loophole.currentStake(lpPid, userB);
+			const userCnewStake = await loophole.currentStake(lpPid, userC);
+			
+			const userAlpPercent2 = userAnewStake / p.totalPool;
+			const userBlpPercent2 = userBnewStake / p.totalPool;
+			const userClpPercent2 = userCnewStake / p.totalPool;
+			console.log('---userAlpPercent2 = 0.16: ', userAlpPercent2);
+			console.log('---userBlpPercent2 = 0.33: ', userBlpPercent2);
+			console.log('---userClpPercent2 = 0.50: ', userClpPercent2);
+
+			userAlpPercent1.should.be.bignumber.equal(userAlpPercent2);
+			userBlpPercent1.should.be.bignumber.equal(userBlpPercent2);
+			userClpPercent1.should.be.bignumber.equal(userClpPercent2);
+		});
+	});*/
+
+
+
+	describe('#when last user exits all staked tokens [from MAIN pool WETH]', async () => {
+		//NOTE: weth exit transaction we use for checks and assertions
+		let wethExitTx;
+		//NOTE: keep a record of LOOP pool for before and after the weth exit checks
+		let lpPool;
+
+		//NOTE: tests group is only for local environment
+		before('before-hook6a', async () => {
+			assertLocalTestOnly();
+		});
+
+		before('before-hook6', async () => {
+			// deploy a NEW loophole contract
+			await deployLoophole(setupWethAndWbtcPoolsConfig);
+
+			[userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+
+			await fundLoopholeWithLP();
+			await approveBulkWethTransfers(userA, userB, userC, userD);
+		});
+
+		before('before-hook6', async () => {
+			//NOTE: setup conditions for last user exit
+
+			// users stake weth
+			await usersStake(wethPid, [userA, userB], [stakeA, stakeB])
+			
+			// userA exits
+			loophole.switchWallet(userA);
+			await loophole.exit(wethPid, stakeA, amountOutMinimum_ZERO);
+			
+			//NOTE: userA stake was 1000, 10% of it is 100, it went back into the WETH pool for distribution
+			const userBnewStake = await loophole.currentStake(wethPid, userB);
+			console.log('---userBnewStake: ', userBnewStake);
+			userBnewStake.should.be.bignumber.equal(stakeB+100);
+
+		});
+
+
+		it('no exit penalty amount is added to pool.totalDistributedPenalty', async () => {
+			//NOTE: userB is the last one having stake in WETH pool
+			//userB new stake is plus 100 from userA exit
+			const userBnewStake = stakeB + 100;
+
+			//NOTE: keep a record of pool.totalDistributedPenalty for later check
+			let p = await loophole.getPool(wethPid);
+			const totalDistributedPenalty1 = p.totalDistributedPenalty;
+			console.log('---totalDistributedPenalty1: ', totalDistributedPenalty1);
+
+			//NOTE: keep a record of LP tokens in LOOP pool
+			lpPool = await loophole.getPool(lpPid);
+			
+			//NOTE: userB is last to exit
+			loophole.switchWallet(userB);
+			wethExitTx = await loophole.exit(wethPid, userBnewStake, amountOutMinimum_ZERO);
+			
+			//NOTE: check pool.totalDistributedPenalty
+			p = await loophole.getPool(wethPid);
+			const totalDistributedPenalty2 = p.totalDistributedPenalty;
+			console.log('---totalDistributedPenalty2: ', totalDistributedPenalty2);
+
+			totalDistributedPenalty1.should.be.bignumber.equal(totalDistributedPenalty2);
+		});
+
+
+		it('all exit penalty is swaped for LP tokens via uniswap and added to LOOP pool', async () => {
+			//emits TokenExchanged(_msgSender(), pool.token, exitPenaltyAmount, lpToken, amountLP)
+			
+			//NOTE: check LP profit from weth exits/unstakes penalty added to LOOP pool
+			console.log('wethExitTx.events.TokenExchanged.returnValues: ', wethExitTx.events.TokenExchanged.returnValues);
+			const wethExitPenaltyToLPtokens = wethExitTx.events.TokenExchanged.returnValues.tokenAmountLP;
+			console.log('---wethExitPenaltyToLPtokens: ', wethExitPenaltyToLPtokens);
+
+			//NOTE: entryStakeTotal should be the same before and after the exit since nobody should have staked LP tokens
+			const p = await loophole.getPool(lpPid);
+			console.log('---LP.entryStakeTotal.before: ', lpPool.entryStakeTotal);
+			console.log('---LP.entryStakeTotal.after: ', p.entryStakeTotal);
+			console.log('---LP.totalPool.before: ', lpPool.totalPool);
+			console.log('---LP.totalPool.after: ', p.totalPool);
+			p.entryStakeTotal.should.be.bignumber.equal(lpPool.entryStakeTotal);
+			p.totalPool.should.be.bignumber.equal(lpPool.totalPool.plus(wethExitPenaltyToLPtokens));
+		});
+	});
+
+
+
+	// not needed
+	/*describe('#when last user exits all staked tokens [from LOOP pool]', async () => {
+		
+		//TODO: no exit penalty amount is added to pool.totalDistributedPenalty
+    it('no exit penalty amount is added to pool.totalDistributedPenalty', async () => {
+		});
+
+
+		//TODO: all exit penalty is swaped for LP tokens via uniswap and added to LOOP pool
+		it('all exit penalty is swaped for LP tokens via uniswap and added to LOOP pool', async () => {
+		});
+	});*/
+
+
+
+	//describe.skip
+	describe('#when userB exits/unstakes after already having some LP reward from userA exit/unstake [from MAIN pool WETH]', async () => {
+		const stakeA = BigNumber(1000);
+		const stakeB = BigNumber(2000);
+		const stakeC = BigNumber(3000);
+
+		//NOTE: tests group is only for local environment
+		before('before-hook6a', async () => {
+			assertLocalTestOnly();
+		});
+
+		before('before-hook6', async () => {
+			// deploy a NEW loophole contract
+			await deployLoophole(setupWethAndWbtcPoolsConfig);
+
+			[userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+
+			await fundLoopholeWithLP();
+			await approveBulkWethTransfers(userA, userB, userC);
+		});
+
+		before('before-hook6', async () => {
+			//NOTE: setup conditions for last user exit
+
+			// users stake weth
+			await usersStake(wethPid, [userA, userB, userC], [stakeA, stakeB, stakeC])
+			
+			// userA exits
+			loophole.switchWallet(userA);
+			await loophole.exit(wethPid, stakeA, amountOutMinimum_ZERO);
+			
+			//NOTE: userA stake was 1000, 10% of it is 100, it went back into the WETH pool for distribution
+			//userB new stake is 2000+40 = 2040
+			const userBnewStakeExpected = 2040;
+			const userBnewStake = await loophole.currentStake(wethPid, userB);
+			console.log('---userBnewStake: ', userBnewStake);
+			userBnewStake.should.be.bignumber.equal(userBnewStakeExpected);
+		});
+
+
+		it('userB exits/unstakes after already having some LP reward from userA exit/unstake [from MAIN pool WETH]', async () => {
+			//NOTE: 100 WETH from userA exit was distributed among userB and userC
+			//userB was given 2000/5000 of 100 = 40 (40%)
+			//userC was given 3000/5000 of 100 = 60 (60%)
+			
+			// userB exits
+			loophole.switchWallet(userB);
+			const userBnewStake = stakeB.plus(40); //2040
+			await loophole.exit(wethPid, userBnewStake, amountOutMinimum_ZERO);
+			
+			//NOTE: last userB stake was 2040, 10% of it is 204, it went back into the WETH pool for distribution
+			//userC new stake is 3000+60+204 = 3264
+			const userCnewStakeExpected = 3264;
+			const userCnewStake = await loophole.currentStake(wethPid, userC);
+			console.log('---userCnewStake: ', userCnewStake);
+			userCnewStake.should.be.bignumber.equal(userCnewStakeExpected);
 		});
 	});
 

@@ -213,20 +213,21 @@ export default class SwapRouter extends IContract {
     return await this.__sendTx(this.getWeb3Contract().methods.unwrapWETH9WithFee(amountMinimum, recipient, feeBips, feeRecipient));
   }
 
-    /**
-     * Deploy the SwapRouter Contract
-     * @function
-     * @param {Object} params Parameters
-     * @param {function():void} params.callback
-     * @return {Promise<*|undefined>}
-     */
-    deploy = async ({ callback } = {}) => {
-      const params = [this.params.factory, this.params.weth9];
 
-      const res = await this.__deploy(params, callback);
-      this.params.contractAddress = res.contractAddress;
-      /* Call to Backend API */
-      await this.__assert();
-      return res;
-    };
+  /**
+   * Deploy the SwapRouter Contract
+   * @function
+   * @param {Object} params Parameters
+   * @param {function():void} params.callback
+   * @return {Promise<*|undefined>}
+   */
+  deploy = async ({ callback } = {}) => {
+    const params = [this.params.factory, this.params.weth9];
+
+    const res = await this.__deploy(params, callback);
+    this.params.contractAddress = res.contractAddress;
+    /* Call to Backend API */
+    await this.__assert();
+    return res;
+  };
 }
