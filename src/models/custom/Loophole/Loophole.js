@@ -214,11 +214,12 @@ export default class Loophole extends IContract {
     return res;
   }
 
+  // TODO: fix this fn, it always returns zero
   /**
    * @param {uint256} pid
    * @returns {Promise<uint256>}
    */
-  async collectRewardsCall(pid) { //TODO: fix this fn, it always returns zero
+  async collectRewardsCall(pid) {
     const res = await this.getWeb3Contract().methods.collectRewards(pid).call();
     console.log('collectRewardsCall.bp-0: ', res);
     return await this.fromDecimalsToBN(res, pid);
@@ -304,16 +305,16 @@ export default class Loophole extends IContract {
    */
   async updatePoolCall(pid) {
     const res = await this.getWeb3Contract().methods.updatePool(pid).call();
-    //res.blocksElapsed, res.lpTokensReward, res.accLPtokensPerShare
+    // res.blocksElapsed, res.lpTokensReward, res.accLPtokensPerShare
     const decimals = this.LPTokenContract().getDecimals();
     const lpPerTokenMult = await this.getWeb3Contract().methods.LPtokensPerShareMultiplier().call();
     const accLPperToken = BigNumber(res.accLPtokensPerShare).div(lpPerTokenMult);
-    
+
     return {
       blocksElapsed: BigNumber(res.blocksElapsed),
       lpTokensReward: Numbers.fromDecimalsToBN(res.lpTokensReward, decimals),
       accLPtokensPerShare: accLPperToken,
-    }
+    };
   }
 
 
@@ -406,7 +407,7 @@ export default class Loophole extends IContract {
     const lpDecimals = this.LPTokenContract().getDecimals();
     const lpPerTokenMult = await this.getWeb3Contract().methods.LPtokensPerShareMultiplier().call();
     const accLPperToken = BigNumber(res[6]).div(lpPerTokenMult);
-    
+
     return {
       token: res[0],
       allocPoint: BigNumber(res[1]),
@@ -479,9 +480,9 @@ export default class Loophole extends IContract {
   }
 
 
-  //WARNING: Function NOT fully working:
+  // WARNING: Function NOT fully working:
   // when user had profit from others exits and entryStake is less than what he had withdrown
-  //SOLUTION? maybe return only what is greather than zero?
+  // SOLUTION? maybe return only what is greather than zero?
   /**
    * @param {uint256} pid
    * @param {address} user
