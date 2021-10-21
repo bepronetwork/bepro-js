@@ -14,6 +14,7 @@
         "url": "https://github.com/betprotocol/bepro-js.git"
     },
     "scripts": {
+        "test2": "./node_modules/.bin/mocha --exit ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
         "pretest": "npm run build && truffle compile && truffle migrate --network development",
         "test": "./node_modules/.bin/mocha --exit ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
         "test:truffle": "truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",

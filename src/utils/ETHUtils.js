@@ -1,4 +1,8 @@
 import { ethutils } from '../interfaces';
+import IContract from '../models/IContract';
+import Numbers from './Numbers';
+
+const BigNumber = require('bignumber.js');
 
 /**
  * ETHUtils Object
@@ -12,44 +16,63 @@ export default class ETHUtils extends IContract {
 
 
   /**
-     * @param {address} tokenAddress
-     * @returns {Promise<string>}
-     */
+   * Get token name given token address
+   * @param {address} tokenAddress
+   * @returns {Promise<string>}
+   */
   async name(tokenAddress) {
     return await this.getWeb3Contract().methods.name(tokenAddress).call();
   }
 
 
   /**
-     * @param {address} tokenAddress
-     * @returns {Promise<string>}
-     */
+   * Get token symbol given token address
+   * @param {address} tokenAddress
+   * @returns {Promise<string>}
+   */
   async symbol(tokenAddress) {
     return await this.getWeb3Contract().methods.symbol(tokenAddress).call();
   }
 
 
   /**
-     * @param {address} tokenAddress
-     * @returns {Promise<uint8>}
-     */
+   * Get token decimals given token address
+   * @param {address} tokenAddress
+   * @returns {Promise<uint8>}
+   */
   async decimals(tokenAddress) {
-    return await this.getWeb3Contract().methods.decimals(tokenAddress).call();
+    return Number(await this.getWeb3Contract().methods.decimals(tokenAddress).call());
   }
 
 
   /**
-     * @returns {Promise<uint256>}
-     */
+   * Get block timestamp
+   * @returns {Promise<uint256>}
+   */
   async blockTimestamp() {
-    return await this.getWeb3Contract().methods.blockTimestamp().call();
+    // TODO: convert to some format?
+    return BigNumber(await this.getWeb3Contract().methods.blockTimestamp().call());
   }
 
 
   /**
-     * @returns {Promise<uint256>}
-     */
+   * Get block number
+   * @returns {Promise<uint256>}
+   */
   async blockNumber() {
-    return await this.getWeb3Contract().methods.blockNumber().call();
+    return BigNumber(await this.getWeb3Contract().methods.blockNumber().call());
+  }
+
+
+  /**
+   * Get block number and timestamp
+   * @returns {Promise<uint256,uint256>}
+   */
+  async blockNumberAndTimestamp() {
+    const [blockNumber, blocktimestamp] = await this.getWeb3Contract().methods.blockNumberAndTimestamp().call();
+    return [
+      BigNumber(blockNumber),
+      BigNumber(blockTimestamp),
+    ];
   }
 }

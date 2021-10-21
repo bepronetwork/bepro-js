@@ -100,6 +100,21 @@ class ERC20Contract extends IContract {
   };
 
   /**
+   * Convert given tokens amount integer to float number with decimals for UI.
+   * @function
+   * @param {number} amount Tokens amount to convert
+   * @returns {Promise<number>} tokensAmount
+   */
+  fromDecimalsToBN = (amount) => {
+    const tokensAmount = Numbers.fromDecimalsToBN(
+      amount,
+      this.getDecimals(),
+    );
+    // console.log('ERC20Contract.fromDecimals:', tokensAmount);
+    return tokensAmount;
+  };
+
+  /**
    * Get Total Supply of Token
    * @function
    * @returns {Promise<number>} Total supply

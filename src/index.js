@@ -8,6 +8,14 @@ import ERC721Standard from './models/ERC721/ERC721Standard';
 import Network from './models/BEPRO/Network';
 import { VotingContract } from './models';
 import Sablier from './models/Sablier/Sablier';
+import ETHUtils from './utils/ETHUtils';
+import UniswapV3Pool from './models/Uniswap/UniswapV3Pool';
+import UniswapV3Factory from './models/Uniswap/UniswapV3Factory';
+import TestUniswapV3Callee from './models/Uniswap/TestUniswapV3Callee';
+import TestUniswapV3RouterBridge from './models/Uniswap/TestUniswapV3RouterBridge';
+// import UniswapV3PoolSwapTest from './models/Uniswap/UniswapV3PoolSwapTest';
+import SwapRouter from './models/Uniswap/SwapRouter';
+import Loophole from './models/custom/Loophole/Loophole';
 
 export {
   Application,
@@ -20,4 +28,12 @@ export {
   ERC721Collectibles,
   ERC721Standard,
   Sablier,
+  ETHUtils,
+  UniswapV3Pool,
+  UniswapV3Factory,
+  TestUniswapV3Callee,
+  TestUniswapV3RouterBridge,
+  // UniswapV3PoolSwapTest,
+  SwapRouter,
+  Loophole,
 };

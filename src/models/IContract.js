@@ -104,10 +104,11 @@ class IContract {
     try {
       let res;
       if (!this.acc && !call) {
-        const accounts = await this.params.web3.eth.getAccounts();
+        // const accounts = await this.params.web3.eth.getAccounts();
+        const account = await this.web3Connection.getAddress();
         res = await this.__metamaskCall({
           f,
-          acc: accounts[0],
+          acc: account, // accounts[0],
           value,
           callback,
         });
@@ -329,15 +330,15 @@ class IContract {
    * Called at start when testing or at login on MAINNET
    */
   _loadDataFromWeb3Connection() {
-    this.web3 = this.web3Connection.web3;
+    this.web3 = this.web3Connection.getWeb3();
     this.acc = this.web3Connection.account;
-
     // update some params properties with new values
     this.params = {
       ...this.params,
       web3: this.web3,
       contract: new Contract(
-        this.web3,
+        // this.web3,
+        this.web3Connection,
         this.params.abi,
         this.params.contractAddress,
       ),
@@ -392,6 +393,26 @@ class IContract {
    */
   async getUserETHBalance() {
     return await this.web3Connection.getETHBalance();
+  }
+
+  /**
+   * @function
+   * @description Get user wallets/signers from current provider
+   * @return {Promise<Array>}
+   */
+  async getSigners() {
+    return await this.web3Connection.getSigners();
+  }
+
+  /**
+   * @function
+   * @description Switch current user account to a new one
+   * @param {Address} newAccount New user wallet/account address in use
+   * @return {Promise<void>}
+   */
+  switchWallet(newAccount) {
+    this.web3Connection.switchWallet(newAccount);
+    return this;
   }
 }
 

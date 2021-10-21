@@ -16,7 +16,7 @@ contract ETHUtils {
     /// @dev This is an utility function for DApp layer.
     /// @param tokenAddress The token address.
     /// @return token name.
-    function name(address tokenAddress) external returns (string memory) {
+    function name(address tokenAddress) external view returns (string memory) {
       return IERC20View(tokenAddress).name();
     }
 
@@ -24,7 +24,7 @@ contract ETHUtils {
     /// @dev This is an utility function for DApp layer.
     /// @param tokenAddress The token address.
     /// @return token symbol.
-    function symbol(address tokenAddress) external returns (string memory) {
+    function symbol(address tokenAddress) external view returns (string memory) {
       return IERC20View(tokenAddress).symbol();
     }
 
@@ -32,8 +32,14 @@ contract ETHUtils {
     /// @dev This is an utility function for DApp layer when converting to float numbers.
     /// @param tokenAddress The token address.
 	  /// @return token decimals.
-    function decimals(address tokenAddress) external returns (uint8) {
+    function decimals(address tokenAddress) external view returns (uint8) {
       return IERC20View(tokenAddress).decimals();
+    }
+
+    /// @notice get current block number
+    /// @return current block number
+    function blockNumber() external view returns (uint256) {
+        return block.number;
     }
 
     /// @notice Get current block timestamp
@@ -42,9 +48,10 @@ contract ETHUtils {
       return block.timestamp;
     }
 
-    /// @notice get current block number
+    /// @notice get current block number and timestamp
     /// @return current block number
-    function blockNumber() external view returns (uint256) {
-        return block.number;
+    /// @return current block timestamp
+    function blockNumberAndTimestamp() external view returns (uint256, uint256) {
+      return (block.number, block.timestamp);
     }
 }

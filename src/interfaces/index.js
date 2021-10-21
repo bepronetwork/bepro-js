@@ -16,6 +16,9 @@ const index = {
   uniswapFactory: require('../contracts/UniswapV3Factory.json'),
   uniswapPool: require('../contracts/UniswapV3Pool.json'),
   swapRouter: require('../contracts/SwapRouter.json'),
+  uniswapCallee: require('../contracts/TestUniswapV3Callee.json'),
+  uniswapRouterBridge: require('../contracts/TestUniswapV3RouterBridge.json'),
+  // uniswapPoolSwapTest: require('../contracts/UniswapV3PoolSwapTest.json'),
 };
 
 module.exports = index;
