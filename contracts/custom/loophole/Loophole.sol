@@ -12,13 +12,11 @@ import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 
 import "./ILoophole.sol";
 import "../../utils/Ownable.sol";
-import "../../math/SafePercentMath.sol";
 import "../../uniswap/UniswapV3RouterBridge.sol";
 
 /// @title LoopHole Finance smart contract
 contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
     using SafeMath for uint256;
-    using SafePercentMath for uint256;
     
     //NOTE: if we need specific event we need them in the smart contract
     //event Transfer(address indexed from, address indexed to, uint256 value);

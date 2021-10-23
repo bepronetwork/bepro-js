@@ -9,5 +9,4 @@ context("Unit Tests", async () => {
   //require("./stakingContract");
   //require("./sablier/sablier");
   require("./loophole/loophole");
-  //require("./utils.test");
 });

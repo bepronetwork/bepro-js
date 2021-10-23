@@ -103,7 +103,7 @@ class numbers {
   fromBigNumberToInteger(value, decimals = 18) {
     return (value / Math.pow(10, decimals)) * 1000000000000000000;
   }
-  
+
   fromDecimals(value, decimals) {
     return Number(
       parseFloat(value / 10 ** decimals).toPrecision(decimals),

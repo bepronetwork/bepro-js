@@ -126,6 +126,7 @@ class StakingContract extends IContract {
    * @param {Date} params.endDate
    * @param {Integer} params.totalMaxAmount
    * @param {Integer} params.individualMinimumAmount
+   * @param {Integer} params.individualMaxAmount
    * @param {Integer} params.APR
    * @param {Boolean} params.lockedUntilFinalization
    * @return {Promise<TransactionObject>}
@@ -135,6 +136,7 @@ class StakingContract extends IContract {
     endDate,
     totalMaxAmount,
     individualMinimumAmount,
+    individualMaxAmount,
     APR,
     lockedUntilFinalization,
   }) {
@@ -150,6 +152,10 @@ class StakingContract extends IContract {
           ),
           Numbers.toSmartContractDecimals(
             individualMinimumAmount,
+            this.getERC20Contract().getDecimals(),
+          ),
+          Numbers.toSmartContractDecimals(
+            individualMaxAmount,
             this.getERC20Contract().getDecimals(),
           ),
           APR,
@@ -177,6 +183,7 @@ class StakingContract extends IContract {
    * @property {number} APR
    * @property {number} currentAmount
    * @property {number} individualMinimumAmount
+   * @property {number} individualMaxAmount
    * @property {number} totalMaxAmount
    * @property {number[]} subscriptionIds
    * @property {Address[]} subscribers
@@ -209,14 +216,18 @@ class StakingContract extends IContract {
         res[4],
         this.getERC20Contract().getDecimals(),
       ),
-      APR: parseInt(res[5], 10),
-      currentAmount: Numbers.fromDecimals(
-        res[6],
+      individualMaxAmount: Numbers.fromDecimals(
+        res[5],
         this.getERC20Contract().getDecimals(),
       ),
-      lockedUntilFinalization: res[7],
-      subscribers: res[8],
-      subscriptionIds: Numbers.fromExponential(res[9]),
+      APR: parseInt(res[6], 10),
+      currentAmount: Numbers.fromDecimals(
+        res[7],
+        this.getERC20Contract().getDecimals(),
+      ),
+      lockedUntilFinalization: res[8],
+      subscribers: res[9],
+      subscriptionIds: Numbers.fromExponential(res[10]),
     };
   };
 
@@ -426,7 +437,6 @@ class StakingContract extends IContract {
         'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
-
     /* Use ABI */
     this.params.contract.use(staking, this.getAddress());
 
