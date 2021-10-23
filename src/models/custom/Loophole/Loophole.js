@@ -141,9 +141,11 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {address} token
-   * @param {uint256} allocPoint
-   * @returns {Promise<void>}
+   * Add/enable new pool, only owner mode
+   * @dev ADD | NEW TOKEN POOL
+   * @param {address} token Token address as IERC20
+   * @param {uint256} allocPoint Pool allocation point/share distributed to this pool from mining rewards
+   * @returns {Promise<uint256>} pid added token pool index
    */
   async add(token, allocPoint) {
     return await this.__sendTx(this.getWeb3Contract().methods.add(token, allocPoint));
@@ -151,9 +153,11 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
-   * @param {uint256} allocPoint
-   * @param {bool} withUpdate
+   * Update pool allocation point/share
+   * @dev UPDATE | ALLOCATION POINT
+   * @param {uint256} Pool id
+   * @param {uint256} allocPoint Set allocation point/share for pool id
+   * @param {bool} withUpdate Update all pools and distribute mining reward for all
    * @returns {Promise<void>}
    */
   async set(pid, allocPoint, withUpdate) {
@@ -162,8 +166,9 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
-   * @param {uint256} amount
+   * Stake tokens on given pool id
+   * @param {uint256} pid Pool id
+   * @param {uint256} amount The token amount user wants to stake to the pool.
    * @returns {Promise<void>}
    */
   async stake(pid, amount) {
@@ -173,10 +178,12 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
-   * @param {uint256} amount
-   * @param {uint256} amountOutMinimum
-   * @returns {Promise<uint256>}
+   * User exit staking amount from main pool, require main pool only
+   * @param {uint256} pid Pool id
+   * @param {uint256} amount The token amount user wants to exit/unstake from the pool.
+   * @param {uint256} amountOutMinimum The min LP token amount expected to be received from exchange,
+   * needed from outside for security reasons, using zero value in production is discouraged.
+   * @returns {Promise<uint256>} net tokens amount sent to user address
    */
   async exit(pid, amount, amountOutMinimum) {
     const amount2 = await this.fromBNToDecimals(amount, pid);
@@ -185,8 +192,9 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} amount
-   * @returns {Promise<uint256>}
+   * User exit staking amount from LOOP pool, require LOOP pool only
+   * @param {uint256} amount The token amount user wants to exit/unstake from the pool.
+   * @returns {Promise<uint256>} net tokens amount sent to user address
    */
   async exitLP(amount) {
     const amount2 = Numbers.fromBNToDecimals(amount, this.LPTokenContract().getDecimals());
@@ -195,9 +203,11 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
-   * @param {address} user
-   * @returns {Promise<uint256>}
+   * View pending LP token rewards for user
+   * @dev VIEW | PENDING REWARD
+   * @param {uint256} pid Pool id of main pool
+   * @param {address} user User address to check pending rewards for
+   * @returns {Promise<uint256>} Pending LP token rewards for user
    */
   async getUserReward(pid, user) {
     const res = await this.getWeb3Contract().methods.getUserReward(pid, user).call();
@@ -206,12 +216,12 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
-   * @returns {Promise<uint256>}
+   * User collects his share of LP tokens reward
+   * @param {uint256} pid Pool id
+   * @returns {Promise<uint256>} LP reward tokens amount sent to user address
    */
   async collectRewards(pid) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.collectRewards(pid));
-    return res;
+    return await this.__sendTx(this.getWeb3Contract().methods.collectRewards(pid));
   }
 
   // TODO: fix this fn, it always returns zero
@@ -250,11 +260,10 @@ export default class Loophole extends IContract {
   } */
 
 
-  /**
-   * @param {uint256} pid
-   * @param {address} user
-   * @returns {Promise<uint256>}
-   */
+  // / Current total user stake in a given pool
+  // / @param pid Pool id
+  // / @param user The user address
+  // / @returns {Promise<uint256>} stake tokens amount
   async currentStake(pid, user) {
     const res = await this.getWeb3Contract().methods.currentStake(pid, user).call();
     return await this.fromDecimalsToBN(res, pid);
@@ -262,9 +271,10 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
-   * @param {address} user
-   * @returns {Promise<uint256>}
+   * Percentage of how much a user has earned so far from the other users exit, would be just a statistic
+   * @param {uint256} pid Pool id
+   * @param {address} user The user address
+   * @returns {Promise<uint256>} earnings percent as integer
    */
   async earnings(pid, user) {
     const res = await this.getWeb3Contract().methods.earnings(pid, user).call();
@@ -273,9 +283,11 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} from
-   * @param {uint256} to
-   * @returns {Promise<uint256>}
+   * Get blocks range given two block numbers, usually computes blocks elapsed since last mining reward block.
+   * @dev RETURN | BLOCK RANGE SINCE LAST REWARD AS REWARD MULTIPLIER | INCLUDES START BLOCK
+   * @param {uint256} from block start
+   * @param {uint256} to block end
+   * @returns {Promise<uint256>} blocks count
    */
   async getBlocksFromRange(from, to) {
     const res = await this.getWeb3Contract().methods.getBlocksFromRange(from, to).call();
@@ -284,6 +296,8 @@ export default class Loophole extends IContract {
 
 
   /**
+   * Update all pools for mining rewards
+   * @dev UPDATE | (ALL) REWARD VARIABLES | BEWARE: HIGH GAS POTENTIAL
    * @returns {Promise<void>}
    */
   async massUpdatePools() {
@@ -292,7 +306,9 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
+   * Update pool to trigger LP tokens reward since last reward mining block
+   * @dev UPDATE | (ONE POOL) REWARD VARIABLES
+   * @param {uint256} pid Pool id
    * @returns {Promise<void>}
    */
   async updatePool(pid) {
@@ -300,8 +316,12 @@ export default class Loophole extends IContract {
   }
 
   /**
-   * @param {uint256} pid
-   * @returns {Promise<void>}
+   * Update pool to trigger LP tokens reward since last reward mining block, function call for results and no transaction
+   * @dev UPDATE | (ONE POOL) REWARD VARIABLES
+   * @param {uint256} pid Pool id
+   * @returns {Promise<uint256>} blocksElapsed Blocks elapsed since last reward block
+   * @returns {Promise<uint256>} lpTokensReward Amount of LP tokens reward since last reward block
+   * @returns {Promise<uint256>} accLPtokensPerShare Pool accumulated LP tokens per pool token (per share)
    */
   async updatePoolCall(pid) {
     const res = await this.getWeb3Contract().methods.updatePool(pid).call();
@@ -319,9 +339,9 @@ export default class Loophole extends IContract {
 
 
   /**
-   * Get LP tokens reward for a pool id
-   * @param {uint256} pid
-   * @returns {Promise<uint256>} tokensReward
+   * Get LP tokens reward for given pool id, only MAIN pool, LOOP pool reward will always be zero
+   * @param {uint256} pid Pool id
+   * @returns {Promise<uint256>} tokensReward Tokens amount as reward based on last mining block
    */
   async getPoolReward(pid) {
     // LP tokens reward
@@ -331,9 +351,10 @@ export default class Loophole extends IContract {
     // return await this.fromDecimalsToBN(res, pid);
   }
 
+
   /**
    * Get pool token decimals given pool id
-   * @param {uint256} pid
+   * @param {uint256} pid Pool id
    * @returns {Promise<uint256>} poolTokenDecimals
    */
   async getPoolTokenDecimals(pid) {
@@ -341,6 +362,7 @@ export default class Loophole extends IContract {
     const res = await this.getWeb3Contract().methods.getPool(pid).call();
     return await this.ETHUtils().decimals(res[0]); // token = res[0]
   }
+
 
   /**
    * Convert given tokens amount integer to float number with decimals for UI.
@@ -355,6 +377,7 @@ export default class Loophole extends IContract {
       await this.getPoolTokenDecimals(pid),
     );
   }
+
 
   /**
    * Convert float number with decimals from UI to tokens amount integer for smart contract function.
@@ -372,7 +395,8 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @returns {Promise<uint256>}
+   * Get current block timestamp
+   * @returns {Promise<uint256>} current block timestamp
    */
   async getBlockTimestamp() {
     return await this.getWeb3Contract().methods.getBlockTimestamp().call();
@@ -380,25 +404,28 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @returns {Promise<uint256>}
+   * Get current block number
+   * @returns {Promise<uint256>} current block number
    */
   async getBlockNumber() {
     return await this.getWeb3Contract().methods.getBlockNumber().call();
   }
 
 
-  /** @typedef {Object} Loophole~getPoolType
+  /** @typedef {Object} Loophole~PoolInfo
    * @property {address} token
    * @property {uint256} allocPoint
    * @property {uint256} lastRewardBlock
    * @property {uint256} totalPool
    * @property {uint256} entryStakeTotal
    * @property {uint256} totalDistributedPenalty
+   * @property {uint256} accLPtokensPerShare
    */
 
   /**
-   * @param {uint256} pid
-   * @returns {Promise<Loophole~getPool>}
+   * Get pool attributes
+   * @param {uint256} pid Pool id
+   * @returns {Promise<Loophole~PoolInfo>}
    */
   async getPool(pid) {
     const res = await this.getWeb3Contract().methods.getPool(pid).call();
@@ -421,8 +448,9 @@ export default class Loophole extends IContract {
 
 
   /**
+   * Get pool attributes, raw with no conversion.
    * @param {uint256} pid
-   * @returns {Promise<Loophole~getPoolInfo>}
+   * @returns {Promise<Loophole~PoolInfo>}
    */
   async getPoolInfo(pid) {
     const res = await this.getWeb3Contract().methods.getPoolInfo(pid).call();
@@ -432,6 +460,7 @@ export default class Loophole extends IContract {
 
 
   /**
+   * Get pools array length
    * @returns {Promise<uint256>} pools count
    */
   async poolsCount() {
@@ -439,10 +468,18 @@ export default class Loophole extends IContract {
   }
 
 
+  /** @typedef {Object} Loophole~UserInfo
+   * @property {uint256} entryStake Accumulated staked amount
+   * @property {uint256} unstake Accumulated net unstaked amount or exitStake
+   * @property {uint256} entryStakeAdjusted Current user adjusted stake in the pool
+   * @property {uint256} payRewardMark LP tokens reward mark to control new rewards and already paid ones
+   */
+
   /**
-   * @param {uint256} pid
-   * @param {address} user
-   * @returns {Promise<Loophole~getPoolInfo>}
+   * Get pool attributes as struct
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise<Loophole~UserInfo>}
    */
   async getUserInfo(pid, user) {
     const res = await this.getWeb3Contract().methods.getUserInfo(pid, user).call();
@@ -459,9 +496,10 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
-   * @param {address} user
-   * @returns {Promise<uint256>}
+   * Get total accumulated 'entry stake' so far for a given user address in a pool id
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise<uint256>} user entry stake amount in a given pool
    */
   async getTotalEntryStakeUser(pid, user) {
     const res = await this.getWeb3Contract().methods.getTotalEntryStakeUser(pid, user).call();
@@ -470,9 +508,10 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
-   * @param {address} user
-   * @returns {Promise<uint256>}
+   * Get total accumulated 'unstake' so far for a given user address in a pool id
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise<uint256>} user unstake amount in a given pool
    */
   async getTotalUnstakeUser(pid, user) {
     const res = await this.getWeb3Contract().methods.getTotalUnstakeUser(pid, user).call();
@@ -484,9 +523,10 @@ export default class Loophole extends IContract {
   // when user had profit from others exits and entryStake is less than what he had withdrown
   // SOLUTION? maybe return only what is greather than zero?
   /**
-   * @param {uint256} pid
-   * @param {address} user
-   * @returns {Promise<uint256>}
+   * Get 'entry stake adjusted' for a given user address in a pool id
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise<uint256>} user entry stake adjusted amount in given pool
    */
   async getCurrentEntryStakeUser(pid, user) {
     // const res = await this.getWeb3Contract().methods.getCurrentEntryStakeUser(pid, user).call();
@@ -500,20 +540,28 @@ export default class Loophole extends IContract {
     return userInfo.entryStake.minus(totalGrossUnstaked);
   }
 
+
+  /**
+   * Returns true if given pis is a LOOP pool id, false otherwise.
+   * @param {uint256} pid Pool id
+   * @returns {Boolean}
+   */
   isLoopPoolId(pid) {
     return (pid == 0);
   }
 
 
   /**
-   * @param {uint256} pid
-   * @param {address} user
-   * @returns {Promise<uint256>}
+   * Get 'entry stake adjusted' for a given user address in a pool id
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise<uint256>} user entry stake adjusted amount in given pool
    */
   async getEntryStakeAdjusted(pid, user) {
     const res = await this.getWeb3Contract().methods.getEntryStakeAdjusted(pid, user).call();
     return await this.fromDecimalsToBN(res, pid);
   }
+
 
   /**
    *

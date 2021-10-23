@@ -74,12 +74,12 @@ class IContract {
    */
   __metamaskCall = async ({
     f, acc, value, callback = () => {},
-  }) => new Promise((resolve, reject) => {
+  }) => new Promise(async (resolve, reject) => {
     f.send({
       from: acc,
       value,
-      gasPrice: 20000000000, // temp test
-      gas: 5913388, // 6721975 //temp test
+      // gasPrice: 20000000000, // temp test
+      gas: 5913388,
     })
       .on('confirmation', (confirmationNumber, receipt) => {
         callback(confirmationNumber);
@@ -104,11 +104,10 @@ class IContract {
     try {
       let res;
       if (!this.acc && !call) {
-        // const accounts = await this.params.web3.eth.getAccounts();
         const account = await this.web3Connection.getAddress();
         res = await this.__metamaskCall({
           f,
-          acc: account, // accounts[0],
+          acc: account,
           value,
           callback,
         });
@@ -332,12 +331,12 @@ class IContract {
   _loadDataFromWeb3Connection() {
     this.web3 = this.web3Connection.getWeb3();
     this.acc = this.web3Connection.account;
+
     // update some params properties with new values
     this.params = {
       ...this.params,
       web3: this.web3,
       contract: new Contract(
-        // this.web3,
         this.web3Connection,
         this.params.abi,
         this.params.contractAddress,

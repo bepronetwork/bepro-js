@@ -7,6 +7,7 @@ const index = {
   erc721collectibles: require('../contracts/ERC721Colectibles.json'),
   erc721standard: require('../contracts/ERC721Standard.json'),
   network: require('../contracts/Network.json'),
+  networkFactory: require('../contracts/NetworkFactory.json'),
   openerRealFvr: require('../contracts/OpenerRealFvr.json'),
   sablier: require('../contracts/Sablier.json'),
   cerc20mock: require('../contracts/CERC20Mock.json'),

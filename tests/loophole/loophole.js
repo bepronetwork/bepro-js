@@ -37,7 +37,7 @@ chai.use(chaiBigNumber(BigNumber));
 //chai.use(chaiPlugin);
 
 
-import Web3Connection from "../../build/Web3Connection";
+//import Web3Connection from "../../build/Web3Connection";
 
 //const shouldBehaveLikeSablier = require("./sablier.behavior");
 
@@ -83,12 +83,6 @@ let wbtcStartBlockSnapshotId;
 //let wbtcStartBlock;
 
 
-
-let _this = {};
-let alice;
-const bob   = "0x000000000000000000000000000000000000000A";
-const carol = "0x000000000000000000000000000000000000000B";
-const eve   = "0x000000000000000000000000000000000000000C";
 
 let wethBnMaxUint256; //MaxUint256 for WETH token
 let wbtcBnMaxUint256; //MaxUint256 for WBTC token
@@ -218,9 +212,6 @@ const deployLoophole = async ({ startBlockNumber = 1, setupWeth = false, setupWb
 	loopholeAddress = loophole.getAddress();
 	console.log('Deployed Loophole address: ', deployed_contractAddress);
 	expect(res).to.not.equal(false);
-	//_this.loophole = loophole;
-	//_this.userAddress = await loophole.getUserAddress();
-	//_this.alice = _this.userAddress;
 	console.log('---loophole.userAddress: ', await loophole.getUserAddress());
 
 	deployedBlock = await ethUtils.blockNumber();
@@ -2741,7 +2732,7 @@ context("Loophole contract", () => {
 
 		//NOTE: this test WILL FAIL due to numbers rounding error when calculating users stake amounts
 		//NOTE: userB exits, check userA has NOT benefited, userC and userD did benefit from userB exit
-		it('userB exits/unstakes all his tokens [from staking pool WETH]', async () => {
+		it('userB exits/unstakes all [from WETH pool] [FAILS due to precision error]', async () => {
 			loophole.switchWallet(userB);
 
 			//NOTE: userB should collect LP rewards pending/left
@@ -2796,7 +2787,7 @@ context("Loophole contract", () => {
 			// 15 * 2022.222222222222222222 / 9100 = 3.333333333333333333 (...332967032967)
 			//
 			// 2022.222222222222222222 = (2000 / 9000 * 9100)
-			// 15 * (2000 / 9000 * 9100) / 9100 = 15 * 2000 / 9000 = 3.333333333333333333
+			// 15 * (2000 / 9000 * 9100) / 9100 = 15 * 2000 / 9000 = 30/9 = 3.333333333333333333
 			const rewardExpectedTokens = BigNumber('3.333333333333333333');
 			//NOTE: temporarely comment it out for testing remaining lines below
 			lpBalance2.should.be.bignumber.equal(lpBalance1.plus(rewardExpectedTokens));
@@ -3465,32 +3456,7 @@ context("Loophole contract", () => {
 	});
 
 
-
-	/*describe('describe.test', async () => {
-		//it('it.test', async () => {
-			console.log('...it.test...');
-			await deployLoophole();
-		//});
-	});*/
-
-	// works
-	/*describe('describe.extCallTest', async () => {
-		//it('it.extCallTest', async () => {
-			console.log('...describe.extCallTest...');
-			await extCallTest();
-		//});
-	});*/
-
-	// works, but NOT nested tests
-	/*describe('describe.extCallTest2', async () => {
-		it('it.extCallTest2', async () => {
-			console.log('...describe.extCallTest2...');
-			await extCallTest2();
-		});
-	});*/
-
-
-
+	
 	after('Loophole::after_hook', async () => {
     if (testConfig.localtest) {
       await traveler.revertToSnapshot(snapshotId);

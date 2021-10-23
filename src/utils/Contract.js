@@ -50,7 +50,7 @@ class Contract {
 
   __metamaskDeploy = async ({
     byteCode, args, acc, callback = () => {},
-  }) => new Promise((resolve, reject) => {
+  }) => new Promise(async (resolve, reject) => {
     try {
       this.getContract()
         .deploy({
@@ -59,11 +59,6 @@ class Contract {
         })
         .send({
           from: acc,
-          // BUGFIX: without gas and gasPrice set here, we get the following error:
-          // Error: Node error: {"message":"base fee exceeds gas limit","code":-32000,"data":{"stack":"Error: base fee exceeds gas limit
-          // ,gasPrice : 180000000000
-          // ,gas : 5913388
-          gasPrice: 20000000000,
           gas: 5913388, // 6721975
         })
         .on('confirmation', (confirmationNumber, receipt) => {
@@ -94,7 +89,7 @@ class Contract {
         from: account.address,
         to: this.address,
         gas: 4430000,
-        gasPrice: 200000000000,
+        gasPrice: await this.web3.eth.getGasPrice(),
         value: value || '0x0',
       };
 

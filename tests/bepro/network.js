@@ -1,6 +1,4 @@
 import { expect, assert } from "chai";
-import moment from "moment";
-import delay from "delay";
 import { mochaAsync } from "../utils";
 import { ERC20Contract, Network } from "../../build";
 import Numbers from "../../build/utils/Numbers";
@@ -15,13 +13,14 @@ context("Network Contract", async () => {
   let transactionalERC20Contract;
   let settlerERC20Contract;
   let networkContract;
-  let userAddress;
   let contractAddress;
+  let userAddress;
   let app;
 
 
   before(async () => {
     networkContract = new Network(testConfig);
+    console.log("Network", networkContract)
     userAddress = await networkContract.getUserAddress(); //local test with ganache
     console.log("stakingContract.userAddress: " + userAddress);
   });
@@ -110,7 +109,7 @@ context("Network Contract", async () => {
       expect(res).to.not.equal(false);
       /* Call the function */
       res = await networkContract.lock({
-        tokenAmount : 1000
+        tokenAmount : 25000000
       });
       expect(res).to.not.equal(false);
       /* Get result */
@@ -127,6 +126,70 @@ context("Network Contract", async () => {
       res = await networkContract.openIssue({
         cid : 'sdfgs',
         tokenAmount : 1000
+      });
+      expect(res).to.not.equal(false);
+      /* Get result */
+    })
+  );
+
+  it(
+    "should lock tokens",
+    mochaAsync(async () => {
+      /* Approve tokens lock */
+      var res = await networkContract.approveTransactionalERC20Token();
+      expect(res).to.not.equal(false);
+      /* Call the function */
+      res = await networkContract.lock({
+        tokenAmount : 1000
+      });
+      expect(res).to.not.equal(false);
+      /* Get result */
+    })
+  );
+
+  it(
+    "should delegate tokens",
+    mochaAsync(async () => {
+      /* Approve tokens lock */
+      var res = await networkContract.approveTransactionalERC20Token();
+      expect(res).to.not.equal(false);
+      /* Call the function */
+      res = await networkContract.delegateOracles({
+        tokenAmount : 100,
+        delegatedTo : "0x139F33B91cF790524dD72c1F9B96E7949A5Bb798"
+      });
+      expect(res).to.not.equal(false);
+      /* Get result */
+    })
+  );
+
+
+  it(
+    "verify if issue is in Draft",
+    mochaAsync(async () => {
+      /* Approve tokens lock */
+      var res = await networkContract.approveTransactionalERC20Token();
+      expect(res).to.not.equal(false);
+      /* Call the function */
+      res = await networkContract.isIssueInDraft({
+        issueId : 1
+      });
+      expect(res).to.equal(true);
+      /* Get result */
+    })
+  );
+
+  it(
+    "create Merge Proposal on Issue",
+    mochaAsync(async () => {
+      /* Approve tokens lock */
+      var res = await networkContract.approveTransactionalERC20Token();
+      expect(res).to.not.equal(false);
+      /* Call the function */
+      res = await networkContract.proposeIssueMerge({
+        issueID : 1,
+        prAddresses : ["0x139F33B91cF790524dD72c1F9B96E7949A5Bb798", "0x139F33B91cF790524dD72c1F9B96E7949A5Bb798"],
+        prAmounts : [800, 200]
       });
       expect(res).to.not.equal(false);
       /* Get result */
