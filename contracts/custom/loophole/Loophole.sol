@@ -10,12 +10,13 @@ import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
 import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 
+import "../../IERC20Events.sol";
 import "./ILoophole.sol";
 import "../../utils/Ownable.sol";
 import "../../uniswap/UniswapV3RouterBridge.sol";
 
 /// @title LoopHole Finance smart contract
-contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
+contract Loophole is ILoophole, IERC20events, Ownable, Context, UniswapV3RouterBridge {
     using SafeMath for uint256;
     
     //NOTE: if we need specific event we need them in the smart contract
@@ -46,14 +47,10 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
     
     // LOOP pool is on index 0, the rest are MAIN pools
     PoolInfo[] private poolInfo;
-    //mapping (uint256 => mapping (address => UserInfo)) private userInfo; //custom: poolId-user-UserInfo
+    
     uint256 public totalAllocPoint = 0; // automated track of total allocated points of all pools = sum of all pools points
     uint256 public startBlock;          // start block for liquidity mining LP tokens
-    //uint256 public bonusEndBlock;
     mapping (address => bool) public poolExists; //mapping for existent pools by given token address.
-
-    // LOOP pool
-    //PoolInfo public loopPoolInfo;
 
     // MAIN pool type exit penalty, applied to user current staked amount as e.g 20 for 20 %
     uint256 public immutable exitPenalty;
@@ -144,12 +141,8 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
     function add(
         IERC20 token
         , uint256 allocPoint // when zero it is the LOOP pool
-        //, bool withUpdate
     ) public onlyOwner requireNewPool(address(token)) virtual override returns (uint256 pid) {
 
-        //if (withUpdate) {
-        //    massUpdatePools();
-        //}
         uint256 lastRewardBlock = getBlockNumber() > startBlock ? getBlockNumber() : startBlock;
         totalAllocPoint = totalAllocPoint.add(allocPoint);
         poolInfo.push(PoolInfo({
@@ -204,15 +197,7 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
         if (isMainPoolId(pid))
             withdrawLPrewards(pid, pool.accLPtokensPerShare, user.payRewardMark);
 
-        // check div by 0 when totalPool = 0
-        uint256 newEntryStake;
-        if (pool.totalPool == 0 || pool.entryStakeTotal == 0)
-            newEntryStake = amount;
-        else newEntryStake = amount.mul(pool.entryStakeTotal).div(pool.totalPool);
-        user.entryStakeAdjusted = user.entryStakeAdjusted.add(newEntryStake);
-        pool.entryStakeTotal = pool.entryStakeTotal.add(newEntryStake);
-        user.entryStake = user.entryStake.add(amount);
-        pool.totalPool = pool.totalPool.add(amount);
+        adjustBalancesStakeEntry(pool, user, amount);
 
         TransferHelper.safeTransferFrom(pool.token, _msgSender(), address(this), amount);
         
@@ -235,8 +220,7 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
         virtual override
         returns (uint256)
     {
-        //if (isMainPoolId(pid)) //LOOP pool can not be mined for LP rewards
-            _updatePool(pid);
+        _updatePool(pid);
         
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][_msgSender()];
@@ -244,14 +228,7 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
         // withdraw LP rewards based on user current stake
         withdrawLPrewards(pid, pool.accLPtokensPerShare, user.payRewardMark);
 
-        {// avoid stack too deep error
-            uint256 userCurrentStake = currentStake(pid, _msgSender());
-            //uint256 exitAmount = amount.div(userCurrentStake).mul(pool.entryStakeAdjusted[sender]);
-            uint256 exitAmount = amount.mul(user.entryStakeAdjusted).div(userCurrentStake);
-            pool.entryStakeTotal = pool.entryStakeTotal.sub(exitAmount);
-            user.entryStakeAdjusted = user.entryStakeAdjusted.sub(exitAmount);
-            pool.totalPool = pool.totalPool.sub(amount);
-        }
+        adjustBalancesStakeExit(pool, user, pid, amount);
 
         uint256 exitPenaltyAmount;
         if (pool.totalPool == 0) { // last user exited his whole stake/amount
@@ -264,9 +241,7 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
             //NOTE: x_tokens go back into the pool for distribution to the rest of the users
             //NOTE: the other x_tokens go to exchange for LP tokens
             // totalPool = totalPool - amount * (1 - exitPenalty / 2);
-            //uint256 afterExitPercent = HUNDRED.sub(exitPenalty.div(2));
-            //pool.totalPool = pool.totalPool.sub(amount.mul(afterExitPercent).div(HUNDRED)); //auto added what went into totalDistributedPenalty
-
+            
             //NOTE: due to rounding margin error the contract might have more tokens than specified by pool variables
             //NOTE: for example 21 tokens, 50% of it is 10 as we work with integers, 1 token is still in the contract
             exitPenaltyAmount = amount.mul(exitPenalty).div(TWO_HUNDRED); //div(HUNDRED).div(2)
@@ -298,18 +273,7 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][_msgSender()];
         
-        // withdraw LP rewards based on user current stake
-        //withdrawLPrewards(pid, pool.accLPtokensPerShare, user.payRewardMark);
-        
-        {// avoid stack too deep error
-            uint256 userCurrentStake = currentStake(pid, _msgSender());
-            ////TODO: is this required???: require(userCurrentStake >= amount, "exit amount too high");
-
-            uint256 exitAmount = amount.mul(user.entryStakeAdjusted).div(userCurrentStake);
-            pool.entryStakeTotal = pool.entryStakeTotal.sub(exitAmount);
-            user.entryStakeAdjusted = user.entryStakeAdjusted.sub(exitAmount);
-            pool.totalPool = pool.totalPool.sub(amount);
-        }
+        adjustBalancesStakeExit(pool, user, pid, amount);
 
         //NOTE: x_tokens = amount * exitPenaltyLP / 2
         //NOTE: x_tokens go back into the LOOP pool for distribution to the rest of the users
@@ -322,9 +286,6 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
         user.unstake = user.unstake.add(withdrawAmount);
         TransferHelper.safeTransfer(pool.token, _msgSender(), withdrawAmount);
         emit Withdraw(_msgSender(), pid, amount, withdrawAmount);
-
-        // update LP rewards withdrawn
-        //updateLPrewardsPaid(pid, pool.accLPtokensPerShare, user);
 
         return withdrawAmount;
     }
@@ -354,6 +315,37 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
         if (currentRewardMark > user.payRewardMark)
             return currentRewardMark.sub(user.payRewardMark);
         else return 0;
+    }
+
+    /// @notice Adjust balances for stake operation
+    /// @param pool Pool storage struct
+    /// @param user User storage struct
+    /// @param amount Token amount to stake
+    function adjustBalancesStakeEntry(PoolInfo storage pool, UserInfo storage user, uint256 amount) internal
+    {
+        // check div by 0 when totalPool = 0
+        uint256 newEntryStake;
+        if (pool.totalPool == 0 || pool.entryStakeTotal == 0)
+            newEntryStake = amount;
+        else newEntryStake = amount.mul(pool.entryStakeTotal).div(pool.totalPool);
+        user.entryStakeAdjusted = user.entryStakeAdjusted.add(newEntryStake);
+        pool.entryStakeTotal = pool.entryStakeTotal.add(newEntryStake);
+        user.entryStake = user.entryStake.add(amount);
+        pool.totalPool = pool.totalPool.add(amount);
+    }
+
+    /// @notice Adjust balances for unstake/exit operation
+    /// @param pool Pool storage struct
+    /// @param user User storage struct
+    /// @param pid Pool id
+    /// @param amount Token amount to unstake/exit
+    function adjustBalancesStakeExit(PoolInfo storage pool, UserInfo storage user, uint256 pid, uint256 amount) internal
+    {
+        uint256 userCurrentStake = currentStake(pid, _msgSender());
+        uint256 exitAmount = amount.mul(user.entryStakeAdjusted).div(userCurrentStake);
+        pool.entryStakeTotal = pool.entryStakeTotal.sub(exitAmount);
+        user.entryStakeAdjusted = user.entryStakeAdjusted.sub(exitAmount);
+        pool.totalPool = pool.totalPool.sub(amount);
     }
 
     /// @notice Withdraw available LP reward for pool id
@@ -507,8 +499,6 @@ contract Loophole is ILoophole, Ownable, Context, UniswapV3RouterBridge {
         accLPtokensPerShare = pool.accLPtokensPerShare;
         blocksElapsed = getBlockNumber() - pool.lastRewardBlock;
         pool.lastRewardBlock = getBlockNumber();
-        ///emit PoolRewardUpdated(pool.token, getBlockNumber(), blocksElapsed, lpTokensReward, accLPtokensPerShare, pid);
-        //return (blocksElapsed, lpTokensReward, accLPtokensPerShare);
     }
 
     /// @notice Update pool to trigger LP tokens reward since last reward mining block

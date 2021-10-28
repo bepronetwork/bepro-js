@@ -14,6 +14,7 @@ import UniswapV3Factory from './models/Uniswap/UniswapV3Factory';
 import TestUniswapV3Callee from './models/Uniswap/TestUniswapV3Callee';
 import TestUniswapV3RouterBridge from './models/Uniswap/TestUniswapV3RouterBridge';
 // import UniswapV3PoolSwapTest from './models/Uniswap/UniswapV3PoolSwapTest';
+import TickMathTest from './models/Uniswap/TickMathTest';
 import SwapRouter from './models/Uniswap/SwapRouter';
 import Loophole from './models/custom/Loophole/Loophole';
 
@@ -34,6 +35,7 @@ export {
   TestUniswapV3Callee,
   TestUniswapV3RouterBridge,
   // UniswapV3PoolSwapTest,
+  TickMathTest,
   SwapRouter,
   Loophole,
 };

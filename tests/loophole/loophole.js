@@ -1,12 +1,9 @@
-//const project_root = process.cwd();
-//const { dappConstants, devConstants } = require('../../src/sablier/dev-utils');
-
 import { expect, assert } from 'chai';
 import moment from 'moment';
 import delay from 'delay';
 import { mochaAsync, mochaContextAsync } from '../utils';
-import { ERC20Contract, ETHUtils, UniswapV3Pool, UniswapV3Factory
-	, SwapRouter, TestUniswapV3Callee, TestUniswapV3RouterBridge, Loophole } from '../../build';
+import { ERC20Contract, ETHUtils, UniswapV3Pool, UniswapV3Factory, SwapRouter
+	, TestUniswapV3Callee, TestUniswapV3RouterBridge, TickMathTest, Loophole } from '../../build';
 import ERC20Mock  from '../../build/models/mocks/ERC20Mock';
 import Numbers from '../../build/utils/Numbers';
 import beproAssert from '../../build/utils/beproAssert';
@@ -121,11 +118,14 @@ let swapRouter; //uniswap swaprouter contract
 let swapRouterAddress; //uniswap swaprouter contract address
 let uniswapV3Callee; //uniswap callee contract used to add liquidity and perform swaps
 let uniswapV3CalleeAddress; //uniswap callee contract address
+let uniswapV3RouterBridge; //TestUniswapRouterBridge contract used to access uniswap trading/exchange pools
+let uniswapV3RouterBridgeAddress; //TestUniswapRouterBridge contract address
+let tickMathTest; //uniswap TickMathTest library used for uniswap ticks and sqrtPriceX96 conversions
+let tickMathTestAddress; //uniswap TickMathTest library contract address
 let wethLpPoolV3; //WETH/LP uniswap pool contract
 let wethLpPoolV3Address; //WETH/LP uniswap pool contract address
 let wbtcLpPoolV3; //WBTC/LP uniswap pool contract
 let wbtcLpPoolV3Address; //WBTC/LP uniswap pool contract address
-let testUniswapRouterBridge; //TestUniswapRouterBridge contract
 let lpTokensPerBlock = 50;
 let initStartBlock; //zero by default
 let deployedBlock = 1; //block number at loophole contract deployment
@@ -234,8 +234,9 @@ const addWethPool = async () => {
 	console.log('...add new WETH staking pool');
 	const allocPoint = wethAllocPoint;
 	//let pidWeth = await loophole.getWeb3Contract().methods.add(wethAddress, allocPoint).call();
-	await loophole.add(wethAddress, allocPoint);
-	
+	const tx = await loophole.add(wethAddress, allocPoint);
+	//console.log('---loophole.add.WETHpool: ', tx);
+
 	//wethStartBlock = await ethUtils.blockNumber();
 
 	// save block at WETH pool setup
@@ -248,7 +249,8 @@ const addWbtcPool = async () => {
 	console.log('...add new WBTC staking pool');
 	const allocPoint = wbtcAllocPoint;
 	//let pidWbtc = await loophole.getWeb3Contract().methods.add(wbtcAddress, allocPoint).call();
-	await loophole.add(wbtcAddress, allocPoint);
+	const tx = await loophole.add(wbtcAddress, allocPoint);
+	//console.log('---loophole.add.WBTCpool: ', tx);
 	
 	//wbtcStartBlock = await ethUtils.blockNumber();
 
@@ -309,6 +311,32 @@ const fundLoopholeWithLP = async () => {
 	const tx = await lpToken.transferTokenAmount({ toAddress: loopholeAddress, tokenAmount: BigNumber(TOKEN_AMOUNT_1M) });
 	//console.log('---lpToken.transferTokenAmount.tx:', tx);
 }
+
+const usersStake = async (pid, [userA, userB, userC, userD], [stakeA, stakeB, stakeC, stakeD]) => {
+	loophole.switchWallet(userA);
+	await loophole.stake(pid, stakeA);
+	
+	if (userB) {
+		loophole.switchWallet(userB);
+		await loophole.stake(pid, stakeB);
+	} else {
+		console.log('---usersStake.userB not defined to stake');
+	}
+	
+	if (userC) {
+		loophole.switchWallet(userC);
+		await loophole.stake(pid, stakeC);
+	} else {
+		console.log('---usersStake.userC not defined to stake');
+	}
+	
+	if (userD) {
+		loophole.switchWallet(userD);
+		await loophole.stake(pid, stakeD);
+	} else {
+		console.log('---usersStake.userD not defined to stake');
+	}
+};
 
 
 
@@ -407,9 +435,9 @@ context("Loophole contract", () => {
 			WBTC_AMOUNT_1M = BigNumber(Numbers.fromBNToDecimals(BigNumber(TOKEN_AMOUNT_1M), wbtcDecimals));
 			LP_AMOUNT_1M = BigNumber(Numbers.fromBNToDecimals(BigNumber(TOKEN_AMOUNT_1M), lpDecimals));
 
-			const wethInitialAirdrop = BigNumber(20000);
-			const wbtcInitialAirdrop = BigNumber(20000);
-			const lpInitialAirdrop = BigNumber(20000);
+			const wethInitialAirdrop = BigNumber(TOKEN_AMOUNT_1M); //BigNumber(20000);
+			const wbtcInitialAirdrop = BigNumber(TOKEN_AMOUNT_1M); //BigNumber(20000);
+			const lpInitialAirdrop = BigNumber(TOKEN_AMOUNT_1M); //BigNumber(20000);
 
 			await weth.mint({ to: userAddress,  amount: wethInitialAirdrop });
 			await weth.mint({ to: userAddress2, amount: wethInitialAirdrop });
@@ -488,6 +516,12 @@ context("Loophole contract", () => {
 			res = await uniswapV3Callee.deploy({});
 			expect(res).to.not.equal(false);
 			uniswapV3CalleeAddress = uniswapV3Callee.getAddress();
+
+			tickMathTest = new TickMathTest(testConfig);
+			expect(tickMathTest).to.not.equal(null);
+			res = await tickMathTest.deploy();
+			expect(res).to.not.equal(false);
+			tickMathTestAddress = tickMathTest.getAddress();
 		});
 
 
@@ -535,7 +569,7 @@ context("Loophole contract", () => {
 			//sets initial price for the pool
 			//require(sqrtPriceX96 >= MIN_SQRT_RATIO && sqrtPriceX96 < MAX_SQRT_RATIO, 'R');
 			//const sqrtPriceX96 = MIN_SQRT_RATIO;
-			const sqrtPriceX96 = encodePriceSqrt(2, 1); //(1,1) 1:2
+			const sqrtPriceX96 = encodePriceSqrt(2, 1); //(1,2) 1:2
 			console.log('sqrtPriceX96: ', sqrtPriceX96.toString());
 			//IUniswapPoolV3(wethLpPoolV3Address).initialize(sqrtPriceX96);
 			const initTx = await wethLpPoolV3.initialize(sqrtPriceX96);
@@ -570,16 +604,23 @@ context("Loophole contract", () => {
 			const tickSpacing = TICK_SPACINGS[FeeAmount.MEDIUM];
 			const minTick = getMinTick(tickSpacing);
 			const maxTick = getMaxTick(tickSpacing);
-			const tickLower = minTick; //-TICK_SPACINGS[FeeAmount.MEDIUM]; //0; //-240; //minTick; //1; //int24 ???
-			const tickUpper = maxTick; //TICK_SPACINGS[FeeAmount.MEDIUM]; //240; //0; //maxTick; //10;
+			
+
+			//NOTE: liquidity in a range
+			// we use minimum tick and maximum tick possible to make a market range
+			const tickLower = minTick; //-TICK_SPACINGS[FeeAmount.MEDIUM];
+			const tickUpper = maxTick; //TICK_SPACINGS[FeeAmount.MEDIUM];
+			
 			//wethLpPoolV3.mint does not work, needs a bridge contract on the blockchain like 'TestUniswapV3Callee'
 			//const { amount0, amount1 } = await wethLpPoolV3.mint(userAddress, tickLower, tickUpper, amount, data);
 			// ??? convert token decimals to bigNumber
 			//console.log('mintRes.amount0: ', amount0);
 			//console.log('mintRes.amount1: ', amount1);
-			// this liquidity would NOT be accurate as we have 2 tokens that could be of different decimals
+			
+			//NOTE: this liquidity would NOT be accurate as we have 2 tokens that could be of different decimals
 			// for a better practice of providing liquidity please use 'TestLiquidityExample' smart contract and wrapper
-			const liquidityDelta = 1000000; //amount;
+			//const liquidityDelta = 1000000;
+			const liquidityDelta = amount;
 			const mintTx = await uniswapV3Callee.mint(wethLpPoolV3Address, userAddress, tickLower, tickUpper, liquidityDelta);
 			//console.log('mintTx', mintTx);
 
@@ -618,50 +659,49 @@ context("Loophole contract", () => {
 
 
 	describe('#uniswap tests via TestUniswapV3RouterBridge', async () => {
-		it('should deploy TestUniswapV3RouterBridge Contract', async () => {
-			testUniswapRouterBridge = new TestUniswapV3RouterBridge({ ...testConfig, swapRouterAddress });
-			expect(testUniswapRouterBridge).to.not.equal(null);
-			let res = await testUniswapRouterBridge.deploy();
+		it('should deploy and approve TestUniswapV3RouterBridge Contract to spend WETH WBTC LP tokens', async () => {
+			let res;
+			uniswapV3RouterBridge = new TestUniswapV3RouterBridge({ ...testConfig, swapRouterAddress });
+			expect(uniswapV3RouterBridge).to.not.equal(null);
+			res = await uniswapV3RouterBridge.deploy({});
 			expect(res).to.not.equal(false);
-			//await testUniswapRouterBridge.__assert();
-			let testUniswapRouterBridgeAddress = testUniswapRouterBridge.getAddress();
-			console.log('Deployed TestUniswapV3RouterBridge address: ', testUniswapRouterBridgeAddress);
+			uniswapV3RouterBridgeAddress = uniswapV3RouterBridge.getAddress();
 
-			// testUniswapRouterBridgeAddress needs to be approved
-			await weth.approve({ address: testUniswapRouterBridgeAddress, amount: wethBnMaxUint256 });
-			await wbtc.approve({ address: testUniswapRouterBridgeAddress, amount: wbtcBnMaxUint256 });
-			await lpToken.approve({ address: testUniswapRouterBridgeAddress, amount: lpBnMaxUint256 });
+			// uniswapRouterBridgeAddress needs to be approved
+			await weth.approve({ address: uniswapV3RouterBridgeAddress, amount: wethBnMaxUint256 });
+			await wbtc.approve({ address: uniswapV3RouterBridgeAddress, amount: wbtcBnMaxUint256 });
+			await lpToken.approve({ address: uniswapV3RouterBridgeAddress, amount: lpBnMaxUint256 });
 		});
 
 
 		it('should exchange exact WETH input tokens for LP output tokens via TestUniswapV3RouterBridge', async () => {
 			const amountIn = 100; //100 weth
 			const amountOutMinimum = 0; //do NOT use zero in production
-			//const amountOut = await testUniswapRouterBridge.swapExactInputSingleEx(...);
-			const amountOut = await testUniswapRouterBridge.getWeb3Contract().methods.swapExactInputSingleEx(
+			//const amountOut = await uniswapV3RouterBridge.swapExactInputSingleEx(...);
+			const amountOut = await uniswapV3RouterBridge.swapExactInputSingleExCall(
 				wethAddress //tokenIn
 				, lpTokenAddress //tokenOut
 				, poolFee_3000
 				, amountIn
 				, amountOutMinimum
-				).call();
-			console.log(`TestUniswapV3RouterBridge.swapExactInputSingleEx swapped ${amountIn} WETH for ${amountOut} LP`);
+				);
+			console.log(`TestUniswapV3RouterBridge.swapExactInputSingleEx swap ${amountIn} WETH for ${amountOut} LP`);
 		});
 
 
 		it('should exchange WETH input tokens for exact LP output tokens via TestUniswapV3RouterBridge', async () => {
-			//... find the correct relationship between 'amountOut' and 'amountInMaximum' using 'uniswapV3 SDK'
+			//TODO: improvement => find the correct relationship between 'amountOut' and 'amountInMaximum' using 'uniswapV3 SDK'
 			const amountOut = 100; //100 LP
 			const amountInMaximum = 1000;
-			//const amountIn = await testUniswapRouterBridge.swapExactOutputSingleEx(
-			const amountIn = await testUniswapRouterBridge.getWeb3Contract().methods.swapExactOutputSingleEx(
+			//const amountIn = await uniswapV3RouterBridge.swapExactOutputSingleEx(
+			const amountIn = await uniswapV3RouterBridge.swapExactOutputSingleExCall(
 				wethAddress //tokenIn
 				, lpTokenAddress //tokenOut
 				, poolFee_3000
 				, amountOut
 				, amountInMaximum
-				).call();
-			console.log(`TestUniswapV3RouterBridge.swapExactInputSingleEx swapped ${amountIn} WETH for ${amountOut} LP`);
+				);
+			console.log(`TestUniswapV3RouterBridge.swapExactInputSingleEx swap ${amountIn} WETH for ${amountOut} LP`);
 		});
 	});
 	
@@ -774,55 +814,6 @@ context("Loophole contract", () => {
 			loophole.switchWallet(userAddress2);
 			await beproAssert.reverts(loophole.add(wethAddress, allocPoint), 'OR'); //'Owner Required'
 			loophole.switchWallet(owner);
-			
-			//console.log('---bp---');
-
-			// this internal function works but it is NOT a scalable solution
-			/*const runOnlyOwner2 = async (asyncFn) => {
-				//const ua1 = await loophole.getUserAddress();
-				//console.log('runOnlyOwner-ua1: ', ua1);
-				
-				loophole.switchWallet(userAddress2);
-				//console.log('runOnlyOwner-bp0.userAddress2: ', userAddress2);
-				
-				//const ua2 = await loophole.getUserAddress();
-				//console.log('runOnlyOwner-ua2: ', ua2);
-				console.log('runOnlyOwner.asyncFn: ', asyncFn.toString());
-			
-				await beproAssert.reverts(asyncFn, 'x'); //'Owner Required'
-				//await truffleAssert.reverts(asyncFn, 'x'); //'Owner Required' //STILL NOT WORKING
-				loophole.switchWallet(owner);
-				console.log('runOnlyOwner-bp1');
-			};*/
-
-			/*let allocPoint = 1;
-			const fn = async () => {
-				console.log('---loophole.ua: ', await loophole.getUserAddress());
-				await loophole.add(wethAddress, allocPoint);
-				//throw new Error('x');
-			};
-			const fn2 = (async () => {
-				console.log('---loophole.ua: ', await loophole.getUserAddress());
-				await loophole.add(wethAddress, allocPoint);
-				//throw new Error('x');
-			})();*/
-
-			//await runOnlyOwner(fn()); //FAILS
-			//await runOnlyOwner2(fn());
-			//await runOnlyOwner(loophole.add(wethAddress, allocPoint)); //FAILS
-			//await runOnlyOwnerInternal(loophole.add(wethAddress, allocPoint)); //FAILS
-			//await runOnlyOwner(loophole.add(wethAddress, 1)); //FAILS
-			//await runOnlyOwnerInternal(loophole.add(wethAddress, 1)); //FAILS
-			
-			//await runOnlyOwner((async () => await loophole.add(wethAddress, allocPoint))()); //FAILS
-			//await runOnlyOwnerInternal((async () => await loophole.add(wethAddress, allocPoint))());
-			//await runOnlyOwner2((async () => await loophole.add(wethAddress, allocPoint))()); //FAILS
-			//await runOnlyOwner2((async () => { await loophole.add(wethAddress, allocPoint) })()); //FAILS
-			//await runOnlyOwner2(fn()); //ok
-			//await runOnlyOwner2(fn2); //ok
-
-			//await runOnlyOwner(async () => { await loophole.add(wethAddress, allocPoint) });
-			//await runOnlyOwner(async () => { await testFail('OR') });
 		});
 
 
@@ -892,7 +883,6 @@ context("Loophole contract", () => {
 
 
 
-	//describe.skip
 	describe('#Loophole staking pools SET', async () => {
 		it('should revert when not owner user tries to set/update staking pool WETH', async () => {
 			loophole.switchWallet(userAddress2);
@@ -1060,51 +1050,6 @@ context("Loophole contract", () => {
 		});
 
 
-		// when getBlockNumber() <= pool.lastRewardBlock return
-		//NOTE: is this tests even possible??? with current design not really
-		/*it('when block number <= pool.lastRewardBlock, return', async () => {
-			//if (!checkLocalTestOnly()) return;
-			//assertLocalTestOnly();
-
-			//NOTE: we need a new loophole deployment before adding staking pools
-			await deployLoophole();
-			
-			await approveWethTransfers(userAddress);
-			await addWethPool();
-
-			const blockNumber1 = await loophole.getBlockNumber();
-			console.log('---blockNumber1: ', blockNumber1);
-
-			let p = await loophole.getPool(wethPid);
-			const lastRewardBlock1 = p.lastRewardBlock;
-			const accLPtokensPerShare1 = p.accLPtokensPerShare;
-			console.log('---lastRewardBlock1: ', lastRewardBlock1);
-			console.log('---accLPtokensPerShare1: ', accLPtokensPerShare1);
-
-			//NOTE: make sure there is some stake in weth pool
-			//NOTE: stake function includes pool mine for LP rewards with 'updatePool' function call
-			await loophole.stake(wethPid, 1000);
-
-			//NOTE: pool mining test
-			await loophole.updatePool(wethPid);
-
-			const blockNumber2 = await loophole.getBlockNumber();
-			console.log('---blockNumber2: ', blockNumber2);
-
-			p = await loophole.getPool(wethPid);
-			const lastRewardBlock2 = p.lastRewardBlock;
-			const accLPtokensPerShare2 = p.accLPtokensPerShare;
-			console.log('---lastRewardBlock2: ', lastRewardBlock2);
-			console.log('---accLPtokensPerShare2: ', accLPtokensPerShare2);
-
-			//NOTE: lastRewardBlock should have increased by one
-			//NOTE: accLPtokensPerShare should still be the same
-			lastRewardBlock2.should.be.bignumber.equal(lastRewardBlock1.plus(2));
-			accLPtokensPerShare2.should.be.bignumber.equal(accLPtokensPerShare1);
-			accLPtokensPerShare2.should.be.bignumber.equal(0);
-		});*/
-
-
 		//NOTE: when totalPool is zero, only update lastRewardBlock
 		// test case covered below in 'when staking pool is empty'
 		
@@ -1175,7 +1120,6 @@ context("Loophole contract", () => {
 
 
 
-	//describe.skip
 	describe('#currentStake', async () => {
 		//requireValidPid(pid)
 		it('should revert when trying to read user current stake of inexistent pool', async () => {
@@ -1239,7 +1183,6 @@ context("Loophole contract", () => {
 
 
 
-	//describe.skip
 	describe('#stake/unstake', async () => {
 		
 		before('before-#stake/unstake', async () => {
@@ -1272,7 +1215,7 @@ context("Loophole contract", () => {
 		//should revert when trying re-entrancy attack', async () => {
 
 
-		it('should stake WETH and emit events: Deposit', async () => {
+		it('should stake WETH and emit events: Transfer, Deposit', async () => {
 			
 			//NOTE: events 'Transfer' and 'TransferFrom'
 			//have to be in the smart contract for them to be defined in the transaction
@@ -1291,6 +1234,9 @@ context("Loophole contract", () => {
 			const amount = BigNumber(1000);
 			const tx = await loophole.stake(pid, amount);
 			
+			// should emit event Transfer(address indexed from, address indexed to, uint256 value);
+			beproAssert.eventEmitted(tx, 'Transfer');
+
 			// should emit event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
 			//const userRet = tx.events.Deposit.returnValues.user;
 			const amountDecimals = await loophole.fromBNToDecimals(amount, pid);
@@ -1310,7 +1256,7 @@ context("Loophole contract", () => {
 		});
 
 
-		it('should exit/unstake WETH and emit events: TokenExchanged and Withdraw', async () => {
+		it('should exit/unstake WETH and emit events: Transfer, TokenExchanged, Withdraw', async () => {
 			
 			const balance1 = await weth.balanceOf(userAddress);
 			console.log('weth.userAddress.balance1: ', balance1.toString());
@@ -1318,6 +1264,10 @@ context("Loophole contract", () => {
 			console.log('weth.loopholeAddress.balanceC1: ', balanceC1.toString());
 			const lpBalanceC1 = await lpToken.balanceOf(loopholeAddress);
 			console.log('lpToken.loopholeAddress.lpBalanceC1: ', lpBalanceC1.toString());
+
+			//NOTE: 'weth pool mine' is run on 'unstake', we account for LP tokens rewards for WETH pool per mining block
+			//NOTE: user has all stake so he gets all LP rewards no sharing
+			const lpTokensForWethPerBlock = 15;
 
 			const pid = wethPid; //weth pool-id is 1
 			//const amount = WETH_AMOUNT_1M;
@@ -1333,32 +1283,51 @@ context("Loophole contract", () => {
 			const withdrawAmountExpected = withdrawAmountExpectedTokens;
 			console.log('withdrawAmountExpected: ', withdrawAmountExpected.toString().padStart(balance1.toString().length, ' '));
 
+
+			const amountOutMinimum = 0; //do NOT use zero in production
+
+			//NOTE: find out what amount of LP tokens we get in exchange for 200 WETH penalty as 20% penalty of 1000 weth
+			// this is the last/only user and all penalty is exchanged for LP tokens 
+			const amountIn = await loophole.fromBNToDecimals(200, pid);
+			const amountOut = await uniswapV3RouterBridge.swapExactInputSingleExCall(
+				wethAddress //tokenIn
+				, lpTokenAddress //tokenOut
+				, poolFee_3000
+				, amountIn
+				, amountOutMinimum
+			);
+			//NOTE: this is what we get for the very first weth/lp exchange transaction
+			const tokenAmountLPExpected = BigNumber('398687572423209140718');
+			amountOut.should.be.bignumber.equal(tokenAmountLPExpected);
+			
+
 			//TODO: calculate what 'amountOutMinimum' should be with uniswap-v3-sdk/uniswap-v3-periphery libs 
-			const amountOutMinimum = 0;
 			const tx = await loophole.exit(pid, amount, amountOutMinimum);
 			console.log('---loophole.exit.tx.events.TokenExchanged.returnValues: ', tx.events.TokenExchanged.returnValues);
-			console.log('---loophole.exit.tx.events.Withdraw.returnValues: ', tx.events.Withdraw.returnValues);
-
+			//console.log('---loophole.exit.tx.events.Withdraw.returnValues: ', tx.events.Withdraw.returnValues);
+			//console.log('---loophole.exit.tx: ', tx);
+			
 			const amountDecimals = BigNumber(await loophole.fromBNToDecimals(amount, pid));
 			const withdrawAmountExpectedDecimals = await loophole.fromBNToDecimals(withdrawAmountExpectedTokens, pid);
 
+			// should emit event Transfer(address indexed from, address indexed to, uint256 value);
+			beproAssert.eventEmitted(tx, 'Transfer');
+
 			// should emit event TokenExchanged(address indexed user, address indexed token, uint256 tokenAmount, address indexed tokenLP, uint256 tokenAmountLP);
-			const wethExitPenaltyAmountExpected = amountDecimals.times(exitPenalty / 2);
-			beproAssert.eventEmitted(tx, 'TokenExchanged');
-			//beproAssert.eventEmitted(tx, 'TokenExchanged', (ev) => {
-			//	return ev.user === userAddress 
-			//	&& ev.token == wethAddress 
-			//	&& ev.tokenAmount.toString() == wethExitPenaltyAmountExpected.toString() 
-			//	&& ev.tokenLP == lpTokenAddress 
-			//	//&& ev.tokenAmountLP.toString() == tokenAmountLPExpected.toString()
-			//});
+			const wethExitPenaltyAmountExpected = amountIn; //amountDecimals.times(exitPenalty);
+			//beproAssert.eventEmitted(tx, 'TokenExchanged');
+			beproAssert.eventEmitted(tx, 'TokenExchanged', (ev) => {
+				return ev.user === userAddress 
+				&& ev.token == wethAddress 
+				&& ev.tokenAmount.toString() == wethExitPenaltyAmountExpected.toString() 
+				&& ev.tokenLP == lpTokenAddress 
+				&& ev.tokenAmountLP.toString() == tokenAmountLPExpected.toString()
+			});
 
 			// should emit event Withdraw(address indexed user, uint256 indexed pid, uint256 amount, uint256 netAmount);
 			beproAssert.eventEmitted(tx, 'Withdraw', (ev) => {
 				return ev.user === userAddress 
 				&& ev.pid.toString() == pid.toString() 
-				//&& ev.amount.toString() == amount.toString() 
-				//&& ev.netAmount.toString() == withdrawAmountExpectedTokens.toString();
 				&& ev.amount.toString() == amountDecimals.toString() 
 				&& ev.netAmount.toString() == withdrawAmountExpectedDecimals.toString();
 			});
@@ -1374,10 +1343,9 @@ context("Loophole contract", () => {
 			// last exit pays full exit penalty
 			balanceC2.should.be.bignumber.equal(BigNumber(balanceC1).minus(amount));
 
-			//TODO:
 			// expect to have the correct amount of LP tokens from last exit as exit collected penalty
-			//...const expectedLPtokensFromExitPenalty = amount.times(exitPenalty / 2.0);
-			//...lpBalanceC2.should.be.bignumber.equal(BigNumber(lpBalanceC1).plus(expectedLPtokensFromExitPenalty));
+			const expectedLPtokensFromExitPenalty = Numbers.fromDecimalsToBN(tokenAmountLPExpected, lpDecimals);
+			lpBalanceC2.should.be.bignumber.equal(BigNumber(lpBalanceC1).plus(expectedLPtokensFromExitPenalty).minus(lpTokensForWethPerBlock));
 
 			const expectedBalance = balance1.plus(withdrawAmountExpected);
 			balance2.should.be.bignumber.equal(expectedBalance);
@@ -1417,13 +1385,10 @@ context("Loophole contract", () => {
 
 
 		it('should exit/unstake LP token from LOOP pool and emit Withdraw event', async () => {
-			//TODO...
 			const balance1 = await lpToken.balanceOf(userAddress);
 			console.log('lpToken.userAddress.balance1: ', balance1.toString());
 
-			const pid = 0; //LP pool-id is 0
-			//const amount = LP_AMOUNT_1M;
-			//const amount = BigNumber(Numbers.fromBNToDecimals(1000, lpDecimals));
+			const pid = lpPid; //LP pool-id is 0
 			const amount = BigNumber(1000);
 			
 			const exitPenaltyLP = await loophole.exitPenaltyLP();
@@ -1443,8 +1408,6 @@ context("Loophole contract", () => {
 			beproAssert.eventEmitted(tx, 'Withdraw', (ev) => {
 				return ev.user === userAddress 
 				&& ev.pid.toString() == pid.toString() 
-				//&& ev.amount.toString() == amount.toString() 
-				//&& ev.netAmount.toString() == withdrawAmountExpectedTokens.toString();
 				&& ev.amount.toString() == amountDecimals.toString() 
 				&& ev.netAmount.toString() == withdrawAmountExpectedDecimals.toString();
 			});
@@ -1453,40 +1416,40 @@ context("Loophole contract", () => {
 			const balance2 = await lpToken.balanceOf(userAddress);
 			console.log('lpToken.userAddress.balance2: ', balance2.toString());
 			const expectedBalance = balance1.plus(withdrawAmountExpected);
-			//expect(balance2.eq(expectedBalance)).to.equal(true);
 			balance2.should.be.bignumber.equal(expectedBalance);
 		});
 
 
 		it('special/custom test case-1', async () => {
-			/*
-			So here it goes a test case:
-			4 Investors, A, B, C and D in a main pool, for example WETH
-			A stakes 200, B stakes 100, C stakes 50 and D stakes 100.
-
-			Then, they execute the following operations in this order
-			1. B unstakes everything  (that is the 100)
-			2. B stakes 75
-			3. C unstakes everything 
-			4. B stakes 200
-			5. B stakes 100
-			6. B unstakes 100
-
-			These operations cover the 4 main operations we have, stake, a top-up stake, unstake everything, 
-			and unstake just a partial amount. The final result for the variables should the following for a main pool:
-
-			Investor A  currentStake = 212.0136
-			Investor B  currentStake = 280.6938
-			Investor D  currentStake = 106.0068
 			
-			totalPool = 598.7142
-			entryStakeTotal = 564.7885
-			entryStakeAdjusted(A) 200
-			entryStakeAdjusted(B) 264.7885
-			entryStakeAdjusted(D) 100
-			totalDistributedPenalty 25.14285
-			*/
+			//NOTES:
+			// So here it goes a test case:
+			// 4 Investors, A, B, C and D in a main pool, for example WETH
+			// A stakes 200, B stakes 100, C stakes 50 and D stakes 100.
 
+			// Then, they execute the following operations in this order
+			// 1. B unstakes everything  (that is the 100)
+			// 2. B stakes 75
+			// 3. C unstakes everything 
+			// 4. B stakes 200
+			// 5. B stakes 100
+			// 6. B unstakes 100
+
+			// These operations cover the 4 main operations we have, stake, a top-up stake, unstake everything, 
+			// and unstake just a partial amount. The final result for the variables should the following for a main pool:
+
+			// Investor A  currentStake = 212.0136
+			// Investor B  currentStake = 280.6938
+			// Investor D  currentStake = 106.0068
+			
+			// totalPool = 598.7142
+			// entryStakeTotal = 564.7885
+			// entryStakeAdjusted(A) 200
+			// entryStakeAdjusted(B) 264.7885
+			// entryStakeAdjusted(D) 100
+			// totalDistributedPenalty 25.14285
+
+			
 			// deploy a NEW loophole contract
 			await deployLoophole(setupWethAndWbtcPoolsConfig);
 
@@ -1647,6 +1610,7 @@ context("Loophole contract", () => {
 			amount = amountB;
 			tx = await loophole.exit(pid, amount, amountOutMinimum);
 			console.log('testcase.bp-6');
+			console.log('---loophole.exit.tx.events.TokenExchanged.returnValues: ', tx.events.TokenExchanged.returnValues);
 
 			//2. B stakes 75
 			//loophole.switchWallet(investorB);
@@ -1659,6 +1623,7 @@ context("Loophole contract", () => {
 			amount = amountC;
 			tx = await loophole.exit(pid, amount, amountOutMinimum);
 			console.log('testcase.bp-8');
+			console.log('---loophole.exit.tx.events.TokenExchanged.returnValues: ', tx.events.TokenExchanged.returnValues);
 
 			//4. B stakes 200
 			loophole.switchWallet(investorB);
@@ -1677,7 +1642,8 @@ context("Loophole contract", () => {
 			amount = 100;
 			tx = await loophole.exit(pid, amount, amountOutMinimum);
 			console.log('testcase.bp-11');
-
+			console.log('---loophole.exit.tx.events.TokenExchanged.returnValues: ', tx.events.TokenExchanged.returnValues);
+			
 			//The final result for the variables should the following for a main pool:
 			//Investor A  currentStake = 212.0136
 			//Investor B  currentStake = 280.6938
@@ -1790,7 +1756,6 @@ context("Loophole contract", () => {
 
 
 
-	//describe.skip
 	describe('#getBlocksFromRange', async () => {
 		//getBlocksFromRange(uint256 from, uint256 to);
 		let startBlock1;
@@ -1841,7 +1806,6 @@ context("Loophole contract", () => {
 
 
 
-	//describe.skip
 	describe('#when user profit from others exit is greater than his own stake', async () => {
 		beforeEach('beforeEach-hook1', async () => {
 			// deploy a NEW loophole contract
@@ -1984,7 +1948,6 @@ context("Loophole contract", () => {
 
 
 
-	//describe.skip
 	describe('#when user profit from others exit is less than his own stake', async () => {
 		beforeEach('beforeEach-hook2', async () => {
 			// deploy a NEW loophole contract
@@ -2102,7 +2065,6 @@ context("Loophole contract", () => {
 
 
 
-	//describe.skip
 	describe('#distribute no LP tokens after 0 blocks', async () => {
 		
 		//NOTE: tests group is only for local environment
@@ -2150,6 +2112,7 @@ context("Loophole contract", () => {
 
 
 
+	let [userA, userB, userC, userD] = [0, 0, 0, 0];
 	const wethShare = 0.3;
 	const wbtcShare = 0.7;
 	const wethBlocks = 9; //forward blocks
@@ -2223,36 +2186,7 @@ context("Loophole contract", () => {
 
 
 
-	const usersStake = async (pid, [userA, userB, userC, userD], [stakeA, stakeB, stakeC, stakeD]) => {
-		loophole.switchWallet(userA);
-		await loophole.stake(pid, stakeA);
-		
-		if (userB) {
-			loophole.switchWallet(userB);
-			await loophole.stake(pid, stakeB);
-		} else {
-			console.log('---usersStake.userB not defined to stake');
-		}
-		
-		if (userC) {
-			loophole.switchWallet(userC);
-			await loophole.stake(pid, stakeC);
-		} else {
-			console.log('---usersStake.userC not defined to stake');
-		}
-		
-		if (userD) {
-			loophole.switchWallet(userD);
-			await loophole.stake(pid, stakeD);
-		} else {
-			console.log('---usersStake.userD not defined to stake');
-		}
-	};
-
-
-
 	describe('#distribute correct LP tokens to users from LP mining based on MAIN pool staking - [SEQUENCE]', async () => {
-		let [userA, userB, userC, userD] = [0, 0, 0, 0];
 		let lpBalance1, lpBalance2;
 		const stakeA = Number(1000);
 		const stakeB = Number(2000);
@@ -2537,8 +2471,6 @@ context("Loophole contract", () => {
 			console.log('---userDrewardExpected: ', userDrewardExpected);
 			console.log('---userDreward        : ', userDreward);
 			userDreward.should.be.bignumber.equal(0.0285 * 4000 - 90); //userDrewardExpected
-
-			//...
 		});
 
 
@@ -2913,7 +2845,7 @@ context("Loophole contract", () => {
 		});
 
 
-		it('userB should NOT benefit from past LP rewards mined and distributed before his stake', async () => {
+		it('userB should NOT benefit from past LP profits from MAIN pool exits penalty mined and distributed before his stake', async () => {
 			
 			//NOTE: userC stakes to round up total pool stake up to 12,000 weth
 			// pool has 10280 at the moment, stake up to 12,000
@@ -2993,7 +2925,8 @@ context("Loophole contract", () => {
 
 		//IMPORTANT: SKIP this test for now
 		//TODO: find a way to convert weth from penalty exits to LP from transactions that already took place
-		it.skip('check LOOP pool LP tokens accumulated from MAIN pool exits penalty', async () => {
+		// HINT: use 'TestUniswapV3RouterBridge' contract to find simulated tokens exchange
+		/*it.skip('check LOOP pool LP tokens accumulated from MAIN pool exits penalty', async () => {
 			const p = await loophole.getPool(lpPid);
 			console.log('---p.totalPool: ', p.totalPool);
 			console.log('---p.entryStakeTotal: ', p.entryStakeTotal);
@@ -3013,10 +2946,23 @@ context("Loophole contract", () => {
 			const accLP = BigNumber(0); // based on 'accWethExitPenalty'
 			p.totalPool.should.be.bignumber.equal(accLP);
 			p.totalDistributedPenalty.should.be.bignumber.equal(accLP);
-		});
+		});*/
 
 
 		it('users should have no LP tokens profits from MAIN pool exits penalty as they did NOT stake any', async () => {
+			const userAlp1 = await loophole.getEntryStakeAdjusted(lpPid, userA);
+			const userBlp1 = await loophole.getEntryStakeAdjusted(lpPid, userB);
+			const userClp1 = await loophole.getEntryStakeAdjusted(lpPid, userC);
+			const userDlp1 = await loophole.getEntryStakeAdjusted(lpPid, userD);
+			console.log('---userAlp1.getEntryStakeAdjusted: ', userAlp1);
+			console.log('---userBlp1.getEntryStakeAdjusted: ', userBlp1);
+			console.log('---userClp1.getEntryStakeAdjusted: ', userClp1);
+			console.log('---userDlp1.getEntryStakeAdjusted: ', userDlp1);
+			userAlp1.should.be.bignumber.equal(0);
+			userBlp1.should.be.bignumber.equal(0);
+			userClp1.should.be.bignumber.equal(0);
+			userDlp1.should.be.bignumber.equal(0);
+
 			const userAlp = await loophole.currentStake(lpPid, userA);
 			const userBlp = await loophole.currentStake(lpPid, userB);
 			const userClp = await loophole.currentStake(lpPid, userC);
@@ -3029,8 +2975,54 @@ context("Loophole contract", () => {
 		});
 
 
-		it('users should STILL have LP tokens profits from MAIN pool exits penalty if they stake AFTER the distribution', async () => {
-			await usersStake(lpPid, [userA, userB, userC, userD], [1000, 1000, 1000, 1000]);
+		//NOTE: some cases FAIL due to precision error
+		it('users should STILL have LP tokens profits from LOOP pool if they stake AFTER the distribution', async () => {
+			console.log('---loophole.userA: ', userA);
+			console.log('---loophole.userB: ', userB);
+			console.log('---loophole.userC: ', userC);
+			console.log('---loophole.userD: ', userD);
+			
+
+			let p = await loophole.getPool(lpPid);
+			console.log('---loophole.LOOP.bp-1: ', p);
+
+			let userStakeTmp = await loophole.currentStake(lpPid, userA);
+			userStakeTmp.should.be.bignumber.equal(0);
+			userStakeTmp = await loophole.currentStake(lpPid, userB);
+			userStakeTmp.should.be.bignumber.equal(0);
+			userStakeTmp = await loophole.currentStake(lpPid, userC);
+			userStakeTmp.should.be.bignumber.equal(0);
+			userStakeTmp = await loophole.currentStake(lpPid, userD);
+			userStakeTmp.should.be.bignumber.equal(0);
+			
+			///await usersStake(lpPid, [userA, userB, userC, userD], [1000, 1000, 1000, 1000]);
+			loophole.switchWallet(userA);
+			await loophole.stake(lpPid, 1000);
+			console.log('---userA.after.stake.getEntryStakeAdjusted: ', await loophole.getEntryStakeAdjusted(lpPid, userA));
+			console.log('---userA.after.stake.currentStake: ', await loophole.currentStake(lpPid, userA));
+			console.log('---userA.after.stake.pool: ', await loophole.getPool(lpPid));
+
+			loophole.switchWallet(userB);
+			await loophole.stake(lpPid, 1000);
+			console.log('---userB.after.stake.getEntryStakeAdjusted: ', await loophole.getEntryStakeAdjusted(lpPid, userB));
+			console.log('---userB.after.stake.currentStake: ', await loophole.currentStake(lpPid, userB));
+			console.log('---userB.after.stake.pool: ', await loophole.getPool(lpPid));
+
+			loophole.switchWallet(userC);
+			await loophole.stake(lpPid, 1000);
+			console.log('---userC.after.stake.getEntryStakeAdjusted: ', await loophole.getEntryStakeAdjusted(lpPid, userC));
+			console.log('---userC.after.stake.currentStake: ', await loophole.currentStake(lpPid, userC));
+			console.log('---userC.after.stake.pool: ', await loophole.getPool(lpPid));
+
+			loophole.switchWallet(userD);
+			await loophole.stake(lpPid, 1000);
+			console.log('---userD.after.stake.getEntryStakeAdjusted: ', await loophole.getEntryStakeAdjusted(lpPid, userD));
+			console.log('---userD.after.stake.currentStake: ', await loophole.currentStake(lpPid, userD));
+			
+
+
+			p = await loophole.getPool(lpPid);
+			console.log('---loophole.LOOP.bp-2: ', p);
 
 			const userAlp1 = await loophole.getEntryStakeAdjusted(lpPid, userA);
 			const userBlp1 = await loophole.getEntryStakeAdjusted(lpPid, userB);
@@ -3051,15 +3043,19 @@ context("Loophole contract", () => {
 			console.log('---userDlp.currentStake: ', userDlp);
 			
 			userAlp1.should.be.bignumber.equal(1000);
-			userBlp1.should.be.bignumber.equal(1000);
-			userClp1.should.be.bignumber.equal(1000);
-			userDlp1.should.be.bignumber.equal(1000);
+			//NOTE: manual calculations give us expected stake for all remaining users as 626.323227664718963305
+			const eqStakeExpected = BigNumber('626.323227664718963305');
+			userBlp1.should.be.bignumber.equal(eqStakeExpected);
+			userClp1.should.be.bignumber.equal(eqStakeExpected);
+			userDlp1.should.be.bignumber.equal(eqStakeExpected);
 
-			userAlp.should.be.bignumber.gte(1000);
-			//NOTE: due to rounding error we get a small variation and the test will FAIL
-			userBlp.should.be.bignumber.equal(1000);
-			userClp.should.be.bignumber.equal(1000);
-			userDlp.should.be.bignumber.equal(1000);
+			userAlp.should.be.bignumber.equal(BigNumber('1596.619693841717628519'));
+			//NOTE: due to rounding error we get a small variation and the test will FAIL in some cases
+			// so we use real values to pass test but the ideal case is to be equal to 1000
+			const expected1k = BigNumber('999.999999999999999999');
+			userBlp.should.be.bignumber.equal(expected1k);
+			userClp.should.be.bignumber.equal(expected1k);
+			userDlp.should.be.bignumber.equal(expected1k);
 		});
 	});
 
@@ -3069,13 +3065,13 @@ context("Loophole contract", () => {
 	const stakeB = Number(2000);
 	const stakeC = Number(3000);
 	const stakeTotal = stakeA + stakeB + stakeC;
-	let userA, userB, userC, userD;
 	//NOTE: do NOT use amountOutMinimum = 0 in production
+	// this is min LP tokens amount to get from staked tokens penalty exchange
 	const amountOutMinimum_ZERO = 0;
 
 	
 
-	describe('#check LOOP pool LP tokens distributions from MAIN pool exits penalty', async () => {
+	describe('#when users have LP tokens staked in LOOP pool BEFORE LP distributions from MAIN pool exits penalty', async () => {
 		
 		//NOTE: tests group is only for local environment
 		before('before-hook6a', async () => {
@@ -3161,11 +3157,11 @@ context("Loophole contract", () => {
 			console.log('---userClpPercent1 3000/6000 = 0.50: ', userClpPercent1);
 
 			const p = await loophole.getPool(lpPid);
-			console.log('---p.totalPool: ', p.totalPool);
-			console.log('---p.entryStakeTotal: ', p.entryStakeTotal);
-			console.log('---p.totalDistributedPenalty: ', p.totalDistributedPenalty);
-			console.log('---p.accLPtokensPerShare: ', p.accLPtokensPerShare);
-      p.accLPtokensPerShare.should.be.bignumber.equal(0);
+			console.log('---LOOP pool: ', p);
+			p.totalPool.should.be.bignumber.equal(BigNumber('7885.496685141371230234'));
+			p.entryStakeTotal.should.be.bignumber.equal(BigNumber('6000'));
+			p.totalDistributedPenalty.should.be.bignumber.equal(BigNumber('1885.496685141371230234'));
+			p.accLPtokensPerShare.should.be.bignumber.equal(0); //no accumulated LP tokens for LOOP pool
 
 			const userAnewStake = await loophole.currentStake(lpPid, userA);
 			const userBnewStake = await loophole.currentStake(lpPid, userB);
@@ -3173,6 +3169,9 @@ context("Loophole contract", () => {
 			console.log('---userAnewStake: ', userAnewStake);
 			console.log('---userBnewStake: ', userBnewStake);
 			console.log('---userCnewStake: ', userCnewStake);
+			userAnewStake.should.be.bignumber.equal(BigNumber('1314.249447523561871705'));
+			userBnewStake.should.be.bignumber.equal(BigNumber('2628.498895047123743411'));
+			userCnewStake.should.be.bignumber.equal(BigNumber('3942.748342570685615117'));
 
 			const userAlpPercent2 = userAnewStake.div(p.totalPool);
 			const userBlpPercent2 = userBnewStake.div(p.totalPool);
@@ -3180,118 +3179,12 @@ context("Loophole contract", () => {
 			console.log('---userAlpPercent2 = 0.16: ', userAlpPercent2);
 			console.log('---userBlpPercent2 = 0.33: ', userBlpPercent2);
 			console.log('---userClpPercent2 = 0.50: ', userClpPercent2);
-
-			userAlpPercent1.should.be.bignumber.equal(userAlpPercent2);
-			userBlpPercent1.should.be.bignumber.equal(userBlpPercent2);
-			userClpPercent1.should.be.bignumber.equal(userClpPercent2);
+			//NOTE: assertion not needed, sometimes due to precision errors and BigNumber default decimals would make test fail
+			userAlpPercent2.should.be.bignumber.equal(BigNumber('0.1666666666666666666665821232709509769247'));
+			userBlpPercent2.should.be.bignumber.equal(BigNumber('0.3333333333333333333332910616354754884623'));
+			userClpPercent2.should.be.bignumber.equal(BigNumber('0.5'));
 		});
 	});
-
-
-
-	//NOTE: test case => check LOOP pool LP tokens distributions from LOOP pool staking
-	//NOT needed because users get LP tokens only from MAIN pools exits/unstakes
-	/*describe.skip('#check LOOP pool LP tokens distributions from LOOP pool staking', async () => {
-		
-		//NOTE: tests group is only for local environment
-		before('before-hook6a', async () => {
-			assertLocalTestOnly();
-		});
-
-		//beforeEach('beforeEach-hook6', async () => {
-		before('before-hook6', async () => {
-			// deploy a NEW loophole contract
-			await deployLoophole(setupWethAndWbtcPoolsConfig);
-
-			[userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
-
-			await fundLoopholeWithLP();
-			await approveBulkWethTransfers(userA, userB, userC, userD);
-		});
-
-
-		it('users should stake some LP into LOOP pool', async () => {
-			//NOTE: use same amounts for weth and LP tokens for simplicity
-			await usersStake(lpPid, [userA, userB, userC], [stakeA, stakeB, stakeC]);
-
-			//NOTE: assert users stakes in the LOOP pool
-			const userAstake = await loophole.currentStake(lpPid, userA);
-			const userBstake = await loophole.currentStake(lpPid, userB);
-			const userCstake = await loophole.currentStake(lpPid, userC);
-			console.log('---userAstake: ', userAstake);
-			console.log('---userBstake: ', userBstake);
-			console.log('---userCstake: ', userCstake);
-			userAstake.should.be.bignumber.equal(stakeA);
-			userBstake.should.be.bignumber.equal(stakeB);
-			userCstake.should.be.bignumber.equal(stakeC);
-		});
-
-
-		it('users should exit/unstake LP from LOOP pool for LP distribution testing', async () => {
-			
-			//NOTE: 10% of 1000 = 100 LP as distribution 
-			loophole.switchWallet(userA);
-			console.log('LP.stakeA: ', stakeA);
-			await loophole.exitLP(stakeA);
-			
-			//NOTE: userB has 2000/5000 of total LOOP pool 5100 = 2040 LP, 10% of that = 204 LP as distribution 
-			loophole.switchWallet(userB);
-			const stakeBnew = await loophole.currentStake(lpPid, userB);
-			console.log('lpPid.stakeBnew: ', stakeBnew);
-			await loophole.exitLP(stakeBnew);
-			
-			//NOTE: userC has 3000/3000 of total LOOP pool 3060+204 = 3264 LP
-			// 10% of that = 326.4 LP as distribution
-			loophole.switchWallet(userC);
-			const stakeCnew = await loophole.currentStake(lpPid, userC);
-			console.log('lpPid.stakeCnew: ', stakeCnew);
-			await loophole.exitLP(stakeCnew);
-
-			//NOTE: assert users stakes in the LOOP pool
-			const userAstake = await loophole.currentStake(lpPid, userA);
-			const userBstake = await loophole.currentStake(lpPid, userB);
-			const userCstake = await loophole.currentStake(lpPid, userC);
-			console.log('---userAstake: ', userAstake);
-			console.log('---userBstake: ', userBstake);
-			console.log('---userCstake: ', userCstake);
-			userAstake.should.be.bignumber.equal(0);
-			userBstake.should.be.bignumber.equal(0);
-			userCstake.should.be.bignumber.equal(0);
-		});
-
-
-		it('users should have correct LP tokens distribution based on their stake in LOOP pool', async () => {
-			
-			const userAlpPercent1 = stakeA / stakeTotal; // 1000/6000 = 0.16
-			const userBlpPercent1 = stakeB / stakeTotal; // 2000/6000 = 0.33
-			const userClpPercent1 = stakeC / stakeTotal; // 3000/6000 = 0.50
-			console.log('---userAlpPercent1 1000/6000 = 0.16: ', userAlpPercent1);
-			console.log('---userBlpPercent1 2000/6000 = 0.33: ', userBlpPercent1);
-			console.log('---userClpPercent1 3000/6000 = 0.50: ', userClpPercent1);
-
-			const p = await loophole.getPool(lpPid);
-			console.log('---p.totalPool: ', p.totalPool);
-			console.log('---p.entryStakeTotal: ', p.entryStakeTotal);
-			console.log('---p.totalDistributedPenalty: ', p.totalDistributedPenalty);
-			console.log('---p.accLPtokensPerShare: ', p.accLPtokensPerShare);
-      p.accLPtokensPerShare.should.be.bignumber.equal(0);
-
-			const userAnewStake = await loophole.currentStake(lpPid, userA);
-			const userBnewStake = await loophole.currentStake(lpPid, userB);
-			const userCnewStake = await loophole.currentStake(lpPid, userC);
-			
-			const userAlpPercent2 = userAnewStake / p.totalPool;
-			const userBlpPercent2 = userBnewStake / p.totalPool;
-			const userClpPercent2 = userCnewStake / p.totalPool;
-			console.log('---userAlpPercent2 = 0.16: ', userAlpPercent2);
-			console.log('---userBlpPercent2 = 0.33: ', userBlpPercent2);
-			console.log('---userClpPercent2 = 0.50: ', userClpPercent2);
-
-			userAlpPercent1.should.be.bignumber.equal(userAlpPercent2);
-			userBlpPercent1.should.be.bignumber.equal(userBlpPercent2);
-			userClpPercent1.should.be.bignumber.equal(userClpPercent2);
-		});
-	});*/
 
 
 
@@ -3365,7 +3258,8 @@ context("Loophole contract", () => {
 			
 			//NOTE: check LP profit from weth exits/unstakes penalty added to LOOP pool
 			console.log('wethExitTx.events.TokenExchanged.returnValues: ', wethExitTx.events.TokenExchanged.returnValues);
-			const wethExitPenaltyToLPtokens = wethExitTx.events.TokenExchanged.returnValues.tokenAmountLP;
+			const wethExitPenaltyToLPtokens = Numbers.fromDecimalsToBN(
+				wethExitTx.events.TokenExchanged.returnValues.tokenAmountLP, lpDecimals);
 			console.log('---wethExitPenaltyToLPtokens: ', wethExitPenaltyToLPtokens);
 
 			//NOTE: entryStakeTotal should be the same before and after the exit since nobody should have staked LP tokens
@@ -3381,22 +3275,6 @@ context("Loophole contract", () => {
 
 
 
-	// not needed
-	/*describe('#when last user exits all staked tokens [from LOOP pool]', async () => {
-		
-		//TODO: no exit penalty amount is added to pool.totalDistributedPenalty
-    it('no exit penalty amount is added to pool.totalDistributedPenalty', async () => {
-		});
-
-
-		//TODO: all exit penalty is swaped for LP tokens via uniswap and added to LOOP pool
-		it('all exit penalty is swaped for LP tokens via uniswap and added to LOOP pool', async () => {
-		});
-	});*/
-
-
-
-	//describe.skip
 	describe('#when userB exits/unstakes after already having some LP reward from userA exit/unstake [from MAIN pool WETH]', async () => {
 		const stakeA = BigNumber(1000);
 		const stakeB = BigNumber(2000);

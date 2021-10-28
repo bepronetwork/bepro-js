@@ -19,6 +19,7 @@ const index = {
   swapRouter: require('../contracts/SwapRouter.json'),
   uniswapCallee: require('../contracts/TestUniswapV3Callee.json'),
   uniswapRouterBridge: require('../contracts/TestUniswapV3RouterBridge.json'),
+  tickMathTest: require('../contracts/TickMathTest.json'),
   // uniswapPoolSwapTest: require('../contracts/UniswapV3PoolSwapTest.json'),
 };
 

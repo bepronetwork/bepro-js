@@ -29,21 +29,21 @@ export default class TestUniswapV3RouterBridge extends IContract {
 
 
   /**
-     * @returns {Promise<address>}
-     */
+   * @returns {Promise<address>}
+   */
   async swapRouter() {
     return await this.getWeb3Contract().methods.swapRouter().call();
   }
 
 
   /**
-     * @param {address} tokenIn
-     * @param {address} tokenOut
-     * @param {uint24} poolFee
-     * @param {uint256} amountIn
-     * @param {uint256} amountOutMinimum
-     * @returns {Promise<uint256>} amountOut
-     */
+   * @param {address} tokenIn
+   * @param {address} tokenOut
+   * @param {uint24} poolFee
+   * @param {uint256} amountIn
+   * @param {uint256} amountOutMinimum
+   * @returns {Promise<uint256>} amountOut
+   */
   async swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
     return await this.__sendTx(
       this.getWeb3Contract().methods.swapExactInputSingleEx(
@@ -52,15 +52,21 @@ export default class TestUniswapV3RouterBridge extends IContract {
     );
   }
 
+  async swapExactInputSingleExCall(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
+    return await this.getWeb3Contract().methods.swapExactInputSingleEx(
+      tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum,
+    ).call();
+  }
+
 
   /**
-     * @param {address} tokenIn
-     * @param {address} tokenOut
-     * @param {uint24} poolFee
-     * @param {uint256} amountOut
-     * @param {uint256} amountInMaximum
-     * @returns {Promise<uint256>} amountIn
-     */
+   * @param {address} tokenIn
+   * @param {address} tokenOut
+   * @param {uint24} poolFee
+   * @param {uint256} amountOut
+   * @param {uint256} amountInMaximum
+   * @returns {Promise<uint256>} amountIn
+   */
   async swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
     return await this.__sendTx(
       this.getWeb3Contract().methods.swapExactOutputSingleEx(
@@ -69,24 +75,30 @@ export default class TestUniswapV3RouterBridge extends IContract {
     );
   }
 
+  async swapExactOutputSingleExCall(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
+    return await this.getWeb3Contract().methods.swapExactOutputSingleEx(
+      tokenIn, tokenOut, poolFee, amountOut, amountInMaximum,
+    ).call();
+  }
 
-    /**
-     * Deploy the TestUniswapV3RouterBridge Contract
-     * @function
-     * @param {Object} params Parameters
-     * @param {function():void} params.callback
-     * @return {Promise<*|undefined>}
-     * @throws {Error} No Token Address Provided
-     */
-    deploy = async ({
-      callback,
-    } = {}) => {
-      const params = [this.params.swapRouterAddress];
 
-      const res = await this.__deploy(params, callback);
-      this.params.contractAddress = res.contractAddress;
-      /* Call to Backend API */
-      await this.__assert();
-      return res;
+  /**
+   * Deploy the TestUniswapV3RouterBridge Contract
+   * @function
+   * @param {Object} params Parameters
+   * @param {function():void} params.callback
+   * @return {Promise<*|undefined>}
+   * @throws {Error} No Token Address Provided
+   */
+  deploy = async ({
+    callback,
+  } = {}) => {
+    const params = [this.params.swapRouterAddress];
+
+    const res = await this.__deploy(params, callback);
+    this.params.contractAddress = res.contractAddress;
+    /* Call to Backend API */
+    await this.__assert();
+    return res;
     };
 }
