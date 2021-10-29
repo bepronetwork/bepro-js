@@ -56,7 +56,7 @@ const getPrettyEmittedEventsString = (result, indentationSize) => {
 const assertEventEmittedFromTxResult = (result, eventType, filter, message) => {
   /* Filter correct event types */
   const events = Object.values(result.events).flat().filter(entry => entry.event === eventType);
-  
+
   // TODO: Move the getPrettyEmittedEventsString to the assertion functions
   assertEventListNotEmpty(events, message, `Event of type ${eventType} was not emitted\n${getPrettyEmittedEventsString(result)}`);
 

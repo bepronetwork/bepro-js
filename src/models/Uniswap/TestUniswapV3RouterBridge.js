@@ -100,5 +100,5 @@ export default class TestUniswapV3RouterBridge extends IContract {
     /* Call to Backend API */
     await this.__assert();
     return res;
-    };
+  };
 }
