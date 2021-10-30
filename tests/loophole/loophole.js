@@ -2644,7 +2644,7 @@ context("Loophole contract", () => {
 			//userAstake was 1000, 100 goes to the staking pool as distributed penalty
 			newStakeTotal = 9100; //newStakeTotal + 100;
 
-			const userBstakeExpected = BigNumber('2022.222222222222222222'); //2022.22; //(2000 / 9000 * 9100);
+			const userBstakeExpected = BigNumber('2022.222222222222222222'); //2022.22; //(2000 / 9000 * 9100); //= 18200 / 9
 			const userBstake = await loophole.currentStake(wethPid, userB);
 			console.log('---currentStake.weth.userB: ', userBstake);
 			console.log('---userBstakeExpected.weth: ', userBstakeExpected);
@@ -2684,6 +2684,9 @@ context("Loophole contract", () => {
 			console.log('---p.accLPtokensPerShare : ', p.accLPtokensPerShare);
 			console.log('---p.totalDistributedPenalty: ', p.totalDistributedPenalty);
 
+			const userInfo = await loophole.getUserInfo(wethPid, userB);
+			console.log('---userB.userInfo.before.exit: ', userInfo);
+
 			//NOTE: check LP token balance for userB after a tx
 			lpBalance1 = await lpToken.balanceOf(userB);
 			console.log('lpToken.balanceOf.userB.lpBalance1: ', lpBalance1);
@@ -2700,6 +2703,9 @@ context("Loophole contract", () => {
 			const expectedPaidRewardDecimals = BigNumber(tx.events.Collect.returnValues.reward);
 			const expectedPaidReward = Numbers.fromDecimalsToBN(expectedPaidRewardDecimals, lpDecimals);
 
+			const userInfo2 = await loophole.getUserInfo(wethPid, userB);
+			console.log('---userB.userInfo.after.exit: ', userInfo2);
+
 			//NOTE: an accurate value for 'accLPtokensPerShare' at the time of executing 'exit' function
 			// since pool will be mined for 1 more block before unstaking
 			//const p = await loophole.getPool(wethPid);
@@ -2707,7 +2713,7 @@ context("Loophole contract", () => {
 			
 			//NOTE: weth pool reward per block is 15 (0.3 of 50), 9100 is current total pool stake
 			//accLPtokensPerShare = accLPtokensPerShare + (15 / 9100);
-			//const accLPtokensPerShare = p.accLPtokensPerShare.plus(15 / 9100); //0.0395934065923516484
+			//const accLPtokensPerShare = p.accLPtokensPerShare.plus(15 / 9100);
 			//console.log('---newAccLPtokensPerShare: ', accLPtokensPerShare);
 
 			//NOTE: userB should have got paid LP rewards for 1 block in unstake tx
@@ -2715,29 +2721,30 @@ context("Loophole contract", () => {
 			console.log('lpToken.balanceOf.userB.lpBalance2: ', lpBalance2);
 			lpBalance2.should.be.bignumber.equal(lpBalance1.plus(expectedPaidReward));
 
+			//NOTE: manual calculations how we get the expected value we are looking for
 			// 15 LP tokens (0.3 of 50 per block) for weth pool
 			// before userB exits we had 9100 weth and userB had 2022.222222222222222222
-			// userB expected LP rewards for 1 block = weth reward per block * (userBnewStake / totalPool)
-			// 15 * 2022.222222222222222222 / 9100 = 3.333333333333333333 (...332967032967)
-			//
 			// 2022.222222222222222222 = (2000 / 9000 * 9100)
-			// 15 * (2000 / 9000 * 9100) / 9100 = 15 * 2000 / 9000 = 30/9 = 3.333333333333333333
-			//const rewardExpectedTokens = BigNumber('3.333333333333333333');
-			//NOTE: following line FAILS because difference in decimal numbers from blockchain vs expected value
-			// smart contract returns 3333333332622222222, we expect 3333333333333333333 as seen above
-			//lpBalance2.should.be.bignumber.equal(lpBalance1.plus(rewardExpectedTokens));
 			
-			//NOTE: decimal numbers rounding precision errors
-			//***=> this comes out in Collect event
-			//3333333332622222222 tokens
-			//3.333333332622222222 decimal tokens
+			//pool.accLPtokensPerShare = 0.036296703296
+			//lpSupply = pool.totalPool = 9100
+			//x = mine weth pool for 1 block and get LP rewards
+			//x = 15 * 10**18 * / 9100 / 10**18 = 15 / 9100 = 0.001648351648351648
+			//pool.accLPtokensPerShare = pool.accLPtokensPerShare.add(lpTokensReward.mul(LPtokensPerShareMultiplier).div(lpSupply));
+			//accLPtokensPerShare = 0.036296703296 + 0.001648351648351648 = 0.037945054944351648
+			//accLPtokensPerShare = 0.037945054944, rounded to 12 decimals as we store it multiplied by 10**12 (LPtokensPerShareMultiplier)
+			
+			//uint256 accReward = userCurrentStake.mul(poolAccLPtokensPerShare).div(LPtokensPerShareMultiplier);
+			//accReward = 2022222222222222222222 * 37945054944 = 76,733,333,331,199,999,999,991,567,765,568  /10**12 = 76733333331199999999
 
-			//userBstake / poolTotal = 0.2222222221748148148
-			//0.2222222221748148148 * 9100 = 2,022.22222179081481468 ??? rounding error ???
-			//0.2222222221748148148 * x = 2022.222222222222222222
-			//=> x = 2022.222222222222222222 / 0.2222222221748148148 = 9,100.0000019413333343531511114581
+			//userPayRewardMark = 73.399999998577777777
+			//uint256 reward = accReward.sub(userPayRewardMark);
+			// we are looking for this value => 76733333331199999999 - 73399999998577777777 = 3333333332622222222
 
-
+			//NOTE: 3333333332622222222 tokens / 10**18 = 3.333333332622222222 as decimal tokens
+			const rewardExpectedTokens = BigNumber('3.333333332622222222');
+			lpBalance2.should.be.bignumber.equal(lpBalance1.plus(rewardExpectedTokens));
+			
 			//NOTE: userB has stake profit from other users exits, from userA exit
 			// when he exits his stake will be zero
 			const userBstake = await loophole.currentStake(wethPid, userB);

@@ -483,14 +483,12 @@ export default class Loophole extends IContract {
    */
   async getUserInfo(pid, user) {
     const res = await this.getWeb3Contract().methods.getUserInfo(pid, user).call();
-    // TODO ???
-    // return res;
     return {
       ...res,
       entryStake: await this.fromDecimalsToBN(res.entryStake, pid),
       unstake: await this.fromDecimalsToBN(res.unstake, pid),
       entryStakeAdjusted: await this.fromDecimalsToBN(res.entryStakeAdjusted, pid),
-      payRewardMark: await this.fromDecimalsToBN(res.payRewardMark, pid),
+      payRewardMark: await this.fromDecimalsToBN(res.payRewardMark, 0), //0 is LOOP pool id token
     };
   }
 
