@@ -189,8 +189,8 @@ contract PredictionMarket {
     Market storage market = markets[marketId];
 
     require(msg.value > 0, "stake needs to be > 0");
-    require(closesAt >= now, "market must resolve after the current date");
-    require(arbitrator == address(arbitrator), "invalid arbitrator address");
+    require(closesAt > now, "market must resolve after the current date");
+    require(arbitrator != address(0), "invalid arbitrator address");
     // v1 - only binary markets
     require(outcomes == 2, "number of outcomes has to be 2");
 
@@ -291,6 +291,7 @@ contract PredictionMarket {
     uint256 value = msg.value;
     uint256 shares = calcBuyAmount(value, marketId, outcomeId);
     require(shares >= minOutcomeSharesToBuy, "minimum buy amount not reached");
+    require(shares > 0, "shares amount is 0");
 
     // subtracting fee from transaction value
     uint256 feeAmount = value.mul(market.fees.value) / ONE;
@@ -323,6 +324,7 @@ contract PredictionMarket {
     uint256 shares = calcSellAmount(value, marketId, outcomeId);
 
     require(shares <= maxOutcomeSharesToSell, "maximum sell amount exceeded");
+    require(shares > 0, "shares amount is 0");
     require(outcome.shares.holders[msg.sender] >= shares, "user does not have enough balance");
 
     transferOutcomeSharesToPool(msg.sender, marketId, outcomeId, shares);
