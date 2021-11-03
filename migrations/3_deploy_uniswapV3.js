@@ -20,9 +20,9 @@ fs.writeFileSync(targetDir + 'SwapRouter.json', fs.readFileSync(SwapRouterJson))
 //NOTE: this is manually added into "artifacts/imported/..." folder and copied into "build/contracts" folder for convenience
 //this is so because it had to be compiled with truffle as uniswap-v3-periphery compiles contracts with hardhat, 
 //compiled contracts that require a library to be linked, generate a different bytecode style for library bytecode section.
-const NonfungibleTokenPositionDescriptorJson =
-  '../artifacts/imported/uniswap-v3-periphery/NonfungibleTokenPositionDescriptor.json';
-fs.writeFileSync(targetDir + 'NonfungibleTokenPositionDescriptor.json', fs.readFileSync(NonfungibleTokenPositionDescriptorJson));
+///const NonfungibleTokenPositionDescriptorJson =
+///  '../artifacts/imported/uniswap-v3-periphery/NonfungibleTokenPositionDescriptor.json';
+///fs.writeFileSync(targetDir + 'NonfungibleTokenPositionDescriptor.json', fs.readFileSync(NonfungibleTokenPositionDescriptorJson));
 
 const NonfungiblePositionManagerJson =
   '../node_modules/' + '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json';
@@ -35,7 +35,7 @@ fs.writeFileSync(targetDir + 'NFTDescriptor.json', fs.readFileSync(NFTDescriptor
 const UniswapV3Factory = artifacts.require("UniswapV3Factory");
 const UniswapV3Pool = artifacts.require("UniswapV3Pool");
 const SwapRouter = artifacts.require("SwapRouter");
-const NonfungibleTokenPositionDescriptor = artifacts.require("NonfungibleTokenPositionDescriptor");
+///const NonfungibleTokenPositionDescriptor = artifacts.require("NonfungibleTokenPositionDescriptor");
 const NonfungiblePositionManager = artifacts.require("NonfungiblePositionManager");
 const NFTDescriptor = artifacts.require("NFTDescriptor");
 
@@ -86,27 +86,27 @@ module.exports = async (deployer, network, accounts) => {
   console.log('nftDescriptor.address: ', nftDescriptor.address);
   // link NFTDescriptor lib to NonfungibleTokenPositionDescriptor contract
   // NOTE: make sure NonfungibleTokenPositionDescriptor is compiled with truffle
-  await deployer.link(NFTDescriptor, NonfungibleTokenPositionDescriptor); 
+  ///await deployer.link(NFTDescriptor, NonfungibleTokenPositionDescriptor); 
   
   // NOT compiling with truffle, link library will fail and will throw this error:
   // >NonfungibleTokenPositionDescriptor contains unresolved libraries.
   // >You must deploy and link the following libraries before you can deploy
   // >a new version of NonfungibleTokenPositionDescriptor: $cea9be979eee3d87fb124d6cbb244bb0b5$.
-  await deployer.deploy(NonfungibleTokenPositionDescriptor, weth.address);
-  const nonfungibleTokenPositionDescriptor = await NonfungibleTokenPositionDescriptor.deployed();
+  ///await deployer.deploy(NonfungibleTokenPositionDescriptor, weth.address);
+  ///const nonfungibleTokenPositionDescriptor = await NonfungibleTokenPositionDescriptor.deployed();
 
   //const fakeNFTPositionDescriptor = await Token.new("fakeNFTPositionDescriptor", "FTKN", new BigNumber(100*(1e18)), accounts[0]);
   //await deployer.deploy(NonfungiblePositionManager, factory.address, weth.address, fakeNFTPositionDescriptor.address);
-  await deployer.deploy(NonfungiblePositionManager, factory.address, weth.address, nonfungibleTokenPositionDescriptor.address);
-  const nonfungiblePositionManager = await NonfungiblePositionManager.deployed();
+  ///await deployer.deploy(NonfungiblePositionManager, factory.address, weth.address, nonfungibleTokenPositionDescriptor.address);
+  ///const nonfungiblePositionManager = await NonfungiblePositionManager.deployed();
   
   // initialize pool with sqrt encoded price
   //await nonfungiblePositionManager.createAndInitializePoolIfNecessary(token0, token1, fee, encodePriceSqrt(1, 1));
 
   //fs.writeFileSync(addressDir + 'NonfungibleTokenPositionDescriptor_address.txt', nonfungibleTokenPositionDescriptor.address);
   //NOTE: this does nothing, fails to write to file:
-  ///fs.writeFileSync('NonfungiblePositionManager_address.txt', nonfungiblePositionManager.address);
-  console.log('...nonfungiblePositionManager.address: ', nonfungiblePositionManager.address);
+  /// fs.writeFileSync('NonfungiblePositionManager_address.txt', nonfungiblePositionManager.address);
+  ///console.log('...nonfungiblePositionManager.address: ', nonfungiblePositionManager.address);
   console.log('...uniswapV3 migration finished!');
 
   if (network !== "development") {
