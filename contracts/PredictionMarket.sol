@@ -124,7 +124,7 @@ contract PredictionMarket {
   // ------ Modifiers ------
 
   modifier isMarket(uint256 marketId) {
-    require(marketId < marketIndex);
+    require(marketId < marketIndex, "Market not found");
     _;
   }
 
@@ -136,12 +136,12 @@ contract PredictionMarket {
   }
 
   modifier atState(uint256 marketId, MarketState state) {
-    require(markets[marketId].state == state);
+    require(markets[marketId].state == state, "Market in incorrect state");
     _;
   }
 
   modifier notAtState(uint256 marketId, MarketState state) {
-    require(markets[marketId].state != state);
+    require(markets[marketId].state != state, "Market in incorrect state");
     _;
   }
 
