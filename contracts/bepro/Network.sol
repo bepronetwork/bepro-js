@@ -135,8 +135,8 @@ contract Network is Pausable, Governed, ReentrancyGuard{
             oraclers[_from].oraclesDelegatedByOthers = oraclers[_from].oraclesDelegatedByOthers.sub(_tokenAmount);
         }
 
-        require(settlerToken.transfer(msg.sender, _tokenAmount), "Transfer didnt work");
         oraclesStaked = oraclesStaked.sub(_tokenAmount);
+        require(settlerToken.transfer(msg.sender, _tokenAmount), "Transfer didnt work");
     }
 
     function delegateOracles(uint256 _tokenAmount, address _delegatedTo) external {

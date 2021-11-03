@@ -1,11 +1,13 @@
 import Application from './Application';
 import DexStorage from './utils/IPFS';
 import ERC20Contract from './models/ERC20/ERC20Contract';
+import ERC20Mock from './models/mocks/ERC20Mock';
 import StakingContract from './models/Staking/StakingContract';
 import ERC20TokenLock from './models/ERC20/ERC20TokenLock';
 import ERC721Collectibles from './models/ERC721/ERC721Collectibles';
 import ERC721Standard from './models/ERC721/ERC721Standard';
 import Network from './models/BEPRO/Network';
+import NetworkFactory from './models/BEPRO/NetworkFactory';
 import { VotingContract } from './models';
 import Sablier from './models/Sablier/Sablier';
 import ETHUtils from './utils/ETHUtils';
@@ -22,8 +24,10 @@ export {
   Application,
   DexStorage,
   ERC20Contract,
+  ERC20Mock,
   VotingContract,
   Network,
+  NetworkFactory,
   StakingContract,
   ERC20TokenLock,
   ERC721Collectibles,
