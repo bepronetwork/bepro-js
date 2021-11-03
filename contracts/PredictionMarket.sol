@@ -113,7 +113,7 @@ contract PredictionMarket {
   uint256 public marketIndex;
 
   // governance
-  uint256 public fee; // fee % taken from every transaction, can be updated by contract owner
+  uint256 public fee; // fee % taken from every transaction
   // realitio configs
   address public realitioAddress;
   uint256 public realitioTimeout;
