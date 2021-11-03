@@ -31,8 +31,8 @@ export default class SwapRouter extends IContract {
 
 
   /**
-     * @returns {Promise<address>}
-     */
+   * @returns {Promise<address>}
+   */
   async WETH9() {
     // return await this.getWeb3Contract().methods.WETH9().call();
     return this.params.weth9;
@@ -40,44 +40,44 @@ export default class SwapRouter extends IContract {
 
 
   /**
-     * @param {tuple} params
-     * @returns {Promise<uint256>} amountOut
-     */
+   * @param {tuple} params
+   * @returns {Promise<uint256>} amountOut
+   */
   async exactInput(params) {
     return await this.__sendTx(this.getWeb3Contract().methods.exactInput(params));
   }
 
 
   /**
-     * @param {tuple} params
-     * @returns {Promise<uint256>} amountOut
-     */
+   * @param {tuple} params
+   * @returns {Promise<uint256>} amountOut
+   */
   async exactInputSingle(params) {
     return await this.__sendTx(this.getWeb3Contract().methods.exactInputSingle(params));
   }
 
 
   /**
-     * @param {tuple} params
-     * @returns {Promise<uint256>} amountIn
-     */
+   * @param {tuple} params
+   * @returns {Promise<uint256>} amountIn
+   */
   async exactOutput(params) {
     return await this.__sendTx(this.getWeb3Contract().methods.exactOutput(params));
   }
 
 
   /**
-     * @param {tuple} params
-     * @returns {Promise<uint256>} amountIn
-     */
+   * @param {tuple} params
+   * @returns {Promise<uint256>} amountIn
+   */
   async exactOutputSingle(params) {
     return await this.__sendTx(this.getWeb3Contract().methods.exactOutputSingle(params));
   }
 
 
   /**
-     * @returns {Promise<address>}
-     */
+   * @returns {Promise<address>}
+   */
   async factory() {
     // return await this.getWeb3Contract().methods.factory().call();
     return this.params.factory;
@@ -85,130 +85,130 @@ export default class SwapRouter extends IContract {
 
 
   /**
-     * @param {bytes[]} data
-     * @returns {Promise<bytes[]>} results
-     */
+   * @param {bytes[]} data
+   * @returns {Promise<bytes[]>} results
+   */
   async multicall(data) {
     return await this.__sendTx(this.getWeb3Contract().methods.multicall(data));
   }
 
 
   /**
-     * @returns {Promise<void>}
-     */
+   * @returns {Promise<void>}
+   */
   async refundETH() {
     return await this.__sendTx(this.getWeb3Contract().methods.refundETH());
   }
 
 
   /**
-     * @param {address} token
-     * @param {uint256} value
-     * @param {uint256} deadline
-     * @param {uint8} v
-     * @param {bytes32} r
-     * @param {bytes32} s
-     * @returns {Promise<void>}
-     */
+   * @param {address} token
+   * @param {uint256} value
+   * @param {uint256} deadline
+   * @param {uint8} v
+   * @param {bytes32} r
+   * @param {bytes32} s
+   * @returns {Promise<void>}
+   */
   async selfPermit(token, value, deadline, v, r, s) {
     return await this.__sendTx(this.getWeb3Contract().methods.selfPermit(token, value, deadline, v, r, s));
   }
 
 
   /**
-     * @param {address} token
-     * @param {uint256} nonce
-     * @param {uint256} expiry
-     * @param {uint8} v
-     * @param {bytes32} r
-     * @param {bytes32} s
-     * @returns {Promise<void>}
-     */
+   * @param {address} token
+   * @param {uint256} nonce
+   * @param {uint256} expiry
+   * @param {uint8} v
+   * @param {bytes32} r
+   * @param {bytes32} s
+   * @returns {Promise<void>}
+   */
   async selfPermitAllowed(token, nonce, expiry, v, r, s) {
     return await this.__sendTx(this.getWeb3Contract().methods.selfPermitAllowed(token, nonce, expiry, v, r, s));
   }
 
 
   /**
-     * @param {address} token
-     * @param {uint256} nonce
-     * @param {uint256} expiry
-     * @param {uint8} v
-     * @param {bytes32} r
-     * @param {bytes32} s
-     * @returns {Promise<void>}
-     */
+   * @param {address} token
+   * @param {uint256} nonce
+   * @param {uint256} expiry
+   * @param {uint8} v
+   * @param {bytes32} r
+   * @param {bytes32} s
+   * @returns {Promise<void>}
+   */
   async selfPermitAllowedIfNecessary(token, nonce, expiry, v, r, s) {
     return await this.__sendTx(this.getWeb3Contract().methods.selfPermitAllowedIfNecessary(token, nonce, expiry, v, r, s));
   }
 
 
   /**
-     * @param {address} token
-     * @param {uint256} value
-     * @param {uint256} deadline
-     * @param {uint8} v
-     * @param {bytes32} r
-     * @param {bytes32} s
-     * @returns {Promise<void>}
-     */
+   * @param {address} token
+   * @param {uint256} value
+   * @param {uint256} deadline
+   * @param {uint8} v
+   * @param {bytes32} r
+   * @param {bytes32} s
+   * @returns {Promise<void>}
+   */
   async selfPermitIfNecessary(token, value, deadline, v, r, s) {
     return await this.__sendTx(this.getWeb3Contract().methods.selfPermitIfNecessary(token, value, deadline, v, r, s));
   }
 
 
   /**
-     * @param {address} token
-     * @param {uint256} amountMinimum
-     * @param {address} recipient
-     * @returns {Promise<void>}
-     */
+   * @param {address} token
+   * @param {uint256} amountMinimum
+   * @param {address} recipient
+   * @returns {Promise<void>}
+   */
   async sweepToken(token, amountMinimum, recipient) {
     return await this.__sendTx(this.getWeb3Contract().methods.sweepToken(token, amountMinimum, recipient));
   }
 
 
   /**
-     * @param {address} token
-     * @param {uint256} amountMinimum
-     * @param {address} recipient
-     * @param {uint256} feeBips
-     * @param {address} feeRecipient
-     * @returns {Promise<void>}
-     */
+   * @param {address} token
+   * @param {uint256} amountMinimum
+   * @param {address} recipient
+   * @param {uint256} feeBips
+   * @param {address} feeRecipient
+   * @returns {Promise<void>}
+   */
   async sweepTokenWithFee(token, amountMinimum, recipient, feeBips, feeRecipient) {
     return await this.__sendTx(this.getWeb3Contract().methods.sweepTokenWithFee(token, amountMinimum, recipient, feeBips, feeRecipient));
   }
 
 
   /**
-     * @param {int256} amount0Delta
-     * @param {int256} amount1Delta
-     * @param {bytes} _data
-     * @returns {Promise<void>}
-     */
+   * @param {int256} amount0Delta
+   * @param {int256} amount1Delta
+   * @param {bytes} _data
+   * @returns {Promise<void>}
+   */
   // async uniswapV3SwapCallback(amount0Delta, amount1Delta, _data) {
   //  return await this.__sendTx(this.getWeb3Contract().methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, _data))
   // };
 
 
   /**
-     * @param {uint256} amountMinimum
-     * @param {address} recipient
-     * @returns {Promise<void>}
-     */
+   * @param {uint256} amountMinimum
+   * @param {address} recipient
+   * @returns {Promise<void>}
+   */
   async unwrapWETH9(amountMinimum, recipient) {
     return await this.__sendTx(this.getWeb3Contract().methods.unwrapWETH9(amountMinimum, recipient));
   }
 
 
   /**
-     * @param {uint256} amountMinimum
-     * @param {address} recipient
-     * @param {uint256} feeBips
-     * @param {address} feeRecipient
-     * @returns {Promise<void>}
-     */
+   * @param {uint256} amountMinimum
+   * @param {address} recipient
+   * @param {uint256} feeBips
+   * @param {address} feeRecipient
+   * @returns {Promise<void>}
+   */
   async unwrapWETH9WithFee(amountMinimum, recipient, feeBips, feeRecipient) {
     return await this.__sendTx(this.getWeb3Contract().methods.unwrapWETH9WithFee(amountMinimum, recipient, feeBips, feeRecipient));
   }
