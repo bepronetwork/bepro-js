@@ -166,6 +166,8 @@ contract PredictionMarket {
     uint256 _realitioTimeout
   ) public {
     require(_realitioAddress != address(0), "_realitioAddress is address 0");
+    require(_realitioTimeout > 0, "timeout must be positive");
+
     fee = _fee;
     token = _token;
     requiredBalance = _requiredBalance;
