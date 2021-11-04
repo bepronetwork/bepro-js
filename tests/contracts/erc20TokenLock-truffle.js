@@ -43,10 +43,6 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
     erc20Lock = await ERC20TokenLock.new(erc20TokenContract, {
       from: owner,
     });
-
-    console.log('erc20Test.address : ', erc20Test.address);
-    console.log('erc20Lock.address : ', erc20Lock.address);
-
     /* time dev tests
 		let now = moment();
 		let now_unix = now.unix();
@@ -71,13 +67,6 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
       expect(Number(res).toString()).to.equal(Number(0).toString());
       res = await erc20Lock.totalAmountStaked();
       expect(Number(res).toString()).to.equal(Number(0).toString());
-
-      console.log(
-        `Init tests: \n* erc20              : ${
-          ret_tokenAddress
-        }\n* erc20TokenContract : ${
-          erc20TokenContract}`,
-      );
     },
   );
 

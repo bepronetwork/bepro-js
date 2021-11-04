@@ -49,9 +49,8 @@ class Contract {
 
   __metamaskDeploy = async ({
     byteCode, args, acc, callback = () => {},
-  }) => new Promise((resolve, reject) => {
+  }) => new Promise(async (resolve, reject) => {
     try {
-      console.log(`Contract.__metamaskDeploy.acc: ${acc}`);
       this.getContract()
         .deploy({
           data: byteCode,
@@ -67,21 +66,15 @@ class Contract {
           gas: 5913388, // 6721975
         })
         .on('confirmation', (confirmationNumber, receipt) => {
-          console.log(
-            `Contract.__metamaskDeploy.confirmationNumber: ${
-              confirmationNumber}`,
-          );
           callback(confirmationNumber);
           if (confirmationNumber > 0) {
             resolve(receipt);
           }
         })
         .on('error', (err) => {
-          console.log(`Contract.__metamaskDeploy.error: ${err}`);
           reject(err);
         });
     } catch (err) {
-      console.log(`Contract.__metamaskDeploy.catch.error: ${err}`);
       reject(err);
     }
   });
@@ -100,7 +93,7 @@ class Contract {
         from: account.address,
         to: this.address,
         gas: 4430000,
-        gasPrice: 5000000000,
+        gasPrice: await this.web3.eth.getGasPrice(),
         value: value || '0x0',
       };
 
