@@ -351,7 +351,6 @@ class OpenerRealFvr extends IContract {
     .methods.exists(tokenId).call();
 
 
-
   /**
    * @function
    * @description Get Purchase Token Address

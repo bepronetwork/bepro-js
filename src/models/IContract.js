@@ -79,7 +79,8 @@ class IContract {
     f.send({
       from: acc,
       value,
-      gas: 591338,
+      gasPrice: 5000000000,
+      gas: 5913388,
     })
       .on('confirmation', (confirmationNumber, receipt) => {
         callback(confirmationNumber);
