@@ -287,7 +287,7 @@ class IContract {
 
 		// getting events via http from web3 events provide
 		let uri = `${this.params.web3EventsProvider}/events?contract=${this.contractName}&address=${this.getAddress()}&eventName=${event}`
-		if (filter.present) uri = uri.concat(`&filter=${JSON.stringify(filter)}`);
+		if (filter) uri = uri.concat(`&filter=${JSON.stringify(filter)}`);
 
 		const { data } = await axios.get(uri);
 		return data;
