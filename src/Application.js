@@ -15,11 +15,10 @@ const networksEnum = Object.freeze({
 });
 
 class Application {
-	constructor({web3Provider, web3PrivateKey, blockConfig}) {
+	constructor({web3Provider, web3PrivateKey, web3EventsProvider}) {
 		this.web3Provider = web3Provider;
-		// used to query events in chunks
-		// structure: { fromBlock, blockCount }
-		this.blockConfig = blockConfig;
+		// evm logs http source
+		this.web3EventsProvider = web3EventsProvider;
 
 		// IMPORTANT: this parameter should only be used for testing purposes
 		if (web3PrivateKey) {
@@ -93,7 +92,7 @@ class Application {
 				web3: this.web3,
 				contractAddress,
 				acc : this.account,
-				blockConfig: this.blockConfig
+				web3EventsProvider: this.web3EventsProvider
 			});
 		} catch(err) {
 			throw err;
@@ -111,7 +110,7 @@ class Application {
 				web3: this.web3,
 				contractAddress,
 				acc : this.account,
-				blockConfig: this.blockConfig
+				web3EventsProvider: this.web3EventsProvider
 			});
 		} catch(err) {
 			throw err;
@@ -129,7 +128,7 @@ class Application {
 				web3: this.web3,
 				contractAddress: contractAddress,
 				acc : this.account,
-				blockConfig: this.blockConfig
+				web3EventsProvider: this.web3EventsProvider
 			});
 		} catch(err) {
 			throw err;

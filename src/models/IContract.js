@@ -1,5 +1,6 @@
 const Contract = require("../utils/Contract");
 const _ = require("lodash");
+const axios = require('axios');
 
 /**
  * Contract Object Interface
@@ -16,7 +17,7 @@ class IContract {
 		contractAddress = null /* If not deployed */,
 		abi,
 		acc,
-		blockConfig
+		web3EventsProvider
 	}) {
 		try {
 			if(!abi){
@@ -36,7 +37,7 @@ class IContract {
 				web3,
 				abi,
 				contractAddress,
-				blockConfig,
+				web3EventsProvider,
 				contract: new Contract(web3, abi, contractAddress)
 			};
 		} catch (err) {
@@ -274,7 +275,7 @@ class IContract {
 	 * @returns {String | undefined} address
 	 */
 	async getEvents(event, filter) {
-		if (!this.params.blockConfig) {
+		if (!this.params.web3EventsProvider) {
 			const events = this.getContract().getPastEvents(event, {
 				fromBlock: 0,
 				toBlock: 'latest',
@@ -284,31 +285,12 @@ class IContract {
 			return events;
 		}
 
-		// iterating by block numbers
-		let blockNumber = await this.web3.eth.getBlockNumber();
-		let events = [];
-		const blockRanges = []
+		// getting events via http from web3 events provide
+		let uri = `${this.params.web3EventsProvider}/events?contract=${this.contractName}&address=${this.getAddress()}&eventName=${event}`
+		if (filter.present) uri = uri.concat(`&filter=${JSON.stringify(filter)}`);
 
-		while (blockNumber > this.params.blockConfig.fromBlock) {
-			const fromBlock = blockNumber - this.params.blockConfig.blockCount;
-
-			blockRanges.push({
-				fromBlock: fromBlock > 0 ? fromBlock : 0,
-				toBlock: blockNumber
-			});
-
-			blockNumber = fromBlock;
-		}
-
-		await Promise.all(blockRanges.map(async (blockRange) => {
-			const blockEvents = await this.getContract().getPastEvents(event, {
-				filter,
-				...blockRange
-			});
-			events = blockEvents.concat(events);
-		}));
-
-		return events.sort((a, b) => a.blockNumber - b.blockNumber);
+		const { data } = await axios.get(uri);
+		return data;
 	}
 }
 
