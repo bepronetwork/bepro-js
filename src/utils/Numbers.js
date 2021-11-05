@@ -79,7 +79,7 @@ class numbers {
   }
 
   fromBigNumberToInteger(value, decimals = 18) {
-    return (value / Math.pow(10, decimals)) * 1000000000000000000
+    return Math.round((value / Math.pow(10, decimals)) * 1000000000000000000);
   }
 
   fromDecimals(value, decimals) {
