@@ -32,7 +32,7 @@ class ERC721Standard extends IContract {
       );
     }
     /* Use ABI */
-    this.params.contract.use(erc721collectibles, this.getAddress());
+    this.params.contract.use(erc721standard, this.getAddress());
 
     /* Set Token Address Contract for easy access */
     this.params.ERC20Contract = new ERC20Contract({
@@ -51,8 +51,8 @@ class ERC721Standard extends IContract {
    * @param {number} params.tokenID
    * @returns {Promise<boolean>} Token Id
    */
-  async exists({ tokenID }) {
-    return await this.params.contract
+  exists({ tokenID }) {
+    return this.params.contract
       .getContract()
       .methods.exists(tokenID)
       .call();
@@ -64,8 +64,8 @@ class ERC721Standard extends IContract {
    * @param {number} params.tokenID
    * @returns {Promise<string>} URI
    */
-  async getURITokenID({ tokenID }) {
-    return await this.params.contract
+  getURITokenID({ tokenID }) {
+    return this.params.contract
       .getContract()
       .methods.tokenURI(tokenID)
       .call();
@@ -75,8 +75,8 @@ class ERC721Standard extends IContract {
    * Verify what is the baseURI
    * @returns {Promise<string>} URI
    */
-  async baseURI() {
-    return await this.params.contract.getContract().methods.baseURI().call();
+  baseURI() {
+    return this.params.contract.getContract().methods.baseURI().call();
   }
 
   /**
@@ -86,7 +86,7 @@ class ERC721Standard extends IContract {
    * @param {string} params.URI
    * @return {Promise<*>}
    */
-  setBaseTokenURI = async ({ URI }) => await this.__sendTx(
+  setBaseTokenURI = ({ URI }) => this.__sendTx(
     this.params.contract.getContract().methods.setBaseURI(URI),
   );
 
@@ -98,7 +98,7 @@ class ERC721Standard extends IContract {
    * @param {string} params.URI
    * @return {Promise<*>}
    */
-  setTokenURI = async ({ tokenID, URI }) => await this.__sendTx(
+  setTokenURI = ({ tokenID, URI }) => this.__sendTx(
     this.params.contract.getContract().methods.setTokenURI(tokenID, URI),
   );
 
@@ -108,8 +108,8 @@ class ERC721Standard extends IContract {
    * @param {number} params.tokenID
    * @return {Promise<TransactionObject>}
    */
-  async mint({ tokenID }) {
-    return await this.__sendTx(
+  mint({ tokenID }) {
+    return this.__sendTx(
       this.params.contract.getContract().methods.mint(tokenID),
     );
   }

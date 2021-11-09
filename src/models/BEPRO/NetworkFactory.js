@@ -5,7 +5,6 @@ import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
-
 /**
  * @typedef {Object} NetworkFactory~Options
  * @property {Boolean} test
@@ -24,7 +23,6 @@ class Network extends IContract {
   constructor(params) {
     super({ abi: networkFactory, ...params });
   }
-
 
   /**
    * Asserts the 2 {@link ERC20Contract} on the current address
@@ -59,8 +57,8 @@ class Network extends IContract {
    * @param {Address} address
    * @returns {Adddress}
    */
-  async getNetworkByAddress(address) {
-    return await this.params.contract
+  getNetworkByAddress(address) {
+    return this.params.contract
       .getContract()
       .methods.getNetworkByAddress(address)
       .call();
@@ -71,8 +69,8 @@ class Network extends IContract {
    * @param {number} id
    * @returns {Adddress}
    */
-  async getNetworkById(id) {
-    return await this.params.contract
+  getNetworkById(id) {
+    return this.params.contract
       .getContract()
       .methods.getNetworkById(id)
       .call();
@@ -82,10 +80,9 @@ class Network extends IContract {
      * Get Amount of Networks Forked in the Protocol
      * @returns {Promise<number>}
      */
-  async getAmountofNetworksForked() {
-    return (await this.params.contract.getContract().methods.networksAmount().call());
+  getAmountofNetworksForked() {
+    return this.params.contract.getContract().methods.networksAmount().call();
   }
-
 
   /**
      * Get Total Amount of Tokens Locked by Operator in the Network
@@ -104,12 +101,11 @@ class Network extends IContract {
      * @param {Address} address
      * @returns {Address[]}
      */
-  async getNetworks() {
-    const res = await this.params.contract
+  getNetworks() {
+    return this.params.contract
       .getContract()
       .methods.networksArray()
       .call();
-    return res;
   }
 
   /**
@@ -137,8 +133,8 @@ class Network extends IContract {
      * Get Settler Token Address
      * @returns {Promise<address>}
      */
-  async getSettlerTokenAddress() {
-    return await this.params.contract
+  getSettlerTokenAddress() {
+    return this.params.contract
       .getContract()
       .methods.beproAddress()
       .call();
@@ -165,12 +161,11 @@ class Network extends IContract {
    */
   approveSettlerERC20Token = async () => {
     const totalMaxAmount = await this.getSettlerTokenContract().totalSupply();
-    return await this.getSettlerTokenContract().approve({
+    return this.getSettlerTokenContract().approve({
       address: this.getAddress(),
       amount: totalMaxAmount,
     });
   };
-
 
   /**
    * Verify if Approved
@@ -180,7 +175,7 @@ class Network extends IContract {
    * @param {Address} params.address
    * @return {Promise<number>}
    */
-  isApprovedSettlerToken = async ({ amount, address }) => await this.getSettlerTokenContract().isApproved({
+  isApprovedSettlerToken = ({ amount, address }) => this.getSettlerTokenContract().isApproved({
     address,
     amount,
     spenderAddress: this.getAddress(),
@@ -194,12 +189,12 @@ class Network extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  async lock({ tokenAmount }) {
+  lock({ tokenAmount }) {
     if (tokenAmount <= 0) {
       throw new Error('Token Amount has to be higher than 0');
     }
 
-    return await this.__sendTx(
+    return this.__sendTx(
       this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
     );
   }
@@ -209,8 +204,8 @@ class Network extends IContract {
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-  async unlock() {
-    return await this.__sendTx(
+  unlock() {
+    return this.__sendTx(
       this.params.contract.getContract().methods.unlock(),
     );
   }
@@ -222,8 +217,8 @@ class Network extends IContract {
    * @param {Address} params.transactionalToken
    * @return {Promise<TransactionObject>}
    */
-  async createNetwork({ settlerToken, transactionalToken }) {
-    return await this.__sendTx(
+  createNetwork({ settlerToken, transactionalToken }) {
+    return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.createNetwork(settlerToken, transactionalToken),

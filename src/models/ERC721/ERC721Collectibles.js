@@ -54,8 +54,8 @@ class ERC721Collectibles extends IContract {
    * Get ERC20 Address of the Contract
    * @returns {Promise<Address>}
    */
-  async purchaseToken() {
-    return await this.params.contract
+  purchaseToken() {
+    return this.params.contract
       .getContract()
       .methods._purchaseToken()
       .call();
@@ -78,8 +78,8 @@ class ERC721Collectibles extends IContract {
    * @param {string} params.tokenID
    * @returns {Promise<number>} Token Id
    */
-  async exists({ tokenID }) {
-    return await this.params.contract
+  exists({ tokenID }) {
+    return this.params.contract
       .getContract()
       .methods.exists(tokenID)
       .call();
@@ -89,8 +89,8 @@ class ERC721Collectibles extends IContract {
    * Verify if it is limited
    * @returns {Promise<boolean>}
    */
-  async isLimited() {
-    return await this.params.contract.getContract().methods._isLimited().call();
+  isLimited() {
+    return this.params.contract.getContract().methods._isLimited().call();
   }
 
   /**
@@ -108,8 +108,8 @@ class ERC721Collectibles extends IContract {
    * Verify what is the getURITokenID
    * @returns {Promise<string>} URI
    */
-  async getURITokenID({ tokenID }) {
-    return await this.params.contract
+  getURITokenID({ tokenID }) {
+    return this.params.contract
       .getContract()
       .methods.tokenURI(tokenID)
       .call();
@@ -119,8 +119,8 @@ class ERC721Collectibles extends IContract {
    * Verify what is the baseURI
    * @returns {Promise<string>} URI
    */
-  async baseURI() {
-    return await this.params.contract.getContract().methods.baseURI().call();
+  baseURI() {
+    return this.params.contract.getContract().methods.baseURI().call();
   }
 
   /**
@@ -135,15 +135,15 @@ class ERC721Collectibles extends IContract {
       .methods.getRegisteredIDs(address)
       .call();
 
-    return res.map(r => parseInt(r, 10));
+    return res.map((r) => parseInt(r, 10));
   }
 
   /**
    * Verify if ID is registered
    * @returns {Promise<boolean>}
    */
-  async isIDRegistered({ address, tokenID }) {
-    return await this.params.contract
+  isIDRegistered({ address, tokenID }) {
+    return this.params.contract
       .getContract()
       .methods.registeredIDs(address, tokenID)
       .call();
@@ -178,7 +178,7 @@ class ERC721Collectibles extends IContract {
    */
   approveERC20 = async () => {
     const totalMaxAmount = await this.getERC20Contract().totalSupply();
-    return await this.getERC20Contract().approve({
+    return this.getERC20Contract().approve({
       address: this.getAddress(),
       amount: totalMaxAmount,
     });
@@ -191,7 +191,7 @@ class ERC721Collectibles extends IContract {
    * @param {string} params.URI
    * @return {Promise<TransactionObject>}
    */
-  setBaseTokenURI = async ({ URI }) => await this.__sendTx(
+  setBaseTokenURI = ({ URI }) => this.__sendTx(
     this.params.contract.getContract().methods.setBaseURI(URI),
   );
 
@@ -203,7 +203,7 @@ class ERC721Collectibles extends IContract {
    * @param {number} params.amount
    * @return {Promise<boolean>}
    */
-  isApproved = async ({ address, amount }) => await this.getERC20Contract().isApproved({
+  isApproved = ({ address, amount }) => this.getERC20Contract().isApproved({
     address,
     amount,
     spenderAddress: this.getAddress(),
@@ -215,8 +215,8 @@ class ERC721Collectibles extends IContract {
    * @param {number} params.amount Amount of packs to open
    * @return {Promise<TransactionObject>}
    */
-  async openPack({ amount }) {
-    return await this.__sendTx(
+  openPack({ amount }) {
+    return this.__sendTx(
       this.params.contract.getContract().methods.openPack(amount),
     );
   }
@@ -226,8 +226,8 @@ class ERC721Collectibles extends IContract {
    * @param {Object} params
    * @param {number} params.tokenID
    */
-  async mint({ tokenID }) {
-    return await this.__sendTx(
+  mint({ tokenID }) {
+    return this.__sendTx(
       this.params.contract.getContract().methods.mint(tokenID),
     );
   }
@@ -238,8 +238,8 @@ class ERC721Collectibles extends IContract {
    * @param {Address} params.purchaseToken
    * @return {Promise<TransactionObject>}
    */
-  async setPurchaseTokenAddress({ purchaseToken }) {
-    return await this.__sendTx(
+  setPurchaseTokenAddress({ purchaseToken }) {
+    return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.setPurchaseTokenAddress(purchaseToken),
@@ -252,8 +252,8 @@ class ERC721Collectibles extends IContract {
    * @param {Address} params.purchaseToken
    * @return {Promise<TransactionObject>}
    */
-  async setStakeAddress({ purchaseToken }) {
-    return await this.__sendTx(
+  setStakeAddress({ purchaseToken }) {
+    return this.__sendTx(
       this.params.contract.getContract().methods.setStakeAddress(purchaseToken),
     );
   }
@@ -264,8 +264,8 @@ class ERC721Collectibles extends IContract {
    * @param {Address} params.purchaseToken
    * @return {Promise<TransactionObject>}
    */
-  async setSwapBackAddress({ purchaseToken }) {
-    return await this.__sendTx(
+  setSwapBackAddress({ purchaseToken }) {
+    return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.setSwapBackAddress(purchaseToken),
@@ -278,8 +278,8 @@ class ERC721Collectibles extends IContract {
    * @param {Address} params.purchaseToken
    * @return {Promise<TransactionObject>}
    */
-  async setFeeAddress({ purchaseToken }) {
-    return await this.__sendTx(
+  setFeeAddress({ purchaseToken }) {
+    return this.__sendTx(
       this.params.contract.getContract().methods.setFeeAddress(purchaseToken),
     );
   }
@@ -290,9 +290,9 @@ class ERC721Collectibles extends IContract {
    * @param {number} amount.newPrice
    * @return {Promise<TransactionObject>}
    */
-  async setPricePerPack({ newPrice }) {
+  setPricePerPack({ newPrice }) {
     const newPriceWithDecimals = Numbers.toSmartContractDecimals(newPrice, 18);
-    return await this.__sendTx(
+    return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.setPricePerPack(newPriceWithDecimals),

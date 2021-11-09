@@ -102,20 +102,16 @@ class Web3Connection {
    * @return {Promise<boolean>}
    */
   async login() {
-    try {
-      if (typeof window === 'undefined') {
-        return false;
-      }
-      if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
-        this.web3 = window.web3;
-        await window.ethereum.enable();
-        return true;
-      }
+    if (typeof window === 'undefined') {
       return false;
-    } catch (err) {
-      throw err;
     }
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      this.web3 = window.web3;
+      await window.ethereum.enable();
+      return true;
+    }
+    return false;
   }
 
   /** ***** */

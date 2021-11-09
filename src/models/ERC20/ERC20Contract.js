@@ -52,12 +52,12 @@ class ERC20Contract extends IContract {
    * @param {Integer} params.tokenAmount Amount of Tokens
    * @returns {Promise<Transaction>} Transaction
    */
-  transferTokenAmount = async ({ toAddress, tokenAmount }) => {
+  transferTokenAmount = ({ toAddress, tokenAmount }) => {
     const amountWithDecimals = Numbers.toSmartContractDecimals(
       tokenAmount,
       this.getDecimals(),
     );
-    return await this.__sendTx(
+    return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.transfer(toAddress, amountWithDecimals),
@@ -70,7 +70,7 @@ class ERC20Contract extends IContract {
    * @param {Address} address User Address
    * @returns {Promise<Transaction>} Transaction
    */
-  getTokenAmount = async address => Numbers.fromDecimals(
+  getTokenAmount = async (address) => Numbers.fromDecimals(
     await this.getContract().methods.balanceOf(address).call(),
     this.getDecimals(),
   );
@@ -106,7 +106,7 @@ class ERC20Contract extends IContract {
    *
    * @return {Promise<number>}
    */
-  getDecimalsAsync = async () => await this.getContract().methods.decimals().call();
+  getDecimalsAsync = () => this.getContract().methods.decimals().call();
 
   /**
    * Verify if Spender is Approved to use tokens
@@ -118,22 +118,18 @@ class ERC20Contract extends IContract {
    * @returns {Promise<boolean>} isApproved
    */
   isApproved = async ({ address, amount, spenderAddress }) => {
-    try {
-      const approvedAmount = Numbers.fromDecimals(
-        await this.getContract()
-          .methods.allowance(address, spenderAddress)
-          .call(),
-        this.getDecimals(),
-      );
+    const approvedAmount = Numbers.fromDecimals(
+      await this.getContract()
+        .methods.allowance(address, spenderAddress)
+        .call(),
+      this.getDecimals(),
+    );
 
-      const amountWithDecimal = Numbers.fromDecimals(
-        amount,
-        this.getDecimals(),
-      );
-      return approvedAmount >= amountWithDecimal;
-    } catch (err) {
-      throw err;
-    }
+    const amountWithDecimal = Numbers.fromDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    return approvedAmount >= amountWithDecimal;
   };
 
   /**
@@ -146,23 +142,19 @@ class ERC20Contract extends IContract {
    * @returns {Promise<Transaction>} Transaction
    */
   approve = async ({ address, amount, callback }) => {
-    try {
-      const amountWithDecimals = Numbers.toSmartContractDecimals(
-        amount,
-        this.getDecimals(),
-      );
-      const res = await this.__sendTx(
-        this.params.contract
-          .getContract()
-          .methods.approve(address, amountWithDecimals),
-        null,
-        null,
-        callback,
-      );
-      return res;
-    } catch (err) {
-      throw err;
-    }
+    const amountWithDecimals = Numbers.toSmartContractDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    const res = await this.__sendTx(
+      this.params.contract
+        .getContract()
+        .methods.approve(address, amountWithDecimals),
+      null,
+      null,
+      callback,
+    );
+    return res;
   };
 
   /**
