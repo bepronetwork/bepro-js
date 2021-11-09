@@ -48,6 +48,7 @@
         "@babel/plugin-syntax-dynamic-import": "^7.0.0",
         "@babel/plugin-syntax-import-meta": "^7.0.0",
         "@babel/preset-env": "^7.0.0",
+        "@babel/runtime": "^7.16.0",
         "@openzeppelin/contracts": "^3.4.1",
         "abi-decoder": "^1.2.0",
         "accounting": "^0.4.1",
