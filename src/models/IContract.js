@@ -18,10 +18,11 @@ import Web3Connection from '../Web3Connection';
  */
 class IContract {
   constructor({
-    web3Connection = null, // Web3Connection if exists, otherwise create one from the rest of params
-    contractAddress = null, // If not deployed
     abi,
+    contractAddress = null, // If not deployed
+    gasFactor = 1, // multiplier for gas estimations, may avoid out-of-gas
     tokenAddress,
+    web3Connection = null, // Web3Connection if exists, otherwise create one from the rest of params
     ...params
   }) {
     if (!abi) {
@@ -36,11 +37,12 @@ class IContract {
     }
 
     this.params = {
-      web3Connection: this.web3Connection,
       abi,
-      contractAddress,
-      tokenAddress,
       contract: new Contract(this.web3Connection.web3, abi, contractAddress),
+      contractAddress,
+      gasFactor,
+      tokenAddress,
+      web3Connection: this.web3Connection,
     };
 
     if (this.web3Connection.test) this._loadDataFromWeb3Connection();
@@ -68,32 +70,39 @@ class IContract {
    * @params [function():void] callback
    * @return {Promise<*>}
    */
-  __sendTx = async (f, call, value, callback = () => {}) => {
-    const __metamaskCall = (acc) => new Promise((resolve, reject) => {
-      f.send({
-        from: acc,
-        value,
-        gasPrice: 5000000000,
-        gas: 5913388,
-      })
-        .on('confirmation', (confirmationNumber, receipt) => {
-          callback(confirmationNumber);
-          if (confirmationNumber > 0) {
-            resolve(receipt);
-          }
-        })
-        .on('error', (err) => {
-          reject(err);
-        });
-    });
-
+  __sendTx = async (method, call, value, callback = () => {}) => {
     if (!this.acc && !call) {
-      const address = await this.web3Connection.getAddress();
-      return __metamaskCall(address);
+      const { params, web3Connection } = this;
+      const from = await web3Connection.getAddress();
+      const gasPrice = await web3Connection.web3.eth.getGasPrice();
+      const { gasFactor } = params;
+
+      const gasAmount = await method.estimateGas({ from })
+        .catch((err) => {
+          throw err;
+        });
+
+      return new Promise((resolve, reject) => {
+        method.send({
+          from,
+          gas: Math.round(gasAmount * gasFactor),
+          gasPrice,
+          value,
+        })
+          .on('confirmation', (confirmationNumber, receipt) => {
+            callback(confirmationNumber);
+            if (confirmationNumber > 0) {
+              resolve(receipt);
+            }
+          })
+          .on('error', (err) => {
+            reject(err);
+          });
+      });
     }
 
     if (this.acc && !call) {
-      const data = f.encodeABI();
+      const data = method.encodeABI();
       return this.params.contract
         .send(this.acc.getAccount(), data, value)
         .catch((err) => {
@@ -102,12 +111,12 @@ class IContract {
     }
 
     if (this.acc && call) {
-      return f.call({ from: this.acc.getAddress() }).catch((err) => {
+      return method.call({ from: this.acc.getAddress() }).catch((err) => {
         throw err;
       });
     }
 
-    return f.call().catch((err) => {
+    return method.call().catch((err) => {
       throw err;
     });
   };
