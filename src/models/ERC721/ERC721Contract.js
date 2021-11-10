@@ -1,5 +1,6 @@
-import { erc721contract } from '../../interfaces';
+import { erc721standard } from '../../interfaces';
 import IContract from '../IContract';
+
 /**
  * ERC721Contract Object
  * @class ERC721Contract
@@ -9,7 +10,7 @@ import IContract from '../IContract';
 
 class ERC721Contract extends IContract {
   constructor(params = {}) {
-    super({ abi: erc721contract, ...params });
+    super({ abi: erc721standard, ...params });
   }
 
   __assert = async () => {
@@ -19,7 +20,7 @@ class ERC721Contract extends IContract {
       );
     }
     /* Use ABI */
-    this.params.contract.use(erc721contract, this.getAddress());
+    this.params.contract.use(erc721standard, this.getAddress());
   };
 
   /**
