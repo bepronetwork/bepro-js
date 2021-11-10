@@ -6,3 +6,5 @@ xunit.xml
 build/
 /docs
 .DS_Store
+
+/built
