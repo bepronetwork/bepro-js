@@ -2,7 +2,7 @@ import { marketplaceRealFvr } from '../../../interfaces';
 import Numbers from '../../../utils/Numbers';
 import IContract from '../../IContract';
 import ERC20Contract from '../../ERC20/ERC20Contract';
-import ERC721Standard from '../../ERC721/ERC721Contract';
+import ERC721Contract from '../../ERC721/ERC721Contract';
 
 /**
  * MarketplaceRealFvr Object
@@ -27,30 +27,38 @@ class MarketplaceRealFvr extends IContract {
     this.params.tokenAddress = await this.getERC20TokenAddress();
     this.params.erc721Address = await this.getERC721TokenAddress();
 
-    // Set Token Address Contract for easy access
-    this.params.ERC20Contract = new ERC20Contract({
-      web3: this.web3,
-      contractAddress: this.params.tokenAddress,
-      acc: this.acc,
-    });
+    if (!this.isETHTransaction) {
+      // Set Token Address Contract for easy access
+      this.params.ERC20Contract = new ERC20Contract({
+        acc: this.acc,
+        contractAddress: this.params.tokenAddress,
+        web3Connection: this.web3Connection,
+      });
+
+      try {
+        // Assert Token Contract
+        await this.params.ERC20Contract.__assert();
+      } catch (err) {
+        throw new Error(`Problem on ERC20 Assert, confirm ERC20 'tokenAddress'${err}`);
+      }
+    }
 
     // Set Token Address Contract for easy access
-    this.params.ERC721Contract = new ERC721Standard({
-      web3: this.web3,
-      contractAddress: this.params.tokenAddress,
+    this.params.ERC721Contract = new ERC721Contract({
       acc: this.acc,
+      contractAddress: this.params.tokenAddress,
+      web3Connection: this.web3Connection,
     });
 
     try {
       // Assert Token Contract
-      await this.params.ERC20Contract.__assert();
       await this.params.ERC721Contract.__assert();
     } catch (err) {
-      throw new Error(`Problem on ERC20 Assert, confirm ERC20 'tokenAddress'${err}`);
+      throw new Error(`Problem on ERC721 Assert, confirm ERC721 'tokenAddress'${err}`);
     }
   };
 
-  isETHTransaction = async () => await this.getERC20TokenAddress() === '0x0000000000000000000000000000000000000000';
+  isETHTransaction = () => this.params.tokenAddress === '0x0000000000000000000000000000000000000000';
 
   /**
    * @function
