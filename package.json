@@ -27,8 +27,8 @@
         "lint": "eslint ./src --cache",
         "lint:fix": "eslint ./src --fix",
         "ganache:start": "ganache-cli -p 8545 -q",
-        "watch": "onchange 'src/**/*.js' -- yarn build",
-        "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && yarn install . && yarn build ) || echo \"Already built\""
+        "watch": "yarn build && onchange 'src/**/*.js' -- yarn build",
+        "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && yarn install && yarn build ) || echo \"Already built\""
     },
     "pre-commit": [
         "lint:fix",
@@ -60,6 +60,7 @@
         "dayjs": "^1.9.4",
         "delay": "^4.4.0",
         "dotenv": "^8.2.0",
+        "electron": "^15.3.1",
         "execution-time": "^1.4.1",
         "express": "^4.17.1",
         "fs": "0.0.1-security",
