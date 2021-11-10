@@ -28,8 +28,12 @@ class IContract {
       throw new Error('No ABI Interface provided');
     }
 
-    if (!web3Connection) this.web3Connection = new Web3Connection(params);
-    else this.web3Connection = web3Connection;
+    if (!web3Connection) {
+      this.web3Connection = new Web3Connection(params);
+      this.web3Connection.start();
+    } else {
+      this.web3Connection = web3Connection;
+    }
 
     this.params = {
       web3Connection: this.web3Connection,
@@ -84,8 +88,8 @@ class IContract {
     });
 
     if (!this.acc && !call) {
-      const accounts = await this.params.web3.eth.getAccounts();
-      return __metamaskCall(accounts[0]);
+      const address = await this.web3Connection.getAddress();
+      return __metamaskCall(address);
     }
 
     if (this.acc && !call) {
@@ -328,7 +332,9 @@ class IContract {
    * @description Start the Web3Connection
    */
   start() {
-    this.web3Connection.start();
+    if (!this.web3Connection.web3) {
+      this.web3Connection.start();
+    }
     this._loadDataFromWeb3Connection();
   }
 

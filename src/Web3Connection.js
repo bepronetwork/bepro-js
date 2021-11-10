@@ -138,7 +138,9 @@ class Web3Connection {
    * @return {Promise<string>} Address in Use
    */
   async getAddress() {
-    if (this.account) return this.account.getAddress();
+    if (this.account) {
+      return this.account.getAddress();
+    }
 
     const accounts = await this.web3.eth.getAccounts();
     return accounts[0];
