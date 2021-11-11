@@ -77,7 +77,7 @@ class IContract {
       const gasPrice = await web3Connection.web3.eth.getGasPrice();
       const { gasFactor } = params;
 
-      const gasAmount = await method.estimateGas({ from })
+      const gasAmount = await method.estimateGas({ from, value })
         .catch((err) => {
           throw err;
         });
