@@ -175,6 +175,12 @@ await stakingTest.availableTokens();
 
 ```
 
+Application can be initialized with a web3 provider directly, but all connection login is assumed to be on the consumer side in this case; i.e. no need to call start() or login(), that logic should be handled separately within the provider itself or by the consumer.
+
+```javascript
+let app = new Application({ opt: { provider: window.ethereum } });
+```
+
 ## Contribution
 
 Contributions are welcomed but we ask to red existing code guidelines, specially the code format. Please review [Contributor guidelines][1]

@@ -48,7 +48,7 @@ class Network extends IContract {
       contractAddress: beproAddress,
     });
     // Assert Token Contract
-    await this.params.settlerToken.login();
+    await this.params.settlerToken.start();
     await this.params.settlerToken.__assert();
   };
 

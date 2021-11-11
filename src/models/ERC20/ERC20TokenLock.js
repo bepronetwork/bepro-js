@@ -298,7 +298,7 @@ class ERC20TokenLock extends IContract {
       });
     }
     /* Assert Token Contract */
-    await this.params.ERC20Contract.login();
+    await this.params.ERC20Contract.start();
     await this.params.ERC20Contract.__assert();
   };
 
