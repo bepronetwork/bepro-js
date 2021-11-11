@@ -86,6 +86,19 @@ class ERC721Collectibles extends IContract {
   }
 
   /**
+   * show balance of address
+   * @param {Object} params
+   * @param {Address} params.address
+   * @return {Promise<TransactionObject>}
+   */
+  balanceOf({ address }) {
+    return this.__sendTx(
+      this.params.contract.getContract().methods.balanceOf(address),
+      true,
+    );
+  }
+
+  /**
    * Verify if it is limited
    * @returns {Promise<boolean>}
    */
