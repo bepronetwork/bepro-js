@@ -81,8 +81,7 @@ class Web3Connection {
   start(provider) {
     if (provider) {
       this.web3 = new Web3(provider);
-    }
-    else if (this.localtest) {
+    } else if (this.localtest) {
       this.web3 = new Web3(
         new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST),
         // NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
