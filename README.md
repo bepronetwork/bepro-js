@@ -203,6 +203,18 @@ await staking.availableTokens();
 await stakingTest.availableTokens();
 ```
 
+### Gas Fees
+
+Transaction fees are automatically calculated via web3's own estimations. We can initialize a contract with a `gasFactor` parameter that will be applied to every calculated fee, in order to overestimate and avoid out-of-gas transaction errors if necessary.
+
+```javascript
+let staking = new StakingContract({
+  contractAddress,
+  gasFactor: 1.25 // default 1
+  opt: { provider, },
+});
+```
+
 ## Contribution
 
 Contributions are welcomed but we ask to red existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
