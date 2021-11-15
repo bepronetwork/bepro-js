@@ -215,6 +215,10 @@ let staking = new StakingContract({
 });
 ```
 
+Estimated gas fees leverage the following web3 functionalities:
+- [chain's getGasPrice()](https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#getgasprice)
+- [contract method's estimateGas()](https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=estimateGas#methods-mymethod-estimategas)
+
 ## Contribution
 
 Contributions are welcomed but we ask to red existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
