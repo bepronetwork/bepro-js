@@ -1,14 +1,15 @@
-/* eslint-disable global-require */
+/* eslint-disable global-require , import/no-unresolved, import/no-extraneous-dependencies */
 const index = {
-  exchange: require('../../build/contracts/Exchange.json'),
-  staking: require('../../build/contracts/StakingContract.json'),
-  tokenlock: require('../../build/contracts/ERC20TokenLock.json'),
-  ierc20: require('../../build/contracts/Token.json'),
-  erc721collectibles: require('../../build/contracts/ERC721Colectibles.json'),
-  erc721contract: require('../../build/contracts/ERC721Standard.json'),
-  beproNetwork: require('../../build/contracts/BEPRONetwork.json'),
-  openerRealFvr: require('../../build/contracts/OpenerRealFvr.json'),
-  marketplaceRealFvr: require('../../build/contracts/MarketplaceRealFvr.json'),
+  staking: require('../contracts/StakingContract.json'),
+  voting: require('../contracts/Votable.json'),
+  tokenlock: require('../contracts/ERC20TokenLock.json'),
+  ierc20: require('../contracts/Token.json'),
+  erc721collectibles: require('../contracts/ERC721Colectibles.json'),
+  erc721standard: require('../contracts/ERC721Standard.json'),
+  network: require('../contracts/Network.json'),
+  networkFactory: require('../contracts/NetworkFactory.json'),
+  openerRealFvr: require('../contracts/OpenerRealFvr.json'),
+  marketplaceRealFvr: require('../contracts/MarketplaceRealFvr.json'),
 };
 
 module.exports = index;

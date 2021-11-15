@@ -40,6 +40,7 @@ contract StakingContract is Pausable, Ownable {
         uint256 endDate;
         uint256 totalMaxAmount;
         uint256 individualMinimumAmount;
+        uint256 individualMaximumAmount; /* FIX PF */
         uint256 APR; /* APR for this product */
         uint256 currentAmount;
         bool lockedUntilFinalization; /* Product can only be withdrawn when finalized */
@@ -72,32 +73,38 @@ contract StakingContract is Pausable, Ownable {
 
         uint256 time = block.timestamp;
         /* Confirm Amount is positive */
-        require(_amount > 0);
+        require(_amount > 0, "Amount has to be bigger than 0");
      
         /* Confirm user has at least one NFT */
         require(IERC721(erc721).balanceOf(msg.sender) > 0, "Must hold at least 1 NFT");
         
         /* Confirm product still exists */
-        require(block.timestamp < products[_product_id].endDate);
+        require(block.timestamp < products[_product_id].endDate, "Already ended the subscription");
 
         /* Confirm Subscription prior to opening */
         if(block.timestamp < products[_product_id].startDate){
             time = products[_product_id].startDate;
         }
+
+        /* Confirm the user has funds for the transfer */
+        require(_amount <= erc20.allowance(msg.sender, address(this)), "Spender not authorized to spend this tokens, allow first");
         
         /* Confirm Max Amount was not hit already */
-        require(products[_product_id].totalMaxAmount > (products[_product_id].currentAmount + _amount));
+        require(products[_product_id].totalMaxAmount > (products[_product_id].currentAmount + _amount), "Max Amount was already hit");
 
         /* Confirm Amount is bigger than minimum Amount */
-        require(_amount >= products[_product_id].individualMinimumAmount);
+        require(_amount >= products[_product_id].individualMinimumAmount, "Has to be highger than minimum");
+        
+        /* Confirm Amount is smaller than maximum Amount */ /* FIX PF */
+        require(_amount <= products[_product_id].individualMaximumAmount, "Has to be smaller than maximum");
         
         uint256 futureAPRAmount = getAPRAmount(products[_product_id].APR, time, products[_product_id].endDate, _amount);
 
         /* Confirm the current funds can assure the user the APR is valid */
-        require(availableTokens() >= futureAPRAmount);
+        require(availableTokens() >= futureAPRAmount, "Available Tokens has to be higher than the future APR Amount");
 
         /* Confirm the user has funds for the transfer */
-        require(erc20.transferFrom(msg.sender, address(this), _amount));
+        require(erc20.transferFrom(msg.sender, address(this), _amount), "Transfer Failed");
 
         /* Add to LockedTokens */
         lockedTokens = lockedTokens.add(_amount.add(futureAPRAmount));
@@ -117,7 +124,7 @@ contract StakingContract is Pausable, Ownable {
         products[_product_id].subscribers.push(msg.sender);
     }
 
-    function createProduct(uint256 _startDate, uint256 _endDate, uint256 _totalMaxAmount, uint256 _individualMinimumAmount, uint256 _APR, bool _lockedUntilFinalization) external whenNotPaused onlyOwner {
+    function createProduct(uint256 _startDate, uint256 _endDate, uint256 _totalMaxAmount, uint256 _individualMinimumAmount, uint256 _individualMaximumAmount, uint256 _APR, bool _lockedUntilFinalization) external whenNotPaused onlyOwner {
 
         /* Confirmations */
         require(block.timestamp < _endDate);
@@ -125,14 +132,16 @@ contract StakingContract is Pausable, Ownable {
         require(_startDate < _endDate);
         require(_totalMaxAmount > 0);
         require(_individualMinimumAmount > 0);
+        require(_individualMaximumAmount > 0);
         require(_totalMaxAmount > _individualMinimumAmount);
+        require(_totalMaxAmount > _individualMaximumAmount);
         require(_APR > 0);
 
         address[] memory addressesI;
         uint256[] memory subscriptionsI;
         
         /* Create ProductAPR Object */
-        ProductAPR memory productAPR = ProductAPR(block.timestamp, _startDate, _endDate, _totalMaxAmount, _individualMinimumAmount, _APR, 0, _lockedUntilFinalization,
+        ProductAPR memory productAPR = ProductAPR(block.timestamp, _startDate, _endDate, _totalMaxAmount, _individualMinimumAmount, _individualMaximumAmount, _APR, 0, _lockedUntilFinalization,
             addressesI, subscriptionsI);
 
         uint256 product_id = productIds.length + 1;
@@ -210,12 +219,12 @@ contract StakingContract is Pausable, Ownable {
             subscription.amount, subscription.subscriberAddress, subscription.APR, subscription.finalized, subscription.withdrawAmount);
     }
     
-    function getProduct(uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256, bool, address[] memory, uint256[] memory){
+    function getProduct(uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256, bool, address[] memory, uint256[] memory){
 
         ProductAPR memory product = products[_product_id];
 
         return (product.createdAt, product.startDate, product.endDate, product.totalMaxAmount, 
-            product.individualMinimumAmount, product.APR, product.currentAmount, product.lockedUntilFinalization,
+            product.individualMinimumAmount, product.individualMaximumAmount, product.APR, product.currentAmount, product.lockedUntilFinalization,
             product.subscribers, product.subscriptionIds
         );
     }

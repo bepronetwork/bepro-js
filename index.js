@@ -1,5 +1,3 @@
-import Application from './build/Application';
+const app = require('./build/index.js');
 
-export {
-  Application,
-};
+module.exports = app;

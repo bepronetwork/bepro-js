@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import { erc721contract } from '../../interfaces';
+import { erc721standard } from '../../interfaces';
 import IContract from '../IContract';
+
 /**
  * ERC721Contract Object
  * @class ERC721Contract
@@ -10,7 +10,7 @@ import IContract from '../IContract';
 
 class ERC721Contract extends IContract {
   constructor(params = {}) {
-    super({ abi: erc721contract, ...params });
+    super({ abi: erc721standard, ...params });
   }
 
   __assert = async () => {
@@ -20,7 +20,7 @@ class ERC721Contract extends IContract {
       );
     }
     /* Use ABI */
-    this.params.contract.use(erc721contract, this.getAddress());
+    this.params.contract.use(erc721standard, this.getAddress());
   };
 
   /**
@@ -28,8 +28,8 @@ class ERC721Contract extends IContract {
    * @description Verify if token ID exists
    * @returns {Integer} Token Id
    */
-  async exists({ tokenID }) {
-    return await this.params.contract
+  exists({ tokenID }) {
+    return this.params.contract
       .getContract()
       .methods.exists(tokenID)
       .call();
@@ -40,8 +40,8 @@ class ERC721Contract extends IContract {
    * @description Verify what is the getURITokenID
    * @returns {String} URI
    */
-  async getURITokenID({ tokenID }) {
-    return await this.params.contract
+  getURITokenID({ tokenID }) {
+    return this.params.contract
       .getContract()
       .methods.tokenURI(tokenID)
       .call();
@@ -52,8 +52,8 @@ class ERC721Contract extends IContract {
    * @description Verify what is the baseURI
    * @returns {String} URI
    */
-  async baseURI() {
-    return await this.params.contract.getContract().methods.baseURI().call();
+  baseURI() {
+    return this.params.contract.getContract().methods.baseURI().call();
   }
 
   /**
@@ -61,8 +61,8 @@ class ERC721Contract extends IContract {
    * @description Get name
    * @returns {String} Name
    */
-  async name() {
-    return await this.params.contract.getContract().methods.name().call();
+  name() {
+    return this.params.contract.getContract().methods.name().call();
   }
 
   /**
@@ -70,15 +70,15 @@ class ERC721Contract extends IContract {
    * @description Get Symbol
    * @returns {String} Symbol
    */
-  async symbol() {
-    return await this.params.contract.getContract().methods.symbol().call();
+  symbol() {
+    return this.params.contract.getContract().methods.symbol().call();
   }
 
   /**
    * @function
    * @description Set Base Token URI
    */
-  setBaseTokenURI = async ({ URI }) => await this.__sendTx(
+  setBaseTokenURI = ({ URI }) => this.__sendTx(
     this.params.contract.getContract().methods.setBaseURI(URI),
   );
 
@@ -89,8 +89,8 @@ class ERC721Contract extends IContract {
    * @param {Address} to Address to send to
    * @param {Integer} tokenId Token Id to use
    */
-  async mint({ to, tokenId }) {
-    return await this.__sendTx(
+  mint({ to, tokenId }) {
+    return this.__sendTx(
       this.params.contract.getContract().methods.mint(to, tokenId),
     );
   }
@@ -102,8 +102,8 @@ class ERC721Contract extends IContract {
    * @param {Address} to Address to send to
    * @param {Integer} tokenId Token Id to use
    */
-  async approve({ to, tokenId }) {
-    return await this.__sendTx(
+  approve({ to, tokenId }) {
+    return this.__sendTx(
       this.params.contract.getContract().methods.approve(to, tokenId),
     );
   }
@@ -115,8 +115,8 @@ class ERC721Contract extends IContract {
    * @param {Address} to Address to approve to
    * @param {Bool} approve If to approve or disapprove
    */
-  async setApprovalForAll({ to, approve = true }) {
-    return await this.__sendTx(
+  setApprovalForAll({ to, approve = true }) {
+    return this.__sendTx(
       this.params.contract.getContract().methods.setApprovalForAll(to, approve),
     );
   }
@@ -128,8 +128,8 @@ class ERC721Contract extends IContract {
    * @param {Address} from Address to approve from
    * @param {Address} to Address to approve to
    */
-  async isApprovedForAll({ from, to }) {
-    return await this.params.contract
+  isApprovedForAll({ from, to }) {
+    return this.params.contract
       .getContract()
       .methods.isApprovedForAll(from, to)
       .call();

@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "airbnb-base"
+  ],
+
+  "globals": {
+    "window": true
+  },
+
+  "parser": "@babel/eslint-parser",
+
+  "root": true,
+
+  "rules": {
+    "camelcase": 0,
+    "max-len": ["warn", 120, 2, {
+      "ignoreUrls": true,
+      "ignoreComments": false,
+      "ignoreRegExpLiterals": true,
+      "ignoreStrings": true,
+      "ignoreTemplateLiterals": true
+    }],
+    "no-prototype-builtins": 0,
+    "no-underscore-dangle": 0
+  }
+}
