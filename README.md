@@ -79,7 +79,7 @@ Now, your work directory is able to install and run bepro-js.
 sudo curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
 ```
 
-**Notice**:If you already have Docker installed, this script can cause trouble. If you installed the current Docker package using this script and are using it again to update Docker. Or use official installation instructions: [Mac](https://docs.docker.com/docker-for-mac/install/), [Windows](https://docs.docker.com/docker-for-windows/install/), [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/), [Other](https://docs.docker.com/install/#supported-platforms).
+**Notice**: If you already have Docker installed, this script can cause trouble. If you installed the current Docker package using this script and are using it again to update Docker. Or use official installation instructions: [Mac](https://docs.docker.com/docker-for-mac/install/), [Windows](https://docs.docker.com/docker-for-windows/install/), [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/), [Other](https://docs.docker.com/install/#supported-platforms).
 
 ##### Docker Compose:
 
@@ -131,29 +131,41 @@ make down
 docker-compose up
 ```
 
+## Documentation
+
+Full API docs can be found at https://bepronetwork.github.io/bepro-js/
+
 ## Usage
 
-https://bepronetwork.github.io/bepro-js/
+### Initialization
+
+#### Via WEB3_LINK from any Web3 Provider
+
+Note: `WEB3_LINK` should be get from Infura/Quicknode or any other Web3 Provider - ETH, BSC, Moonbeam and others are supported
 
 ```javascript
-
-/* Note :  WEB3_LINK should be get from Infura/Quicknode or any other Web3 Provider - ETH, BSC, Moonbeam and others are supported */
-
-import moment from 'moment';
 import {
     Application, DexStorage, ERC20Contract, StakingContract,
     ERC20TokenLock, ERC721Collectibles, ERC721Standard
 } from 'bepro-js';
 
 /* 1.1 - Instantiate the App for Metamask functionality (MAINNET) */
-let app = new Application({ opt : { web3Connection : 'WEB3_LINK' } });
+let app = new Application({
+  opt: { web3Connection: 'WEB3_LINK' },
+});
 
 /* 1.2 - Instantiate StakingContract Object or any other in a similar way (Staking, ERC20 etc..) */
 // - MAINNET
-let staking = new StakingContract({ contractAddress : null, /* Contract Address (optional) */
-                                    opt : { web3Connection : 'WEB3_LINK' } });
+let staking = new StakingContract({
+  contractAddress: null, /* Contract Address (optional) */
+  opt: { web3Connection: 'WEB3_LINK' },
+});
+
 // - TEST net e.g. Rinkeby
-let stakingTest = new StakingContract({ test : true, contractAddress : /* Contract Address (optional) */ });
+let stakingTest = new StakingContract({
+  test: true,
+  contractAddress: null, /* Contract Address (optional) */
+});
 
 /* 2 - Connect the App/Contract to the Metamask Web3 Injected wallet*/
 await app.login();
@@ -161,24 +173,34 @@ await staking.login();
 /* or instantiate with the provided web3Connection, for tests it was already done at object creation */
 await app.start();
 await staking.start();
+```
 
+#### Via leveraged Web3 Provider
+
+Application can be initialized with a web3 provider directly, but all connection login is assumed to be on the consumer side in this case; i.e. no need to call start() or login(), that logic should be handled separately within the provider itself or by the consumer.
+
+```javascript
+// Use Metamask's provider, could be any other compatible Web3 Provider object from any other lib
+let app = new Application({ opt: { provider: window.ethereum } });
+```
+
+### Asserting and Deploying contracts
+
+```javascript
 /* 4 - Assert all object data */
 await staking.__assert();
 await stakingTest.__assert();
 /* or deploy the contract*/
 await staking.deploy();
 await stakingTest.deploy();
+```
 
+### Accessing methods
+
+```javascript
 /* 5 - Access other Methods */
 await staking.availableTokens();
 await stakingTest.availableTokens();
-
-```
-
-Application can be initialized with a web3 provider directly, but all connection login is assumed to be on the consumer side in this case; i.e. no need to call start() or login(), that logic should be handled separately within the provider itself or by the consumer.
-
-```javascript
-let app = new Application({ opt: { provider: window.ethereum } });
 ```
 
 ## Contribution
