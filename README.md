@@ -2,7 +2,7 @@
 
 ## Introductions
 
-`bepro-js#feature/prediction-markets` is the BEPRO sdk to integrate Prediction Markets in a dapp.
+`bepro-js#feature/prediction-markets` is the BEPRO Javascript SDK to integrate Prediction Markets into any dapp.
 
 ## Installation
 
@@ -22,7 +22,7 @@ yarn add https://github.com/bepronetwork/bepro-js.git#feature/prediction-markets
 
 ### Initializing App
 
-`bepro-js` is library initialization is performed in [`Application.js`](https://github.com/bepronetwork/bepro-js/blob/feature/prediction-markets/src/Application.js).
+`bepro-js` library initialization is performed in [`Application.js`](https://github.com/bepronetwork/bepro-js/blob/feature/prediction-markets/src/Application.js).
 
 You'll need to provide a web3 RPC provider (e.g., Infura for Ethereum dapps)
 
