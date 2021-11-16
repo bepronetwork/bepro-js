@@ -71,15 +71,10 @@ class IContract {
 
   /**
    *
-   * @type {boolean}
+   * @type {number}
    * @private
    */
-  _customGasPrice = false;
-
-  async lastBlockGasPrice() {
-    const web3 = await this.params.web3;
-    return web3.eth.getBlockNumber().then(web3.eth.getBlock).then(b => b.gasUsed).then(web3.utils.toBN);
-  }
+  _customGasPrice = 0;
 
   /**
    * @function
