@@ -9,6 +9,7 @@ import Web3Connection from '../Web3Connection';
  * @property {string} tokenAddress
  * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
+ * @property {boolean} [useLastBlockGasPriceWhenMetaSend]
  */
 
 /**
@@ -40,6 +41,11 @@ class IContract {
       };
 
       if (this.web3Connection.test) this._loadDataFromWeb3Connection();
+
+      if (params.useLastBlockGasPriceWhenMetaSend) {
+        this._customGasPrice = true;
+        console.log('Should use customGasPrice');
+      }
     } catch (err) {
       throw err;
     }
@@ -64,6 +70,18 @@ class IContract {
   };
 
   /**
+   *
+   * @type {boolean}
+   * @private
+   */
+  _customGasPrice = false;
+
+  async lastBlockGasPrice() {
+    const web3 = await this.params.web3;
+    return web3.eth.getBlockNumber().then(web3.eth.getBlock).then(b => b.gasUsed).then(web3.utils.toBN);
+  }
+
+  /**
    * @function
    * @params [Object] params
    * @params {*} params.f
@@ -78,7 +96,7 @@ class IContract {
     f.send({
       from: acc,
       value,
-      gas: 591338,
+      gas: this._customGasPrice && await this.lastBlockGasPrice() || 591338,
     })
       .on('confirmation', (confirmationNumber, receipt) => {
         callback(confirmationNumber);
