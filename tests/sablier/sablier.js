@@ -1,31 +1,17 @@
 //const project_root = process.cwd();
 //const { dappConstants, devConstants } = require("../../src/sablier/dev-utils");
 
-//import { expect, assert } from "chai";
-//import moment from "moment";
-//import delay from "delay";
-//import { mochaAsync, mochaContextAsync } from "../utils";
-//import { ERC20Contract, Sablier, ETHUtils } from "../../build";
-//import CERC20Mock from '../../build/models/mocks/CERC20Mock';
-//import ERC20Mock  from '../../build/models/mocks/ERC20Mock';
-//import Numbers from "../../build/utils/Numbers";
-
-//import beproAssert from '../../build/utils/beproAssert';
-//import { MaxUint128, MaxUint256 } from '../shared/utilities';
-
 //const truffleAssert = require("truffle-assertions");
+const traveler = require("ganache-time-traveler");
+const BigNumber = require("bignumber.js");
 
-//const traveler = require("ganache-time-traveler");
+const { chaiPlugin } = require("../../src/sablier/dev-utils");
+const chai = require("chai");
+const chaiBigNumber = require("chai-bignumber");
 
-//const { chaiPlugin } = require("../../src/sablier/dev-utils");
-
-//const BigNumber = require("bignumber.js");
-//const chai = require("chai");
-//const chaiBigNumber = require("chai-bignumber");
-
-//chai.should();
-//chai.use(chaiBigNumber(BigNumber));
-//chai.use(chaiPlugin);
+chai.should();
+chai.use(chaiBigNumber(BigNumber));
+chai.use(chaiPlugin);
 
 //const { INITIAL_EXCHANGE_RATE, STANDARD_SALARY } = dappConstants;
 //const { STANDARD_SABLIER_FEE } = dappConstants;

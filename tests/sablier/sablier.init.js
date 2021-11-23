@@ -1,38 +1,21 @@
 //const { devConstants } = require("@sablier/dev-utils");
 //const project_root = process.cwd();
-const { dappConstants, devConstants } = require("../../src/sablier/dev-utils");
+//const { dappConstants, devConstants } = require("../../src/sablier/dev-utils");
 
 import { expect, assert } from "chai";
-import moment from "moment";
-import delay from "delay";
+//import moment from "moment";
+//import delay from "delay";
 import { mochaAsync, mochaContextAsync } from "../utils";
 import { ERC20Contract, Sablier, ETHUtils } from "../../build";
-import CERC20Mock from '../../build/models/mocks/CERC20Mock';
-import ERC20Mock  from '../../build/models/mocks/ERC20Mock';
-import Numbers from "../../build/utils/Numbers";
+//import ERC20Mock  from '../../build/models/mocks/ERC20Mock';
+//import Numbers from "../../build/utils/Numbers";
 
-import beproAssert from '../../build/utils/beproAssert';
-import { MaxUint128, MaxUint256 } from '../shared/utilities';
+//import beproAssert from '../../build/utils/beproAssert';
 
-const truffleAssert = require("truffle-assertions");
+//const truffleAssert = require("truffle-assertions");
+//const traveler = require("ganache-time-traveler");
+//const BigNumber = require("bignumber.js");
 
-const traveler = require("ganache-time-traveler");
-
-const { chaiPlugin } = require("../../src/sablier/dev-utils");
-
-const BigNumber = require("bignumber.js");
-const chai = require("chai");
-const chaiBigNumber = require("chai-bignumber");
-
-chai.should();
-chai.use(chaiBigNumber(BigNumber));
-chai.use(chaiPlugin);
-
-const { INITIAL_EXCHANGE_RATE, STANDARD_SALARY } = dappConstants;
-const { STANDARD_SABLIER_FEE } = dappConstants;
-
-var deployed_tokenAddress;
-const ethAmount = 0.1;
 let contractAddress = "0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64";
 // this is already deployed on rinkeby network for testing
 // var deployed_contractAddress = '0xf7177df4a4797304cf59aa1e2dd4718cb390cbad';
