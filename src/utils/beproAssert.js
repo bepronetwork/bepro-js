@@ -41,12 +41,12 @@ const getPrettyEventString = (eventType, args) => {
  */
 const getPrettyEmittedEventsString = (result, indentationSize) => {
   const indentation = ' '.repeat(indentationSize);
-  if (!result.events || Object.values(result.events).length === 0) {
+  if (!result.events || Object.values(result.events).flat().length === 0) {
     return `${indentation}No events emitted in tx ${result.tx}\n`;
   }
   let string = `${indentation}Events emitted in tx ${result.tx}:\n`;
   string += `${indentation}----------------------------------------------------------------------------------------\n`;
-  Object.values(result.events).forEach((emittedEvent) => {
+  Object.values(result.events).flat().forEach((emittedEvent) => {
     string += `${indentation}${getPrettyEventString(emittedEvent.event, emittedEvent.returnValues)}\n`;
   });
   string += `${indentation}----------------------------------------------------------------------------------------\n`;
@@ -55,7 +55,7 @@ const getPrettyEmittedEventsString = (result, indentationSize) => {
 
 const assertEventEmittedFromTxResult = (result, eventType, filter, message) => {
   /* Filter correct event types */
-  const events = Object.values(result.events).filter(entry => entry.event === eventType);
+  const events = Object.values(result.events).flat().filter(entry => entry.event === eventType);
 
   // TODO: Move the getPrettyEmittedEventsString to the assertion functions
   assertEventListNotEmpty(events, message, `Event of type ${eventType} was not emitted\n${getPrettyEmittedEventsString(result)}`);
@@ -74,7 +74,7 @@ const assertEventEmittedFromTxResult = (result, eventType, filter, message) => {
 
 const assertEventNotEmittedFromTxResult = (result, eventType, filter, message) => {
   /* Filter correct event types */
-  const events = Object.values(result.events).filter(entry => entry.event === eventType);
+  const events = Object.values(result.events).flat().filter(entry => entry.event === eventType);
 
   /* Only check filtered events if there is no provided filter function */
   if (filter === undefined || filter === null) {

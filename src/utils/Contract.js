@@ -1,10 +1,11 @@
 class Contract {
-  constructor(web3, contract_json, address) {
-    this.web3 = web3;
+  constructor(web3Connection, contract_json, address) {
+    this.web3Connection = web3Connection;
+    this.web3 = web3Connection.getWeb3();
     this.json = contract_json;
     this.abi = contract_json.abi;
     this.address = address;
-    this.contract = new web3.eth.Contract(contract_json.abi, address);
+    this.contract = new this.web3.eth.Contract(contract_json.abi, address);
   }
 
   async deploy(account, abi, byteCode, args = [], callback = () => {}) {
@@ -31,11 +32,11 @@ class Contract {
               }
             });
         } else {
-          const accounts = await this.web3.eth.getAccounts();
+          const userAddress = await this.web3Connection.getAddress();
           const res = await this.__metamaskDeploy({
             byteCode,
             args,
-            acc: accounts[0],
+            acc: userAddress,
             callback,
           });
           this.address = res.contractAddress;
@@ -49,7 +50,7 @@ class Contract {
 
   __metamaskDeploy = async ({
     byteCode, args, acc, callback = () => {},
-  }) => new Promise((resolve, reject) => {
+  }) => new Promise(async (resolve, reject) => {
     try {
       this.getContract()
         .deploy({
@@ -58,11 +59,6 @@ class Contract {
         })
         .send({
           from: acc,
-          // BUGFIX: without gas and gasPrice set here, we get the following error:
-          // Error: Node error: {"message":"base fee exceeds gas limit","code":-32000,"data":{"stack":"Error: base fee exceeds gas limit
-          // ,gasPrice : 180000000000
-          // ,gas : 5913388
-          gasPrice: 20000000000,
           gas: 5913388, // 6721975
         })
         .on('confirmation', (confirmationNumber, receipt) => {
@@ -93,7 +89,7 @@ class Contract {
         from: account.address,
         to: this.address,
         gas: 4430000,
-        gasPrice: 200000000000,
+        gasPrice: await this.web3.eth.getGasPrice(),
         value: value || '0x0',
       };
 

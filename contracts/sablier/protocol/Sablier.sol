@@ -19,24 +19,16 @@ import "../../IERC20View.sol";
 contract Sablier is IERC1620, Ownable, PausableWithoutRenounce, Exponential, ReentrancyGuard {
     /*** Storage Properties ***/
 
-    /**
-     * @notice In Exp terms, 1e18 is 1, or 100%
-     */
+    // In Exp terms, 1e18 is 1, or 100%
     uint256 constant hundredPercent = 1e18;
 
-    /**
-     * @notice In Exp terms, 1e16 is 0.01, or 1%
-     */
+    // In Exp terms, 1e16 is 0.01, or 1%
     uint256 constant onePercent = 1e16;
 
-    /**
-     * @notice Stores information about the initial state of the underlying of the cToken.
-     */
+    // Stores information about the initial state of the underlying of the cToken.
     mapping(uint256 => Types.CompoundingStreamVars) private compoundingStreamsVars;
 	
-    /**
-     * @notice The amount of interest has been accrued per token address.
-     */
+    // The amount of interest has been accrued per token address.
     mapping(address => uint256) private earnings;
 
     /**
@@ -49,9 +41,7 @@ contract Sablier is IERC1620, Ownable, PausableWithoutRenounce, Exponential, Ree
      */
     uint256 public nextStreamId;
 
-    /**
-     * @notice The stream objects identifiable by their unsigned integer ids.
-     */
+    // The stream objects identifiable by their unsigned integer ids.
     mapping(uint256 => Types.Stream) private streams;
 
     /*** Events ***/

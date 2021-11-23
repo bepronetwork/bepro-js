@@ -7,7 +7,7 @@ module.exports = {
   FIVE_UNITS: new BigNumber(5), // .multipliedBy(1e18),
   FIVE_UNITS_CTOKEN: new BigNumber(5), // .multipliedBy(1e8),
   GAS_LIMIT: 6721975,
-  INITIAL_EXCHANGE_RATE: new BigNumber(2e8), // 26-18 //new BigNumber(2e26),
+  // INITIAL_EXCHANGE_RATE: new BigNumber(2e8), // 26-18 //new BigNumber(2e26),
   INITIAL_SUPPLY: STANDARD_SALARY.multipliedBy(1000),
   ONE_PERCENT_MANTISSA: new BigNumber(1), // new BigNumber(1e16),
   ONE_UNIT: new BigNumber(1), // .multipliedBy(1e18),

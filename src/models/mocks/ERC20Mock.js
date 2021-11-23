@@ -43,7 +43,7 @@ class ERC20Mock extends ERC20Contract {
       amount,
       decimals,
     );
-    console.log('ERC20Mock.mint: ', amountWithDecimals);
+    // console.log('ERC20Mock.mint: ', amountWithDecimals);
     return await this.__sendTx(this.getWeb3Contract().methods.mint(to, amountWithDecimals));
   }
 
