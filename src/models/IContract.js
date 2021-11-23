@@ -92,7 +92,7 @@ class IContract {
       from: acc,
       value,
       gas: 591338,
-      ...this._customGasPrice && { gasPrice: this._customGasPrice } || {},
+      ...this._customGasPrice && ({ gasPrice: this._customGasPrice } || {}),
     })
       .on('confirmation', (confirmationNumber, receipt) => {
         callback(confirmationNumber);
