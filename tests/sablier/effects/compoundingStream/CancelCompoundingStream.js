@@ -1,10 +1,8 @@
-//const { dappConstants, mochaContexts } = require("@sablier/dev-utils");
-const project_root = process.cwd();
-const { dappConstants, mochaContexts } = require(project_root + "/src/sablier/dev-utils");
+const { dappConstants, mochaContexts } = require("../../../../src/sablier/dev-utils");
 const BigNumber = require("bignumber.js");
 const dayjs = require("dayjs");
 const truffleAssert = require("truffle-assertions");
-const beproAssert = require(project_root + "/src/utils/beproAssert");
+const beproAssert = require("../../../../build/utils/beproAssert");
 
 const { contextForStreamDidEnd, contextForStreamDidStartButNotEnd } = mochaContexts;
 
@@ -21,12 +19,14 @@ const {
   STANDARD_TIME_DELTA,
 } = dappConstants;
 
+const sablierUtils = require("../../sablier.utils");
+
 let sender;
 let recipient;
 let deposit;
 let streamId;
 
-function runTests(_this) {
+function runTests() {
   describe("when there were no withdrawals", () => {
     describe("when the stream did not start", () => {
       it("cancels the stream", async () => {
@@ -48,7 +48,7 @@ function runTests(_this) {
       it("transfers the tokens and pays the interest to the sender of the stream", async () => {
         const balance = await _this.cToken.balanceOf(sender);
         const { senderInterest } = await _this.sablier.interestOf({ streamId, amount: recipientBalance });
-	    await _this.sablier.cancelStream({ streamId });
+	      await _this.sablier.cancelStream({ streamId });
         const newBalance = await _this.cToken.balanceOf(sender);
         const tolerateByAddition = false;
         newBalance.should.tolerateTheBlockTimeVariation(
@@ -89,14 +89,12 @@ function runTests(_this) {
 
       it("emits a cancelstream event", async () => {
         const result = await _this.sablier.cancelStream({ streamId });
-        //truffleAssert.eventEmitted(result, "CancelStream");
-		beproAssert.eventEmitted(result, "CancelStream");
+        beproAssert.eventEmitted(result, "CancelStream");
       });
 
       it("emits a payinterest event", async () => {
         const result = await _this.sablier.cancelStream({ streamId });
-        //truffleAssert.eventEmitted(result, "PayInterest");
-		beproAssert.eventEmitted(result, "PayInterest");
+        beproAssert.eventEmitted(result, "PayInterest");
       });
     });
 
@@ -122,7 +120,7 @@ function runTests(_this) {
         const { senderInterest, sablierInterest } = await _this.sablier.interestOf({ streamId, amount: recipientBalance });
         await _this.sablier.cancelStream({ streamId });
         const netWithdrawalAmount = new BigNumber(recipientBalance).minus(senderInterest).minus(sablierInterest);
-	    const newBalance = await _this.cToken.balanceOf(recipient);
+	      const newBalance = await _this.cToken.balanceOf(recipient);
         newBalance.should.be.bignumber.equal(balance.plus(netWithdrawalAmount));
       });
 
@@ -145,14 +143,12 @@ function runTests(_this) {
 
       it("emits a cancelstream event", async () => {
         const result = await _this.sablier.cancelStream({ streamId });
-        //truffleAssert.eventEmitted(result, "CancelStream");
-		beproAssert.eventEmitted(result, "CancelStream");
+        beproAssert.eventEmitted(result, "CancelStream");
       });
 
       it("emits a payinterest event", async () => {
         const result = await _this.sablier.cancelStream({ streamId });
-        //truffleAssert.eventEmitted(result, "PayInterest");
-		beproAssert.eventEmitted(result, "PayInterest");
+        beproAssert.eventEmitted(result, "PayInterest");
       });
     });
   });
@@ -173,16 +169,27 @@ function runTests(_this) {
   });
 }
 
-function shouldBehaveLikeCancelCompoundingStream(_this) { //alice, bob) {
-  const alice = _this.alice;
-  const bob = _this.bob;
-  const now = new BigNumber(dayjs().unix());
-  const startTime = now.plus(STANDARD_TIME_OFFSET);
-  const stopTime = startTime.plus(STANDARD_TIME_DELTA);
+context("sablier.CancelCompoundingStream.context", async () => {
+  let alice;// = _this.alice;
+  let bob;// = _this.bob;
+  let now;// = new BigNumber(dayjs().unix());
+  let startTime;// = now.plus(STANDARD_TIME_OFFSET);
+  let stopTime;// = startTime.plus(STANDARD_TIME_DELTA);
 
-  beforeEach(async () => {
-    sender = alice;
-    recipient = bob;
+  before("sablier.CancelCompoundingStream.before", async () => {
+    await sablierUtils.initConfig();
+    alice = _this.alice;
+    bob = _this.bob;
+    recipient = _this.bob;
+    now = new BigNumber(dayjs().unix());
+    startTime = now.plus(STANDARD_TIME_OFFSET);
+    stopTime = startTime.plus(STANDARD_TIME_DELTA);
+    _this.now = now;
+  });
+
+  beforeEach('sablier.CancelCompoundingStream.beforeEach', async () => {
+    sender = _this.alice;
+    recipient = _this.bob;
     deposit = STANDARD_SALARY_CTOKEN.toString(10);
     //this.opts = { from: this.sender };
     //await this.cTokenManager.whitelistCToken(this.cToken.address, { from: alice });
@@ -202,9 +209,9 @@ function shouldBehaveLikeCancelCompoundingStream(_this) { //alice, bob) {
         stopTime,
         senderSharePercentage,
         recipientSharePercentage,
-	  });
+	    });
       streamId = Number(result.events.CreateStream.returnValues.streamId);
-	  console.log('---CancelCompoundingStream.streamId.bp0: ', streamId);
+	    //console.log('---CancelCompoundingStream.streamId.bp0: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); //, this.opts);
       await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
     });
@@ -214,29 +221,29 @@ function shouldBehaveLikeCancelCompoundingStream(_this) { //alice, bob) {
         await _this.sablier.updateFee({ feePercentage: STANDARD_SABLIER_FEE });
       });
 
-      runTests(_this);
+      runTests();
     });
 
     describe("when the sablier fee is 0", () => {
       beforeEach(async () => {
-        await _this.sablier.updateFee({ feePercentage: new BigNumber(0) });
+        await _this.sablier.updateFee({ feePercentage: BigNumber(0) });
       });
 
-      runTests(_this);
+      runTests();
     });
 
     describe("when the sablier fee is 100", () => {
       beforeEach(async () => {
-        await _this.sablier.updateFee({ feePercentage: new BigNumber(100) });
+        await _this.sablier.updateFee({ feePercentage: BigNumber(100) });
       });
 
-      runTests(_this);
+      runTests();
     });
   });
 
   describe("when the sender's interest share is zero", () => {
-    const senderSharePercentage = new BigNumber(0);
-    const recipientSharePercentage = new BigNumber(100);
+    const senderSharePercentage = BigNumber(0);
+    const recipientSharePercentage = BigNumber(100);
 
     beforeEach(async () => {
       const result = await _this.sablier.createCompoundingStream({
@@ -249,7 +256,7 @@ function shouldBehaveLikeCancelCompoundingStream(_this) { //alice, bob) {
         recipientSharePercentage,
       });
       streamId = Number(result.events.CreateStream.returnValues.streamId);
-	  console.log('---CancelCompoundingStream.streamId.bp1: ', streamId);
+	    //console.log('---CancelCompoundingStream.streamId.bp1: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); //, this.opts);
       await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
     });
@@ -259,29 +266,29 @@ function shouldBehaveLikeCancelCompoundingStream(_this) { //alice, bob) {
         await _this.sablier.updateFee({ feePercentage: STANDARD_SABLIER_FEE });
       });
 
-      runTests(_this);
+      runTests();
     });
 
     describe("when the sablier fee is 0", () => {
       beforeEach(async () => {
-        await _this.sablier.updateFee({ feePercentage: new BigNumber(0) });
+        await _this.sablier.updateFee({ feePercentage: BigNumber(0) });
       });
 
-      runTests(_this);
+      runTests();
     });
 
     describe("when the sablier fee is 100", () => {
       beforeEach(async () => {
-        await _this.sablier.updateFee({ feePercentage: new BigNumber(100) });
+        await _this.sablier.updateFee({ feePercentage: BigNumber(100) });
       });
 
-      runTests(_this);
+      runTests();
     });
   });
 
   describe("when the recipient's interest share is zero", () => {
-    const senderSharePercentage = new BigNumber(100);
-    const recipientSharePercentage = new BigNumber(0);
+    const senderSharePercentage = BigNumber(100);
+    const recipientSharePercentage = BigNumber(0);
 
     beforeEach(async () => {
       const result = await _this.sablier.createCompoundingStream({
@@ -294,7 +301,7 @@ function shouldBehaveLikeCancelCompoundingStream(_this) { //alice, bob) {
         recipientSharePercentage,
       });
       streamId = Number(result.events.CreateStream.returnValues.streamId);
-	  console.log('---CancelCompoundingStream.streamId.bp2: ', streamId);
+	    //console.log('---CancelCompoundingStream.streamId.bp2: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); //, this.opts);
       await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
     });
@@ -304,25 +311,23 @@ function shouldBehaveLikeCancelCompoundingStream(_this) { //alice, bob) {
         await _this.sablier.updateFee({ feePercentage: STANDARD_SABLIER_FEE });
       });
 
-      runTests(_this);
+      runTests();
     });
 
     describe("when the sablier fee is 0", () => {
       beforeEach(async () => {
-        await _this.sablier.updateFee({ feePercentage: new BigNumber(0) });
+        await _this.sablier.updateFee({ feePercentage: BigNumber(0) });
       });
 
-      runTests(_this);
+      runTests();
     });
 
     describe("when the sablier fee is 100", () => {
       beforeEach(async () => {
-        await _this.sablier.updateFee({ feePercentage: new BigNumber(100) });
+        await _this.sablier.updateFee({ feePercentage: BigNumber(100) });
       });
 
-      runTests(_this);
+      runTests();
     });
   });
-}
-
-module.exports = shouldBehaveLikeCancelCompoundingStream;
+});

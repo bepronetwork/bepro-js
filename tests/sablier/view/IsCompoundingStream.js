@@ -1,6 +1,4 @@
-//const { dappConstants } = require("@sablier/dev-utils");
-const project_root = process.cwd();
-const { dappConstants } = require(project_root + "/src/sablier/dev-utils");
+const { dappConstants } = require("../../../src/sablier/dev-utils");
 const BigNumber = require("bignumber.js");
 const dayjs = require("dayjs");
 const truffleAssert = require("truffle-assertions");
@@ -14,19 +12,36 @@ const {
   STANDARD_TIME_DELTA,
 } = dappConstants;
 
-function shouldBehaveLikeIsCompoundingStream(_this) { //alice, bob) {
-  const alice = _this.alice;
-  const bob = _this.bob;
-  const sender = _this.alice;
-  //const opts = { from: sender };
-  const now = new BigNumber(dayjs().unix());
+const sablierUtils = require("../sablier.utils");
 
+
+
+context("sablier.IsCompoundingStream.context", async () => {
+  
+  let alice;// = _this.alice;
+  let bob;// = _this.bob;
+  let sender;// = _this.alice;
+  let recipient;// = _this.bob;
+  //const opts = { from: sender };
+  let now;// = new BigNumber(dayjs().unix());
+  let startTime;// = now.plus(STANDARD_TIME_OFFSET);
+  let stopTime;// = startTime.plus(STANDARD_TIME_DELTA);
+  
+  before("sablier.IsCompoundingStream.before", async () => {
+    await sablierUtils.initConfig();
+    alice = _this.alice;
+    bob = _this.bob;
+    sender = _this.alice;
+    recipient = _this.bob;
+    now = new BigNumber(dayjs().unix());
+    startTime = now.plus(STANDARD_TIME_OFFSET);
+    stopTime = startTime.plus(STANDARD_TIME_DELTA);
+    _this.now = now;
+  });
+  
   describe("when the compounding stream exists", () => {
     let streamId;
-    const recipient = bob;
     const deposit = STANDARD_SALARY_CTOKEN.toString(10);
-    const startTime = now.plus(STANDARD_TIME_OFFSET);
-    const stopTime = startTime.plus(STANDARD_TIME_DELTA);
     const senderSharePercentage = STANDARD_SENDER_SHARE_PERCENTAGE;
     const recipientSharePercentage = STANDARD_RECIPIENT_SHARE_PERCENTAGE;
 
@@ -43,8 +58,8 @@ function shouldBehaveLikeIsCompoundingStream(_this) { //alice, bob) {
         recipientSharePercentage,
       });
       //streamId = Number(result.logs[0].args.streamId);
-	  streamId = Number(result.events.CreateStream.returnValues.streamId);
-	  console.log('---IsCompoundingStream.streamId.bp0: ', streamId);
+	    streamId = Number(result.events.CreateStream.returnValues.streamId);
+	    //console.log('---IsCompoundingStream.streamId.bp0: ', streamId);
     });
 
     it("returns true", async () => {
@@ -55,17 +70,19 @@ function shouldBehaveLikeIsCompoundingStream(_this) { //alice, bob) {
 
   describe("when the stream exists but is not compounding", () => {
     let streamId;
-    const recipient = bob;
     const deposit = STANDARD_SALARY.toString(10);
-    const startTime = now.plus(STANDARD_TIME_OFFSET);
-    const stopTime = startTime.plus(STANDARD_TIME_DELTA);
+    //const startTime = now.plus(STANDARD_TIME_OFFSET);
+    //const stopTime = startTime.plus(STANDARD_TIME_DELTA);
 
     beforeEach(async () => {
-	  await _this.token.approve({ address: _this.sablier.getAddress(), amount: deposit });
+	    ///startTime = now.plus(STANDARD_TIME_OFFSET);
+      ///stopTime = startTime.plus(STANDARD_TIME_DELTA);
+
+      await _this.token.approve({ address: _this.sablier.getAddress(), amount: deposit });
       const result = await _this.sablier.createStream({ recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime });
       //streamId = Number(result.logs[0].args.streamId);
-	  streamId = Number(result.events.CreateStream.returnValues.streamId);
-	  console.log('---IsCompoundingStream.streamId.bp1: ', streamId);
+	    streamId = Number(result.events.CreateStream.returnValues.streamId);
+	    //console.log('---IsCompoundingStream.streamId.bp1: ', streamId);
     });
 
     it("returns false", async () => {
@@ -80,6 +97,4 @@ function shouldBehaveLikeIsCompoundingStream(_this) { //alice, bob) {
       await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), "stream does not exist");
     });
   });
-}
-
-module.exports = shouldBehaveLikeIsCompoundingStream;
+});

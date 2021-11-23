@@ -1,10 +1,8 @@
-//const { dappConstants } = require("@sablier/dev-utils");
-const project_root = process.cwd();
-const { dappConstants } = require(project_root + "/src/sablier/dev-utils");
+const { dappConstants } = require("../../../../src/sablier/dev-utils");
 const dayjs = require("dayjs");
 const BigNumber = require("bignumber.js");
 const truffleAssert = require("truffle-assertions");
-const beproAssert = require(project_root + "/src/utils/beproAssert");
+const beproAssert = require("../../../../build/utils/beproAssert");
 
 const {
   ONE_PERCENT_MANTISSA,
@@ -16,21 +14,36 @@ const {
   STANDARD_TIME_OFFSET,
 } = dappConstants;
 
+const sablierUtils = require("../../sablier.utils");
+
 /**
  * We do not tests all the logical branches as in `CreateStream.js`, because these are unit tests.
  * The `createCompoundingStream` method uses `createStream`, so if that fails with non-compliant erc20
  * or insufficient allowances, this must fail too.
  */
-function shouldBehaveLikeCreateCompoundingStream(_this) { //alice, bob) {
-  const alice = _this.alice;
-  const bob = _this.bob;
-  const sender = alice;
-  const recipient = bob;
+context("sablier.CreateCompoundingStream.context", async () => {
+//function shouldBehaveLikeCreateCompoundingStream(_this) { //alice, bob) {
+  let alice;// = _this.alice;
+  let bob;// = _this.bob;
+  let sender;// = alice;
+  let recipient;// = bob;
   const deposit = STANDARD_SALARY_CTOKEN.toString(10);
   //const opts = { from: sender };
-  const now = new BigNumber(dayjs().unix());
-  const startTime = now.plus(STANDARD_TIME_OFFSET);
-  const stopTime = startTime.plus(STANDARD_TIME_DELTA);
+  let now;// = new BigNumber(dayjs().unix());
+  let startTime;// = now.plus(STANDARD_TIME_OFFSET);
+  let stopTime;// = startTime.plus(STANDARD_TIME_DELTA);
+
+  before("sablier.CreateCompoundingStream.before", async () => {
+    await sablierUtils.initConfig();
+    alice = _this.alice;
+    bob = _this.bob;
+    sender = _this.alice;
+    recipient = _this.bob;
+    now = new BigNumber(dayjs().unix());
+    startTime = now.plus(STANDARD_TIME_OFFSET);
+    stopTime = startTime.plus(STANDARD_TIME_DELTA);
+    _this.now = now;
+  });
 
   describe("when not paused", () => {
     describe("when the cToken is whitelisted", () => {
@@ -44,8 +57,8 @@ function shouldBehaveLikeCreateCompoundingStream(_this) { //alice, bob) {
         const recipientSharePercentage = STANDARD_RECIPIENT_SHARE_PERCENTAGE;
 
         it("creates the compounding stream", async () => {
-		  const paused = await _this.sablier.isPaused();
-		  console.log('---sablier.CreateCompoundingStream.isPaused: ', paused);
+		      const paused = await _this.sablier.isPaused();
+		      console.log('---sablier.CreateCompoundingStream.isPaused: ', paused);
 		  
           const result = await _this.sablier.createCompoundingStream({
             recipient,
@@ -59,7 +72,7 @@ function shouldBehaveLikeCreateCompoundingStream(_this) { //alice, bob) {
           const exchangeRateInitial = new BigNumber(await _this.cToken.exchangeRateCurrent());
 
           const streamId = Number(result.events.CreateStream.returnValues.streamId);
-		  console.log('---CreateCompoundingStream.streamId: ', streamId);
+		      console.log('---CreateCompoundingStream.streamId: ', streamId);
           const compoundingStreamObject = await _this.sablier.getCompoundingStream({ streamId });
           compoundingStreamObject.sender.should.be.equal(sender);
           compoundingStreamObject.recipient.should.be.equal(recipient);
@@ -103,8 +116,7 @@ function shouldBehaveLikeCreateCompoundingStream(_this) { //alice, bob) {
             senderSharePercentage,
             recipientSharePercentage,
           });
-          //truffleAssert.eventEmitted(result, "CreateCompoundingStream");
-		  beproAssert.eventEmitted(result, "CreateCompoundingStream");
+          beproAssert.eventEmitted(result, "CreateCompoundingStream");
         });
       });
 
@@ -173,12 +185,5 @@ function shouldBehaveLikeCreateCompoundingStream(_this) { //alice, bob) {
         "Pausable: paused",
       );
     });
-	
-	afterEach(async () => {
-      // Note that `sender` coincides with the owner of the contract
-      await _this.sablier.unpause();
-    });
   });
-}
-
-module.exports = shouldBehaveLikeCreateCompoundingStream;
+});
