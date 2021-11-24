@@ -113,7 +113,7 @@ contract PredictionMarket {
   uint256 public marketIndex;
 
   // governance
-  uint256 public fee; // fee % taken from every transaction, can be updated by contract owner
+  uint256 public fee; // fee % taken from every transaction
   // realitio configs
   address public realitioAddress;
   uint256 public realitioTimeout;
@@ -124,7 +124,7 @@ contract PredictionMarket {
   // ------ Modifiers ------
 
   modifier isMarket(uint256 marketId) {
-    require(marketId < marketIndex);
+    require(marketId < marketIndex, "Market not found");
     _;
   }
 
@@ -136,12 +136,12 @@ contract PredictionMarket {
   }
 
   modifier atState(uint256 marketId, MarketState state) {
-    require(markets[marketId].state == state);
+    require(markets[marketId].state == state, "Market in incorrect state");
     _;
   }
 
   modifier notAtState(uint256 marketId, MarketState state) {
-    require(markets[marketId].state != state);
+    require(markets[marketId].state != state, "Market in incorrect state");
     _;
   }
 
@@ -166,6 +166,8 @@ contract PredictionMarket {
     uint256 _realitioTimeout
   ) public {
     require(_realitioAddress != address(0), "_realitioAddress is address 0");
+    require(_realitioTimeout > 0, "timeout must be positive");
+
     fee = _fee;
     token = _token;
     requiredBalance = _requiredBalance;
@@ -189,8 +191,8 @@ contract PredictionMarket {
     Market storage market = markets[marketId];
 
     require(msg.value > 0, "stake needs to be > 0");
-    require(closesAt >= now, "market must resolve after the current date");
-    require(arbitrator == address(arbitrator), "invalid arbitrator address");
+    require(closesAt > now, "market must resolve after the current date");
+    require(arbitrator != address(0), "invalid arbitrator address");
     // v1 - only binary markets
     require(outcomes == 2, "number of outcomes has to be 2");
 
@@ -291,6 +293,7 @@ contract PredictionMarket {
     uint256 value = msg.value;
     uint256 shares = calcBuyAmount(value, marketId, outcomeId);
     require(shares >= minOutcomeSharesToBuy, "minimum buy amount not reached");
+    require(shares > 0, "shares amount is 0");
 
     // subtracting fee from transaction value
     uint256 feeAmount = value.mul(market.fees.value) / ONE;
@@ -323,6 +326,7 @@ contract PredictionMarket {
     uint256 shares = calcSellAmount(value, marketId, outcomeId);
 
     require(shares <= maxOutcomeSharesToSell, "maximum sell amount exceeded");
+    require(shares > 0, "shares amount is 0");
     require(outcome.shares.holders[msg.sender] >= shares, "user does not have enough balance");
 
     transferOutcomeSharesToPool(msg.sender, marketId, outcomeId, shares);
@@ -649,6 +653,7 @@ contract PredictionMarket {
   function nextState(uint256 marketId) private {
     Market storage market = markets[marketId];
     market.state = MarketState(uint256(market.state) + 1);
+    require(marketId <= 2, "Invalid market state");
   }
 
   /// @dev Emits a outcome price event for every outcome
