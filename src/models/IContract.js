@@ -72,15 +72,29 @@ class IContract {
    */
   __sendTx = async (method, call, value, callback = () => {}) => {
     if (!this.acc && !call) {
-      const { params, web3Connection } = this;
-      const from = await web3Connection.getAddress();
-      const gasPrice = await web3Connection.web3.eth.getGasPrice();
-      const { gasFactor } = params;
+      const {
+        params: {
+          gasFactor,
+          nextGasLimit,
+          nextGasPrice,
+        },
+        web3Connection,
+      } = this;
 
-      const gasAmount = await method.estimateGas({ from, value })
+      const from = await web3Connection.getAddress();
+      const gasPrice = nextGasPrice || await web3Connection.web3.eth.getGasPrice();
+
+      const gasAmount = nextGasLimit || await method.estimateGas({ from, value })
         .catch((err) => {
           throw err;
         });
+
+      // nextGas* variables are meant only for the very next transaction, an easy shortcut to overriding
+      // automatic estimations on a case-by-case basis, without having to refactor the whole IContract
+      // object structure. This ensures the tx after this one uses normal estimations again, unless
+      // overridden once more.
+      this.params.nextGasLimit = null;
+      this.params.nextGasPrice = null;
 
       return new Promise((resolve, reject) => {
         method.send({
@@ -150,6 +164,23 @@ class IContract {
     }
     /* Use ABI */
     this.params.contract.use(this.params.abi, this.getAddress());
+  };
+
+  /**
+   * Updates this contract's params.
+   * @function
+   * @param {Object} params
+   * @void
+   */
+  updateParams = (params) => {
+    if (!params || typeof params !== 'object' || Array.isArray(params)) {
+      throw new Error('Supplied params should be a valid object');
+    }
+
+    this.params = {
+      ...this.params,
+      ...params,
+    };
   };
 
   /**

@@ -219,6 +219,19 @@ Estimated gas fees leverage the following web3 functionalities:
 - [chain's getGasPrice()](https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#getgasprice)
 - [contract method's estimateGas()](https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=estimateGas#methods-mymethod-estimategas)
 
+You can also override the next transaction's gas, by updating a contract object's params:
+
+```javascript
+staking.updateParams({
+  nextGasLimit: 100000, // limit next gas fee to 100000 x gas price
+  nextGasPrice: '6000000000', // 6 GWEI for next transaction
+});
+staking.subscribeProduct({ address, product_id, amount });
+
+// This next transaction will once again use the web3 estimates.
+staking.withdrawSubscription({ product_id, subscription_id });
+```
+
 ## Contribution
 
 Contributions are welcomed but we ask to red existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
