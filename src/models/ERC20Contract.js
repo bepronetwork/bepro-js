@@ -48,11 +48,11 @@ class ERC20Contract extends IContract {
     return this.params.contract;
   }
 
-  getDecimals(){
+  getDecimals() {
     return this.params.decimals;
   }
 
-  async getDecimalsAsync(){
+  async getDecimalsAsync() {
     return await this.getContract().methods.decimals().call();
   }
 

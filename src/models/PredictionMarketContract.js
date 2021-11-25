@@ -220,13 +220,23 @@ class PredictionMarketContract extends IContract {
     const account = await this.getMyAccount();
     if (!account) return [];
 
+    return this.getPortfolio({ user: account });
+  }
+
+  /**
+   * @function getPortfolio
+   * @description Get My Porfolio
+   * @param {Address} user
+   * @returns {Array} Outcome Shares
+   */
+  async getPortfolio({ user }) {
     const marketIds = await this.getMarkets();
-    const events = await this.getMyActions();
+    const events = await this.getActions({ user });
 
     // TODO: improve this (avoid looping through all markets)
     return await marketIds.reduce(async (obj, marketId) => {
-      const marketShares = await this.getContract().methods.getUserMarketShares(marketId, account).call();
-      const claimStatus = await this.getContract().methods.getUserClaimStatus(marketId, account).call();
+      const marketShares = await this.getContract().methods.getUserMarketShares(marketId, user).call();
+      const claimStatus = await this.getContract().methods.getUserClaimStatus(marketId, user).call();
 
       const portfolio = {
         liquidity: {
@@ -285,7 +295,11 @@ class PredictionMarketContract extends IContract {
     const account = await this.getMyAccount();
     if (!account) return [];
 
-    const events = await this.getEvents('MarketActionTx', { user: account });
+    return this.getActions({ user: account });
+  }
+
+  async getActions({ user }) {
+    const events = await this.getEvents('MarketActionTx', { user });
 
     // filtering by address
     return events.map(event => {
@@ -298,7 +312,7 @@ class PredictionMarketContract extends IContract {
         timestamp: Numbers.fromBigNumberToInteger(event.returnValues.timestamp, 18),
         transactionHash: event.transactionHash,
       }
-    })
+    });
   }
 
   /**
