@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs ERC20Contract</title>
+  <title>BEPRO Network Dev Docs ERC20Distribution</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -98,7 +98,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Class</p>
-                    <h1>ERC20Contract</h1>
+                    <h1>ERC20Distribution</h1>
                 </header>
                 
 
@@ -109,7 +109,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ERC20Contract<span class="signature">(options)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>ERC20Distribution<span class="signature">(options)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -128,18 +128,22 @@
 
 
     
-    <h4 class="name" id="ERC20Contract">
-        <a class="href-link" href="#ERC20Contract">#</a>
+    <h4 class="name" id="ERC20Distribution">
+        <a class="href-link" href="#ERC20Distribution">#</a>
         
         <span class="code-name">
             
-                new ERC20Contract<span class="signature">(options)</span><span class="type-signature"></span>
+                new ERC20Distribution<span class="signature">(options)</span><span class="type-signature"></span>
             
         </span>
     </h4>
     
 
     
+    
+    <div class="description">
+        <p>ERC20 Token Distribution Contract Object</p>
+    </div>
     
 
 
@@ -182,7 +186,7 @@
   <td class="type">
   
       
-<span class="param-type"><a href="ERC20Contract.html#~Options">ERC20Contract~Options</a></span>
+<span class="param-type"><a href="ERC20Distribution.html#~Options">ERC20Distribution~Options</a></span>
 
 
   
@@ -238,9 +242,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line13">line 13</a>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line15">line 15</a>
             </span>
         </p>
     
@@ -305,75 +309,6 @@
 
 
 
-<div class="description">
-    <p>Use a ierc20 contract with the current address</p>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line26">line 26</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-<h4 class="name" id="getDecimalsAsync">
-    <a class="href-link" href="#getDecimalsAsync">#</a>
-    
-    <span class="code-name">
-        getDecimalsAsync
-    </span>
-    
-</h4>
-
-
-
-
 
 
 
@@ -411,9 +346,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line109">line 109</a>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line123">line 123</a>
             </span>
         </p>
     
@@ -438,12 +373,12 @@
 
 
     
-    <h4 class="name" id="approve">
-        <a class="href-link" href="#approve">#</a>
+    <h4 class="name" id="deploy">
+        <a class="href-link" href="#deploy">#</a>
         
         <span class="code-name">
             
-                approve<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
+                deploy<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;(*|undefined)>}</span>
             
         </span>
     </h4>
@@ -452,7 +387,7 @@
     
     
     <div class="description">
-        <p>Approve tokens to be used by another address/contract</p>
+        <p>Deploy the Contract</p>
     </div>
     
 
@@ -506,56 +441,10 @@
 
   
 
-  <td class="description last"><p>Parameters</p></td>
+  <td class="description last"></td>
 </tr>
 
   
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>address</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Address</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Spender Address/Contract</p></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>amount</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">number</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Amount of Tokens</p></td>
-</tr>
-
   
     
 <tr class="deep-level-1">
@@ -576,7 +465,7 @@
 
   
 
-  <td class="description last"><p>callback for the Tx</p></td>
+  <td class="description last"></td>
 </tr>
 
   
@@ -624,9 +513,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line143">line 143</a>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line152">line 152</a>
             </span>
         </p>
     
@@ -647,6 +536,27 @@
 
 
 
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>No Token Address Provided</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
 
 
     <div class='columns method-parameter'>
@@ -657,13 +567,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Transaction</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;Transaction></span>
+<span class="param-type">Promise.&lt;(*|undefined)></span>
 
 
     </div>
@@ -683,12 +591,16 @@
 
 
     
-    <h4 class="name" id="deploy">
-        <a class="href-link" href="#deploy">#</a>
+    <h4 class="name" id="erc20">
+        <a class="href-link" href="#erc20">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                deploy<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
+                erc20<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Address>}</span>
             
         </span>
     </h4>
@@ -697,7 +609,7 @@
     
     
     <div class="description">
-        <p>Deploy ERC20 Token</p>
+        <p>Get ERC20 Address of the Token Contract managed</p>
     </div>
     
 
@@ -708,152 +620,6 @@
 
 
 
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Object</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Parameters</p></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>name</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">string</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Name of token</p></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>symbol</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">string</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Symbol of token</p></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>cap</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">number</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Max supply of Token (ex : 100M)</p></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>distributionAddress</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Address</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Where tokens should be sent to initially</p></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
 
 
 
@@ -892,9 +658,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line173">line 173</a>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line33">line 33</a>
             </span>
         </p>
     
@@ -925,13 +691,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Transaction</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;Transaction></span>
+<span class="param-type">Promise.&lt;Address></span>
 
 
     </div>
@@ -951,12 +715,12 @@
 
 
     
-    <h4 class="name" id="getABI">
-        <a class="href-link" href="#getABI">#</a>
+    <h4 class="name" id="getERC20Contract">
+        <a class="href-link" href="#getERC20Contract">#</a>
         
         <span class="code-name">
             
-                getABI<span class="signature">()</span><span class="type-signature"> &rarr; {Contract}</span>
+                getERC20Contract<span class="signature">()</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -1010,9 +774,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line92">line 92</a>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line165">line 165</a>
             </span>
         </p>
     
@@ -1043,374 +807,8 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>ERC20Contract|undefined</p></div>
     
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Contract</span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getAddress">
-        <a class="href-link" href="#getAddress">#</a>
-        
-        <span class="code-name">
-            
-                getAddress<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Get Token Address</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line43">line 43</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>address</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Address</span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getContract">
-        <a class="href-link" href="#getContract">#</a>
-        
-        <span class="code-name">
-            
-                getContract<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line35">line 35</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">*</span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getDecimals">
-        <a class="href-link" href="#getDecimals">#</a>
-        
-        <span class="code-name">
-            
-                getDecimals<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Get Decimals of Token</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line101">line 101</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Total supply</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">number</span>
-
-
-    </div>
     
 </div>
 
@@ -1432,7 +830,7 @@
         
         <span class="code-name">
             
-                getTokenAmount<span class="signature">(address)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
+                getTokenAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1441,180 +839,7 @@
     
     
     <div class="description">
-        <p>Get Amount of Tokens User Holds</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>address</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Address</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>User Address</p></td>
-</tr>
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line73">line 73</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Transaction</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Promise.&lt;Transaction></span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="isApproved">
-        <a class="href-link" href="#isApproved">#</a>
-        
-        <span class="code-name">
-            
-                isApproved<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Verify if Spender is Approved to use tokens</p>
+        <p>Get Token Amount of ERC20 Address</p>
     </div>
     
 
@@ -1668,7 +893,7 @@
 
   
 
-  <td class="description last"><p>Parameters</p></td>
+  <td class="description last"></td>
 </tr>
 
   
@@ -1692,53 +917,7 @@
 
   
 
-  <td class="description last"><p>Sender Address</p></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>amount</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">number</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Amount of Tokens</p></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>spenderAddress</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Address</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Spender Address</p></td>
+  <td class="description last"></td>
 </tr>
 
   
@@ -1786,9 +965,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line120">line 120</a>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line44">line 44</a>
             </span>
         </p>
     
@@ -1819,129 +998,7 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>isApproved</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Promise.&lt;boolean></span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="totalSupply">
-        <a class="href-link" href="#totalSupply">#</a>
-        
-        <span class="code-name">
-            
-                totalSupply<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Get Total Supply of Token</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line83">line 83</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Total supply</p></div>
+    <div class='param-desc column is-7'><p>Token Amount</p></div>
     
     
     <div class='column is-5 has-text-left'>
@@ -1967,12 +1024,12 @@
 
 
     
-    <h4 class="name" id="transferTokenAmount">
-        <a class="href-link" href="#transferTokenAmount">#</a>
+    <h4 class="name" id="safeGuardAllTokens">
+        <a class="href-link" href="#safeGuardAllTokens">#</a>
         
         <span class="code-name">
             
-                transferTokenAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
+                safeGuardAllTokens<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
             
         </span>
     </h4>
@@ -1981,7 +1038,7 @@
     
     
     <div class="description">
-        <p>Transfer Tokens</p>
+        <p>(Admin only) Get All tokens from the Distribution Contract</p>
     </div>
     
 
@@ -2035,7 +1092,7 @@
 
   
 
-  <td class="description last"><p>Parameters</p></td>
+  <td class="description last"></td>
 </tr>
 
   
@@ -2043,7 +1100,7 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>toAddress</code></td>
+      <td class="name"><code>address</code></td>
   
 
   <td class="type">
@@ -2059,30 +1116,7 @@
 
   
 
-  <td class="description last"><p>To Address</p></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>tokenAmount</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Integer</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Amount of Tokens</p></td>
+  <td class="description last"><p>Address to transfer the ERC20 tokens to</p></td>
 </tr>
 
   
@@ -2130,9 +1164,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line55">line 55</a>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line66">line 66</a>
             </span>
         </p>
     
@@ -2163,13 +1197,829 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Transaction</p></div>
+    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;Transaction></span>
+<span class="param-type">Promise.&lt;boolean></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setInitialDistribution">
+        <a class="href-link" href="#setInitialDistribution">#</a>
+        
+        <span class="code-name">
+            
+                setInitialDistribution<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>(Admin only) Set Initial Distribution (Call the amount of times necessary)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Address</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Address of the recipient</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>tokenAmount</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Integer</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Token amount for this tranche</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>unlockTime</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Integer</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Time to when this tokens unlock</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line94">line 94</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;boolean></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setTGEDate">
+        <a class="href-link" href="#setTGEDate">#</a>
+        
+        <span class="code-name">
+            
+                setTGEDate<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>(Admin only) Set the Token Generation Event</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>time</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Integer</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Time to set the TGE to (Token Generation Event)</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line79">line 79</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;boolean></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setTokenAddress">
+        <a class="href-link" href="#setTokenAddress">#</a>
+        
+        <span class="code-name">
+            
+                setTokenAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>(Admin only) Set Token address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Address</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>ERC20 Address</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line53">line 53</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;boolean></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="triggerTokenSend">
+        <a class="href-link" href="#triggerTokenSend">#</a>
+        
+        <span class="code-name">
+            
+                triggerTokenSend<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Trigger Token - should be called every month</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line112">line 112</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </div>
@@ -2424,9 +2274,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Contract.js.html" class="button">View Source</a>
+            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Contract.js.html">models/ERC20/ERC20Contract.js</a>, <a href="models_ERC20_ERC20Contract.js.html#line5">line 5</a>
+                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line7">line 7</a>
             </span>
         </p>
     
