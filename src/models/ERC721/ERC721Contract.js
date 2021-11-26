@@ -78,8 +78,9 @@ class ERC721Contract extends IContract {
    * @function
    * @description Set Base Token URI
    */
-  setBaseTokenURI = ({ URI }) => this.__sendTx(
+  setBaseTokenURI = ({ URI }, options) => this.__sendTx(
     this.params.contract.getContract().methods.setBaseURI(URI),
+    options,
   );
 
   /**
@@ -89,9 +90,10 @@ class ERC721Contract extends IContract {
    * @param {Address} to Address to send to
    * @param {Integer} tokenId Token Id to use
    */
-  mint({ to, tokenId }) {
+  mint({ to, tokenId }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.mint(to, tokenId),
+      options,
     );
   }
 
@@ -102,9 +104,10 @@ class ERC721Contract extends IContract {
    * @param {Address} to Address to send to
    * @param {Integer} tokenId Token Id to use
    */
-  approve({ to, tokenId }) {
+  approve({ to, tokenId }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.approve(to, tokenId),
+      options,
     );
   }
 
@@ -115,9 +118,10 @@ class ERC721Contract extends IContract {
    * @param {Address} to Address to approve to
    * @param {Bool} approve If to approve or disapprove
    */
-  setApprovalForAll({ to, approve = true }) {
+  setApprovalForAll({ to, approve = true }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.setApprovalForAll(to, approve),
+      options,
     );
   }
 

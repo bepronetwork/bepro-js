@@ -60,8 +60,9 @@ class OpenerRealFvr extends IContract {
    * @param {number} params.packId Pack Id
    * @returns {Promise<Transaction>} Transaction
    */
-  buyPack = ({ packId }) => this.__sendTx(
+  buyPack = ({ packId }, options) => this.__sendTx(
     this.params.contract.getContract().methods.buyPack(packId),
+    options,
   );
 
   /**
@@ -72,8 +73,9 @@ class OpenerRealFvr extends IContract {
    * @param {Array | Integer} params.packIds Pack Id
    * @returns {Transaction} Transaction
    */
-  buyPacks = ({ packIds }) => this.__sendTx(
+  buyPacks = ({ packIds }, options) => this.__sendTx(
     this.params.contract.getContract().methods.buyPacks(packIds),
+    options,
   );
 
   /**
@@ -83,8 +85,9 @@ class OpenerRealFvr extends IContract {
    * @param {Integer} params.packId Pack Id
    * @returns {Transaction} Transaction
    */
-  openPack = ({ packId }) => this.__sendTx(
+  openPack = ({ packId }, options) => this.__sendTx(
     this.params.contract.getContract().methods.openPack(packId),
+    options,
   );
 
   /**
@@ -94,8 +97,9 @@ class OpenerRealFvr extends IContract {
    * @param {Array | Integer} params.packIds Pack Id
    * @returns {Transaction} Transaction
    */
-  openPacks = ({ packIds }) => this.__sendTx(
+  openPacks = ({ packIds }, options) => this.__sendTx(
     this.params.contract.getContract().methods.openPacks(packIds),
+    options,
   );
 
   /**
@@ -106,10 +110,11 @@ class OpenerRealFvr extends IContract {
    * @param {Address} params.receivingAddress Pack Id number
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  offerPack = ({ packId, receivingAddress }) => this.__sendTx(
+  offerPack = ({ packId, receivingAddress }, options) => this.__sendTx(
     this.params.contract
       .getContract()
       .methods.offerPack(packId, receivingAddress),
+    options,
   );
 
   /**
@@ -138,7 +143,7 @@ class OpenerRealFvr extends IContract {
     saleDistributionAmounts,
     marketplaceDistributionAddresses,
     marketplaceDistributionAmounts,
-  }) => this.__sendTx(
+  }, options) => this.__sendTx(
     this.params.contract
       .getContract()
       .methods.createPack(
@@ -153,6 +158,7 @@ class OpenerRealFvr extends IContract {
         marketplaceDistributionAddresses,
         marketplaceDistributionAmounts,
       ),
+    options,
   );
 
   /**
@@ -169,7 +175,7 @@ class OpenerRealFvr extends IContract {
    */
   editPackInfo = ({
     packId, saleStart, price, serie, packType, drop,
-  }) => this.__sendTx(
+  }, options) => this.__sendTx(
     this.params.contract
       .getContract()
       .methods.editPackInfo(
@@ -180,6 +186,7 @@ class OpenerRealFvr extends IContract {
         drop,
         Numbers.toSmartContractDecimals(price, 3),
       ),
+    options,
   );
 
   /**
@@ -189,8 +196,9 @@ class OpenerRealFvr extends IContract {
    * @param {number} params.packId Pack Id number
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  deletePackById = ({ packId }) => this.__sendTx(
+  deletePackById = ({ packId }, options) => this.__sendTx(
     this.params.contract.getContract().methods.deletePackById(packId),
+    options,
   );
 
   /**
@@ -200,8 +208,9 @@ class OpenerRealFvr extends IContract {
    * @param {number} params.tokenId Token ID
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  mint = ({ tokenId }) => this.__sendTx(
+  mint = ({ tokenId }, options) => this.__sendTx(
     this.params.contract.getContract().methods.mint(tokenId),
+    options,
   );
 
   /**
@@ -211,10 +220,11 @@ class OpenerRealFvr extends IContract {
    * @param {Address} params.address Token Address
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  setPurchaseTokenAddress = ({ address }) => this.__sendTx(
+  setPurchaseTokenAddress = ({ address }, options) => this.__sendTx(
     this.params.contract
       .getContract()
       .methods.setPurchaseTokenAddress(address),
+    options,
   );
 
   /**
@@ -222,14 +232,14 @@ class OpenerRealFvr extends IContract {
    * @function
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  lock = () => this.__sendTx(this.params.contract.getContract().methods.lock());
+  lock = (options) => this.__sendTx(this.params.contract.getContract().methods.lock(), options);
 
   /**
    * Unlock the Contract
    * @function
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  unlock = () => this.__sendTx(this.params.contract.getContract().methods.unlock());
+  unlock = (options) => this.__sendTx(this.params.contract.getContract().methods.unlock(), options);
 
   /**
    * Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
@@ -238,10 +248,11 @@ class OpenerRealFvr extends IContract {
    * @param {Price} params.price Token Price
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  setTokenWorthof1USD = ({ price }) => this.__sendTx(
+  setTokenWorthof1USD = ({ price }, options) => this.__sendTx(
     this.params.contract
       .getContract()
       .methods.setTokenPriceInUSD(price),
+    options,
   );
 
   /**
@@ -251,8 +262,9 @@ class OpenerRealFvr extends IContract {
    * @param {string} params.uri URI of the Token Id Metadata JSON
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  setBaseURI = ({ uri }) => this.__sendTx(
+  setBaseURI = ({ uri }, options) => this.__sendTx(
     this.params.contract.getContract().methods.setBaseURI(uri),
+    options,
   );
 
   /**
@@ -263,8 +275,9 @@ class OpenerRealFvr extends IContract {
    * @param {string} params.uri URI of the Token Id Metadata JSON
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  setTokenURI = ({ tokenId, uri }) => this.__sendTx(
+  setTokenURI = ({ tokenId, uri }, options) => this.__sendTx(
     this.params.contract.getContract().methods.setTokenURI(tokenId, uri),
+    options,
   );
 
   /**

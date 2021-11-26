@@ -36,7 +36,7 @@ class StakingContract extends IContract {
   erc20() {
     return this.__sendTx(
       this.params.contract.getContract().methods.erc20(),
-      true,
+      { call: true },
     );
   }
 
@@ -56,7 +56,7 @@ class StakingContract extends IContract {
   async futureLockedTokens() {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.futureLockedTokens(),
-      true,
+      { call: true },
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
   }
@@ -68,7 +68,7 @@ class StakingContract extends IContract {
   async availableTokens() {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.availableTokens(),
-      true,
+      { call: true },
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
   }
@@ -80,7 +80,7 @@ class StakingContract extends IContract {
   async heldTokens() {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.heldTokens(),
-      true,
+      { call: true },
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
   }
@@ -110,7 +110,7 @@ class StakingContract extends IContract {
             this.getERC20Contract().getDecimals(),
           ),
         ),
-      true,
+      { call: true },
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
   };
@@ -135,7 +135,7 @@ class StakingContract extends IContract {
     individualMaxAmount,
     APR,
     lockedUntilFinalization,
-  }) {
+  }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
@@ -157,6 +157,7 @@ class StakingContract extends IContract {
           APR,
           lockedUntilFinalization,
         ),
+      options,
     );
   }
 
@@ -167,7 +168,7 @@ class StakingContract extends IContract {
    */
   getProducts = () => this.__sendTx(
     this.params.contract.getContract().methods.getProductIds(),
-    true,
+    { call: true },
   );
 
   /**
@@ -196,7 +197,7 @@ class StakingContract extends IContract {
   getProduct = async ({ product_id }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.getProduct(product_id),
-      true,
+      { call: true },
     );
 
     return {
@@ -252,7 +253,7 @@ class StakingContract extends IContract {
    * @throws {Error} Has to Approve Token Transfer First, use the 'approve' Call
    * @returns {Promise<boolean>} Success
    */
-  subscribeProduct = async ({ address, product_id, amount }) => {
+  subscribeProduct = async ({ address, product_id, amount }, options) => {
     /* Get Decimals of Amount */
     const amountWithDecimals = Numbers.toSmartContractDecimals(
       amount,
@@ -274,6 +275,7 @@ class StakingContract extends IContract {
       this.params.contract
         .getContract()
         .methods.subscribeProduct(product_id, amountWithDecimals),
+      options,
     );
   };
 
@@ -303,7 +305,7 @@ class StakingContract extends IContract {
       this.params.contract
         .getContract()
         .methods.getSubscription(subscription_id, product_id),
-      true,
+      { call: true },
     );
 
     return {
@@ -333,10 +335,11 @@ class StakingContract extends IContract {
    * @param {number} params.product_id
    * @return {Promise<TransactionObject>}
    */
-  withdrawSubscription = ({ product_id, subscription_id }) => this.__sendTx(
+  withdrawSubscription = ({ product_id, subscription_id }, options) => this.__sendTx(
     this.params.contract
       .getContract()
       .methods.withdrawSubscription(product_id, subscription_id),
+    options,
   );
 
   /**
@@ -349,7 +352,7 @@ class StakingContract extends IContract {
   getSubscriptionsByAddress = async ({ address }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.getMySubscriptions(address),
-      true,
+      { call: true },
     );
     return res.map((r) => Numbers.fromExponential(r));
   };

@@ -68,7 +68,7 @@ class MarketplaceRealFvr extends IContract {
    * @param {String} params.price Price (Token Amount)
    * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  putERC721OnSale = async ({ tokenId, price }) => {
+  putERC721OnSale = async ({ tokenId, price }, options) => {
     const valueWithDecimals = Numbers.toSmartContractDecimals(
       price,
       await this.isETHTransaction() ? 18 : this.getERC20Contract().getDecimals(),
@@ -76,6 +76,7 @@ class MarketplaceRealFvr extends IContract {
 
     return this.__sendTx(
       this.params.contract.getContract().methods.putERC721OnSale(tokenId, valueWithDecimals),
+      options,
     );
   };
 
@@ -86,8 +87,9 @@ class MarketplaceRealFvr extends IContract {
      * @param {String} params.tokenId Token Id
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  removeERC721FromSale = ({ tokenId }) => this.__sendTx(
+  removeERC721FromSale = ({ tokenId }, options) => this.__sendTx(
     this.params.contract.getContract().methods.removeERC721FromSale(tokenId),
+    options,
   );
 
   /**
@@ -98,7 +100,7 @@ class MarketplaceRealFvr extends IContract {
      * @param {Integer} params.value If Native ETH, value = 0.1 ETH; if ERC20 value is 0 or optional
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  buyERC721 = async ({ tokenId, value = 0 }) => {
+  buyERC721 = async ({ tokenId, value = 0 }, options) => {
     const valueWithDecimals = Numbers.toSmartContractDecimals(
       value,
       await this.isETHTransaction() ? 18 : this.getERC20Contract().getDecimals(),
@@ -106,8 +108,10 @@ class MarketplaceRealFvr extends IContract {
 
     return this.__sendTx(
       this.params.contract.getContract().methods.buyERC721(tokenId),
-      false,
-      valueWithDecimals,
+      {
+        value: valueWithDecimals,
+        ...options,
+      },
     );
   };
 
@@ -118,8 +122,9 @@ class MarketplaceRealFvr extends IContract {
      * @param {String} params.erc20TokenAddress ERC20TokenAddress
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  changeERC20 = ({ erc20TokenAddress }) => this.__sendTx(
+  changeERC20 = ({ erc20TokenAddress }, options) => this.__sendTx(
     this.params.contract.getContract().methods.changeERC20(erc20TokenAddress),
+    options,
   );
 
   /**
@@ -129,8 +134,9 @@ class MarketplaceRealFvr extends IContract {
      * @param {String} params.erc721TokenAddress ERC721TokenAddress
      * @returns {TransactionObject} Success the Tx Object if operation was successful
     */
-  changeERC721 = ({ erc721TokenAddress }) => this.__sendTx(
+  changeERC721 = ({ erc721TokenAddress }, options) => this.__sendTx(
     this.params.contract.getContract().methods.changeERC721(erc721TokenAddress),
+    options,
   );
 
   /**
@@ -141,8 +147,9 @@ class MarketplaceRealFvr extends IContract {
      * @param {String} params.feePercentage Fee Percentage (1 = 1%)
      * @returns {TransactionObject} Success the Tx Object if operation was successful
     */
-  setFixedFees = ({ feeAddress, feePercentage }) => this.__sendTx(
+  setFixedFees = ({ feeAddress, feePercentage }, options) => this.__sendTx(
     this.params.contract.getContract().methods.setFixedFees(feeAddress, feePercentage),
+    options,
   );
 
   /**

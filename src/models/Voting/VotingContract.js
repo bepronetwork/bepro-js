@@ -28,7 +28,7 @@ class VotingContract extends IContract {
   erc20() {
     return this.__sendTx(
       this.params.contract.getContract().methods.erc20(),
-      true,
+      { call: true },
     );
   }
 
@@ -36,22 +36,23 @@ class VotingContract extends IContract {
    * Creates a Pool
    * @param {String} params.description
    * @param {Integer} params.expirationTime
-   * @param {Array | Integer} params.options
+   * @param {Array | Integer} params.poolOptions
    * @return {Promise<TransactionObject>}
    */
   createPool({
     description,
     expirationTime,
-    options,
-  }) {
+    poolOptions,
+  }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.createPoll(
           description,
           Numbers.timeToSmartContractTime(expirationTime),
-          options,
+          poolOptions,
         ),
+      options,
     );
   }
 
@@ -62,13 +63,14 @@ class VotingContract extends IContract {
    */
   endPool({
     poolId,
-  }) {
+  }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.endPool(
           poolId,
         ),
+      options,
     );
   }
 
@@ -81,7 +83,7 @@ class VotingContract extends IContract {
   castVote({
     poolId,
     voteId,
-  }) {
+  }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
@@ -89,6 +91,7 @@ class VotingContract extends IContract {
           poolId,
           voteId,
         ),
+      options,
     );
   }
 
@@ -99,7 +102,7 @@ class VotingContract extends IContract {
      */
   stakeVotingTokens({
     tokens,
-  }) {
+  }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
@@ -109,6 +112,7 @@ class VotingContract extends IContract {
             this.getERC20Contract().getDecimals(),
           ),
         ),
+      options,
     );
   }
 
@@ -132,7 +136,7 @@ class VotingContract extends IContract {
   getPoolInformation = async ({ poolId }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.getPoolInformation(poolId),
-      true,
+      { call: true },
     );
 
     return {
@@ -157,7 +161,7 @@ class VotingContract extends IContract {
   getPoolWinner = async ({ poolId }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.getPoolWinner(poolId),
-      true,
+      { call: true },
     );
 
     return {
@@ -177,7 +181,7 @@ class VotingContract extends IContract {
   getPollOptionById = async ({ poolId, optionIndex }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.getPollOptionById(poolId, optionIndex),
-      true,
+      { call: true },
     );
 
     return parseInt(res[0], 10);
@@ -193,7 +197,7 @@ class VotingContract extends IContract {
   getPollHistory = async ({ address }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.getPollHistory(address),
-      true,
+      { call: true },
     );
 
     return {
@@ -213,7 +217,7 @@ class VotingContract extends IContract {
   getPollInfoForVoter = async ({ poolId, voter }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.getPollInfoForVoter(poolId, voter),
-      true,
+      { call: true },
     );
 
     return {
@@ -236,7 +240,7 @@ class VotingContract extends IContract {
   userHasVoted = async ({ poolId, voter }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.userHasVoted(poolId, voter),
-      true,
+      { call: true },
     );
 
     return res[0];
@@ -252,7 +256,7 @@ class VotingContract extends IContract {
   getLockedAmount = async ({ voter }) => {
     const res = await this.__sendTx(
       this.params.contract.getContract().methods.getLockedAmount(voter),
-      true,
+      { call: true },
     );
 
     return Numbers.toSmartContractDecimals(
@@ -268,7 +272,7 @@ class VotingContract extends IContract {
      */
   withdrawTokens({
     tokens,
-  }) {
+  }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
@@ -278,6 +282,7 @@ class VotingContract extends IContract {
             this.getERC20Contract().getDecimals(),
           ),
         ),
+      options,
     );
   }
 

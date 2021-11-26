@@ -205,32 +205,46 @@ await stakingTest.availableTokens();
 
 ### Gas Fees
 
-Transaction fees are automatically calculated via web3's own estimations. We can initialize a contract with a `gasFactor` parameter that will be applied to every calculated fee, in order to overestimate and avoid out-of-gas transaction errors if necessary.
+Transaction fees are automatically calculated via web3's own estimation methods.
+
+In order to overestimate and avoid out-of-gas transaction errors if necessary, we can pass a second argument with certain parameters to most Contract methods that involve `send` transactions (those requiring gas):
+
+```javascript
+staking.subscribeProduct(
+  { address, product_id, amount },
+  {
+    gasAmount: 201654, // override the estimated gas fee for this method
+    gasFactor: 1.2, // applied to every calculated or given gas amount, including the gasAmount from this object if passed
+    gasPrice: '5000000000', // override the network's default gas price
+  },
+);
+```
+
+In particular, `gasFactor` is a parameter that can be passed when instantiating the contract, so that gas estimations for every method called on that contract instance will have that factor applied:
 
 ```javascript
 let staking = new StakingContract({
   contractAddress,
   gasFactor: 1.25 // default 1
-  opt: { provider, },
+  opt: { provider },
 });
+
+// The following will have a gasFactor of 1.25
+staking.subscribeProduct({ address, product_id, amount });
+
+// We can still override it per-method, and pass other parameters as well.
+staking.subscribeProduct(
+  { address, product_id, amount },
+  {
+    gasAmount: 201654,
+    gasFactor: 1.2,
+  },
+);
 ```
 
 Estimated gas fees leverage the following web3 functionalities:
 - [chain's getGasPrice()](https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#getgasprice)
 - [contract method's estimateGas()](https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=estimateGas#methods-mymethod-estimategas)
-
-You can also override the next transaction's gas, by updating a contract object's params:
-
-```javascript
-staking.updateParams({
-  nextGasLimit: 100000, // limit next gas fee to 100000 x gas price
-  nextGasPrice: '6000000000', // 6 GWEI for next transaction
-});
-staking.subscribeProduct({ address, product_id, amount });
-
-// This next transaction will once again use the web3 estimates.
-staking.withdrawSubscription({ product_id, subscription_id });
-```
 
 ## Contribution
 

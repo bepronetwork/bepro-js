@@ -140,7 +140,7 @@ class ERC20TokenLock extends IContract {
    * @param {Address} params.tokenAmount Amount of Tokens
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-  setMaxAmountToLock = ({ tokenAmount }) => {
+  setMaxAmountToLock = ({ tokenAmount }, options) => {
     this.onlyOwner(); // verify that user is admin
 
     /* Get Decimals of Amount */
@@ -153,6 +153,7 @@ class ERC20TokenLock extends IContract {
       this.params.contract
         .getContract()
         .methods.setMaxAmountToLock(amountWithDecimals),
+      options,
     );
   };
 
@@ -163,7 +164,7 @@ class ERC20TokenLock extends IContract {
    * @param {number} params.tokenAmount Minimum tokens amount
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-  setMinAmountToLock = ({ tokenAmount }) => {
+  setMinAmountToLock = ({ tokenAmount }, options) => {
     this.onlyOwner(); // verify that user is admin
 
     /* Get Decimals of Amount */
@@ -176,6 +177,7 @@ class ERC20TokenLock extends IContract {
       this.params.contract
         .getContract()
         .methods.setMinAmountToLock(amountWithDecimals),
+      options,
     );
   };
 
@@ -190,7 +192,7 @@ class ERC20TokenLock extends IContract {
    * @param {Date} params.endDate Lock tokens until this end date
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-  lock = async ({ address, amount, endDate }) => {
+  lock = async ({ address, amount, endDate }, options) => {
     // / 'address' is current user address
 
     this.whenNotPaused(); // verify that contract is not paused
@@ -228,6 +230,7 @@ class ERC20TokenLock extends IContract {
           ),
           Numbers.timeToSmartContractTime(endDate),
         ),
+      options,
     );
   };
 
@@ -238,7 +241,7 @@ class ERC20TokenLock extends IContract {
    * @param {Address} params.address User Address
    * @return {Promise<boolean>} Success True if operation was successful
    */
-  release = async ({ address }) => {
+  release = async ({ address }, options) => {
     // / 'address' is current user address
 
     // check if user has locked tokens and if he can unlock and withdraw them
@@ -255,6 +258,7 @@ class ERC20TokenLock extends IContract {
 
     return this.__sendTx(
       this.params.contract.getContract().methods.release(),
+      options,
     );
   };
 

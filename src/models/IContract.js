@@ -12,6 +12,16 @@ import Web3Connection from '../Web3Connection';
  */
 
 /**
+ * @typedef {Object} IContract~TxOptions
+ * @property {boolean} call
+ * @property [function():void] callback
+ * @property {number} gasFactor
+ * @property {number} gasLimit
+ * @property {string} gasPrice
+ * @property {*} value
+ */
+
+/**
  * Contract Object Interface
  * @class IContract
  * @param {IContract~Options} options
@@ -65,46 +75,33 @@ class IContract {
   /**
    * @function
    * @params {*} f
-   * @params {boolean} call
-   * @params {*} value
-   * @params [function():void] callback
+   * @params {IContract~TxOptions} options
    * @return {Promise<*>}
    */
-  __sendTx = async (method, call, value, callback = () => {}) => {
+  __sendTx = async (method, options) => {
+    const { call, value } = options || {};
+
     if (!this.acc && !call) {
-      const {
-        params: {
-          gasFactor,
-          nextGasLimit,
-          nextGasPrice,
-        },
-        web3Connection,
-      } = this;
+      const { callback, gasFactor, gasAmount, gasPrice } = options || {};
+      const { params, web3Connection } = this;
 
       const from = await web3Connection.getAddress();
-      const gasPrice = nextGasPrice || await web3Connection.web3.eth.getGasPrice();
-
-      const gasAmount = nextGasLimit || await method.estimateGas({ from, value })
-        .catch((err) => {
-          throw err;
-        });
-
-      // nextGas* variables are meant only for the very next transaction, an easy shortcut to overriding
-      // automatic estimations on a case-by-case basis, without having to refactor the whole IContract
-      // object structure. This ensures the tx after this one uses normal estimations again, unless
-      // overridden once more.
-      this.params.nextGasLimit = null;
-      this.params.nextGasPrice = null;
+      const txGasPrice = gasPrice || await web3Connection.web3.eth.getGasPrice();
+      const txGasAmount = gasAmount || await method.estimateGas({ from, value });
+      const txGasFactor = gasFactor || params.gasFactor || 1;
 
       return new Promise((resolve, reject) => {
         method.send({
           from,
-          gas: Math.round(gasAmount * gasFactor),
-          gasPrice,
+          gas: Math.round(txGasAmount * txGasFactor),
+          gasPrice: txGasPrice,
           value,
         })
           .on('confirmation', (confirmationNumber, receipt) => {
-            callback(confirmationNumber);
+            if (callback) {
+              callback(confirmationNumber);
+            }
+
             if (confirmationNumber > 0) {
               resolve(receipt);
             }
@@ -213,9 +210,10 @@ class IContract {
    * @param {Address} params.address
    * @return {Promise<*|undefined>}
    */
-  setNewOwner({ address }) {
+  setNewOwner({ address }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.transferOwnership(address),
+      options,
     );
   }
 
@@ -239,9 +237,10 @@ class IContract {
    * (Admins only) Pauses the Contract
    * @return {Promise<*|undefined>}
    */
-  pauseContract() {
+  pauseContract(options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.pause(),
+      options,
     );
   }
 
@@ -249,9 +248,10 @@ class IContract {
    * (Admins only) Unpause Contract
    * @return {Promise<*|undefined>}
    */
-  unpauseContract() {
+  unpauseContract(options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.unpause(),
+      options,
     );
   }
 
@@ -261,11 +261,12 @@ class IContract {
    * @param {Address} params.tokenAddress
    * @param {Address} params.toAddress
    */
-  removeOtherERC20Tokens({ tokenAddress, toAddress }) {
+  removeOtherERC20Tokens({ tokenAddress, toAddress }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.removeOtherERC20Tokens(tokenAddress, toAddress),
+      options,
     );
   }
 
@@ -275,9 +276,10 @@ class IContract {
    * @param {Address} params.toAddress
    * @return {Promise<*|undefined>}
    */
-  safeGuardAllTokens({ toAddress }) {
+  safeGuardAllTokens({ toAddress }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.safeGuardAllTokens(toAddress),
+      options,
     );
   }
 
@@ -287,11 +289,12 @@ class IContract {
    * @param {Address} params.newTokenAddress
    * @return {Promise<*|undefined>}
    */
-  changeTokenAddress({ newTokenAddress }) {
+  changeTokenAddress({ newTokenAddress }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.changeTokenAddress(newTokenAddress),
+      options,
     );
   }
 

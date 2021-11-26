@@ -189,13 +189,14 @@ class Network extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  lock({ tokenAmount }) {
+  lock({ tokenAmount }, options) {
     if (tokenAmount <= 0) {
       throw new Error('Token Amount has to be higher than 0');
     }
 
     return this.__sendTx(
       this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
+      options,
     );
   }
 
@@ -204,9 +205,10 @@ class Network extends IContract {
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-  unlock() {
+  unlock(options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.unlock(),
+      options,
     );
   }
 
@@ -217,11 +219,12 @@ class Network extends IContract {
    * @param {Address} params.transactionalToken
    * @return {Promise<TransactionObject>}
    */
-  createNetwork({ settlerToken, transactionalToken }) {
+  createNetwork({ settlerToken, transactionalToken }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.createNetwork(settlerToken, transactionalToken),
+      options,
     );
   }
 

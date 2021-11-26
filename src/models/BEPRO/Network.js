@@ -282,12 +282,14 @@ class Network extends IContract {
 
   /**
    * Change amount needed for Council
-   * @param {number} value
+   * @param {Object} params
+   * @param {number} params.value
    * @return {Promise<TransactionObject>}
    */
-  changeCouncilAmount(value) {
+  changeCouncilAmount({ value }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals())),
+      options,
     );
   }
 
@@ -364,7 +366,7 @@ class Network extends IContract {
   async getIssueByCID({ issueCID }) {
     const r = await this.__sendTx(
       this.params.contract.getContract().methods.getIssueByCID(issueCID),
-      true,
+      { call: true },
     );
 
     return {
@@ -389,7 +391,7 @@ class Network extends IContract {
   async getIssueById({ issueId }) {
     const r = await this.__sendTx(
       this.params.contract.getContract().methods.getIssueById(issueId),
-      true,
+      { call: true },
     );
 
     return {
@@ -417,7 +419,7 @@ class Network extends IContract {
       this.params.contract
         .getContract()
         .methods.getMergeById(issue_id, merge_id),
-      true,
+      { call: true },
     );
 
     return {
@@ -492,13 +494,14 @@ class Network extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  lock({ tokenAmount }) {
+  lock({ tokenAmount }, options) {
     if (tokenAmount <= 0) {
       throw new Error('Token Amount has to be higher than 0');
     }
 
     return this.__sendTx(
       this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
+      options,
     );
   }
 
@@ -510,13 +513,14 @@ class Network extends IContract {
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-  unlock({ tokenAmount, from }) {
+  unlock({ tokenAmount, from }, options) {
     if (tokenAmount <= 0) {
       throw new Error('Tokens Amount has to be higher than 0');
     }
 
     return this.__sendTx(
       this.params.contract.getContract().methods.unlock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()), from),
+      options,
     );
   }
 
@@ -527,7 +531,7 @@ class Network extends IContract {
    * @param {Address} params.delegatedTo
    * @return {Promise<TransactionObject>}
    */
-  delegateOracles({ tokenAmount, delegatedTo }) {
+  delegateOracles({ tokenAmount, delegatedTo }, options) {
     if (tokenAmount <= 0) {
       throw new Error('Tokens Amount has to be higher than 0');
     }
@@ -536,6 +540,7 @@ class Network extends IContract {
       this.params.contract
         .getContract()
         .methods.delegateOracles(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
+      options,
     );
   }
 
@@ -545,11 +550,12 @@ class Network extends IContract {
    * @param {Number} params.issueId
    * @return {Promise<TransactionObject>}
    */
-  recognizeAsFinished({ issueId }) {
+  recognizeAsFinished({ issueId }, options) {
     return this.__sendTx(
       this.params.contract
         .getContract()
         .methods.recognizeAsFinished(issueId),
+      options,
     );
   }
 
@@ -562,13 +568,14 @@ class Network extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  openIssue({ tokenAmount, cid }) {
+  openIssue({ tokenAmount, cid }, options) {
     if (tokenAmount < 0) {
       throw new Error('Tokens Amount has to be higher than 0');
     }
 
     return this.__sendTx(
       this.params.contract.getContract().methods.openIssue(cid, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
+      options,
     );
   }
 
@@ -578,9 +585,10 @@ class Network extends IContract {
    * @param {number} params.issueId
    * @return {Promise<TransactionObject>}
    */
-  redeemIssue({ issueId }) {
+  redeemIssue({ issueId }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.redeemIssue(issueId),
+      options,
     );
   }
 
@@ -592,7 +600,7 @@ class Network extends IContract {
    * @param {address} params.address
    * @return {Promise<TransactionObject>}
    */
-  updateIssue({ issueID, tokenAmount }) {
+  updateIssue({ issueID, tokenAmount }, options) {
     if (tokenAmount < 0) {
       throw new Error('Tokens Amount has to be higher than 0');
     }
@@ -601,6 +609,7 @@ class Network extends IContract {
       this.params.contract
         .getContract()
         .methods.updateIssue(issueID, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
+      options,
     );
   }
 
@@ -612,7 +621,7 @@ class Network extends IContract {
    * @param {number[]} params.prAmounts
    * @return {Promise<TransactionObject>}
    */
-  proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
+  proposeIssueMerge({ issueID, prAddresses, prAmounts }, options) {
     if (prAddresses.length !== prAmounts.length) {
       throw new Error('prAddresses dont match prAmounts size');
     }
@@ -622,6 +631,7 @@ class Network extends IContract {
       this.params.contract
         .getContract()
         .methods.proposeIssueMerge(issueID, prAddresses, prAmountsWithDecimals),
+      options,
     );
   }
 
@@ -632,9 +642,10 @@ class Network extends IContract {
    * @param {number} params.mergeID
    * @return {Promise<TransactionObject>}
    */
-  closeIssue({ issueID, mergeID }) {
+  closeIssue({ issueID, mergeID }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.closeIssue(issueID, mergeID),
+      options,
     );
   }
 
@@ -645,9 +656,10 @@ class Network extends IContract {
    * @param {number} params.mergeID
    * @return {Promise<TransactionObject>}
    */
-  disputeMerge({ issueID, mergeID }) {
+  disputeMerge({ issueID, mergeID }, options) {
     return this.__sendTx(
       this.params.contract.getContract().methods.disputeMerge(issueID, mergeID),
+      options,
     );
   }
 

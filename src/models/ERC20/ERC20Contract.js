@@ -52,7 +52,7 @@ class ERC20Contract extends IContract {
    * @param {Integer} params.tokenAmount Amount of Tokens
    * @returns {Promise<Transaction>} Transaction
    */
-  transferTokenAmount = ({ toAddress, tokenAmount }) => {
+  transferTokenAmount = ({ toAddress, tokenAmount }, options) => {
     const amountWithDecimals = Numbers.toSmartContractDecimals(
       tokenAmount,
       this.getDecimals(),
@@ -61,6 +61,7 @@ class ERC20Contract extends IContract {
       this.params.contract
         .getContract()
         .methods.transfer(toAddress, amountWithDecimals),
+      options,
     );
   };
 
@@ -141,7 +142,7 @@ class ERC20Contract extends IContract {
    * @param {function():void} params.callback callback for the Tx
    * @returns {Promise<Transaction>} Transaction
    */
-  approve = async ({ address, amount, callback }) => {
+  approve = async ({ address, amount, callback }, options) => {
     const amountWithDecimals = Numbers.toSmartContractDecimals(
       amount,
       this.getDecimals(),
@@ -150,9 +151,10 @@ class ERC20Contract extends IContract {
       this.params.contract
         .getContract()
         .methods.approve(address, amountWithDecimals),
-      null,
-      null,
-      callback,
+      {
+        callback,
+        ...options,
+      },
     );
     return res;
   };
