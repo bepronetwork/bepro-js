@@ -1,9 +1,9 @@
 import { expect, assert } from "chai";
 import moment from "moment";
 import delay from "delay";
-import { mochaAsync } from "../utils";
-import { ERC20Contract, Voting } from "../../index";
-import Numbers from "../../src/utils/Numbers";
+import { mochaAsync } from "./utils";
+import { ERC20Contract, VotingContract } from "../build";
+import Numbers from "../build/utils/Numbers";
 
 let deployed_tokenAddress;
 const testConfig = {
@@ -12,14 +12,15 @@ const testConfig = {
 };
 
 context("Voting Contract", async () => {
-  let votingERC20Contract;
+  let erc20;
   let contract;
   let userAddress;
   let app;
+  let contractAddress;
 
 
   before(async () => {
-    contract = new Network(testConfig);
+    contract = new VotingContract(testConfig);
     userAddress = await contract.getUserAddress(); //local test with ganache
   });
 
@@ -29,17 +30,17 @@ context("Voting Contract", async () => {
     "should deploy the transactional ERC20Contract",
     mochaAsync(async () => {
       // Create Contract
-      transactionalERC20Contract = new ERC20Contract(testConfig);
-      expect(transactionalERC20Contract).to.not.equal(null);
+      erc20 = new ERC20Contract(testConfig);
+      expect(erc20).to.not.equal(null);
       // Deploy
-      const res = await transactionalERC20Contract.deploy({
+      const res = await erc20.deploy({
         name: "Token Transactional",
         symbol: "TKNT",
         cap: Numbers.toSmartContractDecimals(100000000, 18),
         distributionAddress: userAddress, 
       });
-      await transactionalERC20Contract.__assert();
-      deployed_tokenAddress = transactionalERC20Contract.getAddress();
+      await erc20.__assert();
+      deployed_tokenAddress = erc20.getAddress();
       expect(res).to.not.equal(false);
       expect(deployed_tokenAddress).to.equal(res.contractAddress);
       console.log(
@@ -51,7 +52,7 @@ context("Voting Contract", async () => {
   it(
     "should start the Voting Contract",
     mochaAsync(async () => {
-      networkContract = new Network(testConfig);
+      contract = new VotingContract(testConfig);
       expect(app).to.not.equal(null);
     })
   );
@@ -60,15 +61,13 @@ context("Voting Contract", async () => {
     "should deploy Voting Contract",
     mochaAsync(async () => {
       /* Create Contract */
-      networkContract = new Network(testConfig); //ganache local test
+      contract = new VotingContract(testConfig); //ganache local test
       /* Deploy */
-      const res = await networkContract.deploy({
-        settlerTokenAddress : settlerERC20Contract.getAddress(), 
-        transactionTokenAddress : transactionalERC20Contract.getAddress(), 
-        governanceAddress : await networkContract.getUserAddress()
+      const res = await contract.deploy({
+        erc20Contract : erc20.getAddress(), 
       });
 
-      contractAddress = networkContract.getAddress();
+      contractAddress = contract.getAddress();
       expect(res).to.not.equal(false);
     })
   );

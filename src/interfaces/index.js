@@ -8,6 +8,7 @@ const index = {
   erc721standard: require('../contracts/ERC721Standard.json'),
   erc20distribution: require('../contracts/ERC20Distribution.json'),
   network: require('../contracts/Network.json'),
+  networkFactory: require('../contracts/NetworkFactory.json'),
   openerRealFvr: require('../contracts/OpenerRealFvr.json'),
 };
 

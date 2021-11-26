@@ -7,11 +7,13 @@ import ERC20Distribution from './models/ERC20/ERC20Distribution';
 import ERC721Collectibles from './models/ERC721/ERC721Collectibles';
 import ERC721Standard from './models/ERC721/ERC721Standard';
 import Network from './models/BEPRO/Network';
+import { VotingContract } from './models';
 
 export {
   Application,
   DexStorage,
   ERC20Contract,
+  VotingContract,
   Network,
   ERC20Distribution,
   StakingContract,

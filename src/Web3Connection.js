@@ -157,6 +157,15 @@ class Web3Connection {
     const wei = await this.web3.eth.getBalance(await this.getAddress());
     return this.web3.utils.fromWei(wei, 'ether');
   }
+
+  /**
+   * Get Web3 to access functions as https://ethereum.stackexchange.com/questions/66454/how-to-get-events-emitted-by-a-transaction-with-web3-js
+   * @function
+   * @return {Web3} Web3
+   */
+  async getWeb3() {
+    return this.web3;
+  }
 }
 
 export default Web3Connection;

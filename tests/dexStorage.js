@@ -1,6 +1,6 @@
 import chai from 'chai';
 import { mochaAsync } from './utils';
-import { DexStorage } from '..';
+import { DexStorage } from "../build";
 
 const { expect } = chai;
 // var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';

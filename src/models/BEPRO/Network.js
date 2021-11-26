@@ -58,8 +58,10 @@ class Network extends IContract {
       contractAddress: settlerAddresss,
     });
     // Assert Token Contract
+    await this.params.transactionalToken.login();
     await this.params.transactionalToken.__assert();
     // Assert Token Contract
+    await this.params.settlerToken.login();
     await this.params.settlerToken.__assert();
   };
 
@@ -100,6 +102,17 @@ class Network extends IContract {
   }
 
   /**
+   * Get Amount of Disputers (people who locked BEPRO) in the network
+   * @returns {Promise<number>}
+   */
+  async getAmountOfDisputers() {
+    return parseInt(
+      await this.params.contract.getContract().methods.oraclersArray().call(),
+      10,
+    );
+  }
+
+  /**
    * Get Amount of Needed for Approve
    * @returns {Promise<number>}
    */
@@ -114,7 +127,7 @@ class Network extends IContract {
   }
 
   /**
-   * @description Get Amount of Needed for Dispute
+   * @description Get Amount of % Needed for Dispute
    * @returns {Promise<number>}
    */
   async percentageNeededForDispute() {
@@ -122,6 +135,48 @@ class Network extends IContract {
       await this.params.contract
         .getContract()
         .methods.percentageNeededForDispute()
+        .call(),
+      10,
+    );
+  }
+
+  /**
+   * @description Get Amount of Merge Fee Share
+   * @returns {Promise<number>}
+   */
+  async mergeCreatorFeeShare() {
+    return parseInt(
+      await this.params.contract
+        .getContract()
+        .methods.mergeCreatorFeeShare()
+        .call(),
+      10,
+    );
+  }
+
+  /**
+   * @description Get Time of disputableTime
+   * @returns {Promise<Date>}
+   */
+  async disputableTime() {
+    return Numbers.fromSmartContractTimeToMinutes(
+      await this.params.contract
+        .getContract()
+        .methods.disputableTime()
+        .call(),
+      10,
+    );
+  }
+
+  /**
+   * @description Get Time of redeemTime
+   * @returns {Promise<Date>}
+   */
+  async redeemTime() {
+    return Numbers.redeemTime(
+      await this.params.contract
+        .getContract()
+        .methods.redeemTime()
         .call(),
       10,
     );
@@ -143,10 +198,10 @@ class Network extends IContract {
   }
 
   /**
-   * Get Total Amount of BEPRO Staked for Tickets in the network
+   * Get Total Amount of Tokens Staked for Bounties in the Network
    * @returns {Promise<number>}
    */
-  async getBEPROStaked() {
+  async getTokensStaked() {
     return Numbers.fromDecimals(
       await this.params.contract.getContract().methods.totalStaked().call(),
       18,
@@ -154,17 +209,16 @@ class Network extends IContract {
   }
 
   /**
-   * GetTotal amount of time where an issue has to be approved
-   * @returns {Promise<Date>}
+   * Get Total Amount of BEPRO Staked for Oracles
+   * @returns {Promise<number>}
    */
-  async timeOpenForIssueApprove() {
-    return Numbers.fromSmartContractTimeToMinutes(
-      await this.params.contract
-        .getContract()
-        .methods.timeOpenForIssueApprove()
-        .call(),
+  async getBEPROStaked() {
+    return Numbers.fromDecimals(
+      await this.params.contract.getContract().methods.oraclesStaked().call(),
+      18,
     );
   }
+
 
   /**
    * Get Total Amount of Tokens Staked in the network
@@ -180,7 +234,6 @@ class Network extends IContract {
     );
   }
 
-
   /**
    * Get Transaction Token Address
    * @returns {Promise<address>}
@@ -190,6 +243,17 @@ class Network extends IContract {
       .getContract()
       .methods.transactionToken()
       .call();
+  }
+
+
+  /**
+   * Verify if Address is Council
+   * @param {Object} params
+   * @param {number} params.address
+   * @returns {Promise<address>}
+   */
+  async isCouncil({ address }) {
+    return await this.getOraclesByAddress({ address }) >= await this.COUNCIL_AMOUNT();
   }
 
   /**
@@ -219,56 +283,46 @@ class Network extends IContract {
   }
 
   /**
-   * Is issue Approved
+   * Get Amount Needed for Council
+   * @returns {Promise<Integer>}
+   */
+
+  /**
+   * Change amount needed for Council
+   * @param {number} value
+   * @return {Promise<TransactionObject>}
+   */
+  async changeCouncilAmount(value) {
+    return await this.__sendTx(
+      this.params.contract.getContract().methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals())),
+    );
+  }
+
+  /**
+   * Verify if Issue is still in Draft Mode (Available to use the redeemIssue Action)
    * @param {Object} params
    * @param {number} params.issueId
    * @returns {Promise<boolean>}
    */
-  async isIssueApproved({ issueId }) {
+  async isIssueInDraft({ issueId }) {
     return await this.params.contract
       .getContract()
-      .methods.isIssueApproved(issueId)
+      .methods.isIssueInDraft(issueId)
       .call();
   }
 
-  /**
-   * Is issue available to be approved (time wise)
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @returns {Promise<boolean>}
-   */
-  async isIssueApprovable({ issueId }) {
-    return await this.params.contract
-      .getContract()
-      .methods.isIssueApprovable(issueId)
-      .call();
-  }
 
   /**
-   * Can this issue be merged
+   * Verify if Merge is disputed (i.e. was rejected by the network holders)
    * @param {Object} params
    * @param {number} params.issueId
    * @param {number} params.mergeId
    * @returns {Promise<boolean>}
    */
-  async isIssueMergeable({ issueId, mergeId }) {
+  async isMergeDisputed({ issueId, mergeId }) {
     return await this.params.contract
       .getContract()
-      .methods.isIssueMergeable(issueId, mergeId)
-      .call();
-  }
-
-  /**
-   * Can this issue be merged
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @param {number} params.mergeId
-   * @returns {Promise<boolean>}
-   */
-  async isMergeTheOneWithMoreVotes({ issueId, mergeId }) {
-    return await this.params.contract
-      .getContract()
-      .methods.isMergeTheOneWithMoreVotes(issueId, mergeId)
+      .methods.isMergeDisputed(issueId, mergeId)
       .call();
   }
 
@@ -278,29 +332,85 @@ class Network extends IContract {
    * @param {Address} params.address
    * @returns {Promise<number>} Number of votes
    */
-  async getVotesByAddress({ address }) {
+  async getOraclesByAddress({ address }) {
     const r = await this.params.contract
       .getContract()
-      .methods.getVotesByAddress(address)
+      .methods.getOraclesByAddress(address)
       .call();
     return Numbers.fromDecimals(r, 18);
   }
 
-  async getIssueById({ issue_id }) {
+  /**
+   * Get Oralces By Address
+   * @param {Object} params
+   * @param {Address} params.address
+   * @returns {Integer} oraclesDelegatedByOthers
+   * @returns {Array | Integer} amounts
+   * @returns {Array | Address} addresses
+   * @returns {Integer} tokensLocked
+   */
+  async getOraclesSummary({ address }) {
+    const r = await this.params.contract
+      .getContract()
+      .methods.getOraclesSummary(address)
+      .call();
+
+    return {
+      oraclesDelegatedByOthers: Numbers.fromDecimals(r[0], 18),
+      amounts: r[1] ? r[1].map(a => Numbers.fromDecimals(a, 18)) : [],
+      addresses: r[2] ? r[2].map(a => a) : [],
+      tokensLocked: Numbers.fromDecimals(r[3], 18),
+    };
+  }
+
+
+  /**
+   * Get Issue By Id
+   * @param {Object} params
+   * @param {String} params.issueCID
+   * @returns {Promise<TokensNetwork~Issue>}
+   */
+  async getIssueByCID({ issueCID }) {
     const r = await this.__sendTx(
-      this.params.contract.getContract().methods.getIssueById(issue_id),
+      this.params.contract.getContract().methods.getIssueByCID(issueCID),
       true,
     );
 
     return {
       _id: Numbers.fromHex(r[0]),
-      tokensStaked: Numbers.fromDecimals(r[1], 18),
+      cid: r[1],
       creationDate: Numbers.fromSmartContractTimeToMinutes(r[2]),
-      issueGenerator: r[3],
-      votesForApprove: Numbers.fromDecimals(r[4], 18),
+      tokensStaked: Numbers.fromDecimals(r[3], 18),
+      issueGenerator: r[4],
       mergeProposalsAmount: parseInt(r[5], 10),
       finalized: r[6],
       canceled: r[7],
+      recognizedAsFinished: r[8],
+    };
+  }
+
+  /**
+   * Get Issue By Id
+   * @param {Object} params
+   * @param {Integer} params.issueId
+   * @returns {Promise<TokensNetwork~Issue>}
+   */
+  async getIssueById({ issueId }) {
+    const r = await this.__sendTx(
+      this.params.contract.getContract().methods.getIssueById(issueId),
+      true,
+    );
+
+    return {
+      _id: Numbers.fromHex(r[0]),
+      cid: r[1],
+      creationDate: Numbers.fromSmartContractTimeToMinutes(r[2]),
+      tokensStaked: Numbers.fromDecimals(r[3], 18),
+      issueGenerator: r[4],
+      mergeProposalsAmount: parseInt(r[5], 10),
+      finalized: r[6],
+      canceled: r[7],
+      recognizedAsFinished: r[8],
     };
   }
 
@@ -399,7 +509,7 @@ class Network extends IContract {
 
 
      return await this.__sendTx(
-       this.params.contract.getContract().methods.lock(tokenAmount),
+       this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
      );
    }
 
@@ -417,7 +527,7 @@ class Network extends IContract {
      }
 
      return await this.__sendTx(
-       this.params.contract.getContract().methods.unlock(tokenAmount, from),
+       this.params.contract.getContract().methods.unlock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()), from),
      );
    }
 
@@ -436,7 +546,21 @@ class Network extends IContract {
      return await this.__sendTx(
        this.params.contract
          .getContract()
-         .methods.unlock(tokenAmount, delegatedTo),
+         .methods.delegateOracles(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
+     );
+   }
+
+   /**
+   * Recognize Issue as Resolved
+   * @param {Object} params
+   * @param {Number} params.issueId
+   * @return {Promise<TransactionObject>}
+   */
+   async recognizeAsFinished({ issueId }) {
+     return await this.__sendTx(
+       this.params.contract
+         .getContract()
+         .methods.recognizeAsFinished(issueId),
      );
    }
 
@@ -444,7 +568,7 @@ class Network extends IContract {
    * open Issue
    * @param {Object} params
    * @param {number} params.tokenAmount
-   * @param {Address} params.address
+   * @param {String} params.cid
    * @throws {Error} Tokens Amount has to be higher than 0
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
@@ -455,19 +579,7 @@ class Network extends IContract {
      }
 
      return await this.__sendTx(
-       this.params.contract.getContract().methods.openIssue(cid, tokenAmount),
-     );
-   }
-
-   /**
-   * open Issue
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @return {Promise<TransactionObject>}
-   */
-   async approveIssue({ issueId }) {
-     return await this.__sendTx(
-       this.params.contract.getContract().methods.approveIssue(issueId),
+       this.params.contract.getContract().methods.openIssue(cid, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
      );
    }
 
@@ -483,18 +595,6 @@ class Network extends IContract {
      );
    }
 
-   /**
-   * open Issue
-   * @param {Object} params
-   * @param {number} params.issueId
-   * @param {number} params.mergeId
-   * @return {Promise<TransactionObject>}
-   */
-   async approveMerge({ issueId, mergeId }) {
-     return await this.__sendTx(
-       this.params.contract.getContract().methods.approveMerge(issueId, mergeId),
-     );
-   }
 
    /**
    * open Issue
@@ -513,26 +613,28 @@ class Network extends IContract {
      return await this.__sendTx(
        this.params.contract
          .getContract()
-         .methods.updateIssue(issueID, tokenAmount),
+         .methods.updateIssue(issueID, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
      );
    }
 
    /**
-   * Propose Merge of Issue
-   * @param {Object} params
-   * @param {number} params.issueID
-   * @param {Address[]} params.prAddresses
-   * @param {number[]} params.prAmounts
-   * @return {Promise<TransactionObject>}
-   */
+ * Propose Merge of Issue
+ * @param {Object} params
+ * @param {number} params.issueID
+ * @param {Address[]} params.prAddresses
+ * @param {number[]} params.prAmounts
+ * @return {Promise<TransactionObject>}
+ */
    async proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
      if (prAddresses.length !== prAmounts.length) {
        throw new Error('prAddresses dont match prAmounts size');
      }
+     const prAmountsWithDecimals = prAmounts.map(p => Numbers.toSmartContractDecimals(p, this.getTransactionTokenContract().getDecimals()));
+
      return await this.__sendTx(
        this.params.contract
          .getContract()
-         .methods.proposeIssueMerge(issueID, prAddresses, prAmounts),
+         .methods.proposeIssueMerge(issueID, prAddresses, prAmountsWithDecimals),
      );
    }
 
@@ -546,6 +648,19 @@ class Network extends IContract {
    async closeIssue({ issueID, mergeID }) {
      return await this.__sendTx(
        this.params.contract.getContract().methods.closeIssue(issueID, mergeID),
+     );
+   }
+
+   /**
+   * Dispute Merge
+   * @param {Object} params
+   * @param {number} params.issueID
+   * @param {number} params.mergeID
+   * @return {Promise<TransactionObject>}
+   */
+   async disputeMerge({ issueID, mergeID }) {
+     return await this.__sendTx(
+       this.params.contract.getContract().methods.disputeMerge(issueID, mergeID),
      );
    }
 

@@ -2,8 +2,8 @@ import { expect, assert } from "chai";
 import moment from "moment";
 import delay from "delay";
 import { mochaAsync } from "./utils";
-import { ERC20Contract, ERC20TokenLock } from "..";
-import Numbers from "../src/utils/Numbers";
+import { ERC20Contract, ERC20TokenLock } from "../build";
+import Numbers from "../build/utils/Numbers";
 //var assert = require('assert');
 // public address for this key is 0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB
 var userPrivateKey =
