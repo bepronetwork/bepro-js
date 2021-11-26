@@ -82,7 +82,9 @@ class IContract {
     const { call, value } = options || {};
 
     if (!this.acc && !call) {
-      const { callback, gasFactor, gasAmount, gasPrice } = options || {};
+      const {
+        callback, gasFactor, gasAmount, gasPrice,
+      } = options || {};
       const { params, web3Connection } = this;
 
       const from = await web3Connection.getAddress();
