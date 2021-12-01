@@ -1,12 +1,12 @@
 import { expect, assert } from 'chai';
 import moment from 'moment';
 import delay from 'delay';
-import { mochaAsync, mochaContextAsync } from '../utils';
+import { mochaAsync, mochaContextAsync } from '../../utils';
 import { ERC20Contract, ETHUtils, UniswapV3Pool, UniswapV3Factory, SwapRouter
-	, TestUniswapV3Callee, TestUniswapV3RouterBridge, TickMathTest, Loophole } from '../../build';
-import ERC20Mock  from '../../build/models/mocks/ERC20Mock';
-import Numbers from '../../build/utils/Numbers';
-import beproAssert from '../../build/utils/beproAssert';
+	, TestUniswapV3Callee, TestUniswapV3RouterBridge, TickMathTest, Loophole } from '../../../build';
+import ERC20Mock  from '../../../build/models/mocks/ERC20Mock';
+import Numbers from '../../../build/utils/Numbers';
+import beproAssert from '../../../build/utils/beproAssert';
 import {
   FeeAmount,
   getMaxTick,
@@ -18,11 +18,11 @@ import {
 	MaxUint256,
   MAX_SQRT_RATIO,
   MIN_SQRT_RATIO,
-} from '../shared/utilities';
+} from '../../shared/utilities';
 
 const truffleAssert = require("truffle-assertions");
 
-//const { chaiPlugin } = require("../../src/sablier/dev-utils");
+//const { chaiPlugin } = require("../../../src/sablier/dev-utils");
 const traveler = require("ganache-time-traveler");
 
 const BigNumber = require("bignumber.js");

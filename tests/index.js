@@ -9,5 +9,5 @@ context("Unit Tests", async () => {
   //require("./erc20TokenLock");
   //require("./stakingContract");
   //require("./sablier/sablier");
-  //require("./loophole/loophole");
+  //require("./custom/loophole/loophole");
 });

@@ -137,6 +137,18 @@ class Web3Connection {
   }
 
   /**
+   * Get current/selected account in use if available,
+   * or selected signer wallet/address otherwise.
+   * @function
+   * @return {Promise<string>} Account/Wallet in use
+   */
+  async getCurrentAccount() {
+    if (this.account) return this.account;
+    // return selected wallet in use otherwise
+    return await this.getAddress();
+  }
+
+  /**
    * Get Address connected via login()
    * @function
    * @return {Promise<string>} Address in Use
