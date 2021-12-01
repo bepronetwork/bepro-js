@@ -8,7 +8,6 @@ import "../utils/Governed.sol";
 /**
  * @dev Interface of the ERC20 standard + mint & burn
  */
- 
 interface _IERC20 is IERC20  {
 
     /**

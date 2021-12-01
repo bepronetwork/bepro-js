@@ -88,11 +88,13 @@ class IContract {
   __metamaskCall = async ({
     f, acc, value, callback = () => {},
   }) => new Promise(async (resolve, reject) => {
+    let customGasPriceObj = {};
+    if (this._customGasPrice) customGasPriceObj = { gasPrice: this._customGasPrice };
     f.send({
       from: acc,
       value,
-      gas: 591338,
-      ...this._customGasPrice && ({ gasPrice: this._customGasPrice } || {}),
+      gas: 5913388,
+      customGasPriceObj, // ...this._customGasPrice && { gasPrice: this._customGasPrice } || {},
     })
       .on('confirmation', (confirmationNumber, receipt) => {
         callback(confirmationNumber);
