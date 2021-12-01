@@ -40,29 +40,15 @@ class PredictionMarketAchievementContract extends IContract {
 	}
 
   async hasUserPredicted({ user }) {
-    const portfolio = await this.predictionMarket.getPortfolio({ user });
+    const events = await this.predictionMarket.getEvents('MarketActionTx', { user, action: '0' });
 
-    return Object.keys(portfolio).some(marketId => {
-      return portfolio[marketId].outcomes[0].shares > 0 ||
-        portfolio[marketId].outcomes[1].shares > 0;
-    });
+    return events.length > 0;
   }
 
   async hasUserClaimedWinnings({ user }) {
-    const portfolio = await this.predictionMarket.getPortfolio({ user });
+    const events = await this.predictionMarket.getEvents('MarketActionTx', { user, action: '4' });
 
-    const events = await this.predictionMarket.getEvents('MarketResolved');
-    const resolvedMarketIds = events.map(event => parseInt(event.returnValues.marketId));
-
-    return Object.keys(portfolio).some(marketId => {
-      // market not resolved
-      if (!resolvedMarketIds.includes(parseInt(marketId))) return false;
-
-      const resolvedOutcomeId = parseInt(events.find(event => event.returnValues.marketId == marketId).returnValues.outcomeId);
-
-      return portfolio[marketId].outcomes[resolvedOutcomeId] &&
-        portfolio[marketId].outcomes[resolvedOutcomeId].shares > 0;
-    });
+    return events.length > 0;
   }
 
   async hasUserBonded({ user }) {
