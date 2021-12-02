@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node:
     docker:
-      - image: circleci/node:8.12.0
+      - image: cimg/node:16.2.0
       - image: trufflesuite/ganache-cli
         # environment:
         #   FOOD: $BAR
@@ -30,9 +30,6 @@ commands:
       - run:
           name: install truffle@5.1.7 globally
           command: sudo npm install -g --unsafe-perm=true truffle@5.1.7
-      - run:
-          name: install repo's node modules
-          command: npm install
       - save_cache:
           key: *node_cache_key
           paths:
@@ -44,16 +41,6 @@ jobs:
     steps:
       - prepare_code
       - run: mkdir ~/reports
-      - run:
-          name: tests
-          command: npm run test
-          environment:
-            MOCHA_FILE: ~/reports/results.xml
-          when: always
-      - store_test_results:
-          path: ~/reports
-      - store_artifacts:
-          path: ~/reports
 
 workflows:
   code-checks:

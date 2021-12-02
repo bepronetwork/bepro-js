@@ -8,21 +8,21 @@ class Contract {
   }
 
   async deploy(account, abi, byteCode, args = [], callback = () => {}) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        this.contract = new this.web3.eth.Contract(abi);
-        if (account) {
-          const txSigned = await account.getAccount().signTransaction({
-            data: this.contract
-              .deploy({
-                data: byteCode,
-                arguments: args,
-              })
-              .encodeABI(),
-            from: account.getAddress(),
-            gasPrice: 5000000000,
-            gas: 8913388,
-          });
+    this.contract = new this.web3.eth.Contract(abi);
+    if (account) {
+      const txSigned = await account.getAccount().signTransaction({
+        data: this.contract
+          .deploy({
+            data: byteCode,
+            arguments: args,
+          })
+          .encodeABI(),
+        from: account.getAddress(),
+        gasPrice: 5000000000,
+        gas: 8913388,
+      });
+      return new Promise((resolve, reject) => {
+        try {
           this.web3.eth
             .sendSignedTransaction(txSigned.rawTransaction)
             .on('confirmation', (confirmationNumber, receipt) => {
@@ -30,28 +30,26 @@ class Contract {
                 resolve(receipt);
               }
             });
-        } else {
-          const accounts = await this.web3.eth.getAccounts();
-          const res = await this.__metamaskDeploy({
-            byteCode,
-            args,
-            acc: accounts[0],
-            callback,
-          });
-          this.address = res.contractAddress;
-          resolve(res);
+        } catch (ex) {
+          reject(ex);
         }
-      } catch (err) {
-        reject(err);
-      }
+      });
+    }
+    const accounts = await this.web3.eth.getAccounts();
+    const res = await this.__metamaskDeploy({
+      byteCode,
+      args,
+      acc: accounts[0],
+      callback,
     });
+    this.address = res.contractAddress;
+    return res;
   }
 
-  __metamaskDeploy = async ({
+  __metamaskDeploy = ({
     byteCode, args, acc, callback = () => {},
   }) => new Promise((resolve, reject) => {
     try {
-      console.log(`Contract.__metamaskDeploy.acc: ${acc}`);
       this.getContract()
         .deploy({
           data: byteCode,
@@ -67,21 +65,15 @@ class Contract {
           gas: 5913388, // 6721975
         })
         .on('confirmation', (confirmationNumber, receipt) => {
-          console.log(
-            `Contract.__metamaskDeploy.confirmationNumber: ${
-              confirmationNumber}`,
-          );
           callback(confirmationNumber);
           if (confirmationNumber > 0) {
             resolve(receipt);
           }
         })
         .on('error', (err) => {
-          console.log(`Contract.__metamaskDeploy.error: ${err}`);
           reject(err);
         });
     } catch (err) {
-      console.log(`Contract.__metamaskDeploy.catch.error: ${err}`);
       reject(err);
     }
   });
@@ -94,17 +86,18 @@ class Contract {
   }
 
   async send(account, byteCode, value = '0x0', callback = () => {}) {
-    return new Promise(async (resolve, reject) => {
-      const tx = {
-        data: byteCode,
-        from: account.address,
-        to: this.address,
-        gas: 4430000,
-        gasPrice: 5000000000,
-        value: value || '0x0',
-      };
+    const tx = {
+      data: byteCode,
+      from: account.address,
+      to: this.address,
+      gas: 4430000,
+      gasPrice: await this.web3.eth.getGasPrice(),
+      value: value || '0x0',
+    };
 
-      const result = await account.signTransaction(tx);
+    const result = await account.signTransaction(tx);
+
+    return new Promise((resolve, reject) => {
       this.web3.eth
         .sendSignedTransaction(result.rawTransaction)
         .on('confirmation', (confirmationNumber, receipt) => {
