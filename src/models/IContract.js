@@ -88,12 +88,8 @@ class IContract {
       const { params, web3Connection } = this;
 
       const from = await web3Connection.getAddress();
-      const txValue = value || '';
       const txGasPrice = gasPrice || await web3Connection.web3.eth.getGasPrice();
-      const txGasAmount = gasAmount || await method.estimateGas({
-        from,
-        value: txValue,
-      });
+      const txGasAmount = gasAmount || await method.estimateGas({ from, value });
       const txGasFactor = gasFactor || params.gasFactor || 1;
 
       return new Promise((resolve, reject) => {
@@ -101,7 +97,7 @@ class IContract {
           from,
           gas: Math.round(txGasAmount * txGasFactor),
           gasPrice: txGasPrice,
-          value: txValue,
+          value: value || '',
         })
           .on('confirmation', (confirmationNumber, receipt) => {
             if (callback) {
