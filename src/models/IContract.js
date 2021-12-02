@@ -88,7 +88,7 @@ class IContract {
       const { params, web3Connection } = this;
 
       const from = await web3Connection.getAddress();
-      const txValue = value || '0';
+      const txValue = value || '';
       const txGasPrice = gasPrice || await web3Connection.web3.eth.getGasPrice();
       const txGasAmount = gasAmount || await method.estimateGas({
         from,
