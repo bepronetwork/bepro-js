@@ -97,7 +97,7 @@ class IContract {
           from,
           gas: Math.round(txGasAmount * txGasFactor),
           gasPrice: txGasPrice,
-          value: value || '',
+          value,
         })
           .on('confirmation', (confirmationNumber, receipt) => {
             if (callback) {
