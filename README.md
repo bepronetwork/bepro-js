@@ -16,118 +16,159 @@ Build the future of DeFi Gaming
 bepro-js is available as [npm package](https://www.npmjs.com/package/bepro-js).
 
 ```bash
-// with npm
-$ npm i bepro-js
+# with npm
+npm i bepro-js
+
+# with yarn
+yarn add bepro-js
 ```
 
-Before try to install, make sure your working directory has `Python 2` and the recommended `NVM` version setted on. To do, so:
+## Local Development
 
-1. Setting of Python 2:
+### Requirements
+
+<details>
+  <summary>Python 2</summary>
+
+  For Linux:
+  ```bash
+  # Install it via bash terminal globally
+  sudo apt install python2
+
+  # Check the installed version.
+  # Must shown Python 2.7.18rc1 on terminal to the install be OK
+  python2 --version
+
+  # Verify Python 2.7 path
+  ls /usr/bin/python*
+
+  # Set Python 2 as alternative 1
+  sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 1
+
+  # Confirm Python 2 as alternative priority 1
+  sudo update-alternatives --config python
+
+  # On the working directory, run the cmd below to set Python locally
+  npm config set python python
+
+  # Confirm the procedure.
+  # Must show valid Python version on terminal if OK
+  python --version
+  ```
+
+  For other systems please follow the appropriate steps.
+</details>
+
+<details>
+  <summary>Node.js 14</summary>
+
+  Install via NVM:
+  ```bash
+  # Install NVM
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+  # Install recommended Node.js version for bepro-js
+  nvm install lts/fermium
+
+  # Set it on the working directory
+  nvm alias default lts/fermium
+
+  # Use the settled as default
+  nvm use default
+
+  # Confirm the procedure.
+  # Must show valid Node-js version on terminal if OK
+  node --version
+  ```
+</details>
+
+<details>
+  <summary>Yarn 1</summary>
+
+  ```bash
+  npm install -g yarn
+  ```
+
+  Or check [alternative install methods](https://classic.yarnpkg.com/en/docs/install).
+</details>
+
+### Running commands
+
+The following is a set of the commands you most likely will need. For details on these or to check all relevant Node.js tasks, please reference the `scripts` section of *package.json*.
 
 ```bash
-// Install it via bash terminal globally
-$ sudo apt install python2
+# Install and update dependencies
+yarn
 
-// Check the installed version.
-// Must shown Python 2.7.18rc1 on terminal to the install be OK
-$ python2 --version
+# Start watch for rebuild on file changes
+yarn start
 
-// Verify Python 2.7 path
-$ ls /usr/bin/python*
-
-// Set Python 2 as alternative 1
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 1
-
-// Confirm Python 2 as alternative priority 1
-$ sudo update-alternatives --config python
-
-// Confirm the procedure.
-// Must shown Python 2.7.18rc1 on terminal to the install be OK
-$ python --version
-
-// On the working directory, run the cmd below to set Python locally
-$ npm config set python python
+# Build from src
+yarn build
 ```
 
-2. Setting of Node:
+## Local Ethereum Client
+
+For tests, we use [Ganache](https://trufflesuite.com/ganache/).
+
+Once installed, you can:
 
 ```bash
-// Install NVM recommended version for bepro-js
-$ nvm install 14.17.0
+# Boot it up
+yarn ganache:start
 
-// Set it on the working directory
-$ nvm alias default v14.17.0
-
-// Use the settled as default
-$ nvm use default
+# Run the tests
+yarn test
 ```
-
-Now, your work directory is able to install and run bepro-js.
 
 ## Docker support
 
 ### Requirements
 
-- Docker CE - 19.03.3+
-- Docker Compose - 1.19.0+
+<details>
+  <summary>Docker 19.03.3+</summary>
 
-### How to install or upgrade docker and docker-compose?
+  ```shell script
+  sudo curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
+  ```
 
-##### Docker:
+  **Notice**: If you already have Docker installed, this script can cause trouble. If you installed the current Docker package using this script, run it again to update Docker.
 
-```shell script
-sudo curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
-```
+  Or use official installation instructions: [Mac](https://docs.docker.com/docker-for-mac/install/), [Windows](https://docs.docker.com/docker-for-windows/install/), [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/), [Other](https://docs.docker.com/install/#supported-platforms).
+</details>
 
-**Notice**: If you already have Docker installed, this script can cause trouble. If you installed the current Docker package using this script and are using it again to update Docker. Or use official installation instructions: [Mac](https://docs.docker.com/docker-for-mac/install/), [Windows](https://docs.docker.com/docker-for-windows/install/), [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/), [Other](https://docs.docker.com/install/#supported-platforms).
+<details>
+  <summary>Docker Compose 1.19.0+</summary>
 
-##### Docker Compose:
+  ```shell script
+  sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
+  ```
 
-For linux:
+  For Mac or Windows take a look on: [official guides](https://docs.docker.com/compose/install/#install-compose).
+</details>
 
-```shell script
-sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
-```
-
-For Mac or Windows take a look on: [official guides](https://docs.docker.com/compose/install/#install-compose).
 
 ### Running containers
 
 You can use docker-compose directly, or the nifty `make` that comes bundled.
 
-#### Build images
-
-```shell script
+```bash
+# Build images
 make build
-```
 
-#### Starting containers in background:
-
-```shell script
+# Starting containers in background:
 make up
-```
 
-#### Start npm watch:
-
-```shell script
+# Start npm watch:
 make watch
-```
 
-#### Run tests
-
-```shell script
+# Run tests
 make test
-```
 
-#### Stop containers
-
-```shell script
+# Stop containers
 make down
-```
 
-#### Using docker-compose instead of make
-
-```shell script
+# Using docker-compose instead of make
 docker-compose up
 ```
 
@@ -248,7 +289,7 @@ Estimated gas fees leverage the following web3 functionalities:
 
 ## Contribution
 
-Contributions are welcomed but we ask to red existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
+Contributions are welcomed but we ask to read existing code guidelines, especially for the code format. Please review [Contributor guidelines][1]
 
 ## License
 
@@ -256,6 +297,6 @@ Contributions are welcomed but we ask to red existing code guidelines, specially
 
 ## Notes
 
-The usage of ETH in all methods or params means using the native currency of that blockchain, example BSC in Binance Chain would still be nominated as ETH
+The usage of `ETH` in all methods or params means using the native currency of that blockchain, example `BSC` in Binance Chain would still be nominated as `ETH`
 
 [1]: https://github.com/bepronetwork/bepro-js/blob/master/CONTRIBUTING.md
