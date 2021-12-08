@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { staking } from '../../interfaces';
 import ERC20Contract from '../ERC20/ERC20Contract';
+import ERC721Collectibles from '../ERC721/ERC721Collectibles';
 import IContract from '../IContract';
 import Numbers from '../../utils/Numbers';
 
@@ -21,10 +22,18 @@ import Numbers from '../../utils/Numbers';
 class StakingContract extends IContract {
   constructor(params = {}) {
     super({ ...params, abi: staking });
+
     if (params.tokenAddress) {
       this.params.ERC20Contract = new ERC20Contract({
         web3Connection: this.web3Connection,
         contractAddress: params.tokenAddress,
+      });
+    }
+
+    if (params.collectiblesAddress) {
+      this.params.ERC721Collectibles = new ERC721Collectibles({
+        web3Connection: this.web3Connection,
+        contractAddress: params.collectiblesAddress,
       });
     }
   }
@@ -463,11 +472,17 @@ class StakingContract extends IContract {
     if (!this.getERC20Contract()) {
       throw new Error('No Token Address Provided');
     }
-    const params = [this.getERC20Contract().getAddress()];
+
+    const params = [
+      this.getERC20Contract().getAddress(),
+      this.getERC721Contract() ? this.getERC721Contract().getAddress() : '0x0000000000000000000000000000000000000000',
+    ];
+
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
+
     return res;
   };
 
@@ -476,6 +491,12 @@ class StakingContract extends IContract {
    * @return ERC20Contract|undefined
    */
   getERC20Contract = () => this.params.ERC20Contract;
+
+  /**
+   * @function
+   * @return ERC721Collectibles|undefined
+   */
+  getERC721Contract = () => this.params.ERC721Collectibles;
 }
 
 export default StakingContract;

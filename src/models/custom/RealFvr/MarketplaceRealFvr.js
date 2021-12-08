@@ -27,7 +27,7 @@ class MarketplaceRealFvr extends IContract {
     this.params.tokenAddress = await this.getERC20TokenAddress();
     this.params.erc721Address = await this.getERC721TokenAddress();
 
-    if (!this.isETHTransaction) {
+    if (!this.isETHTransaction()) {
       // Set Token Address Contract for easy access
       this.params.ERC20Contract = new ERC20Contract({
         acc: this.acc,

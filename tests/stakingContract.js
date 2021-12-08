@@ -88,6 +88,7 @@ context("Staking Contract", async () => {
         tokenAddress: deployed_tokenAddress,
       }); //ganache local test
       /* Deploy */
+      await stakingContract.start();
       const res = await stakingContract.deploy();
       await stakingContract.__assert();
       contractAddress = stakingContract.getAddress();

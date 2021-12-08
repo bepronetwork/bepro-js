@@ -1,7 +1,7 @@
 import chai from 'chai';
 import { mochaAsync } from '../../utils';
 import Numbers from '../../../src/utils/Numbers';
-import Application from '../../../src/Application';
+import { ERC20Contract, ERC721Contract, MarketplaceRealFvr } from "../../../build";
 
 const { expect } = chai;
 export var contractAddress;
@@ -9,31 +9,25 @@ export var deployed_tokenAddress;
 export var deployed_erc721Address;
 export var deployed_marketplaceAddress;
 
+const testConfig = {
+  test: true,
+  localtest: true, //ganache local blockchain
+};
+
 context('Marketplace RealFvr', async () => {
   let erc20Contract;
   let erc721Contract;
-  let app;
   let marketplaceContract;
   let userAddress;
-
-  before(async () => {
-    app = new Application({ test: true, localtest: true, mainnet: false });
-  });
-
-  it(
-    'should start the Application',
-    mochaAsync(async () => {
-      app = new Application({ test: true, localtest: true, mainnet: false });
-      userAddress = await app.getAddress();
-      expect(app).to.not.equal(null);
-    }),
-  );
 
   it(
     'should deploy a ERC20 contract',
     mochaAsync(async () => {
       /* Create Contract */
-      erc20Contract = app.getERC20Contract({});
+      erc20Contract = new ERC20Contract(testConfig);
+
+      userAddress = await erc20Contract.getUserAddress();
+
       /* Deploy */
       const res = await erc20Contract.deploy({
         name: 'test',
@@ -55,11 +49,12 @@ context('Marketplace RealFvr', async () => {
     'should deploy a ERC721 contract',
     mochaAsync(async () => {
       /* Create Contract */
-      erc721Contract = app.getERC721Contract({});
+      erc721Contract = new ERC721Contract(testConfig);
       /* Deploy */
       const res = await erc721Contract.deploy({
         name: 'test',
-        symbol: 'B.E.P.R.O'
+        symbol: 'B.E.P.R.O',
+        erc20Purchase: deployed_tokenAddress, //tokenAddress
       });
       await erc721Contract.__assert();
       contractAddress = erc721Contract.getAddress();
@@ -74,7 +69,7 @@ context('Marketplace RealFvr', async () => {
     'should deploy the MarketPlace contract',
     mochaAsync(async () => {
       /* Create Contract */
-      marketplaceContract = app.getMarketplaceRealFvrContract({});
+      marketplaceContract = new MarketplaceRealFvr(testConfig);
       /* Deploy */
       const res = await marketplaceContract.deploy({
         erc20TokenAddress: erc20Contract.getAddress(),

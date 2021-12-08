@@ -207,7 +207,7 @@ class ERC20TokenLock extends IContract {
 
     // check if user can lock tokens
     const lockedAmount = await this.getLockedTokens({ address });
-    assert(lockedAmount === 0, 'User already has locked tokens'); // otherwise user already locked tokens
+    assert(lockedAmount === '0', 'User already has locked tokens'); // otherwise user already locked tokens
 
     /* Verify if transfer is approved for this amount */
     const isApproved = await this.getERC20Contract().isApproved({

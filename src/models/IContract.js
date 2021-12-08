@@ -39,16 +39,11 @@ class IContract {
       throw new Error('No ABI Interface provided');
     }
 
-    if (!web3Connection) {
-      this.web3Connection = new Web3Connection(params);
-      this.web3Connection.start();
-    } else {
-      this.web3Connection = web3Connection;
-    }
+    this.web3Connection = web3Connection || new Web3Connection(params);
 
     this.params = {
       abi,
-      contract: new Contract(this.web3Connection.web3, abi, contractAddress),
+      contract: this.web3Connection.web3 ? new Contract(this.web3Connection.web3, abi, contractAddress) : null,
       contractAddress,
       gasFactor,
       tokenAddress,
@@ -161,7 +156,8 @@ class IContract {
         'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
-    /* Use ABI */
+
+    // Use ABI
     this.params.contract.use(this.params.abi, this.getAddress());
   };
 
