@@ -286,7 +286,10 @@ class Network extends IContract {
    * @param {number} params.value
    * @return {Promise<TransactionObject>}
    */
-  changeCouncilAmount({ value }, options) {
+  changeCouncilAmount(params, options) {
+    // Backwards compatibility
+    const value = typeof params === 'object' ? params.value : params;
+
     return this.__sendTx(
       this.params.contract.getContract().methods.changeCOUNCIL_AMOUNT(
         Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals()),
