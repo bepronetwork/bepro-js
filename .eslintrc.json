@@ -4,6 +4,11 @@
   ],
 
   "globals": {
+    "artifacts": true,
+    "before": true,
+    "context": true,
+    "contract": true,
+    "it": true,
     "window": true
   },
 
@@ -15,7 +20,7 @@
     "camelcase": 0,
     "max-len": ["warn", 120, 2, {
       "ignoreUrls": true,
-      "ignoreComments": false,
+      "ignoreComments": true,
       "ignoreRegExpLiterals": true,
       "ignoreStrings": true,
       "ignoreTemplateLiterals": true

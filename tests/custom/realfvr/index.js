@@ -1,17 +1,15 @@
 import chai from 'chai';
 import { mochaAsync } from '../../utils';
 import Numbers from '../../../src/utils/Numbers';
-import { ERC20Contract, ERC721Contract, MarketplaceRealFvr } from "../../../build";
+import { ERC20Contract, ERC721Contract, MarketplaceRealFvr } from '../../../build';
 
 const { expect } = chai;
-export var contractAddress;
-export var deployed_tokenAddress;
-export var deployed_erc721Address;
-export var deployed_marketplaceAddress;
+let contractAddress;
+let deployed_tokenAddress;
 
 const testConfig = {
   test: true,
-  localtest: true, //ganache local blockchain
+  localtest: true, // ganache local blockchain
 };
 
 context('Marketplace RealFvr', async () => {
@@ -53,13 +51,12 @@ context('Marketplace RealFvr', async () => {
       const res = await erc721Contract.deploy({
         name: 'test',
         symbol: 'B.E.P.R.O',
-        erc20Purchase: deployed_tokenAddress, //tokenAddress
+        erc20Purchase: deployed_tokenAddress, // tokenAddress
       });
       await erc721Contract.__assert();
       contractAddress = erc721Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(contractAddress).to.equal(res.contractAddress);
-      deployed_erc721Address = contractAddress;
     }),
   );
 
@@ -77,7 +74,6 @@ context('Marketplace RealFvr', async () => {
       contractAddress = marketplaceContract.getAddress();
       expect(res).to.not.equal(false);
       expect(contractAddress).to.equal(res.contractAddress);
-      deployed_marketplaceAddress = contractAddress;
     }),
   );
 
@@ -86,34 +82,32 @@ context('Marketplace RealFvr', async () => {
     mochaAsync(async () => {
       /* Mint */
       const res = await erc721Contract.mint({
-        tokenId : 1,
-        to : userAddress
+        tokenId: 1,
+        to: userAddress,
       });
       expect(res).to.not.equal(false);
     }),
   );
-
 
   it(
     'should approve  NFT',
     mochaAsync(async () => {
       /* Approve */
       const res = await erc721Contract.approve({
-        tokenId : 1,
-        to : marketplaceContract.getAddress()
+        tokenId: 1,
+        to: marketplaceContract.getAddress(),
       });
       expect(res).to.not.equal(false);
     }),
   );
-
 
   it(
     'should put NFT in sale',
     mochaAsync(async () => {
       /* Put in Sale */
       const res = await marketplaceContract.putERC721OnSale({
-        tokenId : 1,
-        price : 1000
+        tokenId: 1,
+        price: 1000,
       });
       expect(res).to.not.equal(false);
     }),

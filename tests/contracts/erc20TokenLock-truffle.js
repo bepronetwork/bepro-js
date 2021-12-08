@@ -28,8 +28,6 @@ function timeToSmartContractTime(time) {
 contract(TEST_CONTRACT_NAME, async (accounts) => {
   const owner = accounts[0];
   const user1 = accounts[1];
-  const user2 = accounts[2];
-  let app;
   let erc20Test; // erc20 token contract we use for testing
   let erc20Lock; // erc20 token lock contract
 
@@ -44,14 +42,14 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
       from: owner,
     });
     /* time dev tests
-		let now = moment();
-		let now_unix = now.unix();
-		let smartContractTime = timeToSmartContractTime(now);
-		let dt = Date.now(); // equals to moment()
-		console.log("now				: " + now);
-		console.log("now_unix			: " + now_unix);
-		console.log("smartContractTime	: " + smartContractTime);
-		console.log("Date.now()			: " + dt); */
+    let now = moment();
+    let now_unix = now.unix();
+    let smartContractTime = timeToSmartContractTime(now);
+    let dt = Date.now(); // equals to moment()
+    console.log("now: " + now);
+    console.log("now_unix: " + now_unix);
+    console.log("smartContractTime: " + smartContractTime);
+    console.log("Date.now(): " + dt); */
   });
 
   it(
@@ -59,7 +57,6 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
     }ERC20TokenLock Contract should have initial variables expected values`,
     async () => {
       let res = await erc20Lock.erc20();
-      const ret_tokenAddress = res;
       expect(res).to.equal(erc20TokenContract);
       res = await erc20Lock.maxAmountToLock();
       expect(Number(res).toString()).to.equal(Number(0).toString());
@@ -154,7 +151,7 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
       }
 
       // Check if max token amount is still the same
-      res = await erc20Lock.maxAmountToLock();
+      const res = await erc20Lock.maxAmountToLock();
       expect(Number(res).toString()).to.equal(Number(7000).toString());
     },
   );
@@ -179,7 +176,7 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
       }
 
       // Check if min token amount is still the same
-      res = await erc20Lock.minAmountToLock();
+      const res = await erc20Lock.minAmountToLock();
       expect(Number(res).toString()).to.equal(Number(1000).toString());
     },
   );
@@ -200,7 +197,7 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
     const userAddress = owner;
 
     // lock tokens
-    endDate = timeToSmartContractTime(moment().add(lockSeconds, 'seconds'));
+    const endDate = timeToSmartContractTime(moment().add(lockSeconds, 'seconds'));
     res = await erc20Lock.lock(lockTokens, endDate, { from: userAddress });
     expect(res).to.not.equal(false);
     // console.log('res.logs[0] >>> ', res.logs[0]);
@@ -227,7 +224,7 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
     res = await erc20Lock.getLockedTokensInfo(userAddress);
 
     expect(res[0]).to.not.equal(false); // startDate
-    expect(res[1] == endDate).to.equal(true); // endDate
+    expect(res[1] === endDate).to.equal(true); // endDate
     expect(Number(res[2]).toString()).to.equal(Number(lockTokens).toString()); // amount
   });
 

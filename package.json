@@ -24,8 +24,8 @@
         "docs": "yarn build && yarn jsdoc:build && yarn jsdoc:serve",
         "jsdoc:build": "jsdoc -t ./node_modules/better-docs src -r -c docs-src/jsdoc.json",
         "jsdoc:serve": "http-server ./docs/ -o",
-        "lint": "eslint ./src --cache",
-        "lint:fix": "eslint ./src --fix",
+        "lint": "eslint ./src ./tests --cache",
+        "lint:fix": "eslint ./src ./tests --fix",
         "ganache:start": "ganache-cli -p 8545 -q",
         "watch": "yarn build && onchange 'src/**/*.js' -- yarn build"
     },

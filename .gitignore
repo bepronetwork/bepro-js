@@ -6,5 +6,6 @@ xunit.xml
 build/
 /docs
 .DS_Store
+.eslintcache
 
 /built

@@ -195,7 +195,9 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
+      this.params.contract.getContract().methods.lock(
+        Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()),
+      ),
       options,
     );
   }

@@ -288,7 +288,9 @@ class Network extends IContract {
    */
   changeCouncilAmount({ value }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals())),
+      this.params.contract.getContract().methods.changeCOUNCIL_AMOUNT(
+        Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals()),
+      ),
       options,
     );
   }
@@ -500,7 +502,9 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.params.contract.getContract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
+      this.params.contract.getContract().methods.lock(
+        Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()),
+      ),
       options,
     );
   }
@@ -519,7 +523,10 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.params.contract.getContract().methods.unlock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()), from),
+      this.params.contract.getContract().methods.unlock(
+        Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()),
+        from,
+      ),
       options,
     );
   }
@@ -539,7 +546,10 @@ class Network extends IContract {
     return this.__sendTx(
       this.params.contract
         .getContract()
-        .methods.delegateOracles(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
+        .methods.delegateOracles(
+          Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()),
+          delegatedTo,
+        ),
       options,
     );
   }
@@ -574,7 +584,10 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.params.contract.getContract().methods.openIssue(cid, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
+      this.params.contract.getContract().methods.openIssue(
+        cid,
+        Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()),
+      ),
       options,
     );
   }
@@ -608,7 +621,10 @@ class Network extends IContract {
     return this.__sendTx(
       this.params.contract
         .getContract()
-        .methods.updateIssue(issueID, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
+        .methods.updateIssue(
+          issueID,
+          Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()),
+        ),
       options,
     );
   }
@@ -625,7 +641,9 @@ class Network extends IContract {
     if (prAddresses.length !== prAmounts.length) {
       throw new Error('prAddresses dont match prAmounts size');
     }
-    const prAmountsWithDecimals = prAmounts.map((p) => Numbers.toSmartContractDecimals(p, this.getTransactionTokenContract().getDecimals()));
+    const prAmountsWithDecimals = prAmounts.map(
+      (p) => Numbers.toSmartContractDecimals(p, this.getTransactionTokenContract().getDecimals()),
+    );
 
     return this.__sendTx(
       this.params.contract
