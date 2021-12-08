@@ -1,4 +1,4 @@
-FROM node:8-buster
+FROM node:14-buster
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
@@ -17,10 +17,13 @@ RUN apt-get update && apt-get install -y -q --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 14.17.0
+ENV NODE_VERSION 14.17.6
+
+# Ensure NVM_DIR exists
+RUN mkdir -p $NVM_DIR;
 
 # Install nvm with node and npm
-RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.24.1/install.sh | bash \
+RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.38.0/install.sh | bash \
     && . $NVM_DIR/nvm.sh \
     && nvm install $NODE_VERSION \
     && nvm alias default $NODE_VERSION \
