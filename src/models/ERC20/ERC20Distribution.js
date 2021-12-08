@@ -19,11 +19,7 @@ import Numbers from '../../utils/Numbers';
  */
 class ERC20Distribution extends IContract {
   constructor(params = {}) {
-    try {
-      super({ ...params, abi: erc20distribution });
-    } catch (err) {
-      throw err;
-    }
+    super({ ...params, abi: erc20distribution });
   }
 
   /**
@@ -41,7 +37,7 @@ class ERC20Distribution extends IContract {
    * @param {Address} params.address
    * @returns {Promise<number>} Token Amount
    */
-  getTokenAmount = async ({ address }) => await this.getERC20Contract().getTokenAmount(address);
+  getTokenAmount = ({ address }) => this.getERC20Contract().getTokenAmount(address);
 
   /**
    * (Admin only) Set Token address
@@ -50,7 +46,7 @@ class ERC20Distribution extends IContract {
    * @param {Address} params.address ERC20 Address
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-   setTokenAddress = async ({ address }) => await this.__sendTx(
+   setTokenAddress = ({ address }) => this.__sendTx(
      this.params.contract
        .getContract()
        .methods.setTokenAddress(address),
@@ -63,7 +59,7 @@ class ERC20Distribution extends IContract {
    * @param {Address} params.address Address to transfer the ERC20 tokens to
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-    safeGuardAllTokens = async ({ address }) => await this.__sendTx(
+    safeGuardAllTokens = ({ address }) => this.__sendTx(
       this.params.contract
         .getContract()
         .methods.safeGuardAllTokens(address),
@@ -76,7 +72,7 @@ class ERC20Distribution extends IContract {
    * @param {Integer} params.time Time to set the TGE to (Token Generation Event)
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-    setTGEDate = async ({ time }) => await this.__sendTx(
+    setTGEDate = ({ time }) => this.__sendTx(
       this.params.contract
         .getContract()
         .methods.setTGEDate(Numbers.timeToSmartContractTime(time)),
@@ -91,12 +87,12 @@ class ERC20Distribution extends IContract {
    * @param {Integer} params.unlockTime Time to when this tokens unlock
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-    setInitialDistribution = async ({ address, tokenAmount, unlockTime }) => {
+    setInitialDistribution = ({ address, tokenAmount, unlockTime }) => {
       const tokenAmountWithDecimals = Numbers.toSmartContractDecimals(
         tokenAmount,
         this.getERC20Contract().getDecimals(),
       );
-      return await this.__sendTx(
+      return this.__sendTx(
         this.params.contract
           .getContract()
           .methods.setInitialDistribution(address, tokenAmountWithDecimals, Numbers.timeToSmartContractTime(unlockTime)),
@@ -109,7 +105,7 @@ class ERC20Distribution extends IContract {
    * @param {Object} params
    * @returns {Promise<boolean>} Success True if operation was successful
    */
-    triggerTokenSend = async () => await this.__sendTx(
+    triggerTokenSend = () => this.__sendTx(
       this.params.contract
         .getContract()
         .methods.triggerTokenSend(),
