@@ -17,9 +17,9 @@ contract StakingContract is Pausable, Ownable {
     uint256 lockedTokens = 0;
 
     uint256 constant private year = 365 days;
-    
+
     ERC20 public erc20;
-    
+
     address public erc721;
 
     struct SubscriptionAPR {
@@ -48,12 +48,12 @@ contract StakingContract is Pausable, Ownable {
         uint256[] subscriptionIds;
         mapping(uint256 => SubscriptionAPR) subscriptions; /* Distribution object */
     }
-    
+
     constructor(address _tokenAddress, address _nftAddress) public {
         erc20 = ERC20(_tokenAddress);
         erc721 = _nftAddress;
     }
-    
+
     /* Current Held Tokens */
     function heldTokens() public view returns (uint256) {
         return erc20.balanceOf(address(this));
@@ -74,10 +74,12 @@ contract StakingContract is Pausable, Ownable {
         uint256 time = block.timestamp;
         /* Confirm Amount is positive */
         require(_amount > 0, "Amount has to be bigger than 0");
-     
+
         /* Confirm user has at least one NFT */
-        require(IERC721(erc721).balanceOf(msg.sender) > 0, "Must hold at least 1 NFT");
-        
+        if(address(erc721) != address(0)){
+            require(IERC721(erc721).balanceOf(msg.sender) > 0, "Must hold at least 1 NFT");
+        }
+
         /* Confirm product still exists */
         require(block.timestamp < products[_product_id].endDate, "Already ended the subscription");
 
@@ -88,16 +90,16 @@ contract StakingContract is Pausable, Ownable {
 
         /* Confirm the user has funds for the transfer */
         require(_amount <= erc20.allowance(msg.sender, address(this)), "Spender not authorized to spend this tokens, allow first");
-        
+
         /* Confirm Max Amount was not hit already */
         require(products[_product_id].totalMaxAmount > (products[_product_id].currentAmount + _amount), "Max Amount was already hit");
 
         /* Confirm Amount is bigger than minimum Amount */
         require(_amount >= products[_product_id].individualMinimumAmount, "Has to be highger than minimum");
-        
+
         /* Confirm Amount is smaller than maximum Amount */ /* FIX PF */
         require(_amount <= products[_product_id].individualMaximumAmount, "Has to be smaller than maximum");
-        
+
         uint256 futureAPRAmount = getAPRAmount(products[_product_id].APR, time, products[_product_id].endDate, _amount);
 
         /* Confirm the current funds can assure the user the APR is valid */
@@ -113,7 +115,7 @@ contract StakingContract is Pausable, Ownable {
         incrementId = incrementId + 1;
 
         /* Create SubscriptionAPR Object */
-        SubscriptionAPR memory subscriptionAPR = SubscriptionAPR(subscription_id, _product_id, time, products[_product_id].endDate, _amount, 
+        SubscriptionAPR memory subscriptionAPR = SubscriptionAPR(subscription_id, _product_id, time, products[_product_id].endDate, _amount,
         msg.sender, products[_product_id].APR, false, 0);
 
         /* Create new subscription */
@@ -139,7 +141,7 @@ contract StakingContract is Pausable, Ownable {
 
         address[] memory addressesI;
         uint256[] memory subscriptionsI;
-        
+
         /* Create ProductAPR Object */
         ProductAPR memory productAPR = ProductAPR(block.timestamp, _startDate, _endDate, _totalMaxAmount, _individualMinimumAmount, _individualMaximumAmount, _APR, 0, _lockedUntilFinalization,
             addressesI, subscriptionsI);
@@ -209,26 +211,26 @@ contract StakingContract is Pausable, Ownable {
 
         /* Sub to LockedTokens */
         lockedTokens = lockedTokens.sub(totalAmountWithFullAPR);
-    }   
+    }
 
     function getSubscription(uint256 _subscription_id, uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, address, uint256, bool, uint256){
 
         SubscriptionAPR memory subscription = products[_product_id].subscriptions[_subscription_id];
 
-        return (subscription._id, subscription.productId, subscription.startDate, subscription.endDate, 
+        return (subscription._id, subscription.productId, subscription.startDate, subscription.endDate,
             subscription.amount, subscription.subscriberAddress, subscription.APR, subscription.finalized, subscription.withdrawAmount);
     }
-    
+
     function getProduct(uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256, bool, address[] memory, uint256[] memory){
 
         ProductAPR memory product = products[_product_id];
 
-        return (product.createdAt, product.startDate, product.endDate, product.totalMaxAmount, 
+        return (product.createdAt, product.startDate, product.endDate, product.totalMaxAmount,
             product.individualMinimumAmount, product.individualMaximumAmount, product.APR, product.currentAmount, product.lockedUntilFinalization,
             product.subscribers, product.subscriptionIds
         );
     }
-    
+
     function safeGuardAllTokens(address _address) external onlyOwner whenPaused  { /* In case of needed urgency for the sake of contract bug */
         require(erc20.transfer(_address, erc20.balanceOf(address(this))));
     }
