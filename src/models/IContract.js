@@ -16,8 +16,6 @@ import Web3Connection from '../Web3Connection';
  * @property {boolean} call
  * @property [function():void] callback
  * @property {number} gasFactor
- * @property {number} gasLimit
- * @property {string} gasPrice
  * @property {*} value
  */
 

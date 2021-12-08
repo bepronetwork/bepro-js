@@ -7,6 +7,7 @@ import "./Network.sol";
 /**
  * @title Development Network Contract Factory 
  */
+ 
 contract NetworkFactory is ReentrancyGuard{
    using SafeMath for uint256;
 
@@ -38,7 +39,8 @@ contract NetworkFactory is ReentrancyGuard{
     function createNetwork(address _settlerToken, address _transactionToken) external {
 
         require(tokensLocked[msg.sender] >= OPERATOR_AMOUNT, "Operator has to lock +1M BEPRO to fork the Network");
-
+        require(networksByAddress[msg.sender] != Network(0), "Operator can have only 1 Network by address");
+        
         Network network = new Network(_settlerToken, _transactionToken, msg.sender);
         networksArray.push(network);
         networks[networksAmount] = network;
