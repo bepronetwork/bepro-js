@@ -26,7 +26,6 @@ context("Generics", async () => {
   it(
     "should be able to import directly via require(..)",
     mochaAsync(async () => {
-      console.log("app", Application);
       expect(Application).to.not.equal(null);
     })
   );
@@ -40,10 +39,8 @@ context("Generics", async () => {
       expect(erc20).to.not.equal(null);
 
       let userAddr = await erc20.getUserAddress();
-      console.log("---erc20.userAddress: " + userAddr);
 
       let networkName = await erc20.getETHNetwork();
-      console.log("---erc20.networkName: " + networkName);
       expect(networkName).to.equal("Rinkeby");
     })
   );
@@ -60,9 +57,7 @@ context("Generics", async () => {
         await erc20.start();
 
         assert.fail();
-        console.log("---log erc20.start() this should not be reached");
       } catch (err) {
-        console.log("---log erc20.start().error: " + err.message);
         assert(
           err.message.indexOf(
             "Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet"
@@ -72,7 +67,6 @@ context("Generics", async () => {
       }
 
       let userAddr = await erc20.getUserAddress();
-      console.log("---erc20.userAddress: " + userAddr);
       expect(userAddr).to.equal(undefined);
     })
   );
@@ -94,12 +88,9 @@ context("Generics", async () => {
 
       // should fail to get any data since we have no web3 connection
       try {
-        let userAddr = await erc20.getUserAddress();
-        console.log("---erc20.userAddress: " + userAddr);
-
+        await erc20.getUserAddress();
         assert.fail();
       } catch (err) {
-        console.log("---log erc20.getUserAddress().error: " + err.message);
         assert(
           err.message.indexOf("undefined") >= 0,
           "erc20.getUserAddress should fail with expected error"

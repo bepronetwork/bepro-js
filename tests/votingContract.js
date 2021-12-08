@@ -43,9 +43,6 @@ context("Voting Contract", async () => {
       deployed_tokenAddress = erc20.getAddress();
       expect(res).to.not.equal(false);
       expect(deployed_tokenAddress).to.equal(res.contractAddress);
-      console.log(
-        "ERC20Contract.deployed_tokenAddress: " + deployed_tokenAddress
-      );
     })
   );
 

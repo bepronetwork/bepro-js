@@ -40,7 +40,6 @@ context('Marketplace RealFvr', async () => {
       contractAddress = erc20Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(contractAddress).to.equal(res.contractAddress);
-      console.log(`Deployed ERC20Contract address: ${contractAddress}`);
       deployed_tokenAddress = contractAddress;
     }),
   );
@@ -60,7 +59,6 @@ context('Marketplace RealFvr', async () => {
       contractAddress = erc721Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(contractAddress).to.equal(res.contractAddress);
-      console.log(`Deployed ERC721Contract address: ${contractAddress}`);
       deployed_erc721Address = contractAddress;
     }),
   );
@@ -79,7 +77,6 @@ context('Marketplace RealFvr', async () => {
       contractAddress = marketplaceContract.getAddress();
       expect(res).to.not.equal(false);
       expect(contractAddress).to.equal(res.contractAddress);
-      console.log(`Deployed Marketplace address: ${contractAddress}`);
       deployed_marketplaceAddress = contractAddress;
     }),
   );

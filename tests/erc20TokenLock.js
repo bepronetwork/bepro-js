@@ -61,9 +61,6 @@ context("ERC20TokenLock Contract", async () => {
       deployed_tokenAddress = erc20Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(deployed_tokenAddress).to.equal(res.contractAddress);
-      console.log(
-        "ERC20Contract.deployed_tokenAddress: " + deployed_tokenAddress
-      );
     })
   );
 
@@ -142,18 +139,12 @@ context("ERC20TokenLock Contract", async () => {
     mochaAsync(async () => {
       // Create Contract
       let testConfig2 = { ...testConfig, tokenAddress: deployed_tokenAddress };
-      console.log(
-        "---should deploy erc20Lock.testConfig2: " + JSON.stringify(testConfig2)
-      );
       erc20Lock = new ERC20TokenLock(testConfig2);
       // Deploy
       let res = await erc20Lock.deploy();
       await erc20Lock.__assert();
       contractAddress = erc20Lock.getAddress();
       deployed_contractAddress = erc20Lock.getAddress();
-      console.log(
-        "Deployed ERC20TokenLock address: " + deployed_contractAddress
-      );
       assert.equal(
         deployed_tokenAddress,
         erc20Lock.getERC20Contract().getAddress(),
@@ -176,20 +167,20 @@ context("ERC20TokenLock Contract", async () => {
       const res3 = await erc20Lock.minAmountToLock();
       const res4 = await erc20Lock.totalAmountStaked();
       const res5 = await erc20Lock.getLockedTokens({ address: userAddress });
-      console.log("***init.maxAmountToLock : " + res2);
-      console.log("***init.minAmountToLock : " + res3);
-      console.log("***init.totalAmountStaked : " + res4);
-      console.log("***init.userLockedTokens : " + res5);
+      // console.log("***init.maxAmountToLock : " + res2);
+      // console.log("***init.minAmountToLock : " + res3);
+      // console.log("***init.totalAmountStaked : " + res4);
+      // console.log("***init.userLockedTokens : " + res5);
       assert(res2 == 0, true, "maxAmountToLock should be zero");
       expect(Number(res3)).to.equal(0);
       expect(Number(res4)).to.equal(0);
 
-      console.log(
-        "Init tests: \n* erc20                 : " +
-          res +
-          "\n* deployed_tokenAddress : " +
-          deployed_tokenAddress
-      );
+      // console.log(
+      //   "Init tests: \n* erc20                 : " +
+      //     res +
+      //     "\n* deployed_tokenAddress : " +
+      //     deployed_tokenAddress
+      // );
     })
   );
 
@@ -250,8 +241,6 @@ context("ERC20TokenLock Contract", async () => {
       const retEndDate = Numbers.timeToSmartContractTime(res.endDate);
 
       assert(res.startDate != null, "startDate should be valid");
-      console.log("***lock.tokens.endDate:     " + endDate);
-      console.log("***lock.tokens.res.retEndDate: " + retEndDate);
       assert(retEndDate == smEndDate, "should match endDate");
       assert(
         Numbers.fromExponential(res.amount).toString() ==
@@ -284,7 +273,6 @@ context("ERC20TokenLock Contract", async () => {
           err.message.indexOf("tokens release date not reached") >= 0,
           "ERC20TokenLock.release should fail with expected error"
         );
-        console.log("erc20Lock.release: " + err.message);
       }
     })
   );

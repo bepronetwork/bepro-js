@@ -62,9 +62,6 @@ context("ERC721 Collectibles", async () => {
       deployed_tokenAddress = erc20Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(deployed_tokenAddress).to.equal(res.contractAddress);
-      console.log(
-        "ERC20Contract.deployed_tokenAddress: " + deployed_tokenAddress
-      );
     })
   );
 

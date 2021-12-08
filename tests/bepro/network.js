@@ -20,9 +20,7 @@ context("Network Contract", async () => {
 
   before(async () => {
     networkContract = new Network(testConfig);
-    console.log("Network", networkContract)
     userAddress = await networkContract.getUserAddress(); //local test with ganache
-    console.log("stakingContract.userAddress: " + userAddress);
   });
 
   ///this function is needed in all contracts working with an ERC20Contract token
@@ -44,9 +42,6 @@ context("Network Contract", async () => {
       deployed_tokenAddress = transactionalERC20Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(deployed_tokenAddress).to.equal(res.contractAddress);
-      console.log(
-        "ERC20Contract.deployed_tokenAddress: " + deployed_tokenAddress
-      );
     })
   );
 
@@ -69,9 +64,6 @@ context("Network Contract", async () => {
       deployed_tokenAddress = settlerERC20Contract.getAddress();
       expect(res).to.not.equal(false);
       expect(deployed_tokenAddress).to.equal(res.contractAddress);
-      console.log(
-        "ERC20Contract.deployed_tokenAddress: " + deployed_tokenAddress
-      );
     })
   );
 
