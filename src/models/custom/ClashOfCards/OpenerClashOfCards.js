@@ -1,10 +1,10 @@
-import { openerRealFvr } from '../../../interfaces';
+import { openerClashOfCards } from '../../../interfaces';
 import Numbers from '../../../utils/Numbers';
 import IContract from '../../IContract';
 import ERC20Contract from '../../ERC20/ERC20Contract';
 
 /**
- * @typedef {Object} OpenerRealFvr~Options
+ * @typedef {Object} OpenerClashOfCards~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
  * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
@@ -13,13 +13,13 @@ import ERC20Contract from '../../ERC20/ERC20Contract';
  */
 
 /**
- * OpenerRealFvr Object
- * @class OpenerRealFvr
- * @param {OpenerRealFvr~Options} options
+ * OpenerClashOfCards Object
+ * @class OpenerClashOfCards
+ * @param {OpenerClashOfCards~Options} options
  */
-class OpenerRealFvr extends IContract {
+class OpenerClashOfCards extends IContract {
   constructor(params = {}) {
-    super({ abi: openerRealFvr, ...params });
+    super({ abi: openerClashOfCards, ...params });
   }
 
   /**
@@ -36,7 +36,7 @@ class OpenerRealFvr extends IContract {
     }
 
     // Use ABI
-    this.params.contract.use(openerRealFvr, this.getAddress());
+    this.params.contract.use(openerClashOfCards, this.getAddress());
 
     // Set Token Address Contract for easy access
     this.params.ERC20Contract = new ERC20Contract({
@@ -191,19 +191,6 @@ class OpenerRealFvr extends IContract {
   unlock = async () => await this.__sendTx(this.params.contract.getContract().methods.unlock());
 
   /**
-   * Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
-   * @function
-   * @param {Object} params Parameters
-   * @param {Price} params.price Token Price
-   * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
-   */
-  setTokenPriceInUSD = async ({ price }) => await this.__sendTx(
-    this.params.contract
-      .getContract()
-      .methods.setTokenPriceInUSD(price),
-  );
-
-  /**
    * Set Base Id URI
    * @function
    * @param {Object} params Parameters
@@ -284,18 +271,6 @@ class OpenerRealFvr extends IContract {
   this.params.contract.getContract()
     .methods.exists(tokenId).call();
 
-
-  /**
-   * Get Cost in Fvr Tokens of the Pack
-   * @function
-   * @param {Object} params Parameters
-   * @param {number} params.packId
-   * @returns {Promise<number>} Price in Real Fvr Tokens
-   */
-  getPackPriceInFVR = async ({ packId }) => Numbers.fromDecimals(await
-  this.params.contract.getContract()
-    .methods.getPackPriceInFVR(packId).call(), this.getERC20Contract().getDecimals());
-
   /**
    * Get Amount of Packs Created
    * @function
@@ -353,4 +328,4 @@ class OpenerRealFvr extends IContract {
   getERC20Contract = () => this.params.ERC20Contract;
 }
 
-export default OpenerRealFvr;
+export default OpenerClashOfCards;

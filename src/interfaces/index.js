@@ -9,6 +9,7 @@ const index = {
   network: require('../contracts/Network.json'),
   networkFactory: require('../contracts/NetworkFactory.json'),
   openerRealFvr: require('../contracts/OpenerRealFvr.json'),
+  openerClashOfCards: require('../contracts/OpenerClashOfCards.json'),
 };
 
 module.exports = index;
