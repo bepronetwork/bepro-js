@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y -q --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 14.17.6
+ENV NODE_VERSION lts/fermium
 
 # Ensure NVM_DIR exists
 RUN mkdir -p $NVM_DIR;
