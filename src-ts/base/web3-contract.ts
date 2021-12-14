@@ -1,16 +1,21 @@
 import {AbiItem} from 'web3-utils';
-import {Contract, DeployOptions} from 'web3-eth-contract';
+import {Contract, ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 import Web3 from 'web3';
 import {Account, TransactionReceipt} from 'web3-core';
 
 const DEFAULT_CONFIRMATIONS_NEEDED = 1;
 
 export interface Web3ContractOptions {
-  gas: number;
-  gasPrice: string;
+  gas?: number;
+  gasPrice?: string;
+
+  gasAmount?: number;
+  gasFactor?: number;
+
+  auto: boolean; // default: false, auto = true will calculate needed values if none is provided.
 }
 
-export default class Web3Contract {
+export default class Web3Contract<Methods = any> {
   protected contract!: Contract;
 
   constructor(readonly web3: Web3,
@@ -20,12 +25,24 @@ export default class Web3Contract {
     this.contract = new web3.eth.Contract(abi, address);
   }
 
-  get methods() { return this.contract.methods; }
-  get txOptions() {
-    const {gas = 0, gasPrice = ``} = this.contract.options || {};
+  get methods(): Methods { return this.contract.methods; }
+  async txOptions(method: ContractSendMethod, value?: string, from?: string) {
+    let {gas = 0, gasAmount = 0, gasPrice = ``, gasFactor = 1, auto = false} = this.options || {};
+
+    if (auto) {
+      if (!gasPrice)
+        gasPrice = await this.web3.eth.getGasPrice();
+
+      if (!gasAmount)
+        gasAmount = await method.estimateGas({value, from});
+
+      if (!gas)
+        gas = Math.round(gasAmount * gasFactor);
+    }
+
     return {
       ... gas ? {gas} : {},
-      ... gasPrice ? {gasPrice} : {}
+      ... gasPrice ? {gasPrice} : {},
     };
   }
 
@@ -49,12 +66,12 @@ export default class Web3Contract {
 
         if (account) {
           const data = limbo.encodeABI();
-          const signedTx = await account.signTransaction({data, from, ...this.options});
+          const signedTx = await account.signTransaction({data, from, ...await this.txOptions(limbo, undefined, from)});
           this.web3.eth.sendSignedTransaction(signedTx.rawTransaction!)
               .on(`confirmation`, onConfirmation)
               .on(`error`, onError);
         } else
-          limbo.send({from, ...this.txOptions})
+          limbo.send({from, ...await this.txOptions(limbo, undefined, from)})
                .on(`confirmation`, onConfirmation)
                .on(`error`, onError);
 

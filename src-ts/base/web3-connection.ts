@@ -2,7 +2,7 @@ import {Errors} from '@interfaces/error-enum';
 import Web3 from 'web3';
 import {Account, HttpProvider, IpcProvider, WebsocketProvider} from 'web3-core';
 import {HttpProviderOptions, WebsocketProviderOptions} from 'web3-core-helpers';
-import Web3ConnectionOptions from '../interfaces/web3-connection-options';
+import Web3ConnectionOptions from '@interfaces/web3-connection-options';
 
 export default class Web3Connection {
   protected web3!: Web3;

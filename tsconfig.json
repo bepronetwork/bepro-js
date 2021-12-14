@@ -101,7 +101,9 @@
       "@interfaces/*": ["interfaces/*"],
       "@base/*": ["base/*"],
       "@models/*": ["models/*"],
-      "@abi/*": ["../build/contracts/*"]
+      "@abi/*": ["../build/contracts/*"],
+      "@methods/*": ["interfaces/methods/*"],
+      "@utils/*": ["utils/*"],
     }
   },
 }

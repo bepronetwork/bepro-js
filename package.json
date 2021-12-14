@@ -94,7 +94,8 @@
         "typescript": "4.5.3",
         "truffle": "^5.4.3",
         "truffle-assertions": "^0.8.2",
-        "truffle-plugin-verify": "^0.5.8"
+        "truffle-plugin-verify": "^0.5.8",
+        "yargs": "^17.3.0"
     },
     "babel": {
         "presets": [

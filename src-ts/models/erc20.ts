@@ -2,9 +2,10 @@ import Web3Connection from '@base/web3-connection';
 import Model from '@base/model';
 import * as Json from '@abi/ERC20.json';
 import {TransactionReceipt} from 'web3-core';
-import {fromDecimals, toSmartContractDecimals} from '../utils/numbers';
+import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
+import {Deployable} from '@base/deployable';
 
-export default class ERC20 extends Model {
+export default class ERC20 extends Model implements Deployable {
   private _decimals: number = 0;
   get decimals(): number { return this._decimals; }
 
@@ -33,9 +34,8 @@ export default class ERC20 extends Model {
   async isApproved(address:string, spenderAddress: string, amount: number): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
-        const {fromWei} = this.web3Connection.utils;
         const wei = await this.sendTx(this.contract.methods.allowance(address, spenderAddress));
-        const approvedAmount = fromWei(wei, `ether`);
+        const approvedAmount = fromDecimals(wei, this.decimals);
         resolve(+approvedAmount >= amount);
       } catch (e) {
         reject(e);
@@ -44,10 +44,8 @@ export default class ERC20 extends Model {
 
   }
 
-  async approve(address: string, amount: string) {
-    const {toWei} = this.web3Connection.utils;
-    const weiAmount = toWei(amount);
-    return this.sendTx(this.contract.methods.approve(address, weiAmount));
+  async approve(address: string, amount: string): Promise<TransactionReceipt> {
+    return this.sendTx(this.contract.methods.approve(address, toSmartContractDecimals(amount, this.decimals)));
   }
 
   async deployJsonAbi(name: string, symbol: string, cap: number, distributionAddress: string): Promise<TransactionReceipt> {
@@ -56,6 +54,6 @@ export default class ERC20 extends Model {
       arguments: [name, symbol, cap, distributionAddress]
     }
 
-    return super.deploy(deployOptions);
+    return this.deploy(deployOptions);
   }
 }

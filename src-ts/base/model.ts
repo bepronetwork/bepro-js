@@ -4,11 +4,11 @@ import {Errors} from '@interfaces/error-enum';
 import Web3 from 'web3';
 import {Account, TransactionReceipt} from 'web3-core';
 import Web3Contract from './web3-contract';
-import Web3ConnectionOptions from '../interfaces/web3-connection-options';
+import Web3ConnectionOptions from '@interfaces/web3-connection-options';
 import {ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 
-export default class Model {
-  protected contract!: Web3Contract;
+export default class Model<Methods = any> {
+  protected contract!: Web3Contract<Methods>;
   protected web3Connection!: Web3Connection;
 
   constructor(web3Connection: Web3Connection | Web3ConnectionOptions,
@@ -56,7 +56,7 @@ export default class Model {
 
     if (this.account) {
       if (call)
-        return method.call({from: this.account.address, ...this.contract.txOptions});
+        return method.call({from: this.account.address, ...await this.contract.txOptions(method, value, this.account.address)});
       return this.contract.send(this.account, method.encodeABI(), value);
     }
 
@@ -66,7 +66,7 @@ export default class Model {
     const from = (await this.web3.eth.getAccounts())[0];
     return new Promise((resolve, reject) => {
 
-      method.send({from, value, ...this.contract.txOptions})
+      method.send({from, value, ...this.contract.txOptions(method, value, from)})
             .on(`confirmation`, (_n: number, receipt: TransactionReceipt) => resolve(receipt))
             .on(`error`, (e) => reject(e));
     })

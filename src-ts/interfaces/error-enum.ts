@@ -5,4 +5,5 @@ export enum Errors {
   WindowObjectNotFound = `Window object not found`,
   MissingWeb3ProviderHost = `Missing options.web3Host parameter`,
   MissingAbiInterfaceFromArguments = `Missing ABI Interface from arguments list`,
+  AmountNeedsToBeHigherThanZero = `Amount needs to be higher than zero`,
 }

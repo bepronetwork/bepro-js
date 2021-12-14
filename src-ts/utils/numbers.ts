@@ -46,8 +46,8 @@ export function noExponents(n: string, explicitNum?: boolean) {
   }
 }
 
-export function toSmartContractDecimals(value: string|number, decimals = 18) {
-  return noExponents((Number(value) * 10 ** decimals).toFixed())
+export function toSmartContractDecimals(value: string|number, decimals = 18, explicit = false) {
+  return noExponents((Number(value) * 10 ** decimals).toFixed(), explicit)
 }
 
 export function fromDecimals(value: string|number, decimals = 18) {
