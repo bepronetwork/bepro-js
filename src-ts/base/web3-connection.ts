@@ -67,10 +67,8 @@ export default class Web3Connection {
     if (!this.options.skipWindowAssignment && typeof window !== 'undefined')
       (window as any).web3 = this.web3;
 
-    if (this.options.privateKey) {
-      const {eth: {accounts: {privateKeyToAccount}}} = this.web3;
-      this.account = privateKeyToAccount(this.options.privateKey);
-    }
+    if (this.options.privateKey)
+      this.account = this.web3.eth.accounts.privateKeyToAccount(this.options.privateKey);
   }
 
 }

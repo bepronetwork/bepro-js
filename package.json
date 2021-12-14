@@ -7,108 +7,50 @@
         "node": "14.17.0"
     },
     "directories": {
-        "test": "test"
+        "test": "test",
+        "lib": "src-ts"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/betprotocol/bepro-js.git"
     },
     "scripts": {
-        "pretest": "npm run build && ./node_modules/.bin/truffle compile && ./node_modules/.bin/truffle migrate --network development",
-        "test": "./node_modules/.bin/mocha --exit ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill --reporter mocha-multi-reporters",
-        "test:truffle": "./node_modules/.bin/truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
-        "index": "babel-node ./index.js --presets es2015,stage-2",
+        "compile": "truffle compile",
+        "prebuild": "npm run compile",
+        "pretest": "npm run build && truffle compile && truffle migrate --network development",
+        "prepublishOnly": "npm run build",
+        "test:js": "mocha --exit --require ts-node/register --require tsconfig-paths/register 'test-ts/**/*.{ts,tsx}' --pretty",
+        "test:truffle": "npm run truffle -- test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "build": "npm run compile && babel ./src --out-dir lib --copy-files -d ./build",
-        "compile": "./node_modules/.bin/truffle compile",
         "clean:contracts": "rimraf build/contracts && ./node_modules/.bin/truffle compile",
-        "docs": "npm run build && npm run jsdoc:build && npm run jsdoc:serve",
-        "jsdoc:build": "jsdoc -t ./node_modules/better-docs src -r -c docs-src/jsdoc.json",
-        "jsdoc:serve": "http-server ./docs/ -o",
-        "lint": "eslint ./src --cache",
-        "lint:fix": "eslint ./src --fix",
         "ganache:start": "ganache-cli -p 8545 -q",
-        "watch": "onchange 'src/**/*.js' -- npm run build",
-        "install": "( [ ! -d ./build ] && [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"Already built\""
+        "ts-node": "ts-node"
     },
-    "pre-commit": [
-        "lint:fix",
-        "build",
-        "jsdoc:build"
-    ],
     "dependencies": {
-        "@openzeppelin/contracts": "^3.4.1",
+        "@openzeppelin/contracts": "^3.4.2",
         "@uniswap/v3-core": "^1.0.0",
         "@uniswap/v3-periphery": "^1.1.1",
-        "abi-decoder": "^1.2.0",
         "accounting": "^0.4.1",
-        "assertion-error": "^1.1.0",
-        "babel-cli": "^6.26.0",
-        "babel-plugin-transform-remove-console": "^6.9.4",
-        "babel-plugin-transform-runtime": "^6.23.0",
-        "babel-preset-env": "^1.6.1",
-        "babel-preset-es2015": "^6.24.1",
-        "babel-preset-es2017": "^6.24.1",
-        "babel-preset-stage-2": "^6.24.1",
-        "big-number": "^2.0.0",
-        "bignumber.js": "8.1.1",
-        "bn.js": "^5.1.3",
-        "chai": "^4.2.0",
-        "chai-bignumber": "3.0.0",
-        "crypto-js": "^3.1.9-1",
-        "dayjs": "^1.9.4",
-        "delay": "^4.4.0",
         "dotenv": "^8.2.0",
-        "execution-time": "^1.4.1",
-        "express": "^4.17.1",
-        "fs": "0.0.1-security",
-        "ganache-time-traveler": "^1.0.5",
         "ipfs-http-client": "^50.0.0",
-        "jsdoc-template": "^1.2.0",
-        "left-pad": "^1.3.0",
-        "lodash": "^4.17.10",
-        "mocha": "^5.1.1",
-        "moment": "^2.21.0",
-        "mongoose": "^5.9.5",
-        "randomhex": "^0.1.5",
         "truffle": "5.1.7",
-        "truffle-hdwallet-provider": "^1.0.17",
-        "web3": "^1.3.6"
+        "web3": "^1.6.1"
     },
     "devDependencies": {
-        "babel-eslint": "^8.2.6",
-        "babel-plugin-transform-remove-console": "^6.9.4",
-        "babel-plugin-transform-runtime": "^6.23.0",
-        "babel-preset-env": "^1.6.1",
-        "babel-register": "^6.26.0",
-        "better-docs": "^2.3.2",
-        "eslint": "^6.8.0",
-        "eslint-config-airbnb-base": "^13.1.0",
-        "eslint-config-prettier": "5.0.0",
-        "eslint-plugin-import": "^2.22.1",
-        "eslint-plugin-prettier": "3.1.0",
-        "ganache-cli": "^6.12.2",
-
-
+        "@types/chai": "^4.3.0",
+        "@types/mocha": "^9.0.0",
+        "chai": "^4.3.4",
+        "mocha": "^9.1.3",
         "mocha-multi-reporters": "^1.5.1",
-
+        "ts-node": "^10.4.0",
+        "tsconfig-paths": "^3.12.0",
         "typescript": "4.5.3",
         "truffle": "^5.4.3",
         "truffle-assertions": "^0.8.2",
         "truffle-plugin-verify": "^0.5.8",
-        "yargs": "^17.3.0"
-    },
-    "babel": {
-        "presets": [
-            "env",
-            "es2015",
-            "stage-2"
-        ],
-        "plugins": [
-            "transform-runtime",
-            "transform-remove-console"
-        ],
-        "sourceMaps": true,
-        "retainLines": true
+        "yargs": "^17.3.0",
+        "ganache-time-traveler": "^1.0.5",
+        "ganache-cli": "^6.12.2"
     },
     "author": "",
     "license": "ISC"

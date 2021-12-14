@@ -103,7 +103,12 @@
       "@models/*": ["models/*"],
       "@abi/*": ["../build/contracts/*"],
       "@methods/*": ["interfaces/methods/*"],
-      "@utils/*": ["utils/*"],
+      "@utils/*": ["utils/*"]
     }
   },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+    }
+  }
 }
