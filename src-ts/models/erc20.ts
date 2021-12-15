@@ -5,18 +5,19 @@ import {TransactionReceipt} from 'web3-core';
 import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {Deployable} from '@base/deployable';
 import {ERC20Methods} from '@methods/erc20';
+import Web3ConnectionOptions from '@interfaces/web3-connection-options';
 
 export default class ERC20 extends Model<ERC20Methods> implements Deployable {
   private _decimals: number = 0;
   get decimals(): number { return this._decimals; }
 
-  constructor(web3Connection: Web3Connection, contractAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
     super(web3Connection, Json.abi as any, contractAddress);
   }
 
   async loadContract() {
     super.loadContract();
-    this._decimals = await this.sendTx(this.contract.methods.decimals(), true);
+    this._decimals = (await this.sendTx(this.contract.methods.decimals(), true)) || 18;
   }
 
   async name(): Promise<string> {
@@ -35,17 +36,17 @@ export default class ERC20 extends Model<ERC20Methods> implements Deployable {
     return +fromDecimals(await this.sendTx(this.contract.methods.balanceOf(address), true), this.decimals);
   }
 
-  async transferTokenAmount(toAddress: string, amount: string) {
+  async transferTokenAmount(toAddress: string, amount: number) {
     const tokenAmount = toSmartContractDecimals(amount, this.decimals, true) as number;
     return this.sendTx(this.contract.methods.transfer(toAddress, tokenAmount));
   }
 
-  async isApproved(address:string, spenderAddress: string, amount: number): Promise<boolean> {
+  async isApproved(spenderAddress = this.contractAddress, amount: number): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
-        const wei = await this.sendTx(this.contract.methods.allowance(address, spenderAddress));
+        const wei = await this.sendTx(this.contract.methods.allowance(this.web3Connection.Account.address, spenderAddress!), true);
         const approvedAmount = fromDecimals(wei, this.decimals);
-        resolve(+approvedAmount >= amount);
+        resolve(+approvedAmount >= fromDecimals(amount, this.decimals));
       } catch (e) {
         reject(e);
       }
@@ -53,7 +54,7 @@ export default class ERC20 extends Model<ERC20Methods> implements Deployable {
 
   }
 
-  async approve(address: string, amount: string): Promise<TransactionReceipt> {
+  async approve(address: string, amount: number): Promise<TransactionReceipt> {
     return this.sendTx(this.contract.methods.approve(address, toSmartContractDecimals(amount, this.decimals, true) as number));
   }
 
