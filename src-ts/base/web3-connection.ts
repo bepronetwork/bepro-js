@@ -45,6 +45,9 @@ export default class Web3Connection {
   }
 
   start(): void {
+    if (this.started)
+      return;
+
     const {web3Host = ``, web3ProviderOptions = undefined} = this.options;
 
     if (!web3Host)

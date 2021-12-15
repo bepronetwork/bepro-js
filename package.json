@@ -19,7 +19,7 @@
         "prebuild": "npm run compile",
         "pretest": "npm run build && truffle compile && truffle migrate --network development",
         "prepublishOnly": "npm run build",
-        "test:js": "mocha --exit --require ts-node/register --require tsconfig-paths/register 'test-ts/**/*.{ts,tsx}' --pretty",
+        "test:js": "mocha --timeout 30000 --exit --require ts-node/register --require tsconfig-paths/register 'test-ts/**/*.{ts,tsx}' --pretty",
         "test:truffle": "npm run truffle -- test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "build": "npm run compile && babel ./src --out-dir lib --copy-files -d ./build",
         "clean:contracts": "rimraf build/contracts && ./node_modules/.bin/truffle compile",
@@ -33,8 +33,9 @@
         "accounting": "^0.4.1",
         "dotenv": "^8.2.0",
         "ipfs-http-client": "^50.0.0",
+        "web3": "^1.6.1",
         "truffle": "5.1.7",
-        "web3": "^1.6.1"
+        "@truffle/hdwallet-provider": "^2.0.0"
     },
     "devDependencies": {
         "@types/chai": "^4.3.0",

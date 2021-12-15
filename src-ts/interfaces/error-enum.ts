@@ -4,6 +4,7 @@ export enum Errors {
   NoEthereumObjectFoundOnWindow = `No ethereum object found on window`,
   WindowObjectNotFound = `Window object not found`,
   MissingWeb3ProviderHost = `Missing options.web3Host parameter`,
-  MissingAbiInterfaceFromArguments = `Missing ABI Interface from arguments list`,
+  MissingAbiInterfaceFromArguments = `Missing ABI Interface from arguments list or empty Abi`,
   AmountNeedsToBeHigherThanZero = `Amount needs to be higher than zero`,
+  MissingContractAddress = `Missing contract address`,
 }

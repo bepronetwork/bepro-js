@@ -8,13 +8,14 @@ import Web3ConnectionOptions from '@interfaces/web3-connection-options';
 import {ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 
 export default class Model<Methods = any> {
-  protected contract!: Web3Contract<Methods>;
+  protected _contract!: Web3Contract<Methods>;
+  get contract() { return this._contract; }
   protected web3Connection!: Web3Connection;
 
   constructor(web3Connection: Web3Connection | Web3ConnectionOptions,
-              readonly contractAddress: string,
-              readonly abi: AbiItem[]) {
-    if (!abi)
+              readonly abi: AbiItem[],
+              readonly contractAddress?: string) {
+    if (!abi || !abi.length)
       throw new Error(Errors.MissingAbiInterfaceFromArguments);
 
     if (web3Connection instanceof Web3Connection)
@@ -22,12 +23,16 @@ export default class Model<Methods = any> {
     else this.web3Connection = new Web3Connection(web3Connection);
   }
 
-  get web3(): Web3 { return this.web3Connection.Web3; }
-
-  get account(): Account { return this.web3Connection.Account; }
+  get connection(): Web3Connection { return this.web3Connection; }
+  get web3(): Web3 { return this.connection.Web3; }
+  get account(): Account { return this.connection.Account; }
 
   loadContract() {
-    this.contract = new Web3Contract(this.web3, this.abi, this.contractAddress);
+    try {
+      this._contract = new Web3Contract(this.web3, this.abi, this.contractAddress);
+    } catch (e) {
+      throw e;
+    }
   }
 
   /**
@@ -48,7 +53,7 @@ export default class Model<Methods = any> {
    * Will load contract if success
    */
   async start() {
-    this.web3Connection.start();
+    await this.web3Connection.start();
     this.loadContract();
   }
 
@@ -57,7 +62,7 @@ export default class Model<Methods = any> {
     if (this.account) {
       if (call)
         return method.call({from: this.account.address, ...await this.contract.txOptions(method, value, this.account.address)});
-      return this.contract.send(this.account, method.encodeABI(), value);
+      return this.contract.send(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, this.account.address));
     }
 
     if (call)

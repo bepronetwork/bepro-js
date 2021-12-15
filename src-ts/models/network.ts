@@ -17,8 +17,8 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   get transactionToken() { return this._transactionToken; }
   get settlerToken() { return this._settlerToken; }
 
-  constructor(web3Connection: Web3Connection, contractAddress: string) {
-    super(web3Connection, contractAddress, NetworkAbi.abi as any); // investigate type: constructor messing this up
+  constructor(web3Connection: Web3Connection, contractAddress?: string) {
+    super(web3Connection, NetworkAbi.abi as any, contractAddress); // investigate type: constructor messing this up
   }
 
   async getTransactionTokenAddress(): Promise<string> {
@@ -135,19 +135,19 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   }
 
   async approveSettlerERC20Token() {
-    return this.settlerToken.approve(this.contractAddress, (await this.settlerToken.totalSupply()).toString())
+    return this.settlerToken.approve(this.contractAddress!, (await this.settlerToken.totalSupply()).toString())
   }
 
   async approveTransactionalERC20Token() {
-    return this.transactionToken.approve(this.contractAddress, (await this.transactionToken.totalSupply()).toString())
+    return this.transactionToken.approve(this.contractAddress!, (await this.transactionToken.totalSupply()).toString())
   }
 
   async isApprovedSettlerToken(address: string, amount: number) {
-    return this.settlerToken.isApproved(address, this.contractAddress, amount)
+    return this.settlerToken.isApproved(address, this.contractAddress!, amount)
   }
 
   async isApprovedTransactionalToken(address: string, amount: number) {
-    return this.transactionToken.isApproved(address, this.contractAddress, amount)
+    return this.transactionToken.isApproved(address, this.contractAddress!, amount)
   }
 
   async lock(amount: number): Promise<TransactionReceipt> {
@@ -220,10 +220,10 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   deployJsonAbi(settlerAddress: string, transactionalAddress: string, governanceAddress: string) {
 
     const deployOptions = {
-      data: NetworkAbi as any,
+      data: NetworkAbi.bytecode,
       arguments: [settlerAddress, transactionalAddress, governanceAddress]
     }
 
-    return this.deploy(deployOptions)
+    return this.deploy(deployOptions, this.web3Connection.Account);
   }
 }

@@ -50,6 +50,6 @@ export function toSmartContractDecimals(value: string|number, decimals = 18, exp
   return noExponents((Number(value) * 10 ** decimals).toFixed(), explicit)
 }
 
-export function fromDecimals(value: string|number, decimals = 18) {
-  return noExponents(parseFloat((Number(value) / 10 ** decimals).toString()).toPrecision(decimals))
+export function fromDecimals(value: string|number, decimals = 18, explicit = false) {
+  return noExponents(parseFloat((Number(value) / 10 ** decimals).toString()).toPrecision(decimals), explicit)
 }

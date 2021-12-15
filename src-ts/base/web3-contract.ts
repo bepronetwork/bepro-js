@@ -1,7 +1,7 @@
 import {AbiItem} from 'web3-utils';
 import {Contract, ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 import Web3 from 'web3';
-import {Account, TransactionReceipt} from 'web3-core';
+import {Account, TransactionConfig, TransactionReceipt} from 'web3-core';
 
 const DEFAULT_CONFIRMATIONS_NEEDED = 1;
 
@@ -12,7 +12,7 @@ export interface Web3ContractOptions {
   gasAmount?: number;
   gasFactor?: number;
 
-  auto: boolean; // default: false, auto = true will calculate needed values if none is provided.
+  auto: boolean; // default: true, auto = true will calculate needed values if none is provided.
 }
 
 export default class Web3Contract<Methods = any> {
@@ -20,8 +20,8 @@ export default class Web3Contract<Methods = any> {
 
   constructor(readonly web3: Web3,
               readonly abi: AbiItem[],
-              readonly address: string,
-              readonly options?: Web3ContractOptions) {
+              readonly address?: string,
+              readonly options: Web3ContractOptions = {auto: true}) {
     this.contract = new web3.eth.Contract(abi, address);
   }
 
@@ -34,7 +34,7 @@ export default class Web3Contract<Methods = any> {
         gasPrice = await this.web3.eth.getGasPrice();
 
       if (!gasAmount)
-        gasAmount = await method.estimateGas({value, from});
+        gasAmount = await method.estimateGas({...value ? {value} : {}, ... from ? {from} : {}});
 
       if (!gas)
         gas = Math.round(gasAmount * gasFactor);
@@ -86,13 +86,13 @@ export default class Web3Contract<Methods = any> {
   /**
    * Sends a signed transaction with the provided account
    */
-  async send(account: Account, data: string, value = `0x0`): Promise<TransactionReceipt> {
+  async send(account: Account, data: string, value = ``, txOptions: Partial<TransactionConfig>): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       try {
 
         const from = account.address;
         const to = this.address;
-        const signedTx = await account.signTransaction({from, to, data, value, ...this.txOptions});
+        const signedTx = await account.signTransaction({from, to, data, value, ...txOptions});
 
         function onConfirmation(number: number, receipt: TransactionReceipt) {
           if (DEFAULT_CONFIRMATIONS_NEEDED >= number)
