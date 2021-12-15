@@ -22,7 +22,7 @@ contract NetworkFactory is ReentrancyGuard{
 
     Network[] public networksArray; /* Array of Networks */
 
-    event CreatedNetwork(uint256 indexed id, address indexed opener, uint256 indexed amount);
+    event CreatedNetwork(uint256 indexed id, address indexed creator);
 
     constructor(ERC20 _beproAddress) public { 
         beproAddress = _beproAddress;
@@ -46,6 +46,8 @@ contract NetworkFactory is ReentrancyGuard{
         networks[networksAmount] = network;
         networksByAddress[msg.sender] = network;        
         networksAmount = networksAmount.add(1);
+
+        emit CreatedNetwork(networksAmount, msg.sender);
     }
 
     function unlock() external nonReentrant {
