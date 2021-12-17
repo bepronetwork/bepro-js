@@ -1,15 +1,19 @@
-import Model from '@base/model';
+import {OwnableMethods} from '@methods/ownable';
+import UseModel from '@base/use-model';
+import {Errors} from '@interfaces/error-enum';
 
-export default class Ownable extends Model {
+export default class Ownable extends UseModel<OwnableMethods> {
   async setOwner(address: string) {
-    return this.sendTx(this.contract.methods.transferOwnership(address))
+    return this.model.sendTx(this.model.contract.methods.transferOwnership(address))
   }
 
   async owner() {
-    return this.sendTx(this.contract.methods.owner(), true);
+    return this.model.callTx(this.model.contract.methods.owner());
   }
 
-  async onlyOwner(): Promise<boolean> {
-    return (await this.owner()) === (await this.web3Connection.getAddress())
+  async onlyOwner() {
+    const isOwner = (await this.owner()) === (await this.model.connection.getAddress());
+    if (!isOwner)
+      throw new Error(Errors.OnlyAdminCanPerformThisOperation)
   }
 }

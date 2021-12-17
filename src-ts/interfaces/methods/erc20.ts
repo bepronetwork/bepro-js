@@ -5,7 +5,7 @@ export interface ERC20Methods {
   allowance(owner: string, spender: string): ContractCallMethod<number>;
   approve(spender: string, amount: number): ContractCallMethod<boolean>;
   balanceOf(account: string): ContractCallMethod<number>;
-  decimals(): ContractCallMethod<undefined>;
+  decimals(): ContractCallMethod<number>;
   decreaseAllowance(spender: string, subtractedValue: number): ContractCallMethod<boolean>;
   distributionContract(): ContractCallMethod<string>;
   increaseAllowance(spender: string, addedValue: number): ContractCallMethod<boolean>;

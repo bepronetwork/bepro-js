@@ -7,4 +7,10 @@ export enum Errors {
   MissingAbiInterfaceFromArguments = `Missing ABI Interface from arguments list or empty Abi`,
   AmountNeedsToBeHigherThanZero = `Amount needs to be higher than zero`,
   MissingContractAddress = `Missing contract address`,
+  ContractIsPaused = `Contract is paused`,
+  MissingTokenAddress = `Missing token address`,
+  OnlyAdminCanPerformThisOperation = `Only admin can perform this operation`,
+  InvalidTokenAmount = `Invalid token amount`,
+  InteractionIsNotAvailableCallApprove = `Interaction not available, call 'approve' first`,
+  NoLockedAmountOrNotReleaseDate = `User has no locked amount or release date has not been reached`,
 }
