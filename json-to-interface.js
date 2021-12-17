@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const yargs = require(`yargs`);
 const hideBin = require(`yargs/helpers`).hideBin;
+const {camelCase, paramCase} = require('change-case')
 
 /**
  * @typedef {Object} Contract~AbiOption~Input
@@ -34,6 +35,8 @@ const args = yargs(hideBin(process.argv))
   .alias(`f`, `file`)
   .nargs(`f`, 1)
   .describe(`f`, `File to parse`)
+  .alias(`o`, `output`)
+  .describe(`o`, `directory to output file into`)
   .demandOption([`f`,])
   .help(`h`)
   .alias(`h`, `help`)
@@ -109,16 +112,10 @@ const makeFn = (option) => {
  */
 const JsonToInterface = (filePath = ``) => {
 
-  if (args.verbose)
-    console.log(`Loading ${filePath}`);
-
   /**
    * @type {Contract}
    */
   const contract = JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf-8'));
-
-  if (args.verbose)
-    console.log(`Parsing ${contract.contractName}`)
 
   const content = contract.abi
                           .filter(option => !option.anonymous && option.type === "function")
@@ -131,5 +128,10 @@ const JsonToInterface = (filePath = ``) => {
 }
 
 
-console.log(`Parsed`, args.file);
-console.log(JsonToInterface(args.file));
+const parsed = JsonToInterface(args.file);
+console.log(parsed);
+
+if (args.output) {
+  fs.writeFileSync(path.resolve(args.output, paramCase(camelCase(path.basename(args.file))).replace(`-json`, `.ts`)), parsed, 'utf8')
+  console.log(`Outputed`);
+}
