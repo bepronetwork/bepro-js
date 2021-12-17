@@ -32,17 +32,15 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   }
 
   async getIssuesByAddress(address: string): Promise<number[]> {
-    const ids = await this.callTx(await this.contract.methods.getIssuesByAddress(address));
-
-    return ids.map((id: string) => parseInt(id, 10));
+    return this.callTx(await this.contract.methods.getIssuesByAddress(address));
   }
 
   async getAmountOfIssuesOpened(): Promise<number> {
-    return parseInt(await this.callTx(await this.contract.methods.incrementIssueID()), 10);
+    return this.callTx(await this.contract.methods.incrementIssueID());
   }
 
   async getAmountOfIssuesClosed(): Promise<number> {
-    return parseInt(await this.callTx(await this.contract.methods.closedIdsCount()), 10);
+    return this.callTx(await this.contract.methods.closedIdsCount());
   }
 
   async getOraclesByAddress(address: string) {
@@ -75,7 +73,7 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   // }
 
   async percentageNeededForDispute(): Promise<number> {
-    return parseInt(await this.callTx(this.contract.methods.percentageNeededForDispute()), 10);
+    return this.callTx(this.contract.methods.percentageNeededForDispute());
   }
 
   // Method does not exist
@@ -83,16 +81,16 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   //   return parseInt(await this.sendTx(this.contract.methods.percentageNeededForMerge(), true), 10)
   // }
 
-  async mergeCreatorFeeShare(): Promise<number> {
-    return parseInt(await this.callTx(this.contract.methods.mergeCreatorFeeShare()), 10);
+  async mergeCreatorFeeShare() {
+    return this.callTx(this.contract.methods.mergeCreatorFeeShare());
   }
 
-  async disputableTime(): Promise<number> {
-    return parseInt(await this.callTx(this.contract.methods.disputableTime()), 10)
+  async disputableTime() {
+    return this.callTx(this.contract.methods.disputableTime());
   }
 
-  async redeemTime(): Promise<number> {
-    return parseInt(await this.callTx(this.contract.methods.redeemTime()), 10)
+  async redeemTime() {
+    return this.callTx(this.contract.methods.redeemTime())
   }
 
   async getTokensStaked(): Promise<number> {

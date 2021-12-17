@@ -6,6 +6,7 @@ import {Account, TransactionReceipt} from 'web3-core';
 import Web3Contract from './web3-contract';
 import Web3ConnectionOptions from '@interfaces/web3-connection-options';
 import {ContractSendMethod, DeployOptions} from 'web3-eth-contract';
+import {ContractCallMethod} from '@methods/contract-call-method';
 
 export default class Model<Methods = any> {
   protected _contract!: Web3Contract<Methods>;
@@ -57,7 +58,7 @@ export default class Model<Methods = any> {
     this.loadContract();
   }
 
-  async callTx(method: ContractSendMethod, value?: any) {
+  async callTx<ReturnData = any>(method: ContractCallMethod<ReturnData>, value?: any) {
     if (this.account)
       return method.call({from: this.account.address, ...await this.contract.txOptions(method, value, this.account.address)});
     return method.call();
