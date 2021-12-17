@@ -110,7 +110,7 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   }
 
   async changeCouncilAmount(value: string): Promise<TransactionReceipt> {
-    const amount = toSmartContractDecimals(value, this.settlerToken.decimals, true);
+    const amount = toSmartContractDecimals(value, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.changeCOUNCIL_AMOUNT(amount as number));
   }
 
@@ -222,7 +222,7 @@ export default class Network extends Model<NetworkMethods> implements Deployable
     super.loadContract();
 
     if (!this.contractAddress)
-      return;
+      throw new Error(Errors.MissingContractAddress);
 
     const transactionAddress = await this.getTransactionTokenAddress();
     const settlerAddress = await this.getTransactionTokenAddress();
@@ -231,6 +231,7 @@ export default class Network extends Model<NetworkMethods> implements Deployable
 
     await this._transactionToken.loadContract();
     await this._settlerToken.loadContract();
+
   }
 
   deployJsonAbi(settlerAddress: string, transactionalAddress: string, governanceAddress: string) {

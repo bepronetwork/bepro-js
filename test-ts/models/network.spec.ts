@@ -14,7 +14,7 @@ describe.only(`Network`, () => {
 
   let accountAddress = ``
   const cap = toSmartContractDecimals(1000000) as number;
-  const newCouncilAmount = 100001;
+  const newCouncilAmount = '100001';
 
   before(() => {
     web3Connection = defaultWeb3Connection();
@@ -65,24 +65,25 @@ describe.only(`Network`, () => {
       expect(_transaction).to.be.eq(transactionToken);
     });
 
-    it(`Approves settler and transactional`, async () => {
+    it(`Approves settler`, async () => {
       const settler = await network.approveSettlerERC20Token();
       expect(settler.blockHash, `settler hash`).to.not.be.empty;
 
       const approvedSettler = await network.isApprovedSettlerToken(accountAddress, 1);
       expect(approvedSettler, `isApproved settler`).to.not.be.true;
+    });
 
+    it(`Approves transactional`, async () => {
       const transactional = await network.approveTransactionalERC20Token();
       expect(transactional.blockHash, `transactional hash`).to.not.be.empty;
 
       const approvedTransactional = await network.isApprovedTransactionalToken(accountAddress, 1);
       expect(approvedTransactional, `isApproved settler`).to.not.be.true;
-    });
+    })
 
     describe(`Oracles`, () => {
       it(`Change amount needed for council`, async () => {
-        const amount = toSmartContractDecimals(newCouncilAmount, network.settlerToken.decimals) as string;
-        const change = await network.changeCouncilAmount(amount);
+        const change = await network.changeCouncilAmount(newCouncilAmount);
         expect(change.blockHash).to.not.be.empty;
       });
 
@@ -103,7 +104,7 @@ describe.only(`Network`, () => {
       })
 
       it(`Locks and locked`, async () => {
-        const lock = await network.lock(newCouncilAmount + 1);
+        const lock = await network.lock(+newCouncilAmount + 1);
         expect(lock.blockHash, `lock hash`).to.not.be.empty;
 
         const locked = await network.getOraclesByAddress(accountAddress);
@@ -135,7 +136,7 @@ describe.only(`Network`, () => {
         const amount = await network.getOraclesByAddress(accountAddress);
         expect(amount).to.be.greaterThan(0);
 
-        const unlock = await network.unlock(newCouncilAmount + 1, accountAddress);
+        const unlock = await network.unlock(+newCouncilAmount + 1, accountAddress);
         expect(unlock.blockHash, `unlock hash`).to.not.be.empty;
 
         const unlocked = await network.getOraclesByAddress(accountAddress);
