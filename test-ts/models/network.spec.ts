@@ -169,7 +169,7 @@ describe.only(`Network`, () => {
 
     describe(`Issues`, () => {
 
-      describe.skip(`Opens, updates, and redeems an issue`, () => {
+      describe(`Opens, updates, and redeems an issue`, () => {
         let cid: string;
         let issue: NetworkIssue;
 
