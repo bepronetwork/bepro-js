@@ -1,14 +1,19 @@
 import {ContractSendMethod} from 'web3-eth-contract';
+import {ContractCallMethod} from '@methods/contract-call-method';
+
 export interface ERC20Methods {
-  name(): ContractSendMethod;
-  symbol(): ContractSendMethod;
-  decimals(): ContractSendMethod;
-  totalSupply(): ContractSendMethod;
-  balanceOf(account: string): ContractSendMethod;
-  transfer(recipient: string, amount: number): ContractSendMethod;
-  allowance(owner: string, spender: string): ContractSendMethod;
-  approve(spender: string, amount: number): ContractSendMethod;
-  transferFrom(sender: string, recipient: string, amount: number): ContractSendMethod;
-  increaseAllowance(spender: string, addedValue: number): ContractSendMethod;
-  decreaseAllowance(spender: string, subtractedValue: number): ContractSendMethod;
+  allowance(owner: string, spender: string): ContractCallMethod<number>;
+  approve(spender: string, amount: number): ContractCallMethod<boolean>;
+  balanceOf(account: string): ContractCallMethod<number>;
+  decimals(): ContractCallMethod<undefined>;
+  decreaseAllowance(spender: string, subtractedValue: number): ContractCallMethod<boolean>;
+  distributionContract(): ContractCallMethod<string>;
+  increaseAllowance(spender: string, addedValue: number): ContractCallMethod<boolean>;
+  name(): ContractCallMethod<string>;
+  owner(): ContractCallMethod<string>;
+  symbol(): ContractCallMethod<string>;
+  totalSupply(): ContractCallMethod<number>;
+  transfer(recipient: string, amount: number): ContractCallMethod<boolean>;
+  transferFrom(sender: string, recipient: string, amount: number): ContractCallMethod<boolean>;
+  transferOwnership(newOwner: string): ContractSendMethod;
 }
