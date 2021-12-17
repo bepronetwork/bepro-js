@@ -53,7 +53,7 @@ const SolidityTypes = {
 }
 
 const makeClass = (header = ``, content = ``,) =>
-  ["import {ContractSendMethod} from 'web3-eth-contract';", `${header} {`, content, `}`].join(`\n`);
+  ["import {ContractSendMethod} from 'web3-eth-contract';", "import {ContractCallMethod} from '@methods/contract-call-method';", "", `${header} {`, content, `}`].join(`\n`);
 
 /**
  * @param {Contract~AbiOption~Input[]} inputs
@@ -61,10 +61,29 @@ const makeClass = (header = ``, content = ``,) =>
  * @returns {string}
  */
 const parseInputsName = (inputs, joiner = `, `) =>
-  inputs.map(input => `${input.name || `v`}: ${SolidityTypes[input.type]}`).join(joiner);
+  inputs.map((input, i) => `${input.name || `v${i+1}`}: ${SolidityTypes[input.type]}`).join(joiner);
 
-const fnHeader = (name = ``, parsedInputs = ``) =>
-  `${name}(${parsedInputs}): ContractSendMethod`;
+/**
+ * @param {Contract~AbiOption~Input[]} outputs
+ * @returns {string}
+ */
+const parseOutput = (outputs) => {
+  if (!outputs.length)
+    return `ContractSendMethod`;
+
+  const template = `ContractCallMethod<%content%>`;
+
+  let content = outputs.map((o, index) => `'${index}': ${SolidityTypes[o.type]}`).join(`; `);
+
+  if (outputs.length === 1)
+    content = content.replace(`'0': `, ``).replace(`;`, ``);
+  else content = `{${content}}`;
+
+  return template.replace(`%content%`, content);
+}
+
+const fnHeader = (name = ``, parsedInputs = ``, parsedOutputs) =>
+  `${name}(${parsedInputs}): ${parsedOutputs}`;
 
 /**
  *
@@ -79,9 +98,9 @@ const classHeader = (name = `Name`) => `export interface ${name}Methods`
  */
 const makeFn = (option) => {
   const parsedInputs = parseInputsName(option.inputs);
-  // const parsedOutputs = parseInputsName(option.outputs, `;\n`);
+  const parsedOutputs = parseOutput(option.outputs);
 
-  return `  ${fnHeader(option.name, parsedInputs)};`
+  return `  ${fnHeader(option.name, parsedInputs, parsedOutputs)};`
 }
 
 /**
