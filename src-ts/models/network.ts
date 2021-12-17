@@ -11,6 +11,7 @@ import {Errors} from '@interfaces/error-enum';
 import {Deployable} from '@base/deployable';
 import {NetworkMethods} from '@methods/network';
 import {OraclesSummary} from '@interfaces/oracles-summary';
+import {AbiItem} from 'web3-utils';
 
 export default class Network extends Model<NetworkMethods> implements Deployable {
   private _transactionToken!: ERC20;
@@ -19,38 +20,38 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   get settlerToken() { return this._settlerToken; }
 
   constructor(web3Connection: Web3Connection, contractAddress?: string) {
-    super(web3Connection, NetworkAbi.abi as any, contractAddress); // investigate type: constructor messing this up
+    super(web3Connection, NetworkAbi.abi as AbiItem[], contractAddress);
   }
 
   async getTransactionTokenAddress(): Promise<string> {
-    return this.sendTx(await this.contract.methods.transactionToken(), true);
+    return this.callTx(await this.contract.methods.transactionToken());
   }
 
   async getSettlerTokenAddress(): Promise<string> {
-    return this.sendTx(await this.contract.methods.settlerToken(), true);
+    return this.callTx(await this.contract.methods.settlerToken());
   }
 
   async getIssuesByAddress(address: string): Promise<number[]> {
-    const ids = await this.sendTx(await this.contract.methods.getIssuesByAddress(address), true);
+    const ids = await this.callTx(await this.contract.methods.getIssuesByAddress(address));
 
     return ids.map((id: string) => parseInt(id, 10));
   }
 
   async getAmountOfIssuesOpened(): Promise<number> {
-    return parseInt(await this.sendTx(await this.contract.methods.incrementIssueID(), true), 10);
+    return parseInt(await this.callTx(await this.contract.methods.incrementIssueID()), 10);
   }
 
   async getAmountOfIssuesClosed(): Promise<number> {
-    return parseInt(await this.sendTx(await this.contract.methods.closedIdsCount(), true), 10);
+    return parseInt(await this.callTx(await this.contract.methods.closedIdsCount()), 10);
   }
 
   async getOraclesByAddress(address: string) {
-    return +fromDecimals(await this.sendTx(await this.contract.methods.getOraclesByAddress(address), true), this.settlerToken.decimals);
+    return +fromDecimals(await this.callTx(await this.contract.methods.getOraclesByAddress(address)), this.settlerToken.decimals);
   }
 
   async getOraclesSummary(address: string): Promise<OraclesSummary> {
     const {'0': oraclesDelegatedByOthers, '1': amounts, '2': addresses, '3': tokensLocked} =
-      await this.sendTx(await this.contract.methods.getOraclesSummary(address), true);
+      await this.callTx(await this.contract.methods.getOraclesSummary(address));
 
 
     const decimals = this.settlerToken.decimals;
@@ -74,7 +75,7 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   // }
 
   async percentageNeededForDispute(): Promise<number> {
-    return parseInt(await this.sendTx(this.contract.methods.percentageNeededForDispute(), true), 10);
+    return parseInt(await this.callTx(this.contract.methods.percentageNeededForDispute()), 10);
   }
 
   // Method does not exist
@@ -83,27 +84,27 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   // }
 
   async mergeCreatorFeeShare(): Promise<number> {
-    return parseInt(await this.sendTx(this.contract.methods.mergeCreatorFeeShare(), true), 10);
+    return parseInt(await this.callTx(this.contract.methods.mergeCreatorFeeShare()), 10);
   }
 
   async disputableTime(): Promise<number> {
-    return parseInt(await this.sendTx(this.contract.methods.disputableTime(), true), 10)
+    return parseInt(await this.callTx(this.contract.methods.disputableTime()), 10)
   }
 
   async redeemTime(): Promise<number> {
-    return parseInt(await this.sendTx(this.contract.methods.redeemTime(), true), 10)
+    return parseInt(await this.callTx(this.contract.methods.redeemTime()), 10)
   }
 
   async getTokensStaked(): Promise<number> {
-    return +fromDecimals(await this.sendTx(this.contract.methods.totalStaked(), true), this.transactionToken.decimals);
+    return +fromDecimals(await this.callTx(this.contract.methods.totalStaked()), this.transactionToken.decimals);
   }
 
   async getBEPROStaked(): Promise<number> {
-    return +fromDecimals(await this.sendTx(this.contract.methods.oraclesStaked(), true), this.settlerToken.decimals)
+    return +fromDecimals(await this.callTx(this.contract.methods.oraclesStaked()), this.settlerToken.decimals)
   }
 
   async COUNCIL_AMOUNT(): Promise<number> {
-    return +fromDecimals(await this.sendTx(this.contract.methods.COUNCIL_AMOUNT(), true), this.settlerToken.decimals);
+    return +fromDecimals(await this.callTx(this.contract.methods.COUNCIL_AMOUNT()), this.settlerToken.decimals);
   }
 
   async isCouncil(address: string): Promise<boolean> {
@@ -124,11 +125,11 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   }
 
   async isIssueInDraft(issueId: number): Promise<boolean> {
-    return this.sendTx(this.contract.methods.isIssueInDraft(issueId), true);
+    return this.callTx(this.contract.methods.isIssueInDraft(issueId));
   }
 
   async isMergeDisputed(issueId: number, mergeId: number): Promise<boolean> {
-    return this.sendTx(this.contract.methods.isMergeDisputed(issueId, mergeId), true)
+    return this.callTx(this.contract.methods.isMergeDisputed(issueId, mergeId))
   }
 
   async isMergeInDraft(id: number, mergeId: number) {
@@ -136,15 +137,15 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   }
 
   async getIssueByCID(cid: string): Promise<NetworkIssue> {
-    return networkIssue(await this.sendTx(this.contract.methods.getIssueByCID(cid), true), this.transactionToken.decimals);
+    return networkIssue(await this.callTx(this.contract.methods.getIssueByCID(cid)), this.transactionToken.decimals);
   }
 
   async getIssueById(id: number): Promise<NetworkIssue> {
-    return networkIssue(await this.sendTx(this.contract.methods.getIssueById(id), true), this.transactionToken.decimals);
+    return networkIssue(await this.callTx(this.contract.methods.getIssueById(id)), this.transactionToken.decimals);
   }
 
   async getMergeById(issueId: number, mergeId: number): Promise<any> {
-    return networkMerge(await this.sendTx(this.contract.methods.getMergeById(issueId, mergeId)), this.transactionToken.decimals)
+    return networkMerge(await this.callTx(this.contract.methods.getMergeById(issueId, mergeId)), this.transactionToken.decimals)
   }
 
   async approveSettlerERC20Token() {

@@ -57,16 +57,16 @@ export default class Model<Methods = any> {
     this.loadContract();
   }
 
-  async sendTx(method: ContractSendMethod, call = false, value?: any) {
+  async callTx(method: ContractSendMethod, value?: any) {
+    if (this.account)
+      return method.call({from: this.account.address, ...await this.contract.txOptions(method, value, this.account.address)});
+    return method.call();
+  }
 
-    if (this.account) {
-      if (call)
-        return method.call({from: this.account.address, ...await this.contract.txOptions(method, value, this.account.address)});
+  async sendTx(method: ContractSendMethod, value?: any): Promise<TransactionReceipt> {
+
+    if (this.account)
       return this.contract.send(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, this.account.address));
-    }
-
-    if (call)
-      return method.call();
 
     const from = (await this.web3.eth.getAccounts())[0];
     return new Promise((resolve, reject) => {

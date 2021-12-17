@@ -21,19 +21,19 @@ export default class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async name(): Promise<string> {
-    return await this.sendTx(this.contract.methods.name(), true);
+    return await this.callTx(this.contract.methods.name());
   }
 
   async symbol(): Promise<string> {
-    return await this.sendTx(this.contract.methods.symbol(), true);
+    return await this.callTx(this.contract.methods.symbol());
   }
 
   async totalSupply(): Promise<number> {
-    return +fromDecimals(await this.sendTx(this.contract.methods.totalSupply(), true), this.decimals) as number;
+    return +fromDecimals(await this.callTx(this.contract.methods.totalSupply()), this.decimals) as number;
   }
 
   async getTokenAmount(address: string): Promise<number> {
-    return +fromDecimals(await this.sendTx(this.contract.methods.balanceOf(address), true), this.decimals);
+    return +fromDecimals(await this.callTx(this.contract.methods.balanceOf(address)), this.decimals);
   }
 
   async transferTokenAmount(toAddress: string, amount: number) {
@@ -44,7 +44,7 @@ export default class ERC20 extends Model<ERC20Methods> implements Deployable {
   async isApproved(spenderAddress = this.contractAddress, amount: number): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
-        const wei = await this.sendTx(this.contract.methods.allowance(this.web3Connection.Account.address, spenderAddress!), true);
+        const wei = await this.callTx(this.contract.methods.allowance(this.web3Connection.Account.address, spenderAddress!));
         const approvedAmount = fromDecimals(wei, this.decimals);
         resolve(+approvedAmount >= fromDecimals(amount, this.decimals));
       } catch (e) {
