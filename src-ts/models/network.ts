@@ -114,12 +114,24 @@ export default class Network extends Model<NetworkMethods> implements Deployable
     return this.sendTx(this.contract.methods.changeCOUNCIL_AMOUNT(amount as number));
   }
 
+  async changeRedeemTime(amount: number): Promise<TransactionReceipt> {
+    return this.sendTx(this.contract.methods.changeRedeemTime(amount as number));
+  }
+
+  async changeDisputableTime(amount: number): Promise<TransactionReceipt> {
+    return this.sendTx(this.contract.methods.changeDisputableTime(amount as number));
+  }
+
   async isIssueInDraft(issueId: number): Promise<boolean> {
     return this.sendTx(this.contract.methods.isIssueInDraft(issueId), true);
   }
 
   async isMergeDisputed(issueId: number, mergeId: number): Promise<boolean> {
     return this.sendTx(this.contract.methods.isMergeDisputed(issueId, mergeId), true)
+  }
+
+  async isMergeInDraft(id: number, mergeId: number) {
+    return this.sendTx(this.contract.methods.isMergeInDraft(id, mergeId))
   }
 
   async getIssueByCID(cid: string): Promise<NetworkIssue> {
@@ -135,19 +147,19 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   }
 
   async approveSettlerERC20Token() {
-    return this.settlerToken.approve(this.contractAddress!, (await this.settlerToken.totalSupply()).toString())
+    return this.settlerToken.approve(this.contractAddress!, await this.settlerToken.totalSupply())
   }
 
   async approveTransactionalERC20Token() {
-    return this.transactionToken.approve(this.contractAddress!, (await this.transactionToken.totalSupply()).toString())
+    return this.transactionToken.approve(this.contractAddress!, await this.transactionToken.totalSupply())
   }
 
-  async isApprovedSettlerToken(address: string, amount: number) {
-    return this.settlerToken.isApproved(address, this.contractAddress!, amount)
+  async isApprovedSettlerToken(address: string = this.contractAddress!, amount: number) {
+    return this.settlerToken.isApproved(address, amount)
   }
 
-  async isApprovedTransactionalToken(address: string, amount: number) {
-    return this.transactionToken.isApproved(address, this.contractAddress!, amount)
+  async isApprovedTransactionalToken(address: string = this.contractAddress!, amount: number) {
+    return this.transactionToken.isApproved(address, amount)
   }
 
   async lock(amount: number): Promise<TransactionReceipt> {
@@ -208,6 +220,10 @@ export default class Network extends Model<NetworkMethods> implements Deployable
 
   async loadContract() {
     super.loadContract();
+
+    if (!this.contractAddress)
+      return;
+
     const transactionAddress = await this.getTransactionTokenAddress();
     const settlerAddress = await this.getTransactionTokenAddress();
     this._transactionToken = new ERC20(this.web3Connection, transactionAddress);

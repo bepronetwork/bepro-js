@@ -29,7 +29,7 @@ export default class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async totalSupply(): Promise<number> {
-    return +fromDecimals(await this.sendTx(this.contract.methods.totalSupply(), true), this.decimals);
+    return +fromDecimals(await this.sendTx(this.contract.methods.totalSupply(), true), this.decimals) as number;
   }
 
   async getTokenAmount(address: string): Promise<number> {
@@ -55,7 +55,7 @@ export default class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async approve(address: string, amount: number): Promise<TransactionReceipt> {
-    return this.sendTx(this.contract.methods.approve(address, toSmartContractDecimals(amount, this.decimals, true) as number));
+    return this.sendTx(this.contract.methods.approve(address, toSmartContractDecimals(amount, this.decimals) as number));
   }
 
   async deployJsonAbi(name: string, symbol: string, cap: number, distributionAddress: string): Promise<TransactionReceipt> {

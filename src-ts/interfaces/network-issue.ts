@@ -1,5 +1,5 @@
 export interface NetworkIssue {
-  _id: string;
+  _id: number;
   cid: string;
   issueGenerator: string;
   creationDate: number;
