@@ -10,6 +10,7 @@ import networkMerge from '@utils/network-merge';
 import {Errors} from '@interfaces/error-enum';
 import {Deployable} from '@base/deployable';
 import {NetworkMethods} from '@methods/network';
+import {OraclesSummary} from '@interfaces/oracles-summary';
 
 export default class Network extends Model<NetworkMethods> implements Deployable {
   private _transactionToken!: ERC20;
@@ -47,9 +48,10 @@ export default class Network extends Model<NetworkMethods> implements Deployable
     return +fromDecimals(await this.sendTx(await this.contract.methods.getOraclesByAddress(address), true), this.settlerToken.decimals);
   }
 
-  async getOraclesSummary(address: string) {
-    const [oraclesDelegatedByOthers, amounts, addresses, tokensLocked] =
+  async getOraclesSummary(address: string): Promise<OraclesSummary> {
+    const {'0': oraclesDelegatedByOthers, '1': amounts, '2': addresses, '3': tokensLocked} =
       await this.sendTx(await this.contract.methods.getOraclesSummary(address), true);
+
 
     const decimals = this.settlerToken.decimals;
 
@@ -85,8 +87,7 @@ export default class Network extends Model<NetworkMethods> implements Deployable
   }
 
   async disputableTime(): Promise<number> {
-    const seconds = this.sendTx(this.contract.methods.disputableTime(), true);
-    return parseInt((+seconds / 60).toString(), 10);
+    return parseInt(await this.sendTx(this.contract.methods.disputableTime(), true), 10)
   }
 
   async redeemTime(): Promise<number> {
@@ -166,14 +167,14 @@ export default class Network extends Model<NetworkMethods> implements Deployable
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.settlerToken.decimals, true) as number))
+    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.settlerToken.decimals) as number))
   }
 
   async unlock(amount: number, from: string) {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    return this.sendTx(this.contract.methods.unlock(toSmartContractDecimals(amount, this.settlerToken.decimals, true) as number, from))
+    return this.sendTx(this.contract.methods.unlock(toSmartContractDecimals(amount, this.settlerToken.decimals) as number, from))
   }
 
   async delegateOracles(amount: number, delegateTo: string) {

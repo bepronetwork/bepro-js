@@ -4,6 +4,8 @@ import Network from '@models/network';
 import {defaultWeb3Connection, erc20Deployer, newWeb3Account} from '../utils';
 import Web3Connection from '@base/web3-connection';
 import {toSmartContractDecimals} from '@utils/numbers';
+import {NetworkIssue} from '@interfaces/network-issue';
+import {OraclesSummary} from '@interfaces/oracles-summary';
 
 describe.only(`Network`, () => {
   let network: Network;
@@ -96,117 +98,167 @@ describe.only(`Network`, () => {
       });
 
       it(`Changes disputable time`, async () => {
-        const change = await network.changeDisputableTime(60);
+        const change = await network.changeDisputableTime(120);
         expect(change.blockHash).to.not.be.empty;
 
         const disputableTime = await network.disputableTime();
-        expect(disputableTime).to.be.eq(60);
+        expect(disputableTime).to.be.eq(120);
       })
 
-      it(`Locks and locked`, async () => {
-        const lock = await network.lock(+newCouncilAmount + 1);
-        expect(lock.blockHash, `lock hash`).to.not.be.empty;
+      describe(`Locks`, async () => {
+        it (`Locked`, async () => {
+          const lock = await network.lock(+newCouncilAmount + 1);
+          expect(lock.blockHash, `lock hash`).to.not.be.empty;
+        })
 
-        const locked = await network.getOraclesByAddress(accountAddress);
-        expect(locked, `locked amount`).to.be.greaterThan(0);
+        it(`assert locked`, async () => {
+          const isCouncil = await network.isCouncil(accountAddress);
+          expect(isCouncil, `is council`).to.be.true;
+        })
 
-        const isCouncil = await network.isCouncil(accountAddress);
-        expect(isCouncil, `is council`).to.be.true;
+        it(`Check bepro staked`, async () => {
+          const beproStaked = await network.getBEPROStaked();
+          expect(beproStaked, `bepro staked`).to.be.greaterThan(0);
+        });
 
-        const beproStaked = await network.getBEPROStaked();
-        expect(beproStaked, `bepro staked`).to.be.greaterThan(0);
       });
 
-      it(`Delegates and delegated`, async () => {
-        const receiver = newWeb3Account(web3Connection).address;
-        const delegate = await network.delegateOracles(1, receiver);
-        expect(delegate.blockHash, `delegate hash`).to.not.be.empty;
+      describe('delegation', () => {
+        let receiver: string;
+        let delegated: OraclesSummary;
 
-        const delegated = await network.getOraclesSummary(receiver);
-        expect(delegated.oraclesDelegatedByOthers).to.eq(1);
+        before(() => {
+          receiver = newWeb3Account(web3Connection).address;
+        });
 
-        const undelegate = await network.unlock(1, receiver);
-        expect(undelegate.blockHash, `undelegate hash`).to.not.be.empty;
+        it(`Delegates`, async () => {
+          const delegate = await network.delegateOracles(1, receiver);
+          expect(delegate.blockHash, `delegate hash`).to.not.be.empty;
+        });
 
-        const summary = await network.getOraclesSummary(receiver);
-        expect(summary.oraclesDelegatedByOthers).to.eq(delegated.oraclesDelegatedByOthers - 1);
+        it(`asserts delegation`, async () => {
+          delegated = await network.getOraclesSummary(receiver);
+          expect(delegated.oraclesDelegatedByOthers).to.eq(1);
+        })
+
+        it(`Takes back the oracles`, async () => {
+          const undelegate = await network.unlock(1, receiver);
+          expect(undelegate.blockHash, `undelegate hash`).to.not.be.empty;
+        })
+
+        it (`asserts take back`, async () => {
+          const summary = await network.getOraclesSummary(receiver);
+          expect(summary.oraclesDelegatedByOthers).to.eq(delegated.oraclesDelegatedByOthers - 1);
+        });
+
       });
 
-      it(`Unlocks and unlocked`, async () => {
-        const amount = await network.getOraclesByAddress(accountAddress);
-        expect(amount).to.be.greaterThan(0);
+      describe(`Unlock`, () => {
+        it (`unlocks`, async () => {
+          const amount = await network.getOraclesByAddress(accountAddress);
+          const unlock = await network.unlock(amount, accountAddress);
+          expect(unlock.blockHash, `unlock hash`).to.not.be.empty;
+        });
 
-        const unlock = await network.unlock(+newCouncilAmount + 1, accountAddress);
-        expect(unlock.blockHash, `unlock hash`).to.not.be.empty;
-
-        const unlocked = await network.getOraclesByAddress(accountAddress);
-        expect(unlocked).to.be.eq(0);
-
-        const isCouncil = await network.isCouncil(accountAddress);
-        expect(isCouncil, `is council`).to.be.false;
-      });
+        it(`Asserts that unlocked`, async () => {
+          const isCouncil = await network.isCouncil(accountAddress);
+          expect(isCouncil, `is council`).to.be.false;
+        })
+      })
     });
 
     describe(`Issues`, () => {
 
-      it(`Opens, updates, and redeems an issue`, async () => {
-        const cid = `1/1`;
-        const openIssue = await network.openIssue(cid, 1);
-        expect(openIssue.blockHash, `open issue hash`).to.not.be.empty;
+      describe.skip(`Opens, updates, and redeems an issue`, () => {
+        let cid: string;
+        let issue: NetworkIssue;
 
-        let issue = await network.getIssueByCID(cid);
-        expect(issue.creationDate, `creation date`).to.not.be.empty;
+        before(() => {
+          cid = web3Connection.Web3.utils.randomHex(4)
+        });
 
-        const updateIssue = await network.updateIssue(issue._id, 2);
-        expect(updateIssue.blockHash, `update issue hash`).to.not.be.empty;
+        it(`Opens issue`, async () => {
+          const openIssue = await network.openIssue(cid, 1);
+          expect(openIssue.blockHash, `open issue hash`).to.not.be.empty;
 
-        issue = await network.getIssueById(issue._id);
-        expect(issue.tokensStaked, `issue tokens staked`).to.eq(2);
+          issue = await network.getIssueByCID(cid);
+          expect(issue.creationDate, `creation date`).to.be.greaterThan(0);
+        })
 
-        const issueInDraft = await network.isIssueInDraft(issue._id);
-        expect(issueInDraft).to.be.true;
+        it(`Updates issue`, async () => {
+          const updateIssue = await network.updateIssue(issue._id, 2);
+          expect(updateIssue.blockHash, `update issue hash`).to.not.be.empty;
 
-        const redeemIssue = await network.redeemIssue(issue._id);
-        expect(redeemIssue.blockHash, `redeem issue`).to.not.be.empty;
+          issue = await network.getIssueById(issue._id);
+          expect(issue.tokensStaked, `issue tokens staked`).to.eq(2);
+        })
+
+        it(`Redeems issue`, async () => {
+          const redeemIssue = await network.redeemIssue(issue._id);
+          expect(redeemIssue.blockHash, `redeem issue`).to.not.be.empty;
+        });
       });
 
-      it(`Opens, disputes, proposes, and closes an issue`, async (done) => {
-        const cid = `1/2`;
-        let issue = await network.openIssue(cid, 1);
-        expect(issue.blockHash, `open issue hash`).to.not.be.empty;
+      describe(`Opens, disputes, proposes, and closes an issue`, function () {
+        let cid: string;
+        let issue: NetworkIssue;
+        this.timeout(3 * 60 * 1000);
 
-        setTimeout(async () => {
-          issue = await network.getIssueByCID(cid);
-          const inDraft = await network.isIssueInDraft(issue._id);
-          expect(inDraft, `in draft`).to.be.false;
+        before(() => {
+          cid = web3Connection.Web3.utils.randomHex(4);
+        });
 
-          const recognize = await network.recognizeAsFinished(issue._id);
-          expect(recognize.blockHash, `recognize hash`).to.not.be.empty;
+        it (`Opens issue`, async () => {
+          const receipt = await network.openIssue(cid, 1);
+          expect(receipt.blockHash, `open issue hash`).to.not.be.empty;
+        })
 
-          const proposal = await network.proposeIssueMerge(issue._id, [accountAddress], [1]);
-          expect(proposal.blockHash, `proposal hash`).to.not.be.empty;
+        describe(`after redeemTime()`, () => {
+          before((done) => {
+            setTimeout(() => done(), 62 * 1000)
+          });
 
-          await network.lock(1);
-          const dispute = await network.disputeMerge(issue._id, 1);
-          expect(dispute.blockHash, `dispute blockhash`).to.not.be.empty;
+          it(`Waited`, () => {});
 
-          const disputed = await network.isMergeDisputed(1, 1);
-          expect(disputed, `disputed`).to.be.true;
+          it(`Recognizes as finished`, async () => {
+            issue = await network.getIssueByCID(cid);
+            const recognize = await network.recognizeAsFinished(issue._id);
+            expect(recognize.blockHash, `recognize hash`).to.not.be.empty;
+          });
 
-          await network.proposeIssueMerge(issue._id, [accountAddress], [1]);
+          it(`Proposes issue merge`, async () => {
+            await network.lock(+newCouncilAmount+1);
+            const proposal = await network.proposeIssueMerge(issue._id, [accountAddress], [1]);
+            expect(proposal.blockHash, `proposal hash`).to.not.be.empty;
+          });
 
-          setTimeout(async () => {
-            const mergeInDraft = await network.isMergeInDraft(issue._id, 2);
-            expect(mergeInDraft, `merge in draft`).to.be.false;
+          it(`Disputes issue merge`, async () => {
+            await network.lock(1);
+            const dispute = await network.disputeMerge(issue._id, 0);
+            expect(dispute.blockHash, `dispute blockhash`).to.not.be.empty;
+          });
 
-            const closed = await network.closeIssue(issue._id, 2);
+          it(`Asserts merge dispute`, async () => {
+            const disputed = await network.isMergeDisputed(issue._id, 0);
+            expect(disputed, `disputed`).to.be.true;
+          });
+        })
+
+        describe(`after disputableTime()`, () => {
+          before((done) => {
+            network.proposeIssueMerge(issue._id, [accountAddress], [1])
+                   .then(() => setTimeout(() => done(), 62 * 1000));
+          });
+
+          it(`Waited`, () => {});
+
+          it(`Closes issue`, async () => {
+            const closed = await network.closeIssue(issue._id, 1);
             expect(closed.blockHash, `closed hash`).to.not.be.empty;
+          });
 
-            done();
-          }, 62 * 1000);
-        }, 62 * 1000);
-      }).timeout(3 * 60 * 1000); // 3 mins timeout because of disputable time + draft merge
-    })
-
+        });
+      });
+    });
   });
-})
+});
