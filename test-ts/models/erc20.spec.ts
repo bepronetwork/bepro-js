@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import ERC20 from '@models/erc20';
+import {ERC20} from '@models/erc20';
 import {expect} from 'chai';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {describe} from 'mocha';

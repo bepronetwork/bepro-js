@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import {expect} from 'chai';
-import Web3Connection from '@base/web3-connection';
-import Web3ConnectionOptions from '@interfaces/web3-connection-options';
+import {Web3Connection} from '@base/web3-connection';
+import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {Errors} from '@interfaces/error-enum';
 
 describe(`Web3Connection`, () => {

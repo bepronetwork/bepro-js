@@ -1,6 +1,6 @@
-import Web3ConnectionOptions from '@interfaces/web3-connection-options';
-import Web3Connection from '@base/web3-connection';
-import ERC20 from '@models/erc20';
+import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
+import {Web3Connection} from '@base/web3-connection';
+import {ERC20} from '@models/erc20';
 import {toSmartContractDecimals} from '@utils/numbers';
 
 export function defaultWeb3Connection() {

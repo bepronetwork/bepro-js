@@ -1,6 +1,6 @@
-import Web3ConnectionOptions from '@interfaces/web3-connection-options';
-import Web3Connection from '@base/web3-connection';
-import Model from '@base/model';
+import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
+import {Web3Connection} from '@base/web3-connection';
+import {Model} from '@base/model';
 import {expect} from 'chai';
 import {Errors} from '@interfaces/error-enum';
 
