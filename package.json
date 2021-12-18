@@ -22,7 +22,7 @@
         "test:js": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test-ts/**/*.spec.{ts,tsx}' --pretty",
         "test:truffle": "npm run truffle -- test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "build": "npm run compile && babel ./src --out-dir lib --copy-files -d ./build",
-        "build-ts": "tsc && tsc-alias",
+        "build-ts": "tsc && tscpaths -p tsconfig.json -s ./src-ts -o ./dist",
         "docs": "typedoc",
         "clean:contracts": "rimraf build/contracts && ./node_modules/.bin/truffle compile",
         "ganache:start": "ganache-cli -p 8545 -q"
@@ -46,6 +46,7 @@
         "mocha-multi-reporters": "^1.5.1",
         "ts-node": "^10.4.0",
         "tsconfig-paths": "^3.12.0",
+        "tscpaths": "^0.0.9",
         "typedoc": "^0.22.10",
         "typescript": "4.5.3",
         "yargs": "^17.3.0",
