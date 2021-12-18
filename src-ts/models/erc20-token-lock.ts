@@ -93,8 +93,14 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
     return this.callTx(this.contract.methods.release())
   }
 
+  async start() {
+    await super.start();
+    await this.loadContract();
+  }
+
   async loadContract() {
-    super.loadContract();
+    if (!this.contract)
+      super.loadContract();
 
     this._erc20 = new ERC20(this.web3Connection, await this.getERC20TokenAddress());
     await this._erc20.loadContract();

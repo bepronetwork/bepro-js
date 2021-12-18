@@ -15,8 +15,15 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
     super(web3Connection, Json.abi as any, contractAddress);
   }
 
+  async start() {
+    await super.start();
+    await this.loadContract();
+  }
+
   async loadContract() {
-    super.loadContract();
+    if (!this.contract)
+      super.loadContract();
+
     this._decimals = await this.callTx(this.contract.methods.decimals());
   }
 

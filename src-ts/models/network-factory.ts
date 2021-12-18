@@ -72,8 +72,15 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
     return this.sendTx(this.contract.methods.createNetwork(settlerToken, transactionalToken));
   }
 
+  async start() {
+    await super.start();
+    await this.loadContract();
+  }
+
   async loadContract() {
-    super.loadContract();
+    if (!this.contract)
+      super.loadContract();
+
     this._settlerToken = new ERC20(this.web3Connection, await this.getSettlerTokenAddress())
   }
 

@@ -218,8 +218,14 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     return this.sendTx(this.contract.methods.proposeIssueMerge(id, prAddresses, amounts))
   }
 
+  async start() {
+    await super.start();
+    await this.loadContract();
+  }
+
   async loadContract() {
-    super.loadContract();
+    if (!this.contract)
+      super.loadContract();
 
     if (!this.contractAddress)
       throw new Error(Errors.MissingContractAddress);
