@@ -1,13 +1,13 @@
-import Web3Connection from '@base/web3-connection';
-import Model from '@base/model';
 import * as Json from '@abi/Token.json';
+import {Web3Connection} from '@base/web3-connection';
+import {Model} from '@base/model';
 import {TransactionReceipt} from 'web3-core';
 import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
-import {Deployable} from '@base/deployable';
+import {Deployable} from '@interfaces/deployable';
 import {ERC20Methods} from '@methods/erc20';
-import Web3ConnectionOptions from '@interfaces/web3-connection-options';
+import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 
-export default class ERC20 extends Model<ERC20Methods> implements Deployable {
+export class ERC20 extends Model<ERC20Methods> implements Deployable {
   private _decimals: number = 0;
   get decimals(): number { return this._decimals; }
 

@@ -1,14 +1,14 @@
-import Web3Connection from './web3-connection';
+import {Web3Connection} from './web3-connection';
 import {AbiItem} from 'web3-utils';
 import {Errors} from '@interfaces/error-enum';
 import Web3 from 'web3';
 import {Account, TransactionReceipt} from 'web3-core';
-import Web3Contract from './web3-contract';
-import Web3ConnectionOptions from '@interfaces/web3-connection-options';
+import {Web3Contract} from './web3-contract';
+import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 import {ContractCallMethod} from '@methods/contract-call-method';
 
-export default class Model<Methods = any> {
+export class Model<Methods = any> {
   protected _contract!: Web3Contract<Methods>;
   get contract() { return this._contract; }
   protected web3Connection!: Web3Connection;

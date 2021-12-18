@@ -1,8 +1,8 @@
 import {OwnableMethods} from '@methods/ownable';
-import UseModel from '@base/use-model';
+import {UseModel} from '@base/use-model';
 import {Errors} from '@interfaces/error-enum';
 
-export default class Ownable extends UseModel<OwnableMethods> {
+export class Ownable extends UseModel<OwnableMethods> {
   async setOwner(address: string) {
     return this.model.sendTx(this.model.contract.methods.transferOwnership(address))
   }

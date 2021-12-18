@@ -15,7 +15,7 @@ export interface Web3ContractOptions {
   auto: boolean; // default: true, auto = true will calculate needed values if none is provided.
 }
 
-export default class Web3Contract<Methods = any> {
+export class Web3Contract<Methods = any> {
   protected contract!: Contract;
 
   constructor(readonly web3: Web3,

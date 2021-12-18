@@ -1,18 +1,18 @@
-import Model from '@base/model';
+import {Model} from '@base/model';
 import {ERC20TokenLockMethods} from '@methods/erc20-token-lock';
-import {Deployable} from '@base/deployable';
-import Web3Connection from '@base/web3-connection';
-import Web3ConnectionOptions from '@interfaces/web3-connection-options';
+import {Deployable} from '@interfaces/deployable';
+import {Web3Connection} from '@base/web3-connection';
+import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import ERC20TokenLock from '@abi/ERC20TokenLock.json';
 import {AbiItem} from 'web3-utils';
 import {Errors} from '@interfaces/error-enum';
-import ERC20 from '@models/erc20';
+import {ERC20} from '@models/erc20';
 import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {lockedTokensInfo} from '@utils/locked-tokens-info';
-import Pausable from '@base/pausable';
-import Ownable from '@base/ownable';
+import {Pausable} from '@base/pausable';
+import {Ownable} from '@base/ownable';
 
-export default class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Deployable {
+export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress: string) {
     super(web3Connection, ERC20TokenLock.abi as AbiItem[], contractAddress);
   }

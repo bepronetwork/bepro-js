@@ -1,19 +1,19 @@
-import Model from '@base/model';
-import Web3Connection from '@base/web3-connection';
+import {Model} from '@base/model';
+import {Web3Connection} from '@base/web3-connection';
 import * as NetworkAbi from '@abi/Network.json';
-import ERC20 from '@models/erc20';
+import {ERC20} from '@models/erc20';
 import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {TransactionReceipt} from 'web3-core';
 import networkIssue from '@utils/network-issue';
 import {NetworkIssue} from '@interfaces/network-issue';
 import networkMerge from '@utils/network-merge';
 import {Errors} from '@interfaces/error-enum';
-import {Deployable} from '@base/deployable';
+import {Deployable} from '@interfaces/deployable';
 import {NetworkMethods} from '@methods/network';
 import {OraclesSummary} from '@interfaces/oracles-summary';
 import {AbiItem} from 'web3-utils';
 
-export default class Network extends Model<NetworkMethods> implements Deployable {
+export class Network extends Model<NetworkMethods> implements Deployable {
   private _transactionToken!: ERC20;
   private _settlerToken!: ERC20;
   get transactionToken() { return this._transactionToken; }

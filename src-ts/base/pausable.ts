@@ -1,8 +1,8 @@
 import {Errors} from '@interfaces/error-enum';
-import UseModel from '@base/use-model';
+import {UseModel} from '@base/use-model';
 import {PausableMethods} from '@methods/pausable';
 
-export default class Pausable extends UseModel<PausableMethods> {
+export class Pausable extends UseModel<PausableMethods> {
 
   async paused() {
     return this.model.sendTx(this.model.contract.methods.paused());
