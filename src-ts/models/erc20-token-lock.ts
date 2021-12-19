@@ -11,15 +11,16 @@ import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {lockedTokensInfo} from '@utils/locked-tokens-info';
 import {Pausable} from '@base/pausable';
 import {Ownable} from '@base/ownable';
+import {IsOwnable, IsPausable} from '@interfaces/modifiers';
 
-export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Deployable {
+export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Deployable, IsOwnable, IsPausable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress: string) {
     super(web3Connection, ERC20TokenLock.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;
-  private pausable = new Pausable(this);
-  private ownable = new Ownable(this);
+  readonly pausable = new Pausable(this);
+  readonly ownable = new Ownable(this);
 
   get erc20() { return this._erc20; }
 

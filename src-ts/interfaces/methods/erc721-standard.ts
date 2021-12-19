@@ -25,5 +25,5 @@ export interface ERC721StandardMethods {
   setTokenURI(tokenId: number, uri: string): ContractSendMethod;
   setBaseURI(baseURI: string): ContractSendMethod;
   mint(to: string, tokenId: number): ContractSendMethod;
-  mint(to: string, tokenId: number, _data: undefined): ContractSendMethod;
+  mint(to: string, tokenId: number, _data?: string): ContractSendMethod;
 }
