@@ -2,13 +2,22 @@ import {Model} from '@base/model';
 import {Web3Connection} from '@base/web3-connection';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {Deployable} from '@interfaces/deployable';
-import ERC721CollectiblesJson from '@abi/ERC721Colectibles.json';
+import ERC721ColectiblesJson from '@abi/ERC721Colectibles.json';
 import {ERC721ColectiblesMethods} from '@methods/erc721-colectibles';
 import {AbiItem} from 'web3-utils';
 
-export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implements Deployable {
+export class ERC721Colectibles extends Model<ERC721ColectiblesMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
-    super(web3Connection, ERC721CollectiblesJson as any as AbiItem[], contractAddress);
+    super(web3Connection, ERC721ColectiblesJson as any as AbiItem[], contractAddress);
+  }
+
+  async deployJsonAbi(name: string, symbol: string, limitedAmount: number, _purchaseToken: string, baseFeeAddress: string, feeAddress: string, otherAddress: string) {
+    const deployOptions = {
+        data: ERC721ColectiblesJson.bytecode,
+        arguments: [name, symbol, limitedAmount, _purchaseToken, baseFeeAddress, feeAddress, otherAddress]
+    };
+
+    return this.deploy(deployOptions, this.web3Connection.Account);
   }
 
   async MAX_PURCHASE() {

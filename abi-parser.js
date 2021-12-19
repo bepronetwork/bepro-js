@@ -64,17 +64,18 @@ const makeClass = (header = ``, content = ``, imports = []) =>
 /**
  * @param {Contract~AbiOption~Input[]} inputs
  * @param {string} [joiner]
+ * @param {boolean} [noType]
  * @returns {string}
  */
-const parseInputsName = (inputs, joiner = `, `) =>
-  inputs.map((input, i) => `${input.name || `v${i+1}`}: ${SolidityTypes[input.type]}`).join(joiner);
+const parseInputsName = (inputs, joiner = `, `, noType = false) =>
+  inputs.map((input, i) => `${input.name || `v${i+1}`}${!noType && ': '.concat(SolidityTypes[input.type]) || ''}`).join(joiner);
 
 /**
  * @param {Contract~AbiOption~Input[]} outputs
  * @returns {string}
  */
 const parseOutput = (outputs) => {
-  if (!outputs.length)
+  if (!outputs?.length)
     return `ContractSendMethod`;
 
   const template = `ContractCallMethod<%content%>`;
@@ -122,7 +123,7 @@ const makeFn = (option, withBody = false) => {
  * @param {string} filePath
  * @returns {string}
  */
-const AbiTemplater = (filePath = ``) => {
+const AbiParser = (filePath = ``) => {
 
   /**
    * @type {Contract}
@@ -137,6 +138,12 @@ const AbiTemplater = (filePath = ``) => {
   const _constructor = `  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {\n    ${_super}\n  }\n\n`;
 
   const _classBody = abis.map(option => makeFn(option, true)).join(`\n`);
+
+  const abiItemConstructor = contract.abi.filter(option => !option.anonymous && option.type === "constructor");
+  const abiInputs = parseInputsName(abiItemConstructor[0].inputs)
+  const deployOptions = `const deployOptions = {\n        data: ${contract.contractName}Json.bytecode,\n        arguments: [${parseInputsName(abiItemConstructor[0].inputs, undefined, true)}]\n    };`
+  const constructorWithDeployer = _constructor+`  async deployJsonAbi(${abiInputs}) {\n    ${deployOptions}\n\n    return this.deploy(deployOptions, this.web3Connection.Account);\n  }\n\n`;
+
   const _interface = makeClass(classHeader(contract.contractName), content, ["import {ContractSendMethod} from 'web3-eth-contract';", "import {ContractCallMethod} from '@methods/contract-call-method';"]);
 
   const classImports = [
@@ -149,13 +156,13 @@ const AbiTemplater = (filePath = ``) => {
     "import {AbiItem} from 'web3-utils';"
   ]
 
-  const _class = makeClass(classHeader(contract.contractName, `class`, ` extends Model<${contract.contractName}Methods> implements Deployable`), _constructor+_classBody, classImports);
+  const _class = makeClass(classHeader(contract.contractName, `class`, ` extends Model<${contract.contractName}Methods> implements Deployable`), constructorWithDeployer+_classBody, classImports);
 
   return {_interface, _class};
 }
 
 
-const parsed = AbiTemplater(args.file);
+const parsed = AbiParser(args.file);
 
 
 if (args.outputInterface) {
