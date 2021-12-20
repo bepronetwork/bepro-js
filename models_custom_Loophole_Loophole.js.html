@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BEPRO Network Dev Docs models/custom/Loophole/Loophole.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="./doc-styles.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+             
+                <a class="image" href="index.html">
+                    <img src="//avatars.githubusercontent.com/u/49488487?s=200&v=4" alt="logo">
+                </a>
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">BEPRO Network Documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/bepronetwork/bepro-js"
+                        >
+                            Github
+                        </a>
+                    
+                        <a
+                            class="link user-link "
+                            href="https://www.bepro.network/blog"
+                        >
+                            Blog
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="CERC20Mock.html">CERC20Mock</a></li><li><a href="DexStorage.html">DexStorage</a></li><li><a href="ERC20Contract.html">ERC20Contract</a></li><li><a href="ERC20Distribution.html">ERC20Distribution</a></li><li><a href="ERC20Mock.html">ERC20Mock</a></li><li><a href="ERC20TokenLock.html">ERC20TokenLock</a></li><li><a href="ERC721Collectibles.html">ERC721Collectibles</a></li><li><a href="ERC721Standard.html">ERC721Standard</a></li><li><a href="global.html#ETHUtils">ETHUtils</a></li><li><a href="IContract.html">IContract</a></li><li><a href="Loophole.html">Loophole</a></li><li><a href="Network.html">Network</a></li><li><a href="NetworkFactory.html">NetworkFactory</a></li><li><a href="OpenerRealFvr.html">OpenerRealFvr</a></li><li><a href="Sablier.html">Sablier</a></li><li><a href="StakingContract.html">StakingContract</a></li><li><a href="SwapRouter.html">SwapRouter</a></li><li><a href="TestUniswapV3Callee.html">TestUniswapV3Callee</a></li><li><a href="TestUniswapV3RouterBridge.html">TestUniswapV3RouterBridge</a></li><li><a href="TickMathTest.html">TickMathTest</a></li><li><a href="UniswapV3Factory.html">UniswapV3Factory</a></li><li><a href="UniswapV3Pool.html">UniswapV3Pool</a></li><li><a href="VotingContract.html">VotingContract</a></li><li><a href="Web3Connection.html">Web3Connection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#add">add</a></li><li><a href="global.html#addPauser">addPauser</a></li><li><a href="global.html#balanceOf">balanceOf</a></li><li><a href="global.html#blockNumber">blockNumber</a></li><li><a href="global.html#blockNumberAndTimestamp">blockNumberAndTimestamp</a></li><li><a href="global.html#blockTimestamp">blockTimestamp</a></li><li><a href="global.html#burn">burn</a></li><li><a href="global.html#cancelStream">cancelStream</a></li><li><a href="global.html#collect">collect</a></li><li><a href="global.html#collectProtocol">collectProtocol</a></li><li><a href="global.html#collectRewards">collectRewards</a></li><li><a href="global.html#collectRewardsCall">collectRewardsCall</a></li><li><a href="global.html#createCompoundingStream">createCompoundingStream</a></li><li><a href="global.html#createPool">createPool</a></li><li><a href="global.html#createStream">createStream</a></li><li><a href="global.html#decimals">decimals</a></li><li><a href="global.html#deltaOf">deltaOf</a></li><li><a href="global.html#earnings">earnings</a></li><li><a href="global.html#enableFeeAmount">enableFeeAmount</a></li><li><a href="global.html#exactInput">exactInput</a></li><li><a href="global.html#exactInputSingle">exactInputSingle</a></li><li><a href="global.html#exactOutput">exactOutput</a></li><li><a href="global.html#exactOutputSingle">exactOutputSingle</a></li><li><a href="global.html#exit">exit</a></li><li><a href="global.html#exitLP">exitLP</a></li><li><a href="global.html#exitPenalty">exitPenalty</a></li><li><a href="global.html#exitPenaltyLP">exitPenaltyLP</a></li><li><a href="global.html#factory">factory</a></li><li><a href="global.html#fee">fee</a></li><li><a href="global.html#feeAmountTickSpacing">feeAmountTickSpacing</a></li><li><a href="global.html#feeGrowthGlobal0X128">feeGrowthGlobal0X128</a></li><li><a href="global.html#feeGrowthGlobal1X128">feeGrowthGlobal1X128</a></li><li><a href="global.html#flash">flash</a></li><li><a href="global.html#fromBNToDecimals">fromBNToDecimals</a></li><li><a href="global.html#fromDecimalsToBN">fromDecimalsToBN</a></li><li><a href="global.html#getBlockNumber">getBlockNumber</a></li><li><a href="global.html#getBlocksFromRange">getBlocksFromRange</a></li><li><a href="global.html#getBlockTimestamp">getBlockTimestamp</a></li><li><a href="global.html#getCompoundingStream">getCompoundingStream</a></li><li><a href="global.html#getCurrentEntryStakeUser">getCurrentEntryStakeUser</a></li><li><a href="global.html#getEarnings">getEarnings</a></li><li><a href="global.html#getEntryStakeAdjusted">getEntryStakeAdjusted</a></li><li><a href="global.html#getGasCostOfGetSqrtRatioAtTick">getGasCostOfGetSqrtRatioAtTick</a></li><li><a href="global.html#getGasCostOfGetTickAtSqrtRatio">getGasCostOfGetTickAtSqrtRatio</a></li><li><a href="global.html#getPool">getPool</a></li><li><a href="global.html#getPoolInfo">getPoolInfo</a></li><li><a href="global.html#getPoolReward">getPoolReward</a></li><li><a href="global.html#getPoolTokenDecimals">getPoolTokenDecimals</a></li><li><a href="global.html#getSqrtRatioAtTick">getSqrtRatioAtTick</a></li><li><a href="global.html#getStream">getStream</a></li><li><a href="global.html#getTickAtSqrtRatio">getTickAtSqrtRatio</a></li><li><a href="global.html#getTokenDecimalsFromStream">getTokenDecimalsFromStream</a></li><li><a href="global.html#getTotalEntryStakeUser">getTotalEntryStakeUser</a></li><li><a href="global.html#getTotalUnstakeUser">getTotalUnstakeUser</a></li><li><a href="global.html#getUserInfo">getUserInfo</a></li><li><a href="global.html#getUserReward">getUserReward</a></li><li><a href="global.html#increaseObservationCardinalityNext">increaseObservationCardinalityNext</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#interestOf">interestOf</a></li><li><a href="global.html#isCompoundingStream">isCompoundingStream</a></li><li><a href="global.html#isLoopPoolId">isLoopPoolId</a></li><li><a href="global.html#isPauser">isPauser</a></li><li><a href="global.html#liquidity">liquidity</a></li><li><a href="global.html#lpToken">lpToken</a></li><li><a href="global.html#LPTokenContract">LPTokenContract</a></li><li><a href="global.html#lpTokensPerBlock">lpTokensPerBlock</a></li><li><a href="global.html#massUpdatePools">massUpdatePools</a></li><li><a href="global.html#MAX_SQRT_RATIO">MAX_SQRT_RATIO</a></li><li><a href="global.html#maxLiquidityPerTick">maxLiquidityPerTick</a></li><li><a href="global.html#MIN_SQRT_RATIO">MIN_SQRT_RATIO</a></li><li><a href="global.html#mint">mint</a></li><li><a href="global.html#multicall">multicall</a></li><li><a href="global.html#name">name</a></li><li><a href="global.html#nextStreamId">nextStreamId</a></li><li><a href="global.html#owner">owner</a></li><li><a href="global.html#parameters">parameters</a></li><li><a href="global.html#pause">pause</a></li><li><a href="global.html#poolExists">poolExists</a></li><li><a href="global.html#poolFee">poolFee</a></li><li><a href="global.html#poolsCount">poolsCount</a></li><li><a href="global.html#protocolFees">protocolFees</a></li><li><a href="global.html#refundETH">refundETH</a></li><li><a href="global.html#selfPermit">selfPermit</a></li><li><a href="global.html#selfPermitAllowed">selfPermitAllowed</a></li><li><a href="global.html#selfPermitAllowedIfNecessary">selfPermitAllowedIfNecessary</a></li><li><a href="global.html#selfPermitIfNecessary">selfPermitIfNecessary</a></li><li><a href="global.html#set">set</a></li><li><a href="global.html#setFeeProtocol">setFeeProtocol</a></li><li><a href="global.html#setOwner">setOwner</a></li><li><a href="global.html#slot0">slot0</a></li><li><a href="global.html#snapshotCumulativesInside">snapshotCumulativesInside</a></li><li><a href="global.html#stake">stake</a></li><li><a href="global.html#startBlock">startBlock</a></li><li><a href="global.html#swap">swap</a></li><li><a href="global.html#swap0ForExact1">swap0ForExact1</a></li><li><a href="global.html#swap1ForExact0">swap1ForExact0</a></li><li><a href="global.html#swapExact0For1">swapExact0For1</a></li><li><a href="global.html#swapExact1For0">swapExact1For0</a></li><li><a href="global.html#swapExactInputSingleEx">swapExactInputSingleEx</a></li><li><a href="global.html#swapExactOutputSingleEx">swapExactOutputSingleEx</a></li><li><a href="global.html#swapRouter">swapRouter</a></li><li><a href="global.html#swapToHigherSqrtPrice">swapToHigherSqrtPrice</a></li><li><a href="global.html#swapToLowerSqrtPrice">swapToLowerSqrtPrice</a></li><li><a href="global.html#sweepToken">sweepToken</a></li><li><a href="global.html#sweepTokenWithFee">sweepTokenWithFee</a></li><li><a href="global.html#symbol">symbol</a></li><li><a href="global.html#takeEarnings">takeEarnings</a></li><li><a href="global.html#ticks">ticks</a></li><li><a href="global.html#tickSpacing">tickSpacing</a></li><li><a href="global.html#token0">token0</a></li><li><a href="global.html#token1">token1</a></li><li><a href="global.html#totalAllocPoint">totalAllocPoint</a></li><li><a href="global.html#unpause">unpause</a></li><li><a href="global.html#unwrapWETH9">unwrapWETH9</a></li><li><a href="global.html#unwrapWETH9WithFee">unwrapWETH9WithFee</a></li><li><a href="global.html#updateFee">updateFee</a></li><li><a href="global.html#updatePool">updatePool</a></li><li><a href="global.html#updatePoolCall">updatePoolCall</a></li><li><a href="global.html#WETH9">WETH9</a></li><li><a href="global.html#withdrawFromStream">withdrawFromStream</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>models/custom/Loophole/Loophole.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { loophole } from '../../../interfaces';
+import ERC20Contract from '../../ERC20/ERC20Contract';
+import ETHUtils from '../../../utils/ETHUtils';
+import Numbers from '../../../utils/Numbers';
+import IContract from '../../IContract';
+
+const assert = require('assert');
+const BigNumber = require('bignumber.js');
+
+/** @typedef {Object} Loophole~Options
+* @property {Boolean} test
+* @property {Boolean} localtest
+* @property {Web3Connection} [web3Connection=Web3Connection]
+* @property {address} [contractAddress]
+* @property {address} [lpTokenAddress]
+* @property {address} [ethUtilsAddress]
+*/
+
+/**
+ * Loophole Object
+ * @class Loophole
+ * @param {Loophole~Options} options
+ */
+export default class Loophole extends IContract {
+  constructor(params = {}) {
+    super({ abi: loophole, ...params });
+    if (!params.lpTokenAddress) {
+      throw new Error('Please provide an LP token address');
+    }
+    if (!params.ethUtilsAddress) {
+      throw new Error('Please provide an ETHUtils contract address');
+    }
+    if (!params.swapRouterAddress) {
+      throw new Error('Please provide an SwapRouter contract address');
+    }
+
+    this.params.LPTokenContract = new ERC20Contract({
+      web3Connection: this.web3Connection,
+      contractAddress: params.lpTokenAddress,
+    });
+    this.params.ETHUtils = new ETHUtils({
+      web3Connection: this.web3Connection,
+      contractAddress: params.ethUtilsAddress,
+    });
+
+    this.params.LPTokenAddress = params.lpTokenAddress; // LP token address
+    this.params.ethUtilsAddress = params.ethUtilsAddress; // ETHUtils contract
+    this.params.swapRouterAddress = params.swapRouterAddress; // swapRouter exchange contract address
+  }
+
+
+  /**
+   * @returns {Promise&lt;address>}
+   */
+  async lpToken() {
+    // return await this.getWeb3Contract().methods.lpToken().call();
+    return this.params.LPTokenAddress;
+  }
+
+
+  /**
+   * @returns {Promise&lt;uint256>}
+   */
+  async lpTokensPerBlock() {
+    const decimals = await this.ETHUtils().decimals(this.params.LPTokenAddress);
+    const res = await this.getWeb3Contract().methods.lpTokensPerBlock().call();
+    return Numbers.fromDecimalsToBN(res, decimals);
+  }
+
+
+  /**
+   * @param {address}
+   * @returns {Promise&lt;bool>}
+   */
+  async poolExists(address) {
+    return await this.getWeb3Contract().methods.poolExists(address).call();
+  }
+
+
+  /**
+   * @returns {Promise&lt;uint24>}
+   */
+  async poolFee() {
+    // TODO: ???
+    return await this.getWeb3Contract().methods.poolFee().call();
+  }
+
+
+  /**
+   * @returns {Promise&lt;uint256>}
+   */
+  async startBlock() {
+    return await this.getWeb3Contract().methods.startBlock().call();
+  }
+
+
+  /**
+   * @returns {Promise&lt;uint256>}
+   */
+  async exitPenalty() {
+    // penalty is stored as 20 for 20%
+    const res = await this.getWeb3Contract().methods.exitPenalty().call();
+    return Number(res / 100.0);
+  }
+
+
+  /**
+   * @returns {Promise&lt;uint256>}
+   */
+  async exitPenaltyLP() {
+    // penalty is stored as 20 for 20%
+    const res = await this.getWeb3Contract().methods.exitPenaltyLP().call();
+    return Number(res / 100.0);
+  }
+
+
+  /**
+   * @returns {Promise&lt;address>}
+   */
+  async swapRouter() {
+    // return await this.getWeb3Contract().methods.swapRouter().call();
+    return this.params.swapRouterAddress;
+  }
+
+
+  /**
+   * @returns {Promise&lt;uint256>}
+   */
+  async totalAllocPoint() {
+    return await this.getWeb3Contract().methods.totalAllocPoint().call();
+  }
+
+
+  /**
+   * @param {address} newOwner
+   * @returns {Promise&lt;void>}
+   */
+  /* async transferOwnership(newOwner) {
+      return await this.__sendTx(this.params.getContract().methods.transferOwnership(newOwner))
+    }; */
+
+
+  /**
+   * Add/enable new pool, only owner mode
+   * @dev ADD | NEW TOKEN POOL
+   * @param {address} token Token address as IERC20
+   * @param {uint256} allocPoint Pool allocation point/share distributed to this pool from mining rewards
+   * @returns {Promise&lt;uint256>} pid added token pool index
+   */
+  async add(token, allocPoint) {
+    return await this.__sendTx(this.getWeb3Contract().methods.add(token, allocPoint));
+  }
+
+
+  /**
+   * Update pool allocation point/share
+   * @dev UPDATE | ALLOCATION POINT
+   * @param {uint256} Pool id
+   * @param {uint256} allocPoint Set allocation point/share for pool id
+   * @param {bool} withUpdate Update all pools and distribute mining reward for all
+   * @returns {Promise&lt;void>}
+   */
+  async set(pid, allocPoint, withUpdate) {
+    return await this.__sendTx(this.getWeb3Contract().methods.set(pid, allocPoint, withUpdate));
+  }
+
+
+  /**
+   * Stake tokens on given pool id
+   * @param {uint256} pid Pool id
+   * @param {uint256} amount The token amount user wants to stake to the pool.
+   * @returns {Promise&lt;void>}
+   */
+  async stake(pid, amount) {
+    const amount2 = await this.fromBNToDecimals(amount, pid);
+    return await this.__sendTx(this.getWeb3Contract().methods.stake(pid, amount2));
+  }
+
+
+  /**
+   * User exit staking amount from main pool, require main pool only
+   * @param {uint256} pid Pool id
+   * @param {uint256} amount The token amount user wants to exit/unstake from the pool.
+   * @param {uint256} amountOutMinimum The min LP token amount expected to be received from exchange,
+   * needed from outside for security reasons, using zero value in production is discouraged.
+   * @returns {Promise&lt;uint256>} net tokens amount sent to user address
+   */
+  async exit(pid, amount, amountOutMinimum) {
+    const amount2 = await this.fromBNToDecimals(amount, pid);
+    return await this.__sendTx(this.getWeb3Contract().methods.exit(pid, amount2, amountOutMinimum));
+  }
+
+
+  /**
+   * User exit staking amount from LOOP pool, require LOOP pool only
+   * @param {uint256} amount The token amount user wants to exit/unstake from the pool.
+   * @returns {Promise&lt;uint256>} net tokens amount sent to user address
+   */
+  async exitLP(amount) {
+    const amount2 = Numbers.fromBNToDecimals(amount, this.LPTokenContract().getDecimals());
+    return await this.__sendTx(this.getWeb3Contract().methods.exit(amount2));
+  }
+
+
+  /**
+   * View pending LP token rewards for user
+   * @dev VIEW | PENDING REWARD
+   * @param {uint256} pid Pool id of main pool
+   * @param {address} user User address to check pending rewards for
+   * @returns {Promise&lt;uint256>} Pending LP token rewards for user
+   */
+  async getUserReward(pid, user) {
+    const res = await this.getWeb3Contract().methods.getUserReward(pid, user).call();
+    return await this.fromDecimalsToBN(res, pid);
+  }
+
+
+  /**
+   * User collects his share of LP tokens reward
+   * @param {uint256} pid Pool id
+   * @returns {Promise&lt;uint256>} LP reward tokens amount sent to user address
+   */
+  async collectRewards(pid) {
+    return await this.__sendTx(this.getWeb3Contract().methods.collectRewards(pid));
+  }
+
+  // TODO: fix this fn, it always returns zero
+  /**
+   * @param {uint256} pid
+   * @returns {Promise&lt;uint256>}
+   */
+  async collectRewardsCall(pid) {
+    const res = await this.getWeb3Contract().methods.collectRewards(pid).call();
+    console.log('collectRewardsCall.bp-0: ', res);
+    return await this.fromDecimalsToBN(res, pid);
+  }
+
+
+  /**
+   * @param {uint256} pid
+   * @returns {Promise&lt;uint256[]>}
+   */
+  /* async collectRewardsAll() {
+    const res = await this.__sendTx(this.getWeb3Contract().methods.collectRewardsAll());
+    return res;
+  } */
+
+  /**
+   * @param {uint256} pid
+   * @returns {Promise&lt;uint256[]>}
+   */
+  /* async collectRewardsAllCall() {
+    let res = await this.getWeb3Contract().methods.collectRewardsAll().call();
+    // convert all rewards decimals to ui tokens
+    console.log('---collectRewardsAll(): ', res);
+    for (let i=1; i &lt; res.length; ++i) {
+      res[i] = await this.fromDecimalsToBN(res[i], i);
+    }
+    return res;
+  } */
+
+
+  // / Current total user stake in a given pool
+  // / @param pid Pool id
+  // / @param user The user address
+  // / @returns {Promise&lt;uint256>} stake tokens amount
+  async currentStake(pid, user) {
+    const res = await this.getWeb3Contract().methods.currentStake(pid, user).call();
+    return await this.fromDecimalsToBN(res, pid);
+  }
+
+
+  /**
+   * Percentage of how much a user has earned so far from the other users exit, would be just a statistic
+   * @param {uint256} pid Pool id
+   * @param {address} user The user address
+   * @returns {Promise&lt;uint256>} earnings percent as integer
+   */
+  async earnings(pid, user) {
+    const res = await this.getWeb3Contract().methods.earnings(pid, user).call();
+    return await this.fromDecimalsToBN(res, pid);
+  }
+
+
+  /**
+   * Get blocks range given two block numbers, usually computes blocks elapsed since last mining reward block.
+   * @dev RETURN | BLOCK RANGE SINCE LAST REWARD AS REWARD MULTIPLIER | INCLUDES START BLOCK
+   * @param {uint256} from block start
+   * @param {uint256} to block end
+   * @returns {Promise&lt;uint256>} blocks count
+   */
+  async getBlocksFromRange(from, to) {
+    const res = await this.getWeb3Contract().methods.getBlocksFromRange(from, to).call();
+    return BigNumber(res);
+  }
+
+
+  /**
+   * Update all pools for mining rewards
+   * @dev UPDATE | (ALL) REWARD VARIABLES | BEWARE: HIGH GAS POTENTIAL
+   * @returns {Promise&lt;void>}
+   */
+  async massUpdatePools() {
+    return await this.__sendTx(this.getWeb3Contract().methods.massUpdatePools());
+  }
+
+
+  /**
+   * Update pool to trigger LP tokens reward since last reward mining block
+   * @dev UPDATE | (ONE POOL) REWARD VARIABLES
+   * @param {uint256} pid Pool id
+   * @returns {Promise&lt;void>}
+   */
+  async updatePool(pid) {
+    return await this.__sendTx(this.getWeb3Contract().methods.updatePool(pid));
+  }
+
+  /**
+   * Update pool to trigger LP tokens reward since last reward mining block, function call for results and no transaction
+   * @dev UPDATE | (ONE POOL) REWARD VARIABLES
+   * @param {uint256} pid Pool id
+   * @returns {Promise&lt;uint256>} blocksElapsed Blocks elapsed since last reward block
+   * @returns {Promise&lt;uint256>} lpTokensReward Amount of LP tokens reward since last reward block
+   * @returns {Promise&lt;uint256>} accLPtokensPerShare Pool accumulated LP tokens per pool token (per share)
+   */
+  async updatePoolCall(pid) {
+    const res = await this.getWeb3Contract().methods.updatePool(pid).call();
+    // res.blocksElapsed, res.lpTokensReward, res.accLPtokensPerShare
+    const decimals = this.LPTokenContract().getDecimals();
+    const lpPerTokenMult = await this.getWeb3Contract().methods.LPtokensPerShareMultiplier().call();
+    const accLPperToken = BigNumber(res.accLPtokensPerShare).div(lpPerTokenMult);
+
+    return {
+      blocksElapsed: BigNumber(res.blocksElapsed),
+      lpTokensReward: Numbers.fromDecimalsToBN(res.lpTokensReward, decimals),
+      accLPtokensPerShare: accLPperToken,
+    };
+  }
+
+
+  /**
+   * Get LP tokens reward for given pool id, only MAIN pool, LOOP pool reward will always be zero
+   * @param {uint256} pid Pool id
+   * @returns {Promise&lt;uint256>} tokensReward Tokens amount as reward based on last mining block
+   */
+  async getPoolReward(pid) {
+    // LP tokens reward
+    const res = await this.getWeb3Contract().methods.getPoolReward(pid).call();
+    const decimals = this.LPTokenContract().getDecimals();
+    return Numbers.fromDecimalsToBN(res, decimals);
+    // return await this.fromDecimalsToBN(res, pid);
+  }
+
+
+  /**
+   * Get pool token decimals given pool id
+   * @param {uint256} pid Pool id
+   * @returns {Promise&lt;uint256>} poolTokenDecimals
+   */
+  async getPoolTokenDecimals(pid) {
+    // TODO: cache decimals by pid for token address
+    const res = await this.getWeb3Contract().methods.getPool(pid).call();
+    return await this.ETHUtils().decimals(res[0]); // token = res[0]
+  }
+
+
+  /**
+   * Convert given tokens amount integer to float number with decimals for UI.
+   * @function
+   * @param {number} amount Tokens amount to convert
+   * @param {number} pid Pool id
+   * @returns {Promise&lt;number>} tokensAmount
+   */
+  async fromDecimalsToBN(amount, pid) {
+    return Numbers.fromDecimalsToBN(
+      amount,
+      await this.getPoolTokenDecimals(pid),
+    );
+  }
+
+
+  /**
+   * Convert float number with decimals from UI to tokens amount integer for smart contract function.
+   * @function
+   * @param {number} amount Tokens float amount to convert
+   * @param {number} pid Pool id
+   * @returns {Promise&lt;number>} tokensAmount
+   */
+  async fromBNToDecimals(amount, pid) {
+    return Numbers.fromBNToDecimals(
+      amount,
+      await this.getPoolTokenDecimals(pid),
+    );
+  }
+
+
+  /**
+   * Get current block timestamp
+   * @returns {Promise&lt;uint256>} current block timestamp
+   */
+  async getBlockTimestamp() {
+    return await this.getWeb3Contract().methods.getBlockTimestamp().call();
+  }
+
+
+  /**
+   * Get current block number
+   * @returns {Promise&lt;uint256>} current block number
+   */
+  async getBlockNumber() {
+    return await this.getWeb3Contract().methods.getBlockNumber().call();
+  }
+
+
+  /** @typedef {Object} Loophole~PoolInfo
+   * @property {address} token
+   * @property {uint256} allocPoint
+   * @property {uint256} lastRewardBlock
+   * @property {uint256} totalPool
+   * @property {uint256} entryStakeTotal
+   * @property {uint256} totalDistributedPenalty
+   * @property {uint256} accLPtokensPerShare
+   */
+
+  /**
+   * Get pool attributes
+   * @param {uint256} pid Pool id
+   * @returns {Promise&lt;Loophole~PoolInfo>}
+   */
+  async getPool(pid) {
+    const res = await this.getWeb3Contract().methods.getPool(pid).call();
+    const token = res[0];
+    const decimals = await this.ETHUtils().decimals(token);
+    const lpDecimals = this.LPTokenContract().getDecimals();
+    const lpPerTokenMult = await this.getWeb3Contract().methods.LPtokensPerShareMultiplier().call();
+    const accLPperToken = BigNumber(res[6]).div(lpPerTokenMult);
+
+    return {
+      token: res[0],
+      allocPoint: BigNumber(res[1]),
+      lastRewardBlock: BigNumber(res[2]),
+      totalPool: Numbers.fromDecimalsToBN(res[3], decimals),
+      entryStakeTotal: Numbers.fromDecimalsToBN(res[4], decimals),
+      totalDistributedPenalty: Numbers.fromDecimalsToBN(res[5], decimals),
+      accLPtokensPerShare: accLPperToken,
+    };
+  }
+
+
+  /**
+   * Get pool attributes, raw with no conversion.
+   * @param {uint256} pid
+   * @returns {Promise&lt;Loophole~PoolInfo>}
+   */
+  async getPoolInfo(pid) {
+    const res = await this.getWeb3Contract().methods.getPoolInfo(pid).call();
+    // TODO ???
+    return res;
+  }
+
+
+  /**
+   * Get pools array length
+   * @returns {Promise&lt;uint256>} pools count
+   */
+  async poolsCount() {
+    return await this.getWeb3Contract().methods.poolsCount().call();
+  }
+
+
+  /** @typedef {Object} Loophole~UserInfo
+   * @property {uint256} entryStake Accumulated staked amount
+   * @property {uint256} unstake Accumulated net unstaked amount or exitStake
+   * @property {uint256} entryStakeAdjusted Current user adjusted stake in the pool
+   * @property {uint256} payRewardMark LP tokens reward mark to control new rewards and already paid ones
+   */
+
+  /**
+   * Get pool attributes as struct
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise&lt;Loophole~UserInfo>}
+   */
+  async getUserInfo(pid, user) {
+    const res = await this.getWeb3Contract().methods.getUserInfo(pid, user).call();
+    return {
+      ...res,
+      entryStake: await this.fromDecimalsToBN(res.entryStake, pid),
+      unstake: await this.fromDecimalsToBN(res.unstake, pid),
+      entryStakeAdjusted: await this.fromDecimalsToBN(res.entryStakeAdjusted, pid),
+      payRewardMark: await this.fromDecimalsToBN(res.payRewardMark, 0), // 0 is LOOP pool id token
+    };
+  }
+
+
+  /**
+   * Get total accumulated 'entry stake' so far for a given user address in a pool id
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise&lt;uint256>} user entry stake amount in a given pool
+   */
+  async getTotalEntryStakeUser(pid, user) {
+    const res = await this.getWeb3Contract().methods.getTotalEntryStakeUser(pid, user).call();
+    return await this.fromDecimalsToBN(res, pid);
+  }
+
+
+  /**
+   * Get total accumulated 'unstake' so far for a given user address in a pool id
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise&lt;uint256>} user unstake amount in a given pool
+   */
+  async getTotalUnstakeUser(pid, user) {
+    const res = await this.getWeb3Contract().methods.getTotalUnstakeUser(pid, user).call();
+    return await this.fromDecimalsToBN(res, pid);
+  }
+
+
+  // WARNING: Function NOT fully working:
+  // when user had profit from others exits and entryStake is less than what he had withdrown
+  // SOLUTION? maybe return only what is greather than zero?
+  /**
+   * Get 'entry stake adjusted' for a given user address in a pool id
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise&lt;uint256>} user entry stake adjusted amount in given pool
+   */
+  async getCurrentEntryStakeUser(pid, user) {
+    // const res = await this.getWeb3Contract().methods.getCurrentEntryStakeUser(pid, user).call();
+    // return await this.fromDecimalsToBN(res, pid);
+    let selExitPenalty;
+    if (this.isLoopPoolId(pid)) {
+      selExitPenalty = await this.exitPenaltyLP();
+    } else selExitPenalty = await this.exitPenalty();
+    const userInfo = await this.getUserInfo(pid, user);
+    const totalGrossUnstaked = userInfo.unstake.div(1 - selExitPenalty);
+    return userInfo.entryStake.minus(totalGrossUnstaked);
+  }
+
+
+  /**
+   * Returns true if given pis is a LOOP pool id, false otherwise.
+   * @param {uint256} pid Pool id
+   * @returns {Boolean}
+   */
+  isLoopPoolId(pid) {
+    return (pid == 0);
+  }
+
+
+  /**
+   * Get 'entry stake adjusted' for a given user address in a pool id
+   * @param {uint256} pid Pool id
+   * @param {address} user User address
+   * @returns {Promise&lt;uint256>} user entry stake adjusted amount in given pool
+   */
+  async getEntryStakeAdjusted(pid, user) {
+    const res = await this.getWeb3Contract().methods.getEntryStakeAdjusted(pid, user).call();
+    return await this.fromDecimalsToBN(res, pid);
+  }
+
+
+  /**
+   *
+   * @return {Promise&lt;void>}
+   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
+   */
+  __assert = async () => {
+    if (!this.getAddress()) {
+      throw new Error(
+        'Contract is not deployed, first deploy it and provide a contract address',
+      );
+    }
+
+    /* Use ABI */
+    this.params.contract.use(loophole, this.getAddress());
+
+    if (!this.params.LPTokenContract) {
+      this.params.LPTokenContract = new ERC20Contract({
+        web3Connection: this.web3Connection,
+        contractAddress: this.params.LPTokenAddress,
+      });
+    }
+    /* Assert Token Contract */
+    await this.params.LPTokenContract.login();
+    await this.params.LPTokenContract.__assert();
+
+    if (!this.params.ETHUtils) {
+      this.params.ETHUtils = new ETHUtils({
+        web3Connection: this.web3Connection,
+        contractAddress: this.params.ethUtilsAddress,
+      });
+    }
+    /* Assert Token Contract */
+    await this.params.ETHUtils.login();
+    await this.params.ETHUtils.__assert();
+  };
+
+
+  /**
+   * Deploy the Loophole Contract
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.name Name of token
+   * @param {address} swapRouter
+   * @param {address} lpToken
+   * @param {uint256} lpTokensPerBlock
+   * @param {uint256} startBlock
+   * @param {uint256} exitPenalty
+   * @param {uint256} exitPenaltyLP
+   * @param {function():void} params.callback
+   * @return {Promise&lt;*|undefined>}
+   * @throws {Error} No Token Address Provided
+   */
+  deploy = async ({
+    swapRouter, lpToken, lpTokensPerBlock, startBlock, exitPenalty, exitPenaltyLP, callback,
+  } = {}) => {
+    // if (!this.LPTokenContract()) {
+    //  throw new Error('No LPTokenContract Address Provided');
+    // }
+
+    assert(lpToken === this.LPTokenContract().getAddress()); // LPTokenAddress
+    assert(swapRouter === this.params.swapRouterAddress);
+
+    const lpTokenDecimals = await this.ETHUtils().decimals(lpToken);
+    const lpTokensPerBlock1 = Numbers.fromBNToDecimals(lpTokensPerBlock, lpTokenDecimals);
+    const params = [swapRouter, lpToken, lpTokensPerBlock1, startBlock, exitPenalty, exitPenaltyLP];
+
+    const res = await this.__deploy(params, callback);
+    this.params.contractAddress = res.contractAddress;
+    /* Call to Backend API */
+    await this.__assert();
+    return res;
+  };
+
+
+  /**
+   * @function
+   * @return LPTokenContract|undefined
+   */
+  LPTokenContract() {
+    return this.params.LPTokenContract;
+  }
+
+  /**
+   * @function
+   * @return ETHUtils|undefined
+   */
+  ETHUtils() {
+    return this.params.ETHUtils;
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

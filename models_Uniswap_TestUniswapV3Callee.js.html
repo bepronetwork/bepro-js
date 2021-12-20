@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs models/BEPRO/NetworkFactory.js</title>
+  <title>BEPRO Network Dev Docs models/Uniswap/TestUniswapV3Callee.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -100,7 +100,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>models/BEPRO/NetworkFactory.js</h1>
+                    <h1>models/Uniswap/TestUniswapV3Callee.js</h1>
                 </header>
                 
 
@@ -109,285 +109,150 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* eslint-disable no-underscore-dangle */
-// eslint-disable-next-line no-unused-vars
-import { networkFactory } from '../../interfaces';
+            <pre class="prettyprint source linenums"><code>import { uniswapCallee } from '../../interfaces';
 import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
-import ERC20Contract from '../ERC20/ERC20Contract';
-
-const BigNumber = require('bignumber.js');
 
 /**
- * @typedef {Object} NetworkFactory~Options
- * @property {Boolean} test
- * @property {Boolean} localtest ganache local blockchain
- * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
- * @property {string} [contractAddress]
+ * TestUniswapV3Callee Object
+ * @class TestUniswapV3Callee
+ * @param {TestUniswapV3Callee~Options} options
  */
-
-/**
- * NetworkFactory Object
- * @class NetworkFactory
- * @param {NetworkFactory~Options} options
- */
-class NetworkFactory extends IContract {
+export default class TestUniswapV3Callee extends IContract {
   constructor(params) {
-    super({ abi: networkFactory, ...params });
+    super({ abi: uniswapCallee, ...params });
   }
 
 
   /**
-   * Asserts the 2 {@link ERC20Contract} on the current address
-   * @function
-   * @return {Promise&lt;void>}
-   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
+   * @param {address} pool
+   * @param {uint256} amount0In
+   * @param {address} recipient
+   * @param {uint160} sqrtPriceLimitX96
+   * @returns {Promise&lt;void>}
    */
-  __assert = async () => {
-    if (!this.getAddress()) {
-      throw new Error(
-        'Contract is not deployed, first deploy it and provide a contract address',
-      );
-    }
-
-    // Use ABI
-    this.params.contract.use(networkFactory, this.getAddress());
-
-    const beproAddress = await this.getSettlerTokenAddress();
-
-    // Set Token Address Contract for easy access
-    this.params.settlerToken = new ERC20Contract({
-      web3Connection: this.web3Connection,
-      contractAddress: beproAddress,
-    });
-    // Assert Token Contract
-    await this.params.settlerToken.login();
-    await this.params.settlerToken.__assert();
-  };
-
-  /**
-   * Get Network By Creator Address
-   * @param {Address} address
-   * @returns {Adddress}
-   */
-  async getNetworkByAddress(address) {
-    return await this.getWeb3Contract()
-      .methods.getNetworkByAddress(address)
-      .call();
-  }
-
-  /**
-   * Get Network By Id
-   * @param {number} id
-   * @returns {Adddress}
-   */
-  async getNetworkById(id) {
-    return await this.getWeb3Contract()
-      .methods.getNetworkById(id)
-      .call();
-  }
-
-  /**
-   * Get Amount of Networks Forked in the Protocol
-   * @returns {Promise&lt;number>}
-   */
-  async getAmountofNetworksForked() {
-    return Number(await this.getWeb3Contract().methods.networksAmount().call());
-  }
-
-  async networksAmount() {
-    return BigNumber(await this.getWeb3Contract().methods.networksAmount().call());
+  async swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96) {
+    return await this.__sendTx(this.getWeb3Contract().methods.swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96));
   }
 
 
   /**
-   * Get Total Amount of Tokens Locked by Operator in the Network
-   * @param {Address} address
-   * @returns {Promise&lt;number>}
+   * @param {address} pool
+   * @param {uint256} amount1Out
+   * @param {address} recipient
+   * @param {uint160} sqrtPriceLimitX96
+   * @returns {Promise&lt;void>}
    */
-  async getLockedStakedByAddress(address) {
-    return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.tokensLocked(address).call(),
-      18,
-    );
+  async swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96) {
+    return await this.__sendTx(this.getWeb3Contract().methods.swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96));
   }
-
-  async getTokensLocked(address) {
-    return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.tokensLocked(address).call(),
-      18,
-    );
-  }
-
-  /**
-   * Get Open Issues Available
-   * @param {Address} address
-   * @returns {Address[]}
-   */
-  async getNetworks() {
-    const res = await this.getWeb3Contract()
-      .methods.networksArray()
-      .call();
-    return res;
-  }
-
-  /**
-   * Get Total Amount of Tokens Staked in the Protocol
-   * @returns {Promise&lt;number>}
-   */
-  async getBEPROLocked() {
-    return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
-      18,
-    );
-  }
-
-  async tokensLockedTotal() {
-    return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
-      18,
-    );
-  }
-
-  /**
-   * Verify if Address is Council
-   * @param {Object} params
-   * @param {number} params.address
-   * @returns {Promise&lt;address>}
-   */
-  async isOperator({ address }) {
-    return await this.getLockedStakedByAddress(address) >= await this.OPERATOR_AMOUNT();
-  }
-
-  /**
-   * Get Settler Token Address
-   * @returns {Promise&lt;address>}
-   */
-  async getSettlerTokenAddress() {
-    return await this.getWeb3Contract()
-      .methods.beproAddress()
-      .call();
-  }
-
-  async beproAddress() {
-    return await this.getWeb3Contract()
-      .methods.beproAddress()
-      .call();
-  }
-
-  /**
-   * Get Amount Needed for Operator
-   * @returns {Promise&lt;Integer>}
-   */
-  async OPERATOR_AMOUNT() {
-    return Numbers.fromDecimals(
-      await this.getWeb3Contract()
-        .methods.OPERATOR_AMOUNT()
-        .call(),
-      18,
-    );
-  }
-
-  /**
-   * Approve ERC20 Allowance
-   * @function
-   * @return {Promise&lt;number>}
-   */
-  approveSettlerERC20Token = async () => {
-    const totalMaxAmount = await this.getSettlerTokenContract().totalSupply();
-    return await this.getSettlerTokenContract().approve({
-      address: this.getAddress(),
-      amount: totalMaxAmount,
-    });
-  };
 
 
   /**
-   * Verify if Approved
-   * @function
-   * @param {Object} params
-   * @param {number} params.amount
-   * @param {Address} params.address
-   * @return {Promise&lt;number>}
+   * @param {address} pool
+   * @param {uint256} amount1In
+   * @param {address} recipient
+   * @param {uint160} sqrtPriceLimitX96
+   * @returns {Promise&lt;void>}
    */
-  isApprovedSettlerToken = async ({ amount, address }) => await this.getSettlerTokenContract().isApproved({
-    address,
-    amount,
-    spenderAddress: this.getAddress(),
-  });
-
-  /**
-   * lock tokens for operator use
-   * @param {Object} params
-   * @params params.tokenAmount {number}
-   * @throws {Error} Tokens Amount has to be higher than 0
-   * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
-   * @return {Promise&lt;TransactionObject>}
-   */
-  async lock({ tokenAmount }) {
-    if (tokenAmount &lt;= 0) {
-      throw new Error('Token Amount has to be higher than 0');
-    }
-
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
-    );
+  async swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96) {
+    return await this.__sendTx(this.getWeb3Contract().methods.swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96));
   }
 
-  /**
-   * Unlock Tokens for oracles
-   * @throws {Error} Tokens Amount has to be higher than 0
-   * @return {Promise&lt;TransactionObject>}
-   */
-  async unlock() {
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.unlock(),
-    );
-  }
 
   /**
-   * Create Network
-   * @param {Object} params
-   * @param {Address} params.settlerToken
-   * @param {Address} params.transactionalToken
-   * @return {Promise&lt;TransactionObject>}
+   * @param {address} pool
+   * @param {uint256} amount0Out
+   * @param {address} recipient
+   * @param {uint160} sqrtPriceLimitX96
+   * @returns {Promise&lt;void>}
    */
-  async createNetwork({ settlerToken, transactionalToken }) {
-    return await this.__sendTx(
-      this.getWeb3Contract()
-        .methods.createNetwork(settlerToken, transactionalToken),
-    );
+  async swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96) {
+    return await this.__sendTx(this.getWeb3Contract().methods.swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96));
   }
 
-  /**
-   * Deploys Contracts
-   * @function
-   * @param {Object} params
-   * @param {string} params.beproAddress
-   * @param {function():void} params.callback
-   * @return {Promise&lt;*|undefined>}
-   */
-  deploy = async ({
-    beproAddress, callback,
-  }) => {
-    const params = [beproAddress];
-    const res = await this.__deploy(params, callback);
-    this.params.contractAddress = res.contractAddress;
-    /* Call to Backend API */
-    await this.__assert();
-    return res;
-  };
 
   /**
-   * @function
-   * @return ERC20Contract|null
+   * @param {address} pool
+   * @param {uint160} sqrtPriceX96
+   * @param {address} recipient
+   * @returns {Promise&lt;void>}
    */
-  getSettlerTokenContract() {
-    return this.params.settlerToken;
+  async swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient) {
+    return await this.__sendTx(this.getWeb3Contract().methods.swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient));
   }
+
+
+  /**
+   * @param {address} pool
+   * @param {uint160} sqrtPriceX96
+   * @param {address} recipient
+   * @returns {Promise&lt;void>}
+   */
+  async swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient) {
+    return await this.__sendTx(this.getWeb3Contract().methods.swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient));
+  }
+
+
+  /**
+   * @param {int256} amount0Delta
+   * @param {int256} amount1Delta
+   * @param {bytes} data
+   * @returns {Promise&lt;void>}
+   */
+  /* async uniswapV3SwapCallback(amount0Delta, amount1Delta, data) {
+      return await this.__sendTx(this.getWeb3Contract().methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, data));
+    }; */
+
+
+  /**
+   * @param {address} pool
+   * @param {address} recipient
+   * @param {int24} tickLower
+   * @param {int24} tickUpper
+   * @param {uint128} amount
+   * @returns {Promise&lt;void>}
+   */
+  async mint(pool, recipient, tickLower, tickUpper, amount) {
+    return await this.__sendTx(this.getWeb3Contract().methods.mint(pool, recipient, tickLower, tickUpper, amount));
+  }
+
+
+  /**
+   * @param {uint256} amount0Owed
+   * @param {uint256} amount1Owed
+   * @param {bytes} data
+   * @returns {Promise&lt;void>}
+   */
+  /* async uniswapV3MintCallback(amount0Owed, amount1Owed, data) {
+      return await this.__sendTx(this.getWeb3Contract().methods.uniswapV3MintCallback(amount0Owed, amount1Owed, data))
+    }; */
+
+
+  /**
+   * @param {address} pool
+   * @param {address} recipient
+   * @param {uint256} amount0
+   * @param {uint256} amount1
+   * @param {uint256} pay0
+   * @param {uint256} pay1
+   * @returns {Promise&lt;void>}
+   */
+  async flash(pool, recipient, amount0, amount1, pay0, pay1) {
+    return await this.__sendTx(this.getWeb3Contract().methods.flash(pool, recipient, amount0, amount1, pay0, pay1));
+  }
+
+
+  /**
+   * @param {uint256} fee0
+   * @param {uint256} fee1
+   * @param {bytes} data
+   * @returns {Promise&lt;void>}
+   */
+  /* async uniswapV3FlashCallback(fee0, fee1, data) {
+      return await this.__sendTx(this.getWeb3Contract().methods.uniswapV3FlashCallback(fee0, fee1, data))
+    }; */
 }
-
-export default NetworkFactory;
 </code></pre>
         </article>
     </section>

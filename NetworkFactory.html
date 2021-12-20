@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs ERC721Standard</title>
+  <title>BEPRO Network Dev Docs NetworkFactory</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -98,7 +98,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Class</p>
-                    <h1>ERC721Standard</h1>
+                    <h1>NetworkFactory</h1>
                 </header>
                 
 
@@ -109,7 +109,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ERC721Standard<span class="signature">(options)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>NetworkFactory<span class="signature">(options)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -128,12 +128,12 @@
 
 
     
-    <h4 class="name" id="ERC721Standard">
-        <a class="href-link" href="#ERC721Standard">#</a>
+    <h4 class="name" id="NetworkFactory">
+        <a class="href-link" href="#NetworkFactory">#</a>
         
         <span class="code-name">
             
-                new ERC721Standard<span class="signature">(options)</span><span class="type-signature"></span>
+                new NetworkFactory<span class="signature">(options)</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -142,7 +142,7 @@
     
     
     <div class="description">
-        <p>ERC721Standard Object</p>
+        <p>NetworkFactory Object</p>
     </div>
     
 
@@ -186,7 +186,7 @@
   <td class="type">
   
       
-<span class="param-type"><a href="ERC721Standard.html#~Options">ERC721Standard~Options</a></span>
+<span class="param-type"><a href="NetworkFactory.html#~Options">NetworkFactory~Options</a></span>
 
 
   
@@ -242,9 +242,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line13">line 13</a>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line18">line 18</a>
             </span>
         </p>
     
@@ -291,78 +291,6 @@
     
 
     
-        <div class='vertical-section'>
-            <h1>Members</h1>
-            <div class="members">
-            
-                <div class="member">
-
-<h4 class="name" id="deploy">
-    <a class="href-link" href="#deploy">#</a>
-    
-    <span class="code-name">
-        deploy
-    </span>
-    
-</h4>
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line127">line 127</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-            </div>
-        </div>
-    
 
     
         <div class='vertical-section'>
@@ -386,6 +314,10 @@
 
     
     
+    <div class="description">
+        <p>Asserts the 2 <a href="ERC20Contract.html">ERC20Contract</a> on the current address</p>
+    </div>
+    
 
 
 
@@ -432,9 +364,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line28">line 28</a>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line35">line 35</a>
             </span>
         </p>
     
@@ -510,16 +442,12 @@
 
 
     
-    <h4 class="name" id="baseURI">
-        <a class="href-link" href="#baseURI">#</a>
-        
-            
-                <span class='tag'>async</span>
-            
+    <h4 class="name" id="approveSettlerERC20Token">
+        <a class="href-link" href="#approveSettlerERC20Token">#</a>
         
         <span class="code-name">
             
-                baseURI<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
+                approveSettlerERC20Token<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -528,7 +456,7 @@
     
     
     <div class="description">
-        <p>Verify what is the baseURI</p>
+        <p>Approve ERC20 Allowance</p>
     </div>
     
 
@@ -577,9 +505,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line78">line 78</a>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line185">line 185</a>
             </span>
         </p>
     
@@ -610,13 +538,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>URI</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;string></span>
+<span class="param-type">Promise.&lt;number></span>
 
 
     </div>
@@ -636,8 +562,8 @@
 
 
     
-    <h4 class="name" id="exists">
-        <a class="href-link" href="#exists">#</a>
+    <h4 class="name" id="createNetwork">
+        <a class="href-link" href="#createNetwork">#</a>
         
             
                 <span class='tag'>async</span>
@@ -645,7 +571,7 @@
         
         <span class="code-name">
             
-                exists<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
+                createNetwork<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
             
         </span>
     </h4>
@@ -654,7 +580,7 @@
     
     
     <div class="description">
-        <p>Verify if token ID exists</p>
+        <p>Create Network</p>
     </div>
     
 
@@ -716,13 +642,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>tokenID</code></td>
+      <td class="name"><code>settlerToken</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">number</span>
+<span class="param-type">Address</span>
 
 
   
@@ -735,307 +661,17 @@
   <td class="description last"></td>
 </tr>
 
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line54">line 54</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Token Id</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Promise.&lt;boolean></span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getERC20Contract">
-        <a class="href-link" href="#getERC20Contract">#</a>
-        
-        <span class="code-name">
-            
-                getERC20Contract<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line147">line 147</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>ERC20Contract|undefined</p></div>
-    
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getURITokenID">
-        <a class="href-link" href="#getURITokenID">#</a>
-        
-            
-                <span class='tag'>async</span>
-            
-        
-        <span class="code-name">
-            
-                getURITokenID<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Verify what is the getURITokenID</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Object</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
   
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>tokenID</code></td>
+      <td class="name"><code>transactionalToken</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">number</span>
+<span class="param-type">Address</span>
 
 
   
@@ -1093,212 +729,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line67">line 67</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>URI</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Promise.&lt;string></span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="mint">
-        <a class="href-link" href="#mint">#</a>
-        
-            
-                <span class='tag'>async</span>
-            
-        
-        <span class="code-name">
-            
-                mint<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Mint created TokenID</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Object</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>tokenID</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">number</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line111">line 111</a>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line244">line 244</a>
             </span>
         </p>
     
@@ -1353,12 +786,12 @@
 
 
     
-    <h4 class="name" id="setBaseTokenURI">
-        <a class="href-link" href="#setBaseTokenURI">#</a>
+    <h4 class="name" id="deploy">
+        <a class="href-link" href="#deploy">#</a>
         
         <span class="code-name">
             
-                setBaseTokenURI<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span>
+                deploy<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;(*|undefined)>}</span>
             
         </span>
     </h4>
@@ -1367,7 +800,7 @@
     
     
     <div class="description">
-        <p>Set Base Token URI</p>
+        <p>Deploys Contracts</p>
     </div>
     
 
@@ -1429,13 +862,36 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>URI</code></td>
+      <td class="name"><code>beproAddress</code></td>
   
 
   <td class="type">
   
       
 <span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">function</span>
 
 
   
@@ -1493,9 +949,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line89">line 89</a>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line259">line 259</a>
             </span>
         </p>
     
@@ -1530,7 +986,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;*></span>
+<span class="param-type">Promise.&lt;(*|undefined)></span>
 
 
     </div>
@@ -1550,12 +1006,16 @@
 
 
     
-    <h4 class="name" id="setTokenURI">
-        <a class="href-link" href="#setTokenURI">#</a>
+    <h4 class="name" id="getAmountofNetworksForked">
+        <a class="href-link" href="#getAmountofNetworksForked">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                setTokenURI<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span>
+                getAmountofNetworksForked<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
             
         </span>
     </h4>
@@ -1564,7 +1024,1185 @@
     
     
     <div class="description">
-        <p>Set Token URI</p>
+        <p>Get Amount of Networks Forked in the Protocol</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line83">line 83</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;number></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getBEPROLocked">
+        <a class="href-link" href="#getBEPROLocked">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getBEPROLocked<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get Total Amount of Tokens Staked in the Protocol</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line127">line 127</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;number></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getLockedStakedByAddress">
+        <a class="href-link" href="#getLockedStakedByAddress">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getLockedStakedByAddress<span class="signature">(address)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get Total Amount of Tokens Locked by Operator in the Network</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Address</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line97">line 97</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;number></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getNetworkByAddress">
+        <a class="href-link" href="#getNetworkByAddress">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getNetworkByAddress<span class="signature">(address)</span><span class="type-signature"> &rarr; {Adddress}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get Network By Creator Address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Address</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line62">line 62</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Adddress</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getNetworkById">
+        <a class="href-link" href="#getNetworkById">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getNetworkById<span class="signature">(id)</span><span class="type-signature"> &rarr; {Adddress}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get Network By Id</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line73">line 73</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Adddress</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getNetworks">
+        <a class="href-link" href="#getNetworks">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getNetworks<span class="signature">(address)</span><span class="type-signature"> &rarr; {Array.&lt;Address>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get Open Issues Available</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Address</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line116">line 116</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Array.&lt;Address></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getSettlerTokenAddress">
+        <a class="href-link" href="#getSettlerTokenAddress">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getSettlerTokenAddress<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;address>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get Settler Token Address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line155">line 155</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;address></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getSettlerTokenContract">
+        <a class="href-link" href="#getSettlerTokenContract">#</a>
+        
+        <span class="code-name">
+            
+                getSettlerTokenContract<span class="signature">()</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line274">line 274</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>ERC20Contract|null</p></div>
+    
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isApprovedSettlerToken">
+        <a class="href-link" href="#isApprovedSettlerToken">#</a>
+        
+        <span class="code-name">
+            
+                isApprovedSettlerToken<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Verify if Approved</p>
     </div>
     
 
@@ -1626,13 +2264,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>tokenID</code></td>
+      <td class="name"><code>amount</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">string</span>
+<span class="param-type">number</span>
 
 
   
@@ -1649,13 +2287,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>URI</code></td>
+      <td class="name"><code>address</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">string</span>
+<span class="param-type">Address</span>
 
 
   
@@ -1713,9 +2351,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line101">line 101</a>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line202">line 202</a>
             </span>
         </p>
     
@@ -1750,7 +2388,687 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;*></span>
+<span class="param-type">Promise.&lt;number></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isOperator">
+        <a class="href-link" href="#isOperator">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                isOperator<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;address>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Verify if Address is Council</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>address</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line147">line 147</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;address></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="lock">
+        <a class="href-link" href="#lock">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                lock<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>lock tokens for operator use</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line216">line 216</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Tokens Amount has to be higher than 0</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Tokens not approve for tx, first use 'approveERC20'</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="OPERATOR_AMOUNT">
+        <a class="href-link" href="#OPERATOR_AMOUNT">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                OPERATOR_AMOUNT<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Integer>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get Amount Needed for Operator</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line171">line 171</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;Integer></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="unlock">
+        <a class="href-link" href="#unlock">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                unlock<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Unlock Tokens for oracles</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line231">line 231</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-10">
+            
+                    
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Tokens Amount has to be higher than 0</p></div>
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+<span class="param-type">Error</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;TransactionObject></span>
 
 
     </div>
@@ -2005,9 +3323,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_BEPRO_NetworkFactory.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line5">line 5</a>
+                <a href="models_BEPRO_NetworkFactory.js.html">models/BEPRO/NetworkFactory.js</a>, <a href="models_BEPRO_NetworkFactory.js.html#line10">line 10</a>
             </span>
         </p>
     

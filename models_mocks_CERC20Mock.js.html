@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs models/BEPRO/NetworkFactory.js</title>
+  <title>BEPRO Network Dev Docs models/mocks/CERC20Mock.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -100,7 +100,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>models/BEPRO/NetworkFactory.js</h1>
+                    <h1>models/mocks/CERC20Mock.js</h1>
                 </header>
                 
 
@@ -109,17 +109,12 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/* eslint-disable no-underscore-dangle */
-// eslint-disable-next-line no-unused-vars
-import { networkFactory } from '../../interfaces';
+            <pre class="prettyprint source linenums"><code>import { cerc20mock } from '../../interfaces';
 import Numbers from '../../utils/Numbers';
-import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
 
-const BigNumber = require('bignumber.js');
-
 /**
- * @typedef {Object} NetworkFactory~Options
+ * @typedef {Object} CERC20Mock~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
  * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
@@ -127,21 +122,145 @@ const BigNumber = require('bignumber.js');
  */
 
 /**
- * NetworkFactory Object
- * @class NetworkFactory
- * @param {NetworkFactory~Options} options
+ * @class CERC20Mock, use no decimals transformation for numbers because we hold underlaying token asset.
+ * @param {CERC20Mock~Options} options
+ * @dev See https://compound.finance/developers
  */
-class NetworkFactory extends IContract {
-  constructor(params) {
-    super({ abi: networkFactory, ...params });
+class CERC20Mock extends ERC20Contract {
+  constructor(params = {}) {
+    super({ ...params, abi: cerc20mock });
+    if (params.tokenAddress) {
+      this.params.ERC20Contract = new ERC20Contract({
+        web3Connection: this.web3Connection,
+        contractAddress: params.tokenAddress,
+      });
+    }
   }
 
 
   /**
-   * Asserts the 2 {@link ERC20Contract} on the current address
-   * @function
+     * Block number that interest started to increase from
+     * @returns {Promise&lt;uint256>}
+     */
+  async initialBlockNumber() {
+    return await this.getWeb3Contract().methods.initialBlockNumber().call();
+  }
+
+
+  /**
+     * Initial exchange rate used when minting the first CTokens (used when totalSupply = 0)
+     * @returns {Promise&lt;uint256>}
+     */
+  async initialExchangeRate() {
+    return await this.getWeb3Contract().methods.initialExchangeRate().call();
+  }
+
+
+  /**
+     * Indicator that this is a CToken contract (for inspection)
+     * @returns {Promise&lt;bool>}
+     */
+  async isCToken() {
+    return await this.getWeb3Contract().methods.isCToken().call();
+  }
+
+
+  /**
+     * Underlying asset for this CToken
+     * @returns {Promise&lt;address>}
+     */
+  async underlying() {
+    return await this.getWeb3Contract().methods.underlying().call();
+  }
+
+
+  /** * User Interface ** */
+
+
+  /**
+     * Get the underlying balance of the `owner`
+     * @dev This also accrues interest in a transaction
+     * @param {address} The address of the account to query
+     * @returns {Promise&lt;uint256>} The amount of underlying owned by `owner`
+     */
+  async balanceOfUnderlying(owner) {
+    const balance = await this.getWeb3Contract().methods.balanceOfUnderlying(owner).call();
+    return Numbers.fromDecimalsToBN(
+      balance,
+      this.getERC20Contract().getDecimals(),
+    );
+  }
+
+
+  /**
+     * Accrue interest then return the up-to-date exchange rate
+     * @returns {Promise&lt;uint256>} Calculated exchange rate
+     */
+  async exchangeRateCurrent() {
+    const rate = await this.getWeb3Contract().methods.exchangeRateCurrent().call();
+    const decimals = this.getDecimals();
+    const rate2 = Numbers.fromDecimalsToBN(
+      rate,
+      decimals,
+    );
+    return rate2; // rate
+  }
+
+
+  /**
+     * Sender supplies assets into the market and receives cTokens in exchange
+     * Accrues interest whether or not the operation succeeds, unless reverted
+     * @param {uint256} The amount of the underlying asset to supply
+     * @returns {Promise&lt;bool>} true=success, otherwise a failure
+     */
+  async mint(mintAmount) {
+    const decimals = this.getERC20Contract().getDecimals();
+    const mintAmountWithDecimals = Numbers.fromBNToDecimals(
+      mintAmount,
+      decimals,
+    );
+    return await this.__sendTx(this.getWeb3Contract().methods.mint(mintAmountWithDecimals));
+    // return await this.__sendTx(this.getWeb3Contract().methods.mint(mintAmount));
+  }
+
+
+  /**
+     * Sender supplies underlying to the money market
+     * @dev This is just a mock
+     * @param {uint256} supplyAmount The amount of underlying to supply
+     * @returns {Promise&lt;bool>} true=success, otherwise a failure
+     */
+  async supplyUnderlying(supplyAmount) {
+    const decimals = this.getERC20Contract().getDecimals();
+    const supplyAmountWithDecimals = Numbers.fromBNToDecimals(
+      supplyAmount,
+      decimals,
+    );
+    return await this.__sendTx(this.getWeb3Contract().methods.supplyUnderlying(supplyAmountWithDecimals));
+    // return await this.__sendTx(this.getWeb3Contract().methods.supplyUnderlying(supplyAmount));;
+  }
+
+
+  /**
+     * Sender redeems cTokens in exchange for a specified amount of underlying asset
+     * @dev This is just a mock
+     * @param {uint256} redeemAmount The amount of underlying to redeem
+     * @returns {Promise&lt;bool>} true=success, otherwise a failure
+     */
+  async redeemUnderlying(redeemAmount) {
+    const decimals = this.getERC20Contract().getDecimals();
+    const redeemAmountWithDecimals = Numbers.fromBNToDecimals(
+      redeemAmount,
+      decimals,
+    );
+    return await this.__sendTx(this.getWeb3Contract().methods.redeemUnderlying(redeemAmountWithDecimals));
+    // return await this.__sendTx(this.getWeb3Contract().methods.redeemUnderlying(redeemAmount));
+  }
+
+
+  /**
+   * Use a {@link cerc20mock} contract with the current address
    * @return {Promise&lt;void>}
-   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
    */
   __assert = async () => {
     if (!this.getAddress()) {
@@ -150,227 +269,54 @@ class NetworkFactory extends IContract {
       );
     }
 
-    // Use ABI
-    this.params.contract.use(networkFactory, this.getAddress());
+    this.params.contract.use(cerc20mock, this.getAddress());
+    this.params.decimals = await this.getDecimalsAsync();
 
-    const beproAddress = await this.getSettlerTokenAddress();
-
-    // Set Token Address Contract for easy access
-    this.params.settlerToken = new ERC20Contract({
-      web3Connection: this.web3Connection,
-      contractAddress: beproAddress,
-    });
-    // Assert Token Contract
-    await this.params.settlerToken.login();
-    await this.params.settlerToken.__assert();
-  };
-
-  /**
-   * Get Network By Creator Address
-   * @param {Address} address
-   * @returns {Adddress}
-   */
-  async getNetworkByAddress(address) {
-    return await this.getWeb3Contract()
-      .methods.getNetworkByAddress(address)
-      .call();
-  }
-
-  /**
-   * Get Network By Id
-   * @param {number} id
-   * @returns {Adddress}
-   */
-  async getNetworkById(id) {
-    return await this.getWeb3Contract()
-      .methods.getNetworkById(id)
-      .call();
-  }
-
-  /**
-   * Get Amount of Networks Forked in the Protocol
-   * @returns {Promise&lt;number>}
-   */
-  async getAmountofNetworksForked() {
-    return Number(await this.getWeb3Contract().methods.networksAmount().call());
-  }
-
-  async networksAmount() {
-    return BigNumber(await this.getWeb3Contract().methods.networksAmount().call());
-  }
-
-
-  /**
-   * Get Total Amount of Tokens Locked by Operator in the Network
-   * @param {Address} address
-   * @returns {Promise&lt;number>}
-   */
-  async getLockedStakedByAddress(address) {
-    return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.tokensLocked(address).call(),
-      18,
-    );
-  }
-
-  async getTokensLocked(address) {
-    return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.tokensLocked(address).call(),
-      18,
-    );
-  }
-
-  /**
-   * Get Open Issues Available
-   * @param {Address} address
-   * @returns {Address[]}
-   */
-  async getNetworks() {
-    const res = await this.getWeb3Contract()
-      .methods.networksArray()
-      .call();
-    return res;
-  }
-
-  /**
-   * Get Total Amount of Tokens Staked in the Protocol
-   * @returns {Promise&lt;number>}
-   */
-  async getBEPROLocked() {
-    return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
-      18,
-    );
-  }
-
-  async tokensLockedTotal() {
-    return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
-      18,
-    );
-  }
-
-  /**
-   * Verify if Address is Council
-   * @param {Object} params
-   * @param {number} params.address
-   * @returns {Promise&lt;address>}
-   */
-  async isOperator({ address }) {
-    return await this.getLockedStakedByAddress(address) >= await this.OPERATOR_AMOUNT();
-  }
-
-  /**
-   * Get Settler Token Address
-   * @returns {Promise&lt;address>}
-   */
-  async getSettlerTokenAddress() {
-    return await this.getWeb3Contract()
-      .methods.beproAddress()
-      .call();
-  }
-
-  async beproAddress() {
-    return await this.getWeb3Contract()
-      .methods.beproAddress()
-      .call();
-  }
-
-  /**
-   * Get Amount Needed for Operator
-   * @returns {Promise&lt;Integer>}
-   */
-  async OPERATOR_AMOUNT() {
-    return Numbers.fromDecimals(
-      await this.getWeb3Contract()
-        .methods.OPERATOR_AMOUNT()
-        .call(),
-      18,
-    );
-  }
-
-  /**
-   * Approve ERC20 Allowance
-   * @function
-   * @return {Promise&lt;number>}
-   */
-  approveSettlerERC20Token = async () => {
-    const totalMaxAmount = await this.getSettlerTokenContract().totalSupply();
-    return await this.getSettlerTokenContract().approve({
-      address: this.getAddress(),
-      amount: totalMaxAmount,
-    });
-  };
-
-
-  /**
-   * Verify if Approved
-   * @function
-   * @param {Object} params
-   * @param {number} params.amount
-   * @param {Address} params.address
-   * @return {Promise&lt;number>}
-   */
-  isApprovedSettlerToken = async ({ amount, address }) => await this.getSettlerTokenContract().isApproved({
-    address,
-    amount,
-    spenderAddress: this.getAddress(),
-  });
-
-  /**
-   * lock tokens for operator use
-   * @param {Object} params
-   * @params params.tokenAmount {number}
-   * @throws {Error} Tokens Amount has to be higher than 0
-   * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
-   * @return {Promise&lt;TransactionObject>}
-   */
-  async lock({ tokenAmount }) {
-    if (tokenAmount &lt;= 0) {
-      throw new Error('Token Amount has to be higher than 0');
+    /* Set Token Address Contract for easy access */
+    if (!this.params.ERC20Contract) {
+      this.params.ERC20Contract = new ERC20Contract({
+        web3Connection: this.web3Connection,
+        contractAddress: await this.underlying(),
+      });
     }
+    /* Assert Token Contract */
+    await this.params.ERC20Contract.login();
+    await this.params.ERC20Contract.__assert();
+  };
 
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
-    );
-  }
-
-  /**
-   * Unlock Tokens for oracles
-   * @throws {Error} Tokens Amount has to be higher than 0
-   * @return {Promise&lt;TransactionObject>}
-   */
-  async unlock() {
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.unlock(),
-    );
-  }
 
   /**
-   * Create Network
-   * @param {Object} params
-   * @param {Address} params.settlerToken
-   * @param {Address} params.transactionalToken
-   * @return {Promise&lt;TransactionObject>}
-   */
-  async createNetwork({ settlerToken, transactionalToken }) {
-    return await this.__sendTx(
-      this.getWeb3Contract()
-        .methods.createNetwork(settlerToken, transactionalToken),
-    );
-  }
-
-  /**
-   * Deploys Contracts
+   * Deploy CERC20Mock
    * @function
-   * @param {Object} params
-   * @param {string} params.beproAddress
-   * @param {function():void} params.callback
-   * @return {Promise&lt;*|undefined>}
+   * @param {Object} params Parameters
+   * @param {Address} params.underlying The address of the underlying asset
+   * @param {uint256} params.initialExchangeRate The initial exchange rate, scaled by 1e18
+   * @param {uint256} params.decimals ERC-20 decimal precision of this token
+   * @returns {Promise&lt;Transaction>} Transaction
    */
   deploy = async ({
-    beproAddress, callback,
+    // underlying,
+    initialExchangeRate, decimals, callback,
   }) => {
-    const params = [beproAddress];
+    // if (!underlying) {
+    //  throw new Error('Please provide an underlying asset address');
+    // }
+
+    if (!initialExchangeRate) {
+      throw new Error('Please provide an initial exchange rate');
+    }
+
+    if (!decimals) {
+      throw new Error('Please provide decimals');
+    }
+
+    if (!this.getERC20Contract()) {
+      throw new Error('No Token Address Provided');
+    }
+
+    const underlying = this.getERC20Contract().getAddress();
+
+    const params = [underlying, initialExchangeRate, decimals];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
@@ -380,14 +326,12 @@ class NetworkFactory extends IContract {
 
   /**
    * @function
-   * @return ERC20Contract|null
+   * @return ERC20Contract|undefined
    */
-  getSettlerTokenContract() {
-    return this.params.settlerToken;
-  }
+  getERC20Contract = () => this.params.ERC20Contract;
 }
 
-export default NetworkFactory;
+export default CERC20Mock;
 </code></pre>
         </article>
     </section>

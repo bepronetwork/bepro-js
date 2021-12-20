@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs ERC721Standard</title>
+  <title>BEPRO Network Dev Docs CERC20Mock</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -98,7 +98,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Class</p>
-                    <h1>ERC721Standard</h1>
+                    <h1>CERC20Mock</h1>
                 </header>
                 
 
@@ -109,7 +109,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ERC721Standard<span class="signature">(options)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>CERC20Mock<span class="signature">(options)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>CERC20Mock, use no decimals transformation for numbers because we hold underlaying token asset.</p></div>
         
     
 </header>
@@ -128,22 +130,18 @@
 
 
     
-    <h4 class="name" id="ERC721Standard">
-        <a class="href-link" href="#ERC721Standard">#</a>
+    <h4 class="name" id="CERC20Mock">
+        <a class="href-link" href="#CERC20Mock">#</a>
         
         <span class="code-name">
             
-                new ERC721Standard<span class="signature">(options)</span><span class="type-signature"></span>
+                new CERC20Mock<span class="signature">(options)</span><span class="type-signature"></span>
             
         </span>
     </h4>
     
 
     
-    
-    <div class="description">
-        <p>ERC721Standard Object</p>
-    </div>
     
 
 
@@ -186,7 +184,7 @@
   <td class="type">
   
       
-<span class="param-type"><a href="ERC721Standard.html#~Options">ERC721Standard~Options</a></span>
+<span class="param-type"><a href="CERC20Mock.html#~Options">CERC20Mock~Options</a></span>
 
 
   
@@ -242,9 +240,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line13">line 13</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line18">line 18</a>
             </span>
         </p>
     
@@ -297,17 +295,21 @@
             
                 <div class="member">
 
-<h4 class="name" id="deploy">
-    <a class="href-link" href="#deploy">#</a>
+<h4 class="name" id="__assert">
+    <a class="href-link" href="#__assert">#</a>
     
     <span class="code-name">
-        deploy
+        __assert
     </span>
     
 </h4>
 
 
 
+
+<div class="description">
+    <p>Use a cerc20mock contract with the current address</p>
+</div>
 
 
 
@@ -346,9 +348,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line127">line 127</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line154">line 154</a>
             </span>
         </p>
     
@@ -373,12 +375,16 @@
 
 
     
-    <h4 class="name" id="__assert">
-        <a class="href-link" href="#__assert">#</a>
+    <h4 class="name" id="balanceOfUnderlying">
+        <a class="href-link" href="#balanceOfUnderlying">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                __assert<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+                balanceOfUnderlying<span class="signature">(The)</span><span class="type-signature"> &rarr; {Promise.&lt;uint256>}</span>
             
         </span>
     </h4>
@@ -386,6 +392,10 @@
 
     
     
+    <div class="description">
+        <p>Get the underlying balance of the <code>owner</code></p>
+    </div>
+    
 
 
 
@@ -394,6 +404,57 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>The</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">address</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>address of the account to query</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -432,154 +493,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line28">line 28</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
-        <div class="column is-10">
-            
-                    
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Contract is not deployed, first deploy it and provide a contract address</p></div>
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-<span class="param-type">Error</span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<span class="param-type">Promise.&lt;void></span>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="baseURI">
-        <a class="href-link" href="#baseURI">#</a>
-        
-            
-                <span class='tag'>async</span>
-            
-        
-        <span class="code-name">
-            
-                baseURI<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Verify what is the baseURI</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line78">line 78</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line75">line 75</a>
             </span>
         </p>
     
@@ -610,13 +526,13 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>URI</p></div>
+    <div class='param-desc column is-7'><p>The amount of underlying owned by <code>owner</code></p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;string></span>
+<span class="param-type">Promise.&lt;uint256></span>
 
 
     </div>
@@ -636,16 +552,12 @@
 
 
     
-    <h4 class="name" id="exists">
-        <a class="href-link" href="#exists">#</a>
-        
-            
-                <span class='tag'>async</span>
-            
+    <h4 class="name" id="deploy">
+        <a class="href-link" href="#deploy">#</a>
         
         <span class="code-name">
             
-                exists<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
+                deploy<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
             
         </span>
     </h4>
@@ -654,7 +566,7 @@
     
     
     <div class="description">
-        <p>Verify if token ID exists</p>
+        <p>Deploy CERC20Mock</p>
     </div>
     
 
@@ -708,7 +620,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
   
@@ -716,13 +628,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>tokenID</code></td>
+      <td class="name"><code>underlying</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">number</span>
+<span class="param-type">Address</span>
 
 
   
@@ -732,7 +644,53 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>The address of the underlying asset</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>initialExchangeRate</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">uint256</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>The initial exchange rate, scaled by 1e18</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>decimals</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">uint256</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>ERC-20 decimal precision of this token</p></td>
 </tr>
 
   
@@ -780,9 +738,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line54">line 54</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line186">line 186</a>
             </span>
         </p>
     
@@ -813,13 +771,139 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Token Id</p></div>
+    <div class='param-desc column is-7'><p>Transaction</p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;boolean></span>
+<span class="param-type">Promise.&lt;Transaction></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="exchangeRateCurrent">
+        <a class="href-link" href="#exchangeRateCurrent">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                exchangeRateCurrent<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;uint256>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Accrue interest then return the up-to-date exchange rate</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line88">line 88</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Calculated exchange rate</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;uint256></span>
 
 
     </div>
@@ -898,9 +982,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line147">line 147</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line220">line 220</a>
             </span>
         </p>
     
@@ -949,8 +1033,8 @@
 
 
     
-    <h4 class="name" id="getURITokenID">
-        <a class="href-link" href="#getURITokenID">#</a>
+    <h4 class="name" id="initialBlockNumber">
+        <a class="href-link" href="#initialBlockNumber">#</a>
         
             
                 <span class='tag'>async</span>
@@ -958,7 +1042,7 @@
         
         <span class="code-name">
             
-                getURITokenID<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
+                initialBlockNumber<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;uint256>}</span>
             
         </span>
     </h4>
@@ -967,7 +1051,7 @@
     
     
     <div class="description">
-        <p>Verify what is the getURITokenID</p>
+        <p>Block number that interest started to increase from</p>
     </div>
     
 
@@ -978,83 +1062,6 @@
 
 
 
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">Object</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>tokenID</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">number</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
 
 
 
@@ -1093,9 +1100,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line67">line 67</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line34">line 34</a>
             </span>
         </p>
     
@@ -1126,13 +1133,259 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>URI</p></div>
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;uint256></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="initialExchangeRate">
+        <a class="href-link" href="#initialExchangeRate">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                initialExchangeRate<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;uint256>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Initial exchange rate used when minting the first CTokens (used when totalSupply = 0)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line43">line 43</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;string></span>
+<span class="param-type">Promise.&lt;uint256></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isCToken">
+        <a class="href-link" href="#isCToken">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                isCToken<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;bool>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Indicator that this is a CToken contract (for inspection)</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line52">line 52</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;bool></span>
 
 
     </div>
@@ -1161,7 +1414,7 @@
         
         <span class="code-name">
             
-                mint<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
+                mint<span class="signature">(The)</span><span class="type-signature"> &rarr; {Promise.&lt;bool>}</span>
             
         </span>
     </h4>
@@ -1170,7 +1423,8 @@
     
     
     <div class="description">
-        <p>Mint created TokenID</p>
+        <p>Sender supplies assets into the market and receives cTokens in exchange
+Accrues interest whether or not the operation succeeds, unless reverted</p>
     </div>
     
 
@@ -1208,13 +1462,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>params</code></td>
+      <td class="name"><code>The</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Object</span>
+<span class="param-type">uint256</span>
 
 
   
@@ -1224,34 +1478,8 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>amount of the underlying asset to supply</p></td>
 </tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>tokenID</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">number</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
 
 
         
@@ -1296,9 +1524,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line111">line 111</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line105">line 105</a>
             </span>
         </p>
     
@@ -1329,11 +1557,13 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>true=success, otherwise a failure</p></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;TransactionObject></span>
+<span class="param-type">Promise.&lt;bool></span>
 
 
     </div>
@@ -1353,12 +1583,16 @@
 
 
     
-    <h4 class="name" id="setBaseTokenURI">
-        <a class="href-link" href="#setBaseTokenURI">#</a>
+    <h4 class="name" id="redeemUnderlying">
+        <a class="href-link" href="#redeemUnderlying">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                setBaseTokenURI<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span>
+                redeemUnderlying<span class="signature">(redeemAmount)</span><span class="type-signature"> &rarr; {Promise.&lt;bool>}</span>
             
         </span>
     </h4>
@@ -1367,7 +1601,7 @@
     
     
     <div class="description">
-        <p>Set Base Token URI</p>
+        <p>Sender redeems cTokens in exchange for a specified amount of underlying asset</p>
     </div>
     
 
@@ -1405,13 +1639,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>params</code></td>
+      <td class="name"><code>redeemAmount</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Object</span>
+<span class="param-type">uint256</span>
 
 
   
@@ -1421,34 +1655,8 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>The amount of underlying to redeem</p></td>
 </tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>URI</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">string</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
 
 
         
@@ -1493,9 +1701,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line89">line 89</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line139">line 139</a>
             </span>
         </p>
     
@@ -1526,11 +1734,13 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>true=success, otherwise a failure</p></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;*></span>
+<span class="param-type">Promise.&lt;bool></span>
 
 
     </div>
@@ -1550,12 +1760,16 @@
 
 
     
-    <h4 class="name" id="setTokenURI">
-        <a class="href-link" href="#setTokenURI">#</a>
+    <h4 class="name" id="supplyUnderlying">
+        <a class="href-link" href="#supplyUnderlying">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                setTokenURI<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span>
+                supplyUnderlying<span class="signature">(supplyAmount)</span><span class="type-signature"> &rarr; {Promise.&lt;bool>}</span>
             
         </span>
     </h4>
@@ -1564,7 +1778,7 @@
     
     
     <div class="description">
-        <p>Set Token URI</p>
+        <p>Sender supplies underlying to the money market</p>
     </div>
     
 
@@ -1602,13 +1816,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>params</code></td>
+      <td class="name"><code>supplyAmount</code></td>
   
 
   <td class="type">
   
       
-<span class="param-type">Object</span>
+<span class="param-type">uint256</span>
 
 
   
@@ -1618,57 +1832,8 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>The amount of underlying to supply</p></td>
 </tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>tokenID</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">string</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>URI</code></td>
-  
-
-  <td class="type">
-  
-      
-<span class="param-type">string</span>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
 
 
         
@@ -1713,9 +1878,135 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line101">line 101</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line122">line 122</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>true=success, otherwise a failure</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;bool></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="underlying">
+        <a class="href-link" href="#underlying">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                underlying<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;address>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Underlying asset for this CToken</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line61">line 61</a>
             </span>
         </p>
     
@@ -1750,7 +2041,7 @@
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<span class="param-type">Promise.&lt;*></span>
+<span class="param-type">Promise.&lt;address></span>
 
 
     </div>
@@ -2005,9 +2296,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Standard.js.html" class="button">View Source</a>
+            <a href="models_mocks_CERC20Mock.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Standard.js.html">models/ERC721/ERC721Standard.js</a>, <a href="models_ERC721_ERC721Standard.js.html#line5">line 5</a>
+                <a href="models_mocks_CERC20Mock.js.html">models/mocks/CERC20Mock.js</a>, <a href="models_mocks_CERC20Mock.js.html#line5">line 5</a>
             </span>
         </p>
     
