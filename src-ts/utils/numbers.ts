@@ -53,3 +53,11 @@ export function toSmartContractDecimals(value: string|number, decimals = 18, exp
 export function fromDecimals(value: string|number, decimals = 18, explicit = false) {
   return noExponents(parseFloat((Number(value) / 10 ** decimals).toString()).toPrecision(decimals), explicit)
 }
+
+export function toSmartContractDate(date: number|Date) {
+  return (+new Date(date)) / 1000
+}
+
+export function fromSmartContractDate(date: number) {
+  return +new Date(date*1000);
+}

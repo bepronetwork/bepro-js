@@ -17,7 +17,7 @@ export class ERC721Colectibles extends Model<ERC721ColectiblesMethods> implement
   get erc20() { return this._erc20; }
 
   async loadContract() {
-    if (!this.contractAddress)
+    if (!this.contract)
       super.loadContract();
 
     this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods._purchaseToken()));
