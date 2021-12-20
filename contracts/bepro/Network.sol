@@ -8,7 +8,6 @@ import "../utils/Governed.sol";
 /**
  * @dev Interface of the ERC20 standard + mint & burn
  */
- 
 interface _IERC20 is IERC20  {
 
     /**
@@ -57,7 +56,7 @@ contract Network is Pausable, Governed, ReentrancyGuard{
     struct MergeProposal {
         uint256 _id;
         uint256 creationDate;
-        mapping(address => uint256) disputesForMergeByAddress; // Address -> oracles for that merge
+        //mapping(address => uint256) disputesForMergeByAddress; // Address -> oracles for that merge
         uint256 oracles; // Amount of oracles set
         uint256 disputes; // Amount of oracles set
         address[] prAddresses;
@@ -65,18 +64,24 @@ contract Network is Pausable, Governed, ReentrancyGuard{
         address proposalAddress;
     }
 
+    // issueId - Merge Proposal Id - Address - oracles for that merge
+    mapping(uint256 => mapping(uint256 => mapping(address => uint256))) public disputesForMergeByAddress;
+
     struct Issue {
         uint256 _id;
         string cid;
         uint256 creationDate;
         uint256 tokensStaked;
         address issueGenerator;
-        mapping(uint256 => MergeProposal) mergeProposals; // Id -> Merge Proposal
+        //mapping(uint256 => MergeProposal) mergeProposals; // Id -> Merge Proposal
         uint256 mergeIDIncrement;
         bool finalized;
         bool recognizedAsFinished;
         bool canceled;
     }
+
+    // issueId - Merge Proposal Id - Merge Proposal
+    mapping(uint256 => mapping(uint256 => MergeProposal)) mergeProposals;
 
     struct Oracler {
         uint256 oraclesDelegatedByOthers;
@@ -130,8 +135,8 @@ contract Network is Pausable, Governed, ReentrancyGuard{
             oraclers[_from].oraclesDelegatedByOthers = oraclers[_from].oraclesDelegatedByOthers.sub(_tokenAmount);
         }
 
-        require(settlerToken.transfer(msg.sender, _tokenAmount), "Transfer didnt work");
         oraclesStaked = oraclesStaked.sub(_tokenAmount);
+        require(settlerToken.transfer(msg.sender, _tokenAmount), "Transfer didnt work");
     }
 
     function delegateOracles(uint256 _tokenAmount, address _delegatedTo) external {
@@ -152,15 +157,15 @@ contract Network is Pausable, Governed, ReentrancyGuard{
 
     function disputeMerge(uint256 _issueID, uint256 _mergeID) external {
         Issue memory issue = issues[_issueID];
-        MergeProposal storage merge = issues[_issueID].mergeProposals[_mergeID];
+        MergeProposal storage merge = mergeProposals[_issueID][_mergeID];
         require(issue._id != 0, "Issue does not exist");
         require(issue.mergeIDIncrement >  _mergeID, "Merge Proposal does not exist");
-        require(merge.disputesForMergeByAddress[msg.sender] == 0, "Has already oracled");
+        require(disputesForMergeByAddress[_issueID][_mergeID][msg.sender] == 0, "Has already oracled");
 
         uint256 oraclesToAdd = getOraclesByAddress(msg.sender);
         
-        issues[_issueID].mergeProposals[_mergeID].disputes = merge.disputes.add(oraclesToAdd);
-        issues[_issueID].mergeProposals[_mergeID].disputesForMergeByAddress[msg.sender] = oraclesToAdd;
+        mergeProposals[_issueID][_mergeID].disputes = merge.disputes.add(oraclesToAdd);
+        disputesForMergeByAddress[_issueID][_mergeID][msg.sender] = oraclesToAdd;
         
         emit DisputeMerge(_issueID, _mergeID, oraclesToAdd, msg.sender);
     }
@@ -173,14 +178,14 @@ contract Network is Pausable, Governed, ReentrancyGuard{
 
     function isMergeInDraft(uint256 _issueID, uint256 _mergeID) public returns (bool) {
         require(issues[_issueID].creationDate != 0, "Issue does not exist");
-        require(issues[_issueID].mergeProposals[_mergeID].proposalAddress != address(0), "Merge does not exist");
-        return (block.timestamp <= issues[_issueID].mergeProposals[_mergeID].creationDate.add(disputableTime));
+        require(mergeProposals[_issueID][_mergeID].proposalAddress != address(0), "Merge does not exist");
+        return (block.timestamp <= mergeProposals[_issueID][_mergeID].creationDate.add(disputableTime));
     }
 
     function isMergeDisputed(uint256 _issueID, uint256 _mergeID) public returns (bool) {
         require(issues[_issueID].creationDate != 0, "Issue does not exist");
-        require(issues[_issueID].mergeProposals[_mergeID].proposalAddress != address(0), "Merge does not exist");
-        return (issues[_issueID].mergeProposals[_mergeID].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100));
+        require(mergeProposals[_issueID][_mergeID].proposalAddress != address(0), "Merge does not exist");
+        return (mergeProposals[_issueID][_mergeID].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100));
     }
 
     /**
@@ -289,7 +294,7 @@ contract Network is Pausable, Governed, ReentrancyGuard{
 
         require(total == issues[_issueID].tokensStaked, "PrAmounts & TokensStaked dont match");
 
-        issues[_issueID].mergeProposals[issue.mergeIDIncrement] = mergeProposal;
+        mergeProposals[_issueID][issue.mergeIDIncrement] = mergeProposal;
         issues[_issueID].mergeIDIncrement = issues[_issueID].mergeIDIncrement + 1;
         emit MergeProposalCreated(_issueID, mergeProposal._id, msg.sender);
     }
@@ -312,7 +317,7 @@ contract Network is Pausable, Governed, ReentrancyGuard{
 
         // Closes the issue
         issues[_issueID].finalized = true;
-        MergeProposal memory merge = issues[_issueID].mergeProposals[_mergeID];
+        MergeProposal memory merge = mergeProposals[_issueID][_mergeID];
 
         // Merge Creator Transfer
         require(transactionToken.transfer(merge.proposalAddress, (issues[_issueID].tokensStaked * mergeCreatorFeeShare) / 100), "Has to transfer");
@@ -362,7 +367,7 @@ contract Network is Pausable, Governed, ReentrancyGuard{
     }
 
     function getMergeById(uint256 _issueID, uint256 _mergeId) public returns (uint256, uint256, uint256, address[] memory, uint256[] memory, address){
-        MergeProposal memory merge = issues[_issueID].mergeProposals[_mergeId];
+        MergeProposal memory merge = mergeProposals[_issueID][_mergeId];
         return (merge._id, merge.oracles, merge.disputes, merge.prAddresses, merge.prAmounts, merge.proposalAddress);
     }
 
@@ -370,7 +375,7 @@ contract Network is Pausable, Governed, ReentrancyGuard{
      * @dev Change Merge Creator FeeShare
      */
     function changeMergeCreatorFeeShare(uint256 _mergeCreatorFeeShare) external onlyGovernor {
-        require(_mergeCreatorFeeShare < 20, "Merge Share can´t be higher than 20");
+        require(_mergeCreatorFeeShare < 20, "Merge Share can't be higher than 20");
         mergeCreatorFeeShare = _mergeCreatorFeeShare;
     }
 
@@ -378,7 +383,7 @@ contract Network is Pausable, Governed, ReentrancyGuard{
      * @dev changePercentageNeededForDispute
      */
     function changePercentageNeededForDispute(uint256 _percentageNeededForDispute) external onlyGovernor {
-        require(_percentageNeededForDispute < 15, "Dispute % Needed can´t be higher than 15");
+        require(_percentageNeededForDispute < 15, "Dispute % Needed can't be higher than 15");
         percentageNeededForDispute = _percentageNeededForDispute;
     }
 
