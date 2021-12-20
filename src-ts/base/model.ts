@@ -29,6 +29,9 @@ export class Model<Methods = any> {
   get account(): Account { return this.connection.Account; }
 
   loadContract() {
+    if (!this.contractAddress)
+      throw new Error(Errors.MissingContractAddress)
+
     try {
       this._contract = new Web3Contract(this.web3, this.abi, this.contractAddress);
     } catch (e) {

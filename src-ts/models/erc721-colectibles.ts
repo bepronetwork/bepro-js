@@ -5,10 +5,27 @@ import {Deployable} from '@interfaces/deployable';
 import ERC721ColectiblesJson from '@abi/ERC721Colectibles.json';
 import {ERC721ColectiblesMethods} from '@methods/erc721-colectibles';
 import {AbiItem} from 'web3-utils';
+import {ERC20} from '@models/erc20';
+import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 
 export class ERC721Colectibles extends Model<ERC721ColectiblesMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
     super(web3Connection, ERC721ColectiblesJson as any as AbiItem[], contractAddress);
+  }
+
+  private _erc20!: ERC20;
+  get erc20() { return this._erc20; }
+
+  async loadContract() {
+    if (!this.contractAddress)
+      super.loadContract();
+
+    this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods._purchaseToken()));
+  }
+
+  async start() {
+    await super.start();
+    await this.loadContract();
   }
 
   async deployJsonAbi(name: string, symbol: string, limitedAmount: number, _purchaseToken: string, baseFeeAddress: string, feeAddress: string, otherAddress: string) {
@@ -48,16 +65,8 @@ export class ERC721Colectibles extends Model<ERC721ColectiblesMethods> implement
     return this.callTx(this.contract.methods._feeShare());
   }
 
-  async _isLimited() {
-    return this.callTx(this.contract.methods._isLimited());
-  }
-
   async _limitedAmount() {
     return this.callTx(this.contract.methods._limitedAmount());
-  }
-
-  async _openedPacks() {
-    return this.callTx(this.contract.methods._openedPacks());
   }
 
   async _otherAddress() {
@@ -68,11 +77,19 @@ export class ERC721Colectibles extends Model<ERC721ColectiblesMethods> implement
     return this.callTx(this.contract.methods._otherShare());
   }
 
-  async _pricePerPack() {
-    return this.callTx(this.contract.methods._pricePerPack());
+  async isLimited() {
+    return this.callTx(this.contract.methods._isLimited());
   }
 
-  async _purchaseToken() {
+  async openedPacks() {
+    return this.callTx(this.contract.methods._openedPacks());
+  }
+
+  async pricePerPack() {
+    return +fromDecimals(await this.callTx(this.contract.methods._pricePerPack(), this.erc20.decimals));
+  }
+
+  async purchaseToken() {
     return this.callTx(this.contract.methods._purchaseToken());
   }
 
@@ -80,8 +97,12 @@ export class ERC721Colectibles extends Model<ERC721ColectiblesMethods> implement
     return this.callTx(this.contract.methods.alreadyMinted(v1));
   }
 
-  async approve(to: string, tokenId: number) {
-    return this.sendTx(this.contract.methods.approve(to, tokenId));
+  async approveERC20Transfer() {
+    return this.erc20.approve(this.contractAddress!, await this.erc20.totalSupply());
+  }
+
+  async isApproved(amount: number) {
+    return this.erc20.isApproved(this.contractAddress!, amount)
   }
 
   async balanceOf(owner: string) {
@@ -141,7 +162,7 @@ export class ERC721Colectibles extends Model<ERC721ColectiblesMethods> implement
   }
 
   async setPricePerPack(newPrice: number) {
-    return this.sendTx(this.contract.methods.setPricePerPack(newPrice));
+    return this.sendTx(this.contract.methods.setPricePerPack(toSmartContractDecimals(newPrice, this.erc20.decimals) as number));
   }
 
   async setPurchaseTokenAddress(purchaseToken: string) {
