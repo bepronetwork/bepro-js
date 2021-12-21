@@ -30,6 +30,7 @@ export class StakingContract extends Model<StakingContractMethods> implements De
       super.loadContract();
 
     this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods.erc20()));
+    await this._erc20.loadContract();
   }
 
   async start() {
