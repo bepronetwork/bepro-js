@@ -161,6 +161,8 @@ const AbiParser = (filePath = ``) => {
   return {_interface, _class};
 }
 
+if (!fs.existsSync(args.file))
+  return console.log(`File ${args.file} not found`);
 
 const parsed = AbiParser(args.file);
 
