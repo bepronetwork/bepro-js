@@ -26,7 +26,8 @@ export class ERC20Distribution extends Model<ERC20DistributionMethods> implement
     if (!this.contract)
       super.loadContract();
 
-    this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods.erc20()))
+    this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods.erc20()));
+    await this._erc20.loadContract();
   }
 
   async start() {

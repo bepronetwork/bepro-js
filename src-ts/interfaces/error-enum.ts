@@ -13,4 +13,5 @@ export enum Errors {
   InvalidTokenAmount = `Invalid token amount`,
   InteractionIsNotAvailableCallApprove = `Interaction not available, call 'approve' first`,
   NoLockedAmountOrNotReleaseDate = `User has no locked amount or release date has not been reached`,
+  MissingERC20AddressOnContractPleaseSetPurchaseToken = `Missing ERC20 address on contract, please call setPurchaseTokenAddress`,
 }
