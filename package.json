@@ -62,7 +62,7 @@
         "@babel/register": "^7.0.0",
         "babel-plugin-transform-remove-console": "^6.9.4",
         "better-docs": "^2.3.2",
-        "eslint": "^8.2.0",
+        "eslint": "^7",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-plugin-import": "^2.22.1",
         "ganache-cli": "^6.12.2",
