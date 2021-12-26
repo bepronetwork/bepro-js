@@ -24,7 +24,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~burn>}
    */
   async burn(tickLower, tickUpper, amount) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.burn(tickLower, tickUpper, amount));
+    const res = await this.__sendTx(this.getContract().methods.burn(tickLower, tickUpper, amount));
     return {
       amount0: res[0],
       amount1: res[1],
@@ -45,7 +45,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~collect>}
    */
   async collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested));
+    const res = await this.__sendTx(this.getContract().methods.collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested));
     return {
       amount0: res[0],
       amount1: res[1],
@@ -64,7 +64,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~collectProtocol>}
    */
   async collectProtocol(recipient, amount0Requested, amount1Requested) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.collectProtocol(recipient, amount0Requested, amount1Requested));
+    const res = await this.__sendTx(this.getContract().methods.collectProtocol(recipient, amount0Requested, amount1Requested));
     return {
       amount0: res[0],
       amount1: res[1],
@@ -75,28 +75,28 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<address>}
    */
   async factory() {
-    return await this.getWeb3Contract().methods.factory().call();
+    return await this.getContract().methods.factory().call();
   }
 
   /**
    * @returns {Promise<uint24>}
    */
   async fee() {
-    return await this.getWeb3Contract().methods.fee().call();
+    return await this.getContract().methods.fee().call();
   }
 
   /**
    * @returns {Promise<uint256>}
    */
   async feeGrowthGlobal0X128() {
-    return await this.getWeb3Contract().methods.feeGrowthGlobal0X128().call();
+    return await this.getContract().methods.feeGrowthGlobal0X128().call();
   }
 
   /**
    * @returns {Promise<uint256>}
    */
   async feeGrowthGlobal1X128() {
-    return await this.getWeb3Contract().methods.feeGrowthGlobal1X128().call();
+    return await this.getContract().methods.feeGrowthGlobal1X128().call();
   }
 
   /**
@@ -107,7 +107,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<void>}
    */
   async flash(recipient, amount0, amount1, data) {
-    return await this.__sendTx(this.getWeb3Contract().methods.flash(recipient, amount0, amount1, data));
+    return await this.__sendTx(this.getContract().methods.flash(recipient, amount0, amount1, data));
   }
 
   /**
@@ -115,7 +115,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<void>}
    */
   async increaseObservationCardinalityNext(observationCardinalityNext) {
-    return await this.__sendTx(this.getWeb3Contract().methods.increaseObservationCardinalityNext(observationCardinalityNext));
+    return await this.__sendTx(this.getContract().methods.increaseObservationCardinalityNext(observationCardinalityNext));
   }
 
   /**
@@ -123,21 +123,21 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<void>}
    */
   async initialize(sqrtPriceX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.initialize(sqrtPriceX96));
+    return await this.__sendTx(this.getContract().methods.initialize(sqrtPriceX96));
   }
 
   /**
    * @returns {Promise<uint128>}
    */
   async liquidity() {
-    return await this.getWeb3Contract().methods.liquidity().call();
+    return await this.getContract().methods.liquidity().call();
   }
 
   /**
    * @returns {Promise<uint128>}
    */
   async maxLiquidityPerTick() {
-    return await this.getWeb3Contract().methods.maxLiquidityPerTick().call();
+    return await this.getContract().methods.maxLiquidityPerTick().call();
   }
 
   /** @typedef {Object} UniswapV3Pool~mintType
@@ -154,7 +154,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~mint>}
    */
   async mint(recipient, tickLower, tickUpper, amount, data) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.mint(recipient, tickLower, tickUpper, amount, data));
+    const res = await this.__sendTx(this.getContract().methods.mint(recipient, tickLower, tickUpper, amount, data));
     return {
       amount0: res[0],
       amount1: res[1],
@@ -173,7 +173,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~observations>}
    */
   /* async observations() {
-      return await this.getWeb3Contract().methods.observations().call();
+      return await this.getContract().methods.observations().call();
     }; */
 
   /** @typedef {Object} UniswapV3Pool~observeType
@@ -186,7 +186,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~observe>}
    */
   /* async observe(secondsAgos) {
-      return await this.__sendTx(this.getWeb3Contract().methods.observe(secondsAgos));
+      return await this.__sendTx(this.getContract().methods.observe(secondsAgos));
     }; */
 
   /** @typedef {Object} UniswapV3Pool~positionsType
@@ -202,7 +202,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~positions>}
    */
   /* async positions() {
-      return await this.getWeb3Contract().methods.positions().call();
+      return await this.getContract().methods.positions().call();
     }; */
 
   /** @typedef {Object} UniswapV3Pool~protocolFeesType
@@ -214,7 +214,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~protocolFees>}
    */
   async protocolFees() {
-    const res = await this.getWeb3Contract().methods.protocolFees().call();
+    const res = await this.getContract().methods.protocolFees().call();
     return {
       token0: res[0],
       token1: res[1],
@@ -227,7 +227,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<void>}
    */
   async setFeeProtocol(feeProtocol0, feeProtocol1) {
-    return await this.__sendTx(this.getWeb3Contract().methods.setFeeProtocol(feeProtocol0, feeProtocol1));
+    return await this.__sendTx(this.getContract().methods.setFeeProtocol(feeProtocol0, feeProtocol1));
   }
 
   /** @typedef {Object} UniswapV3Pool~slot0Type
@@ -244,7 +244,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~slot0>}
    */
   async slot0() {
-    const res = await this.getWeb3Contract().methods.slot0().call();
+    const res = await this.getContract().methods.slot0().call();
     return {
       sqrtPriceX96: res[0],
       tick: res[1],
@@ -268,7 +268,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~snapshotCumulativesInside>}
    */
   async snapshotCumulativesInside(tickLower, tickUpper) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.snapshotCumulativesInside(tickLower, tickUpper));
+    const res = await this.__sendTx(this.getContract().methods.snapshotCumulativesInside(tickLower, tickUpper));
     return {
       tickCumulativeInside: res[0],
       secondsPerLiquidityInsideX128: res[1],
@@ -290,7 +290,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~swap>}
    */
   async swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data));
+    const res = await this.__sendTx(this.getContract().methods.swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data));
     return {
       amount0: res[0],
       amount1: res[1],
@@ -302,14 +302,14 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<uint256>}
    */
   /* async tickBitmap() {
-      return await this.getWeb3Contract().methods.tickBitmap().call();
+      return await this.getContract().methods.tickBitmap().call();
     }; */
 
   /**
    * @returns {Promise<int24>}
    */
   async tickSpacing() {
-    return await this.getWeb3Contract().methods.tickSpacing().call();
+    return await this.getContract().methods.tickSpacing().call();
   }
 
   /** @typedef {Object} UniswapV3Pool~ticksType
@@ -328,7 +328,7 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<UniswapV3Pool~ticks>}
    */
   async ticks(i) {
-    const res = await this.getWeb3Contract().methods.ticks(i).call();
+    const res = await this.getContract().methods.ticks(i).call();
     return {
       liquidityGross: res[0],
       liquidityNet: res[1],
@@ -345,13 +345,13 @@ export default class UniswapV3Pool extends IContract {
    * @returns {Promise<address>}
    */
   async token0() {
-    return await this.getWeb3Contract().methods.token0().call();
+    return await this.getContract().methods.token0().call();
   }
 
   /**
    * @returns {Promise<address>}
    */
   async token1() {
-    return await this.getWeb3Contract().methods.token1().call();
+    return await this.getContract().methods.token1().call();
   }
 }

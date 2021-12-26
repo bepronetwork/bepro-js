@@ -26,7 +26,7 @@ class ERC20Distribution extends IContract {
    * @returns {Promise<Address>}
    */
   erc20() {
-    return this.params.contract.getContract().methods.erc20().call();
+    return this.getContract().methods.erc20().call();
   }
 
   /**
@@ -46,8 +46,7 @@ class ERC20Distribution extends IContract {
    * @returns {Promise<boolean>} Success True if operation was successful
    */
   setTokenAddress = ({ address }) => this.__sendTx(
-    this.params.contract
-      .getContract()
+    this.getContract()
       .methods.setTokenAddress(address),
   );
 
@@ -59,8 +58,7 @@ class ERC20Distribution extends IContract {
    * @returns {Promise<boolean>} Success True if operation was successful
    */
   safeGuardAllTokens = ({ address }) => this.__sendTx(
-    this.params.contract
-      .getContract()
+    this.getContract()
       .methods.safeGuardAllTokens(address),
   );
 
@@ -72,8 +70,7 @@ class ERC20Distribution extends IContract {
    * @returns {Promise<boolean>} Success True if operation was successful
    */
   setTGEDate = ({ time }) => this.__sendTx(
-    this.params.contract
-      .getContract()
+    this.getContract()
       .methods.setTGEDate(Numbers.timeToSmartContractTime(time)),
   );
 
@@ -92,8 +89,7 @@ class ERC20Distribution extends IContract {
       this.getERC20Contract().getDecimals(),
     );
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.setInitialDistribution(address, tokenAmountWithDecimals, Numbers.timeToSmartContractTime(unlockTime)),
     );
   };
@@ -105,8 +101,7 @@ class ERC20Distribution extends IContract {
    * @returns {Promise<boolean>} Success True if operation was successful
    */
   triggerTokenSend = () => this.__sendTx(
-    this.params.contract
-      .getContract()
+    this.getContract()
       .methods.triggerTokenSend(),
   );
 

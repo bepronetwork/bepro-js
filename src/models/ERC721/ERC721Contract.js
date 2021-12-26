@@ -29,8 +29,7 @@ class ERC721Contract extends IContract {
    * @returns {Integer} Token Id
    */
   exists({ tokenID }) {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods.exists(tokenID)
       .call();
   }
@@ -41,8 +40,7 @@ class ERC721Contract extends IContract {
    * @returns {String} URI
    */
   getURITokenID({ tokenID }) {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods.tokenURI(tokenID)
       .call();
   }
@@ -53,7 +51,7 @@ class ERC721Contract extends IContract {
    * @returns {String} URI
    */
   baseURI() {
-    return this.params.contract.getContract().methods.baseURI().call();
+    return this.getContract().methods.baseURI().call();
   }
 
   /**
@@ -62,7 +60,7 @@ class ERC721Contract extends IContract {
    * @returns {String} Name
    */
   name() {
-    return this.params.contract.getContract().methods.name().call();
+    return this.getContract().methods.name().call();
   }
 
   /**
@@ -71,7 +69,7 @@ class ERC721Contract extends IContract {
    * @returns {String} Symbol
    */
   symbol() {
-    return this.params.contract.getContract().methods.symbol().call();
+    return this.getContract().methods.symbol().call();
   }
 
   /**
@@ -79,7 +77,7 @@ class ERC721Contract extends IContract {
    * @description Set Base Token URI
    */
   setBaseTokenURI = ({ URI }, options) => this.__sendTx(
-    this.params.contract.getContract().methods.setBaseURI(URI),
+    this.getContract().methods.setBaseURI(URI),
     options,
   );
 
@@ -92,7 +90,7 @@ class ERC721Contract extends IContract {
    */
   mint({ to, tokenId }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.mint(to, tokenId),
+      this.getContract().methods.mint(to, tokenId),
       options,
     );
   }
@@ -106,7 +104,7 @@ class ERC721Contract extends IContract {
    */
   approve({ to, tokenId }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.approve(to, tokenId),
+      this.getContract().methods.approve(to, tokenId),
       options,
     );
   }
@@ -120,7 +118,7 @@ class ERC721Contract extends IContract {
    */
   setApprovalForAll({ to, approve = true }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.setApprovalForAll(to, approve),
+      this.getContract().methods.setApprovalForAll(to, approve),
       options,
     );
   }
@@ -133,8 +131,7 @@ class ERC721Contract extends IContract {
    * @param {Address} to Address to approve to
    */
   isApprovedForAll({ from, to }) {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods.isApprovedForAll(from, to)
       .call();
   }

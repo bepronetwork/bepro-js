@@ -44,7 +44,7 @@ class StakingContract extends IContract {
    */
   erc20() {
     return this.__sendTx(
-      this.params.contract.getContract().methods.erc20(),
+      this.getContract().methods.erc20(),
       { call: true },
     );
   }
@@ -64,7 +64,7 @@ class StakingContract extends IContract {
    */
   async futureLockedTokens() {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.futureLockedTokens(),
+      this.getContract().methods.futureLockedTokens(),
       { call: true },
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
@@ -76,7 +76,7 @@ class StakingContract extends IContract {
    */
   async availableTokens() {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.availableTokens(),
+      this.getContract().methods.availableTokens(),
       { call: true },
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
@@ -88,7 +88,7 @@ class StakingContract extends IContract {
    */
   async heldTokens() {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.heldTokens(),
+      this.getContract().methods.heldTokens(),
       { call: true },
     );
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
@@ -108,8 +108,7 @@ class StakingContract extends IContract {
     APR, startDate, endDate, amount,
   }) => {
     const res = await this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.getAPRAmount(
           APR,
           Numbers.timeToSmartContractTime(startDate),
@@ -146,8 +145,7 @@ class StakingContract extends IContract {
     lockedUntilFinalization,
   }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.createProduct(
           Numbers.timeToSmartContractTime(startDate),
           Numbers.timeToSmartContractTime(endDate),
@@ -176,7 +174,7 @@ class StakingContract extends IContract {
    * @returns {Promise<number[]>} ids
    */
   getProducts = () => this.__sendTx(
-    this.params.contract.getContract().methods.getProductIds(),
+    this.getContract().methods.getProductIds(),
     { call: true },
   );
 
@@ -205,7 +203,7 @@ class StakingContract extends IContract {
    */
   getProduct = async ({ product_id }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.getProduct(product_id),
+      this.getContract().methods.getProduct(product_id),
       { call: true },
     );
 
@@ -281,8 +279,7 @@ class StakingContract extends IContract {
     }
 
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.subscribeProduct(product_id, amountWithDecimals),
       options,
     );
@@ -311,8 +308,7 @@ class StakingContract extends IContract {
    */
   getSubscription = async ({ subscription_id, product_id }) => {
     const res = await this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.getSubscription(subscription_id, product_id),
       { call: true },
     );
@@ -345,8 +341,7 @@ class StakingContract extends IContract {
    * @return {Promise<TransactionObject>}
    */
   withdrawSubscription = ({ product_id, subscription_id }, options) => this.__sendTx(
-    this.params.contract
-      .getContract()
+    this.getContract()
       .methods.withdrawSubscription(product_id, subscription_id),
     options,
   );
@@ -360,7 +355,7 @@ class StakingContract extends IContract {
    */
   getSubscriptionsByAddress = async ({ address }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.getMySubscriptions(address),
+      this.getContract().methods.getMySubscriptions(address),
       { call: true },
     );
     return res.map(r => Numbers.fromExponential(r));

@@ -20,7 +20,7 @@ export default class ETHUtils extends IContract {
    * @returns {Promise<string>}
    */
   async name(tokenAddress) {
-    return await this.getWeb3Contract().methods.name(tokenAddress).call();
+    return await this.getContract().methods.name(tokenAddress).call();
   }
 
   /**
@@ -29,7 +29,7 @@ export default class ETHUtils extends IContract {
    * @returns {Promise<string>}
    */
   async symbol(tokenAddress) {
-    return await this.getWeb3Contract().methods.symbol(tokenAddress).call();
+    return await this.getContract().methods.symbol(tokenAddress).call();
   }
 
   /**
@@ -38,7 +38,7 @@ export default class ETHUtils extends IContract {
    * @returns {Promise<uint8>}
    */
   async decimals(tokenAddress) {
-    return Number(await this.getWeb3Contract().methods.decimals(tokenAddress).call());
+    return Number(await this.getContract().methods.decimals(tokenAddress).call());
   }
 
   /**
@@ -47,7 +47,7 @@ export default class ETHUtils extends IContract {
    */
   async blockTimestamp() {
     // TODO: convert to some format?
-    return BigNumber(await this.getWeb3Contract().methods.blockTimestamp().call());
+    return BigNumber(await this.getContract().methods.blockTimestamp().call());
   }
 
   /**
@@ -55,7 +55,7 @@ export default class ETHUtils extends IContract {
    * @returns {Promise<uint256>}
    */
   async blockNumber() {
-    return BigNumber(await this.getWeb3Contract().methods.blockNumber().call());
+    return BigNumber(await this.getContract().methods.blockNumber().call());
   }
 
   /**
@@ -63,7 +63,7 @@ export default class ETHUtils extends IContract {
    * @returns {Promise<uint256,uint256>}
    */
   async blockNumberAndTimestamp() {
-    const [blockNumber, blocktimestamp] = await this.getWeb3Contract().methods.blockNumberAndTimestamp().call();
+    const [blockNumber, blocktimestamp] = await this.getContract().methods.blockNumberAndTimestamp().call();
     return [
       BigNumber(blockNumber),
       BigNumber(blockTimestamp),

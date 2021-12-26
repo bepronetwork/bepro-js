@@ -229,7 +229,7 @@ const addWethPool = async () => {
   /// >>> setup loophole, add WETH pool
   console.log('...add new WETH staking pool');
   const allocPoint = wethAllocPoint;
-  // let pidWeth = await loophole.getWeb3Contract().methods.add(wethAddress, allocPoint).call();
+  // let pidWeth = await loophole.getContract().methods.add(wethAddress, allocPoint).call();
   const tx = await loophole.add(wethAddress, allocPoint);
   // console.log('---loophole.add.WETHpool: ', tx);
 
@@ -244,7 +244,7 @@ const addWbtcPool = async () => {
   /// >>> setup loophole, add WBTC pool
   console.log('...add new WBTC staking pool');
   const allocPoint = wbtcAllocPoint;
-  // let pidWbtc = await loophole.getWeb3Contract().methods.add(wbtcAddress, allocPoint).call();
+  // let pidWbtc = await loophole.getContract().methods.add(wbtcAddress, allocPoint).call();
   const tx = await loophole.add(wbtcAddress, allocPoint);
   // console.log('---loophole.add.WBTCpool: ', tx);
 
@@ -508,8 +508,8 @@ context('Loophole contract', () => {
     it('create and fund uniswapV3 trading pools WETH/LP WBTC/LP', async () => {
       let res;
 
-      const wethPoolAddress1 = await factory.getWeb3Contract().methods.createPool(wethAddress, lpTokenAddress, poolFee_3000).call();
-      const wbtcPoolAddress1 = await factory.getWeb3Contract().methods.createPool(wbtcAddress, lpTokenAddress, poolFee_3000).call();
+      const wethPoolAddress1 = await factory.getContract().methods.createPool(wethAddress, lpTokenAddress, poolFee_3000).call();
+      const wbtcPoolAddress1 = await factory.getContract().methods.createPool(wbtcAddress, lpTokenAddress, poolFee_3000).call();
 
       // const wethPoolTx = await factory.createPool(wethAddress, lpTokenAddress, poolFee_3000); //create WETH/LP pool
       // const wbtcPoolTx = await factory.createPool(wbtcAddress, lpTokenAddress, poolFee_3000); //create WBTC/LP pool
@@ -791,7 +791,7 @@ context('Loophole contract', () => {
 
     it('should add new staking pools WETH and WBTC and emit PoolAdded events', async () => {
       let allocPoint = 1;
-      let pid = await loophole.getWeb3Contract().methods.add(wethAddress, allocPoint).call();
+      let pid = await loophole.getContract().methods.add(wethAddress, allocPoint).call();
       let tx = await loophole.add(wethAddress, allocPoint);
 
       // const token = tx.events.PoolAdded.returnValues.token;
@@ -817,7 +817,7 @@ context('Loophole contract', () => {
       expect(res.totalDistributedPenalty.eq(BigNumber(0))).to.equal(true);
 
       allocPoint = 4;
-      pid = await loophole.getWeb3Contract().methods.add(wbtcAddress, allocPoint).call();
+      pid = await loophole.getContract().methods.add(wbtcAddress, allocPoint).call();
       tx = await loophole.add(wbtcAddress, allocPoint);
 
       // const token = tx.events.PoolAdded.returnValues.token;

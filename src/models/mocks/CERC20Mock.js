@@ -31,7 +31,7 @@ class CERC20Mock extends ERC20Contract {
      * @returns {Promise<uint256>}
      */
   async initialBlockNumber() {
-    return await this.getWeb3Contract().methods.initialBlockNumber().call();
+    return await this.getContract().methods.initialBlockNumber().call();
   }
 
   /**
@@ -39,7 +39,7 @@ class CERC20Mock extends ERC20Contract {
      * @returns {Promise<uint256>}
      */
   async initialExchangeRate() {
-    return await this.getWeb3Contract().methods.initialExchangeRate().call();
+    return await this.getContract().methods.initialExchangeRate().call();
   }
 
   /**
@@ -47,7 +47,7 @@ class CERC20Mock extends ERC20Contract {
      * @returns {Promise<bool>}
      */
   async isCToken() {
-    return await this.getWeb3Contract().methods.isCToken().call();
+    return await this.getContract().methods.isCToken().call();
   }
 
   /**
@@ -55,7 +55,7 @@ class CERC20Mock extends ERC20Contract {
      * @returns {Promise<address>}
      */
   async underlying() {
-    return await this.getWeb3Contract().methods.underlying().call();
+    return await this.getContract().methods.underlying().call();
   }
 
   /** * User Interface ** */
@@ -67,7 +67,7 @@ class CERC20Mock extends ERC20Contract {
      * @returns {Promise<uint256>} The amount of underlying owned by `owner`
      */
   async balanceOfUnderlying(owner) {
-    const balance = await this.getWeb3Contract().methods.balanceOfUnderlying(owner).call();
+    const balance = await this.getContract().methods.balanceOfUnderlying(owner).call();
     return Numbers.fromDecimalsToBN(
       balance,
       this.getERC20Contract().getDecimals(),
@@ -79,7 +79,7 @@ class CERC20Mock extends ERC20Contract {
      * @returns {Promise<uint256>} Calculated exchange rate
      */
   async exchangeRateCurrent() {
-    const rate = await this.getWeb3Contract().methods.exchangeRateCurrent().call();
+    const rate = await this.getContract().methods.exchangeRateCurrent().call();
     const decimals = this.getDecimals();
     const rate2 = Numbers.fromDecimalsToBN(
       rate,
@@ -100,8 +100,8 @@ class CERC20Mock extends ERC20Contract {
       mintAmount,
       decimals,
     );
-    return await this.__sendTx(this.getWeb3Contract().methods.mint(mintAmountWithDecimals));
-    // return await this.__sendTx(this.getWeb3Contract().methods.mint(mintAmount));
+    return await this.__sendTx(this.getContract().methods.mint(mintAmountWithDecimals));
+    // return await this.__sendTx(this.getContract().methods.mint(mintAmount));
   }
 
   /**
@@ -116,8 +116,8 @@ class CERC20Mock extends ERC20Contract {
       supplyAmount,
       decimals,
     );
-    return await this.__sendTx(this.getWeb3Contract().methods.supplyUnderlying(supplyAmountWithDecimals));
-    // return await this.__sendTx(this.getWeb3Contract().methods.supplyUnderlying(supplyAmount));;
+    return await this.__sendTx(this.getContract().methods.supplyUnderlying(supplyAmountWithDecimals));
+    // return await this.__sendTx(this.getContract().methods.supplyUnderlying(supplyAmount));;
   }
 
   /**
@@ -132,8 +132,8 @@ class CERC20Mock extends ERC20Contract {
       redeemAmount,
       decimals,
     );
-    return await this.__sendTx(this.getWeb3Contract().methods.redeemUnderlying(redeemAmountWithDecimals));
-    // return await this.__sendTx(this.getWeb3Contract().methods.redeemUnderlying(redeemAmount));
+    return await this.__sendTx(this.getContract().methods.redeemUnderlying(redeemAmountWithDecimals));
+    // return await this.__sendTx(this.getContract().methods.redeemUnderlying(redeemAmount));
   }
 
   /**

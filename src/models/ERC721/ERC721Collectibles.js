@@ -55,8 +55,7 @@ class ERC721Collectibles extends IContract {
    * @returns {Promise<Address>}
    */
   purchaseToken() {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods._purchaseToken()
       .call();
   }
@@ -67,7 +66,7 @@ class ERC721Collectibles extends IContract {
    */
   async getPricePerPack() {
     return Numbers.fromDecimals(
-      await this.params.contract.getContract().methods._pricePerPack().call(),
+      await this.getContract().methods._pricePerPack().call(),
       18,
     );
   }
@@ -79,8 +78,7 @@ class ERC721Collectibles extends IContract {
    * @returns {Promise<number>} Token Id
    */
   exists({ tokenID }) {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods.exists(tokenID)
       .call();
   }
@@ -93,7 +91,7 @@ class ERC721Collectibles extends IContract {
    */
   balanceOf({ address }) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.balanceOf(address),
+      this.getContract().methods.balanceOf(address),
       { call: true },
     );
   }
@@ -103,7 +101,7 @@ class ERC721Collectibles extends IContract {
    * @returns {Promise<boolean>}
    */
   isLimited() {
-    return this.params.contract.getContract().methods._isLimited().call();
+    return this.getContract().methods._isLimited().call();
   }
 
   /**
@@ -112,7 +110,7 @@ class ERC721Collectibles extends IContract {
    */
   async currentTokenId() {
     return parseInt(
-      await this.params.contract.getContract().methods._currentTokenId().call(),
+      await this.getContract().methods._currentTokenId().call(),
       10,
     );
   }
@@ -122,8 +120,7 @@ class ERC721Collectibles extends IContract {
    * @returns {Promise<string>} URI
    */
   getURITokenID({ tokenID }) {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods.tokenURI(tokenID)
       .call();
   }
@@ -133,7 +130,7 @@ class ERC721Collectibles extends IContract {
    * @returns {Promise<string>} URI
    */
   baseURI() {
-    return this.params.contract.getContract().methods.baseURI().call();
+    return this.getContract().methods.baseURI().call();
   }
 
   /**
@@ -143,8 +140,7 @@ class ERC721Collectibles extends IContract {
    * @returns {number[]} ids
    */
   async getRegisteredIDs({ address }) {
-    const res = await this.params.contract
-      .getContract()
+    const res = await this.getContract()
       .methods.getRegisteredIDs(address)
       .call();
 
@@ -156,8 +152,7 @@ class ERC721Collectibles extends IContract {
    * @returns {Promise<boolean>}
    */
   isIDRegistered({ address, tokenID }) {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods.registeredIDs(address, tokenID)
       .call();
   }
@@ -168,7 +163,7 @@ class ERC721Collectibles extends IContract {
    */
   async pricePerPack() {
     return Numbers.fromDecimals(
-      await this.params.contract.getContract().methods._pricePerPack().call(),
+      await this.getContract().methods._pricePerPack().call(),
       18,
     );
   }
@@ -179,7 +174,7 @@ class ERC721Collectibles extends IContract {
    */
   async openedPacks() {
     return parseInt(
-      await this.params.contract.getContract().methods._openedPacks().call(),
+      await this.getContract().methods._openedPacks().call(),
       10,
     );
   }
@@ -205,7 +200,7 @@ class ERC721Collectibles extends IContract {
    * @return {Promise<TransactionObject>}
    */
   setBaseTokenURI = ({ URI }, options) => this.__sendTx(
-    this.params.contract.getContract().methods.setBaseURI(URI),
+    this.getContract().methods.setBaseURI(URI),
     options,
   );
 
@@ -231,7 +226,7 @@ class ERC721Collectibles extends IContract {
    */
   openPack({ amount }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.openPack(amount),
+      this.getContract().methods.openPack(amount),
       options,
     );
   }
@@ -243,7 +238,7 @@ class ERC721Collectibles extends IContract {
    */
   mint({ tokenID }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.mint(tokenID),
+      this.getContract().methods.mint(tokenID),
       options,
     );
   }
@@ -256,8 +251,7 @@ class ERC721Collectibles extends IContract {
    */
   setPurchaseTokenAddress({ purchaseToken }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.setPurchaseTokenAddress(purchaseToken),
       options,
     );
@@ -271,7 +265,7 @@ class ERC721Collectibles extends IContract {
    */
   setStakeAddress({ purchaseToken }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.setStakeAddress(purchaseToken),
+      this.getContract().methods.setStakeAddress(purchaseToken),
       options,
     );
   }
@@ -284,8 +278,7 @@ class ERC721Collectibles extends IContract {
    */
   setSwapBackAddress({ purchaseToken }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.setSwapBackAddress(purchaseToken),
       options,
     );
@@ -299,7 +292,7 @@ class ERC721Collectibles extends IContract {
    */
   setFeeAddress({ purchaseToken }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.setFeeAddress(purchaseToken),
+      this.getContract().methods.setFeeAddress(purchaseToken),
       options,
     );
   }
@@ -313,8 +306,7 @@ class ERC721Collectibles extends IContract {
   setPricePerPack({ newPrice }, options) {
     const newPriceWithDecimals = Numbers.toSmartContractDecimals(newPrice, 18);
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.setPricePerPack(newPriceWithDecimals),
       options,
     );

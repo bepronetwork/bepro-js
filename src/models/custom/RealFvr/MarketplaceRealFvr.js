@@ -75,7 +75,7 @@ class MarketplaceRealFvr extends IContract {
     );
 
     return this.__sendTx(
-      this.params.contract.getContract().methods.putERC721OnSale(tokenId, valueWithDecimals),
+      this.getContract().methods.putERC721OnSale(tokenId, valueWithDecimals),
       options,
     );
   };
@@ -88,7 +88,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
   removeERC721FromSale = ({ tokenId }, options) => this.__sendTx(
-    this.params.contract.getContract().methods.removeERC721FromSale(tokenId),
+    this.getContract().methods.removeERC721FromSale(tokenId),
     options,
   );
 
@@ -107,7 +107,7 @@ class MarketplaceRealFvr extends IContract {
     );
 
     return this.__sendTx(
-      this.params.contract.getContract().methods.buyERC721(tokenId),
+      this.getContract().methods.buyERC721(tokenId),
       {
         value: valueWithDecimals,
         ...options,
@@ -123,7 +123,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
   changeERC20 = ({ erc20TokenAddress }, options) => this.__sendTx(
-    this.params.contract.getContract().methods.changeERC20(erc20TokenAddress),
+    this.getContract().methods.changeERC20(erc20TokenAddress),
     options,
   );
 
@@ -135,7 +135,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
     */
   changeERC721 = ({ erc721TokenAddress }, options) => this.__sendTx(
-    this.params.contract.getContract().methods.changeERC721(erc721TokenAddress),
+    this.getContract().methods.changeERC721(erc721TokenAddress),
     options,
   );
 
@@ -148,7 +148,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {TransactionObject} Success the Tx Object if operation was successful
     */
   setFixedFees = ({ feeAddress, feePercentage }, options) => this.__sendTx(
-    this.params.contract.getContract().methods.setFixedFees(feeAddress, feePercentage),
+    this.getContract().methods.setFixedFees(feeAddress, feePercentage),
     options,
   );
 
@@ -157,21 +157,21 @@ class MarketplaceRealFvr extends IContract {
      * @description Get ERC20 Token Address
      * @returns {Address} Token Address
      */
-  getERC20TokenAddress = () => this.params.contract.getContract().methods.erc20Address().call();
+  getERC20TokenAddress = () => this.getContract().methods.erc20Address().call();
 
   /**
      * @function
      * @description Get ERC721 Token Address
      * @returns {Address} Token Address
      */
-  getERC721TokenAddress = () => this.params.contract.getContract().methods.erc721Address().call();
+  getERC721TokenAddress = () => this.getContract().methods.erc721Address().call();
 
   /**
      * @function
      * @description Get FeeAddress
      * @returns {Address} Fee Address
     */
-  getFeeAddress = () => this.params.contract.getContract().methods.feeAddress().call();
+  getFeeAddress = () => this.getContract().methods.feeAddress().call();
 
   /**
      * @function
@@ -179,7 +179,7 @@ class MarketplaceRealFvr extends IContract {
      * @returns {Integer} Amount of NFTs in Sale
      */
   // eslint-disable-next-line max-len
-  getAmountofNFTsEverInSale = async () => parseInt(await this.params.contract.getContract().methods.saleIncrementId().call(), 10) - 1;
+  getAmountofNFTsEverInSale = async () => parseInt(await this.getContract().methods.saleIncrementId().call(), 10) - 1;
 
   /**
      * @function

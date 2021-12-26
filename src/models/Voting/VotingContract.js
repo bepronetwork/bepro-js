@@ -27,7 +27,7 @@ class VotingContract extends IContract {
    */
   erc20() {
     return this.__sendTx(
-      this.params.contract.getContract().methods.erc20(),
+      this.getContract().methods.erc20(),
       { call: true },
     );
   }
@@ -45,8 +45,7 @@ class VotingContract extends IContract {
     poolOptions,
   }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.createPoll(
           description,
           Numbers.timeToSmartContractTime(expirationTime),
@@ -65,8 +64,7 @@ class VotingContract extends IContract {
     poolId,
   }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.endPool(
           poolId,
         ),
@@ -85,8 +83,7 @@ class VotingContract extends IContract {
     voteId,
   }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.castVote(
           poolId,
           voteId,
@@ -104,8 +101,7 @@ class VotingContract extends IContract {
     tokens,
   }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.stakeVotingTokens(
           Numbers.toSmartContractDecimals(
             tokens,
@@ -135,7 +131,7 @@ class VotingContract extends IContract {
      */
   getPoolInformation = async ({ poolId }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.getPoolInformation(poolId),
+      this.getContract().methods.getPoolInformation(poolId),
       { call: true },
     );
 
@@ -160,7 +156,7 @@ class VotingContract extends IContract {
      */
   getPoolWinner = async ({ poolId }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.getPoolWinner(poolId),
+      this.getContract().methods.getPoolWinner(poolId),
       { call: true },
     );
 
@@ -180,7 +176,7 @@ class VotingContract extends IContract {
      */
   getPollOptionById = async ({ poolId, optionIndex }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.getPollOptionById(poolId, optionIndex),
+      this.getContract().methods.getPollOptionById(poolId, optionIndex),
       { call: true },
     );
 
@@ -196,7 +192,7 @@ class VotingContract extends IContract {
      */
   getPollHistory = async ({ address }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.getPollHistory(address),
+      this.getContract().methods.getPollHistory(address),
       { call: true },
     );
 
@@ -216,7 +212,7 @@ class VotingContract extends IContract {
      */
   getPollInfoForVoter = async ({ poolId, voter }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.getPollInfoForVoter(poolId, voter),
+      this.getContract().methods.getPollInfoForVoter(poolId, voter),
       { call: true },
     );
 
@@ -239,7 +235,7 @@ class VotingContract extends IContract {
      */
   userHasVoted = async ({ poolId, voter }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.userHasVoted(poolId, voter),
+      this.getContract().methods.userHasVoted(poolId, voter),
       { call: true },
     );
 
@@ -255,7 +251,7 @@ class VotingContract extends IContract {
      */
   getLockedAmount = async ({ voter }) => {
     const res = await this.__sendTx(
-      this.params.contract.getContract().methods.getLockedAmount(voter),
+      this.getContract().methods.getLockedAmount(voter),
       { call: true },
     );
 
@@ -274,8 +270,7 @@ class VotingContract extends IContract {
     tokens,
   }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.withdrawTokens(
           Numbers.toSmartContractDecimals(
             tokens,

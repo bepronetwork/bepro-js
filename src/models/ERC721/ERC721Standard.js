@@ -52,8 +52,7 @@ class ERC721Standard extends IContract {
    * @returns {Promise<boolean>} Token Id
    */
   exists({ tokenID }) {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods.exists(tokenID)
       .call();
   }
@@ -65,8 +64,7 @@ class ERC721Standard extends IContract {
    * @returns {Promise<string>} URI
    */
   getURITokenID({ tokenID }) {
-    return this.params.contract
-      .getContract()
+    return this.getContract()
       .methods.tokenURI(tokenID)
       .call();
   }
@@ -76,7 +74,7 @@ class ERC721Standard extends IContract {
    * @returns {Promise<string>} URI
    */
   baseURI() {
-    return this.params.contract.getContract().methods.baseURI().call();
+    return this.getContract().methods.baseURI().call();
   }
 
   /**
@@ -87,7 +85,7 @@ class ERC721Standard extends IContract {
    * @return {Promise<*>}
    */
   setBaseTokenURI = ({ URI }, options) => this.__sendTx(
-    this.params.contract.getContract().methods.setBaseURI(URI),
+    this.getContract().methods.setBaseURI(URI),
     options,
   );
 
@@ -100,7 +98,7 @@ class ERC721Standard extends IContract {
    * @return {Promise<*>}
    */
   setTokenURI = ({ tokenID, URI }, options) => this.__sendTx(
-    this.params.contract.getContract().methods.setTokenURI(tokenID, URI),
+    this.getContract().methods.setTokenURI(tokenID, URI),
     options,
   );
 
@@ -112,7 +110,7 @@ class ERC721Standard extends IContract {
    */
   mint({ tokenID }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.mint(tokenID),
+      this.getContract().methods.mint(tokenID),
       options,
     );
   }

@@ -193,10 +193,10 @@ class IContract {
   };
 
   /**
+   * Get Web3 Contract to interact directly with the web3 library functions like events (https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=events#contract-events)
    * @function
-   * @description Get Web3 Contract to interact directly with the web3 library functions like events (https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=events#contract-events)
    */
-  getWeb3Contract() {
+  getContract() {
     return this.params.contract.getContract();
   }
 
@@ -208,7 +208,7 @@ class IContract {
    */
   setNewOwner({ address }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.transferOwnership(address),
+      this.getContract().methods.transferOwnership(address),
       options,
     );
   }
@@ -218,7 +218,7 @@ class IContract {
    * @returns {Promise<string>}
    */
   owner() {
-    return this.params.contract.getContract().methods.owner().call();
+    return this.getContract().methods.owner().call();
   }
 
   /**
@@ -226,7 +226,7 @@ class IContract {
    * @returns {Promise<boolean>}
    */
   isPaused() {
-    return this.params.contract.getContract().methods.paused().call();
+    return this.getContract().methods.paused().call();
   }
 
   /**
@@ -235,7 +235,7 @@ class IContract {
    */
   pauseContract(options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.pause(),
+      this.getContract().methods.pause(),
       options,
     );
   }
@@ -246,7 +246,7 @@ class IContract {
    */
   unpauseContract(options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.unpause(),
+      this.getContract().methods.unpause(),
       options,
     );
   }
@@ -259,8 +259,7 @@ class IContract {
    */
   removeOtherERC20Tokens({ tokenAddress, toAddress }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.removeOtherERC20Tokens(tokenAddress, toAddress),
       options,
     );
@@ -274,7 +273,7 @@ class IContract {
    */
   safeGuardAllTokens({ toAddress }, options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.safeGuardAllTokens(toAddress),
+      this.getContract().methods.safeGuardAllTokens(toAddress),
       options,
     );
   }
@@ -287,8 +286,7 @@ class IContract {
    */
   changeTokenAddress({ newTokenAddress }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.changeTokenAddress(newTokenAddress),
       options,
     );

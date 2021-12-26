@@ -60,7 +60,7 @@ class NetworkFactory extends IContract {
    * @returns {Adddress}
    */
   getNetworkByAddress(address) {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.getNetworkByAddress(address)
       .call();
   }
@@ -71,7 +71,7 @@ class NetworkFactory extends IContract {
    * @returns {Adddress}
    */
   getNetworkById(id) {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.getNetworkById(id)
       .call();
   }
@@ -81,11 +81,11 @@ class NetworkFactory extends IContract {
    * @returns {Promise<number>}
    */
   async getAmountofNetworksForked() {
-    return Number(await this.getWeb3Contract().methods.networksAmount().call());
+    return Number(await this.getContract().methods.networksAmount().call());
   }
 
   async networksAmount() {
-    return BigNumber(await this.getWeb3Contract().methods.networksAmount().call());
+    return BigNumber(await this.getContract().methods.networksAmount().call());
   }
 
   /**
@@ -95,14 +95,14 @@ class NetworkFactory extends IContract {
    */
   async getLockedStakedByAddress(address) {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.tokensLocked(address).call(),
+      await this.getContract().methods.tokensLocked(address).call(),
       18,
     );
   }
 
   async getTokensLocked(address) {
     return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.tokensLocked(address).call(),
+      await this.getContract().methods.tokensLocked(address).call(),
       18,
     );
   }
@@ -113,7 +113,7 @@ class NetworkFactory extends IContract {
    * @returns {Address[]}
    */
   getNetworks() {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.networksArray()
       .call();
   }
@@ -124,14 +124,14 @@ class NetworkFactory extends IContract {
    */
   async getBEPROLocked() {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
+      await this.getContract().methods.tokensLockedTotal().call(),
       18,
     );
   }
 
   async tokensLockedTotal() {
     return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
+      await this.getContract().methods.tokensLockedTotal().call(),
       18,
     );
   }
@@ -151,13 +151,13 @@ class NetworkFactory extends IContract {
    * @returns {Promise<address>}
    */
   getSettlerTokenAddress() {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.beproAddress()
       .call();
   }
 
   beproAddress() {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.beproAddress()
       .call();
   }
@@ -168,7 +168,7 @@ class NetworkFactory extends IContract {
    */
   async OPERATOR_AMOUNT() {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.OPERATOR_AMOUNT()
         .call(),
       18,
@@ -216,7 +216,7 @@ class NetworkFactory extends IContract {
     }
 
     return this.__sendTx(
-      this.getWeb3Contract().methods.lock(
+      this.getContract().methods.lock(
         Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()),
       ),
       options,
@@ -230,7 +230,7 @@ class NetworkFactory extends IContract {
    */
   unlock(options) {
     return this.__sendTx(
-      this.getWeb3Contract().methods.unlock(),
+      this.getContract().methods.unlock(),
       options,
     );
   }
@@ -244,7 +244,7 @@ class NetworkFactory extends IContract {
    */
   createNetwork({ settlerToken, transactionalToken }, options) {
     return this.__sendTx(
-      this.getWeb3Contract()
+      this.getContract()
         .methods.createNetwork(settlerToken, transactionalToken),
       options,
     );

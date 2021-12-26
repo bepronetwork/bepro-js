@@ -29,14 +29,6 @@ class ERC20Contract extends IContract {
   };
 
   /**
-   *
-   * @return {*}
-   */
-  getContract() {
-    return this.params.contract.getContract();
-  }
-
-  /**
    * Get Token Address
    * @returns {Address} address
    */
@@ -58,8 +50,7 @@ class ERC20Contract extends IContract {
       this.getDecimals(),
     );
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.transfer(toAddress, amountWithDecimals),
       options,
     );
@@ -91,14 +82,10 @@ class ERC20Contract extends IContract {
    * @param {number} amount Tokens amount to convert
    * @returns {Promise<number>} tokensAmount
    */
-  toTokens = amount => {
-    const tokensAmount = Numbers.fromBNToDecimals(
-      amount,
-      this.getDecimals(),
-    );
-    console.log('ERC20Contract.toTokens:', tokensAmount);
-    return tokensAmount;
-  };
+  toTokens = amount => Numbers.fromBNToDecimals(
+    amount,
+    this.getDecimals(),
+  );
 
   /**
    * Convert given tokens amount integer to float number with decimals for UI.
@@ -106,14 +93,10 @@ class ERC20Contract extends IContract {
    * @param {number} amount Tokens amount to convert
    * @returns {Promise<number>} tokensAmount
    */
-  fromDecimalsToBN = amount => {
-    const tokensAmount = Numbers.fromDecimalsToBN(
-      amount,
-      this.getDecimals(),
-    );
-    // console.log('ERC20Contract.fromDecimals:', tokensAmount);
-    return tokensAmount;
-  };
+  fromDecimalsToBN = amount => Numbers.fromDecimalsToBN(
+    amount,
+    this.getDecimals(),
+  );
 
   /**
    * Get Total Supply of Token
@@ -209,8 +192,7 @@ class ERC20Contract extends IContract {
       this.getDecimals(),
     );
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.approve(address, amountWithDecimals),
       {
         callback,

@@ -68,7 +68,7 @@ class Network extends IContract {
    * @returns {number[]}
    */
   async getIssuesByAddress(address) {
-    const res = await this.getWeb3Contract()
+    const res = await this.getContract()
       .methods.getIssuesByAddress(address)
       .call();
 
@@ -81,7 +81,7 @@ class Network extends IContract {
    */
   async getAmountofIssuesOpened() {
     return parseInt(
-      await this.getWeb3Contract().methods.incrementIssueID().call(),
+      await this.getContract().methods.incrementIssueID().call(),
       10,
     );
   }
@@ -92,7 +92,7 @@ class Network extends IContract {
    */
   async getAmountofIssuesClosed() {
     return parseInt(
-      await this.getWeb3Contract().methods.closedIdsCount().call(),
+      await this.getContract().methods.closedIdsCount().call(),
       10,
     );
   }
@@ -103,7 +103,7 @@ class Network extends IContract {
    */
   async getAmountOfDisputers() {
     return parseInt(
-      await this.getWeb3Contract().methods.oraclersArray().call(),
+      await this.getContract().methods.oraclersArray().call(),
       10,
     );
   }
@@ -114,7 +114,7 @@ class Network extends IContract {
    */
   async percentageNeededForApprove() {
     return parseInt(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.percentageNeededForApprove()
         .call(),
       10,
@@ -127,7 +127,7 @@ class Network extends IContract {
    */
   async percentageNeededForDispute() {
     return parseInt(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.percentageNeededForDispute()
         .call(),
       10,
@@ -140,7 +140,7 @@ class Network extends IContract {
    */
   async mergeCreatorFeeShare() {
     return parseInt(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.mergeCreatorFeeShare()
         .call(),
       10,
@@ -153,7 +153,7 @@ class Network extends IContract {
    */
   async disputableTime() {
     return Numbers.fromSmartContractTimeToMinutes(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.disputableTime()
         .call(),
       10,
@@ -166,7 +166,7 @@ class Network extends IContract {
    */
   async redeemTime() {
     return Numbers.redeemTime(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.redeemTime()
         .call(),
       10,
@@ -179,7 +179,7 @@ class Network extends IContract {
    */
   async percentageNeededForMerge() {
     return parseInt(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.percentageNeededForMerge()
         .call(),
       10,
@@ -192,7 +192,7 @@ class Network extends IContract {
    */
   async getTokensStaked() {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.totalStaked().call(),
+      await this.getContract().methods.totalStaked().call(),
       18,
     );
   }
@@ -203,14 +203,14 @@ class Network extends IContract {
    */
   async getBEPROStaked() {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.oraclesStaked().call(),
+      await this.getContract().methods.oraclesStaked().call(),
       18,
     );
   }
 
   async oraclesStaked() {
     return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.oraclesStaked().call(),
+      await this.getContract().methods.oraclesStaked().call(),
       18,
     );
   }
@@ -221,7 +221,7 @@ class Network extends IContract {
    */
   async votesStaked() {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.votesStaked()
         .call(),
       18,
@@ -233,7 +233,7 @@ class Network extends IContract {
    * @returns {Promise<address>}
    */
   getTransactionTokenAddress() {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.transactionToken()
       .call();
   }
@@ -253,7 +253,7 @@ class Network extends IContract {
    * @returns {Promise<address>}
    */
   getSettlerTokenAddress() {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.settlerToken()
       .call();
   }
@@ -264,7 +264,7 @@ class Network extends IContract {
    */
   async COUNCIL_AMOUNT() {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.COUNCIL_AMOUNT()
         .call(),
       18,
@@ -287,7 +287,7 @@ class Network extends IContract {
     const value = typeof params === 'object' ? params.value : params;
 
     return this.__sendTx(
-      this.getWeb3Contract().methods.changeCOUNCIL_AMOUNT(
+      this.getContract().methods.changeCOUNCIL_AMOUNT(
         Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals()),
       ),
       options,
@@ -301,7 +301,7 @@ class Network extends IContract {
    * @returns {Promise<boolean>}
    */
   isIssueInDraft({ issueId }) {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.isIssueInDraft(issueId)
       .call();
   }
@@ -314,7 +314,7 @@ class Network extends IContract {
    * @returns {Promise<boolean>}
    */
   isMergeDisputed({ issueId, mergeId }) {
-    return this.getWeb3Contract()
+    return this.getContract()
       .methods.isMergeDisputed(issueId, mergeId)
       .call();
   }
@@ -326,7 +326,7 @@ class Network extends IContract {
    * @returns {Promise<number>} Number of votes
    */
   async getOraclesByAddress({ address }) {
-    const r = await this.getWeb3Contract()
+    const r = await this.getContract()
       .methods.getOraclesByAddress(address)
       .call();
     return Numbers.fromDecimals(r, 18);
@@ -342,7 +342,7 @@ class Network extends IContract {
    * @returns {Integer} tokensLocked
    */
   async getOraclesSummary({ address }) {
-    const r = await this.getWeb3Contract()
+    const r = await this.getContract()
       .methods.getOraclesSummary(address)
       .call();
 
@@ -362,7 +362,7 @@ class Network extends IContract {
    */
   async getIssueByCID({ issueCID }) {
     const r = await this.__sendTx(
-      this.getWeb3Contract().methods.getIssueByCID(issueCID),
+      this.getContract().methods.getIssueByCID(issueCID),
       { call: true },
     );
 
@@ -387,7 +387,7 @@ class Network extends IContract {
    */
   async getIssueById({ issueId }) {
     const r = await this.__sendTx(
-      this.getWeb3Contract().methods.getIssueById(issueId),
+      this.getContract().methods.getIssueById(issueId),
       { call: true },
     );
 
@@ -413,7 +413,7 @@ class Network extends IContract {
    */
   async getMergeById({ issue_id, merge_id }) {
     const r = await this.__sendTx(
-      this.getWeb3Contract()
+      this.getContract()
         .methods.getMergeById(issue_id, merge_id),
       { call: true },
     );
@@ -496,7 +496,7 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.getWeb3Contract().methods.lock(
+      this.getContract().methods.lock(
         Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()),
       ),
       options,
@@ -517,7 +517,7 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.getWeb3Contract().methods.unlock(
+      this.getContract().methods.unlock(
         Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()),
         from,
       ),
@@ -538,7 +538,7 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.getWeb3Contract()
+      this.getContract()
         .methods.delegateOracles(
           Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()),
           delegatedTo,
@@ -555,7 +555,7 @@ class Network extends IContract {
    */
   recognizeAsFinished({ issueId }, options) {
     return this.__sendTx(
-      this.getWeb3Contract()
+      this.getContract()
         .methods.recognizeAsFinished(issueId),
       options,
     );
@@ -576,7 +576,7 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.getWeb3Contract().methods.openIssue(
+      this.getContract().methods.openIssue(
         cid,
         Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()),
       ),
@@ -592,7 +592,7 @@ class Network extends IContract {
    */
   redeemIssue({ issueId }, options) {
     return this.__sendTx(
-      this.getWeb3Contract().methods.redeemIssue(issueId),
+      this.getContract().methods.redeemIssue(issueId),
       options,
     );
   }
@@ -611,7 +611,7 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.getWeb3Contract()
+      this.getContract()
         .methods.updateIssue(
           issueID,
           Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()),
@@ -637,7 +637,7 @@ class Network extends IContract {
     );
 
     return this.__sendTx(
-      this.getWeb3Contract()
+      this.getContract()
         .methods.proposeIssueMerge(issueID, prAddresses, prAmountsWithDecimals),
       options,
     );
@@ -652,7 +652,7 @@ class Network extends IContract {
    */
   closeIssue({ issueID, mergeID }, options) {
     return this.__sendTx(
-      this.getWeb3Contract().methods.closeIssue(issueID, mergeID),
+      this.getContract().methods.closeIssue(issueID, mergeID),
       options,
     );
   }
@@ -666,7 +666,7 @@ class Network extends IContract {
    */
   disputeMerge({ issueID, mergeID }, options) {
     return this.__sendTx(
-      this.getWeb3Contract().methods.disputeMerge(issueID, mergeID),
+      this.getContract().methods.disputeMerge(issueID, mergeID),
       options,
     );
   }

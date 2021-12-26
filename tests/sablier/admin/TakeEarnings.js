@@ -79,9 +79,9 @@ context('sablier.TakeEarnings.context', async () => {
             senderSharePercentage,
             recipientSharePercentage,
           });
-          // const res = await beproAssert.createTransactionResult(_this.sablier.getWeb3Contract(), result.transactionHash);
+          // const res = await beproAssert.createTransactionResult(_this.sablier.getContract(), result.transactionHash);
 		      // console.log('---TakeEarnings.result.beproAssert\n', res);
-		      // const res2 = await truffleAssert.createTransactionResult(_this.sablier.getWeb3Contract(), result.transactionHash);
+		      // const res2 = await truffleAssert.createTransactionResult(_this.sablier.getContract(), result.transactionHash);
 		      // console.log('---TakeEarnings.result.truffleAssert\n', res2);
 		      // streamId = Number(result.logs[0].args.streamId);
 		      streamId = Number(result.events.CreateStream.returnValues.streamId);

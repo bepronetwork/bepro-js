@@ -21,7 +21,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<void>}
    */
   async addPauser({ account }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.addPauser(account));
+    return await this.__sendTx(this.getContract().methods.addPauser(account));
   }
 
   /**
@@ -29,7 +29,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<void>}
    */
   async pause() {
-    return await this.__sendTx(this.getWeb3Contract().methods.pause());
+    return await this.__sendTx(this.getContract().methods.pause());
   }
 
   /**
@@ -37,7 +37,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<void>}
    */
   async unpause() {
-    return await this.__sendTx(this.getWeb3Contract().methods.unpause());
+    return await this.__sendTx(this.getContract().methods.unpause());
   }
 
   /**
@@ -47,7 +47,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<bool>}
    */
   async isPauser({ account }) {
-    return await this.getWeb3Contract().methods.isPauser(account).call();
+    return await this.getContract().methods.isPauser(account).call();
   }
 
   /**
@@ -55,7 +55,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<uint256>}
    */
   async nextStreamId() {
-    return await this.getWeb3Contract().methods.nextStreamId().call();
+    return await this.getContract().methods.nextStreamId().call();
   }
 
   /**
@@ -63,7 +63,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<uint256>} mantissa
    */
   async fee() {
-    const res = await this.getWeb3Contract().methods.fee().call();
+    const res = await this.getContract().methods.fee().call();
     // 1e16 is 1% of 1e18, fee is stored with 16 decimals as one hundred percent.
     return Numbers.fromDecimalsToBN(res, 16);
   }
@@ -76,7 +76,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<void>}
    */
   async updateFee({ feePercentage }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.updateFee(feePercentage));
+    return await this.__sendTx(this.getContract().methods.updateFee(feePercentage));
   }
 
   /**
@@ -88,12 +88,12 @@ export default class Sablier extends IContract {
    * @returns {Promise<void>}
    */
   async takeEarnings({ tokenAddress, amount }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(
       amount,
       decimals,
     );
-    return await this.__sendTx(this.getWeb3Contract().methods.takeEarnings(tokenAddress, amountWithDecimals));
+    return await this.__sendTx(this.getContract().methods.takeEarnings(tokenAddress, amountWithDecimals));
   }
 
   /**
@@ -116,10 +116,10 @@ export default class Sablier extends IContract {
    * @returns {Promise<Sablier~getStream>} The stream object.
    */
   async getStream({ streamId }) {
-    const res = await this.getWeb3Contract().methods.getStream(streamId).call();
+    const res = await this.getContract().methods.getStream(streamId).call();
 
     const tokenAddress = res[3];
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     return {
       sender: res[0],
       recipient: res[1],
@@ -142,7 +142,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<uint256>} delta The time delta in seconds.
    */
   async deltaOf({ streamId }) {
-    return await this.getWeb3Contract().methods.deltaOf(streamId).call();
+    return await this.getContract().methods.deltaOf(streamId).call();
   }
 
   /**
@@ -154,8 +154,8 @@ export default class Sablier extends IContract {
    * @returns {Promise<uint256>} balance The total funds allocated to `who` as uint256.
    */
   async balanceOf({ streamId, who }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
-    const balance = await this.getWeb3Contract().methods.balanceOf(streamId, who).call();
+    const decimals = await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
+    const balance = await this.getContract().methods.balanceOf(streamId, who).call();
     const ret = Numbers.fromDecimalsToBN(balance, decimals);
     console.log('---Sablier.balanceOf.RAW: decimals ', decimals, ' | balance: ', balance);
     return ret;
@@ -168,7 +168,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<bool>} True if it is a compounding stream, otherwise false.
    */
   async isCompoundingStream({ streamId }) {
-    return await this.getWeb3Contract().methods.isCompoundingStream(streamId).call();
+    return await this.getContract().methods.isCompoundingStream(streamId).call();
   }
 
   /**
@@ -194,10 +194,10 @@ export default class Sablier extends IContract {
    * @returns {Promise<Sablier~getCompoundingStream>} The compounding stream object.
    */
   async getCompoundingStream({ streamId }) {
-    const res = await this.getWeb3Contract().methods.getCompoundingStream(streamId).call();
+    const res = await this.getContract().methods.getCompoundingStream(streamId).call();
 
     const tokenAddress = res[3];
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     return {
       sender: res[0],
       recipient: res[1],
@@ -230,9 +230,9 @@ export default class Sablier extends IContract {
    * @returns {Promise<Sablier~interestOf>} The interest accrued by the sender, the recipient and sablier, respectively, as uint256s.
    */
   async interestOf({ streamId, amount }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
+    const decimals = await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(amount, decimals);
-    const res = await this.getWeb3Contract().methods.interestOf(streamId, amountWithDecimals).call();
+    const res = await this.getContract().methods.interestOf(streamId, amountWithDecimals).call();
     return {
       senderInterest: Numbers.fromDecimalsToBN(res[0], decimals),
       recipientInterest: Numbers.fromDecimalsToBN(res[1], decimals),
@@ -247,8 +247,8 @@ export default class Sablier extends IContract {
    * @returns {Promise<uint256>} The amount of interest as uint256.
    */
   async getEarnings({ tokenAddress }) {
-    const earnings = await this.getWeb3Contract().methods.getEarnings(tokenAddress).call();
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+    const earnings = await this.getContract().methods.getEarnings(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const ret1 = Numbers.fromDecimalsToBN(earnings, decimals);
     return ret1;
   }
@@ -278,9 +278,9 @@ export default class Sablier extends IContract {
   async createStream({
     recipient, deposit, tokenAddress, startTime, stopTime,
   }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const depositWithDecimals = Numbers.fromBNToDecimals(deposit, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.createStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime));
+    return await this.__sendTx(this.getContract().methods.createStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime));
   }
 
   /**
@@ -303,9 +303,9 @@ export default class Sablier extends IContract {
   async createCompoundingStream({
     recipient, deposit, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage,
   }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const depositWithDecimals = Numbers.fromBNToDecimals(deposit, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.createCompoundingStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage));
+    return await this.__sendTx(this.getContract().methods.createCompoundingStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage));
   }
 
   /**
@@ -320,9 +320,9 @@ export default class Sablier extends IContract {
    * @returns {Promise<bool>} True if success, otherwise false.
    */
   async withdrawFromStream({ streamId, amount }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
+    const decimals = await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(amount, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.withdrawFromStream(streamId, amountWithDecimals));
+    return await this.__sendTx(this.getContract().methods.withdrawFromStream(streamId, amountWithDecimals));
   }
 
   /**
@@ -335,7 +335,7 @@ export default class Sablier extends IContract {
    * @returns {Promise<bool>} True if success, otherwise false.
    */
   async cancelStream({ streamId }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.cancelStream(streamId));
+    return await this.__sendTx(this.getContract().methods.cancelStream(streamId));
   }
 
   /**
@@ -344,7 +344,7 @@ export default class Sablier extends IContract {
    * @param streamId The id of the stream.
    */
   async getTokenDecimalsFromStream({ streamId }) {
-    return await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
+    return await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
   }
 
   /**

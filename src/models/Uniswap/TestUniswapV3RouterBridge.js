@@ -30,7 +30,7 @@ export default class TestUniswapV3RouterBridge extends IContract {
    * @returns {Promise<address>}
    */
   async swapRouter() {
-    return await this.getWeb3Contract().methods.swapRouter().call();
+    return await this.getContract().methods.swapRouter().call();
   }
 
   /**
@@ -43,12 +43,12 @@ export default class TestUniswapV3RouterBridge extends IContract {
    */
   async swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
     return await this.__sendTx(
-      this.getWeb3Contract().methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum),
+      this.getContract().methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum),
     );
   }
 
   async swapExactInputSingleExCall(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
-    return await this.getWeb3Contract().methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum).call();
+    return await this.getContract().methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum).call();
   }
 
   /**
@@ -61,12 +61,12 @@ export default class TestUniswapV3RouterBridge extends IContract {
    */
   async swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
     return await this.__sendTx(
-      this.getWeb3Contract().methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum),
+      this.getContract().methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum),
     );
   }
 
   async swapExactOutputSingleExCall(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
-    return await this.getWeb3Contract().methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum).call();
+    return await this.getContract().methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum).call();
   }
 
   /**

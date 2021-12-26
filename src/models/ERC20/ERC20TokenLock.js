@@ -36,7 +36,7 @@ class ERC20TokenLock extends IContract {
    * @returns {Promise<Address>}
    */
   erc20() {
-    return this.params.contract.getContract().methods.erc20().call();
+    return this.getContract().methods.erc20().call();
   }
 
   /**
@@ -53,8 +53,7 @@ class ERC20TokenLock extends IContract {
    * @returns {Integer} Token Amount
    */
   async totalAmountStaked() {
-    const res = await this.params.contract
-      .getContract()
+    const res = await this.getContract()
       .methods.totalAmountStaked()
       .call();
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
@@ -65,8 +64,7 @@ class ERC20TokenLock extends IContract {
    * @returns {Promise<number>} Minimum Amount
    */
   async minAmountToLock() {
-    const res = await this.params.contract
-      .getContract()
+    const res = await this.getContract()
       .methods.minAmountToLock()
       .call();
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
@@ -77,8 +75,7 @@ class ERC20TokenLock extends IContract {
    * @returns {Promise<number>} Maximum Amount
    */
   async maxAmountToLock() {
-    const res = await this.params.contract
-      .getContract()
+    const res = await this.getContract()
       .methods.maxAmountToLock()
       .call();
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
@@ -91,7 +88,7 @@ class ERC20TokenLock extends IContract {
    * @param {Address} params.address
    * @returns {Promise<boolean>} canRelease
    */
-  canRelease = ({ address }) => this.params.contract.getContract().methods.canRelease(address).call();
+  canRelease = ({ address }) => this.getContract().methods.canRelease(address).call();
 
   /**
    * Get locked tokens amount for a given address
@@ -101,8 +98,7 @@ class ERC20TokenLock extends IContract {
    * @returns {Promise<number>} amount Locked token amount
    */
   getLockedTokens = async ({ address }) => {
-    const res = await this.params.contract
-      .getContract()
+    const res = await this.getContract()
       .methods.getLockedTokens(address)
       .call();
     return Numbers.fromDecimals(res, this.getERC20Contract().getDecimals());
@@ -118,8 +114,7 @@ class ERC20TokenLock extends IContract {
    * @returns {Promise<number>} amount Token amount
    */
   getLockedTokensInfo = async ({ address }) => {
-    const res = await this.params.contract
-      .getContract()
+    const res = await this.getContract()
       .methods.getLockedTokensInfo(address)
       .call();
 
@@ -150,8 +145,7 @@ class ERC20TokenLock extends IContract {
     );
 
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.setMaxAmountToLock(amountWithDecimals),
       options,
     );
@@ -174,8 +168,7 @@ class ERC20TokenLock extends IContract {
     );
 
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.setMinAmountToLock(amountWithDecimals),
       options,
     );
@@ -221,8 +214,7 @@ class ERC20TokenLock extends IContract {
       );
     }
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getContract()
         .methods.lock(
           Numbers.toSmartContractDecimals(
             amount,
@@ -257,7 +249,7 @@ class ERC20TokenLock extends IContract {
     );
 
     return this.__sendTx(
-      this.params.contract.getContract().methods.release(),
+      this.getContract().methods.release(),
       options,
     );
   };

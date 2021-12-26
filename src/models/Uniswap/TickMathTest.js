@@ -26,7 +26,7 @@ export default class TickMathTest extends IContract {
    * @returns {Promise<uint160>}
    */
   async getSqrtRatioAtTick(tick) {
-    return BigNumber(await this.getWeb3Contract().methods.getSqrtRatioAtTick(tick).call());
+    return BigNumber(await this.getContract().methods.getSqrtRatioAtTick(tick).call());
   }
 
   /**
@@ -34,7 +34,7 @@ export default class TickMathTest extends IContract {
    * @returns {Promise<uint256>}
    */
   async getGasCostOfGetSqrtRatioAtTick(tick) {
-    return BigNumber(await this.getWeb3Contract().methods.getGasCostOfGetSqrtRatioAtTick(tick).call());
+    return BigNumber(await this.getContract().methods.getGasCostOfGetSqrtRatioAtTick(tick).call());
   }
 
   /**
@@ -42,7 +42,7 @@ export default class TickMathTest extends IContract {
    * @returns {Promise<int24>}
    */
   async getTickAtSqrtRatio(sqrtPriceX96) {
-    return BigNumber(await this.getWeb3Contract().methods.getTickAtSqrtRatio(sqrtPriceX96).call());
+    return BigNumber(await this.getContract().methods.getTickAtSqrtRatio(sqrtPriceX96).call());
   }
 
   /**
@@ -50,21 +50,21 @@ export default class TickMathTest extends IContract {
    * @returns {Promise<uint256>}
    */
   async getGasCostOfGetTickAtSqrtRatio(sqrtPriceX96) {
-    return BigNumber(await this.getWeb3Contract().methods.getGasCostOfGetTickAtSqrtRatio(sqrtPriceX96).call());
+    return BigNumber(await this.getContract().methods.getGasCostOfGetTickAtSqrtRatio(sqrtPriceX96).call());
   }
 
   /**
    * @returns {Promise<uint160>}
    */
   async MIN_SQRT_RATIO() {
-    return BigNumber(await this.getWeb3Contract().methods.MIN_SQRT_RATIO().call());
+    return BigNumber(await this.getContract().methods.MIN_SQRT_RATIO().call());
   }
 
   /**
    * @returns {Promise<uint160>}
    */
   async MAX_SQRT_RATIO() {
-    return BigNumber(await this.getWeb3Contract().methods.MAX_SQRT_RATIO().call());
+    return BigNumber(await this.getContract().methods.MAX_SQRT_RATIO().call());
   }
 
   /**
