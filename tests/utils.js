@@ -1,10 +1,10 @@
-export const mochaAsync = (fn) => (done) => {
-  fn.call().then(done, (err) => {
+export const mochaAsync = fn => done => {
+  fn.call().then(done, err => {
     done(err);
   });
 };
 
-export const detectValidationErrors = (res) => {
+export const detectValidationErrors = res => {
   if (res.message === 'Validation errors') {
     // eslint-disable-next-line no-console
     console.log(res.errors[0]);

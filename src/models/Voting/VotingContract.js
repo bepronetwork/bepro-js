@@ -201,7 +201,7 @@ class VotingContract extends IContract {
     );
 
     return {
-      pools: res[0].map((r) => parseInt(r, 10)),
+      pools: res[0].map(r => parseInt(r, 10)),
     };
   };
 

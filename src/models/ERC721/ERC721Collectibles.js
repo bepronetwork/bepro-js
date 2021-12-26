@@ -148,7 +148,7 @@ class ERC721Collectibles extends IContract {
       .methods.getRegisteredIDs(address)
       .call();
 
-    return res.map((r) => parseInt(r, 10));
+    return res.map(r => parseInt(r, 10));
   }
 
   /**

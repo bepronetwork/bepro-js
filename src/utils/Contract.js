@@ -1,10 +1,11 @@
 class Contract {
-  constructor(web3, contract_json, address) {
-    this.web3 = web3;
+  constructor(web3Connection, contract_json, address) {
+    this.web3Connection = web3Connection;
+    this.web3 = web3Connection.getWeb3();
     this.json = contract_json;
     this.abi = contract_json.abi;
     this.address = address;
-    this.contract = new web3.eth.Contract(contract_json.abi, address);
+    this.contract = new this.web3.eth.Contract(contract_json.abi, address);
   }
 
   async deploy(account, abi, byteCode, args = [], callback = () => {}) {
@@ -35,11 +36,11 @@ class Contract {
         }
       });
     }
-    const accounts = await this.web3.eth.getAccounts();
+    const userAddress = await this.web3Connection.getAddress();
     const res = await this.__metamaskDeploy({
       byteCode,
       args,
-      acc: accounts[0],
+      acc: userAddress,
       callback,
     });
     this.address = res.contractAddress;
@@ -70,7 +71,7 @@ class Contract {
             resolve(receipt);
           }
         })
-        .on('error', (err) => {
+        .on('error', err => {
           reject(err);
         });
     } catch (err) {
@@ -106,7 +107,7 @@ class Contract {
             resolve(receipt);
           }
         })
-        .on('error', (err) => {
+        .on('error', err => {
           reject(err);
         });
     });

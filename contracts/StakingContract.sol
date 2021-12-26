@@ -46,8 +46,12 @@ contract StakingContract is Pausable, Ownable {
         bool lockedUntilFinalization; /* Product can only be withdrawn when finalized */
         address[] subscribers;
         uint256[] subscriptionIds;
-        mapping(uint256 => SubscriptionAPR) subscriptions; /* Distribution object */
     }
+
+    /* Available Subscriptions for specific Product of type productId-subscriptionId-SubscriptionAPR mapping */
+    mapping(uint256 => mapping(uint256 => SubscriptionAPR)) public subscriptions;
+
+
 
     constructor(address _tokenAddress, address _nftAddress) public {
         erc20 = ERC20(_tokenAddress);
@@ -121,7 +125,7 @@ contract StakingContract is Pausable, Ownable {
         /* Create new subscription */
         mySubscriptions[msg.sender].push(subscription_id);
         products[_product_id].subscriptionIds.push(subscription_id);
-        products[_product_id].subscriptions[subscription_id] = subscriptionAPR;
+        subscriptions[_product_id][subscription_id] = subscriptionAPR;
         products[_product_id].currentAmount = products[_product_id].currentAmount + _amount;
         products[_product_id].subscribers.push(msg.sender);
     }
@@ -172,15 +176,15 @@ contract StakingContract is Pausable, Ownable {
         require(products[_product_id].endDate != 0, "Product has expired");
 
         /* Confirm Subscription exists */
-        require(products[_product_id].subscriptions[_subscription_id].endDate != 0, "Product does not exist");
+        require(subscriptions[_product_id][_subscription_id].endDate != 0, "Product does not exist");
 
         /* Confirm Subscription is not finalized */
-        require(products[_product_id].subscriptions[_subscription_id].finalized == false, "Subscription was finalized already");
+        require(subscriptions[_product_id][_subscription_id].finalized == false, "Subscription was finalized already");
 
         /* Confirm Subscriptor is the sender */
-        require(products[_product_id].subscriptions[_subscription_id].subscriberAddress == msg.sender, "Not the subscription owner");
+        require(subscriptions[_product_id][_subscription_id].subscriberAddress == msg.sender, "Not the subscription owner");
 
-        SubscriptionAPR memory subscription = products[_product_id].subscriptions[_subscription_id];
+        SubscriptionAPR memory subscription = subscriptions[_product_id][_subscription_id];
 
         /* Confirm start date has already passed */
         require(block.timestamp > subscription.startDate, "Now is below the start date");
@@ -202,9 +206,9 @@ contract StakingContract is Pausable, Ownable {
         require(totalAmount > 0, "Total Amount has to be bigger than 0");
 
         /* Update Subscription */
-        products[_product_id].subscriptions[_subscription_id].finalized = true;
-        products[_product_id].subscriptions[_subscription_id].endDate = finishDate;
-        products[_product_id].subscriptions[_subscription_id].withdrawAmount = totalAmount;
+        subscriptions[_product_id][_subscription_id].finalized = true;
+        subscriptions[_product_id][_subscription_id].endDate = finishDate;
+        subscriptions[_product_id][_subscription_id].withdrawAmount = totalAmount;
 
         /* Transfer funds to the subscriber address */
         require(erc20.transfer(subscription.subscriberAddress, totalAmount), "Transfer has failed");
@@ -215,7 +219,7 @@ contract StakingContract is Pausable, Ownable {
 
     function getSubscription(uint256 _subscription_id, uint256 _product_id) external view returns (uint256, uint256, uint256, uint256, uint256, address, uint256, bool, uint256){
 
-        SubscriptionAPR memory subscription = products[_product_id].subscriptions[_subscription_id];
+        SubscriptionAPR memory subscription = subscriptions[_product_id][_subscription_id];
 
         return (subscription._id, subscription.productId, subscription.startDate, subscription.endDate,
             subscription.amount, subscription.subscriberAddress, subscription.APR, subscription.finalized, subscription.withdrawAmount);

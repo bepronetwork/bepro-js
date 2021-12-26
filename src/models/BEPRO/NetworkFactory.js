@@ -1,5 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 // eslint-disable-next-line no-unused-vars
+
+import BigNumber from 'bignumber.js';
+
 import { networkFactory } from '../../interfaces';
 import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
@@ -14,12 +17,11 @@ import ERC20Contract from '../ERC20/ERC20Contract';
  */
 
 /**
- * Network Object
- * @class Network
- * @param {Network~Options} options
+ * NetworkFactory Object
+ * @class NetworkFactory
+ * @param {NetworkFactory~Options} options
  */
-
-class Network extends IContract {
+class NetworkFactory extends IContract {
   constructor(params) {
     super({ abi: networkFactory, ...params });
   }
@@ -58,8 +60,7 @@ class Network extends IContract {
    * @returns {Adddress}
    */
   getNetworkByAddress(address) {
-    return this.params.contract
-      .getContract()
+    return this.getWeb3Contract()
       .methods.getNetworkByAddress(address)
       .call();
   }
@@ -70,72 +71,93 @@ class Network extends IContract {
    * @returns {Adddress}
    */
   getNetworkById(id) {
-    return this.params.contract
-      .getContract()
+    return this.getWeb3Contract()
       .methods.getNetworkById(id)
       .call();
   }
 
   /**
-     * Get Amount of Networks Forked in the Protocol
-     * @returns {Promise<number>}
-     */
-  getAmountofNetworksForked() {
-    return this.params.contract.getContract().methods.networksAmount().call();
+   * Get Amount of Networks Forked in the Protocol
+   * @returns {Promise<number>}
+   */
+  async getAmountofNetworksForked() {
+    return Number(await this.getWeb3Contract().methods.networksAmount().call());
+  }
+
+  async networksAmount() {
+    return BigNumber(await this.getWeb3Contract().methods.networksAmount().call());
   }
 
   /**
-     * Get Total Amount of Tokens Locked by Operator in the Network
-     * @param {Address} address
-     * @returns {Promise<number>}
-     */
+   * Get Total Amount of Tokens Locked by Operator in the Network
+   * @param {Address} address
+   * @returns {Promise<number>}
+   */
   async getLockedStakedByAddress(address) {
     return Numbers.fromDecimals(
-      await this.params.contract.getContract().methods.tokensLocked(address).call(),
+      await this.getWeb3Contract().methods.tokensLocked(address).call(),
+      18,
+    );
+  }
+
+  async getTokensLocked(address) {
+    return Numbers.fromDecimalsToBN(
+      await this.getWeb3Contract().methods.tokensLocked(address).call(),
       18,
     );
   }
 
   /**
-     * Get Open Issues Available
-     * @param {Address} address
-     * @returns {Address[]}
-     */
+   * Get Open Issues Available
+   * @param {Address} address
+   * @returns {Address[]}
+   */
   getNetworks() {
-    return this.params.contract
-      .getContract()
+    return this.getWeb3Contract()
       .methods.networksArray()
       .call();
   }
 
   /**
-     * Get Total Amount of Tokens Staked in the Protocol
-     * @returns {Promise<number>}
-     */
+   * Get Total Amount of Tokens Staked in the Protocol
+   * @returns {Promise<number>}
+   */
   async getBEPROLocked() {
     return Numbers.fromDecimals(
-      await this.params.contract.getContract().methods.tokensLockedTotal().call(),
+      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
+      18,
+    );
+  }
+
+  async tokensLockedTotal() {
+    return Numbers.fromDecimalsToBN(
+      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
       18,
     );
   }
 
   /**
-     * Verify if Address is Council
-     * @param {Object} params
-     * @param {number} params.address
-     * @returns {Promise<address>}
-     */
+   * Verify if Address is Council
+   * @param {Object} params
+   * @param {number} params.address
+   * @returns {Promise<address>}
+   */
   async isOperator({ address }) {
     return await this.getLockedStakedByAddress(address) >= await this.OPERATOR_AMOUNT();
   }
 
   /**
-     * Get Settler Token Address
-     * @returns {Promise<address>}
-     */
+   * Get Settler Token Address
+   * @returns {Promise<address>}
+   */
   getSettlerTokenAddress() {
-    return this.params.contract
-      .getContract()
+    return this.getWeb3Contract()
+      .methods.beproAddress()
+      .call();
+  }
+
+  beproAddress() {
+    return this.getWeb3Contract()
       .methods.beproAddress()
       .call();
   }
@@ -146,8 +168,7 @@ class Network extends IContract {
    */
   async OPERATOR_AMOUNT() {
     return Numbers.fromDecimals(
-      await this.params.contract
-        .getContract()
+      await this.getWeb3Contract()
         .methods.OPERATOR_AMOUNT()
         .call(),
       18,
@@ -195,7 +216,7 @@ class Network extends IContract {
     }
 
     return this.__sendTx(
-      this.params.contract.getContract().methods.lock(
+      this.getWeb3Contract().methods.lock(
         Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()),
       ),
       options,
@@ -209,7 +230,7 @@ class Network extends IContract {
    */
   unlock(options) {
     return this.__sendTx(
-      this.params.contract.getContract().methods.unlock(),
+      this.getWeb3Contract().methods.unlock(),
       options,
     );
   }
@@ -223,8 +244,7 @@ class Network extends IContract {
    */
   createNetwork({ settlerToken, transactionalToken }, options) {
     return this.__sendTx(
-      this.params.contract
-        .getContract()
+      this.getWeb3Contract()
         .methods.createNetwork(settlerToken, transactionalToken),
       options,
     );
@@ -253,7 +273,9 @@ class Network extends IContract {
    * @function
    * @return ERC20Contract|null
    */
-  getSettlerTokenContract = () => this.params.settlerToken;
+  getSettlerTokenContract() {
+    return this.params.settlerToken;
+  }
 }
 
-export default Network;
+export default NetworkFactory;

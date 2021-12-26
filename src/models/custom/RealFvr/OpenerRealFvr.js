@@ -232,14 +232,14 @@ class OpenerRealFvr extends IContract {
    * @function
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  lock = (options) => this.__sendTx(this.params.contract.getContract().methods.lock(), options);
+  lock = options => this.__sendTx(this.params.contract.getContract().methods.lock(), options);
 
   /**
    * Unlock the Contract
    * @function
    * @returns {Promise<TransactionObject>} Success the Tx Object if operation was successful
    */
-  unlock = (options) => this.__sendTx(this.params.contract.getContract().methods.unlock(), options);
+  unlock = options => this.__sendTx(this.params.contract.getContract().methods.unlock(), options);
 
   /**
    * Set Token Price of Real Fvr in USD --> 1*10**18 as input means 1 Real Fvr = $0.000001
@@ -309,7 +309,7 @@ class OpenerRealFvr extends IContract {
       packType: res[5],
       buyer: res[6],
       saleDistributionAddresses: res[7],
-      saleDistributionAmounts: res[8] ? res[8].map((a) => parseInt(a, 10)) : [],
+      saleDistributionAmounts: res[8] ? res[8].map(a => parseInt(a, 10)) : [],
       opened: res[9],
     };
   };
@@ -328,7 +328,7 @@ class OpenerRealFvr extends IContract {
       .methods.getRegisteredIDs(address)
       .call();
 
-    return res.map((a) => parseInt(a, 10));
+    return res.map(a => parseInt(a, 10));
   };
 
   /**
@@ -347,7 +347,7 @@ class OpenerRealFvr extends IContract {
       .call();
 
     return {
-      distributionAmounts: res[0].map((a) => parseInt(a, 10)),
+      distributionAmounts: res[0].map(a => parseInt(a, 10)),
       distributionAddresses: res[1],
     };
   };

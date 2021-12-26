@@ -2,7 +2,7 @@
 import moment from 'moment';
 import accounting from 'accounting';
 import dayjs from 'dayjs';
-import BN from 'bn.js';
+import BigNumber from 'bignumber.js';
 
 Number.prototype.noExponents = function () {
   const data = String(this).split(/[eE]/);
@@ -72,11 +72,28 @@ class numbers {
     return accounting.formatNumber(number);
   }
 
+  // original version
   toSmartContractDecimals(value, decimals) {
     const numberWithNoExponents = new Number(
       (Number(value) * 10 ** decimals).toFixed(0),
     ).noExponents();
     return numberWithNoExponents;
+  }
+
+  // convert BigNumber value to smart contract value because Number loose precision.
+  // value can be BigNumber, number or string, if string it will be converted to BigNumber
+  // returns a string
+  fromBNToDecimals(value, decimals) {
+    let val;
+    const decimalsNr = Number(decimals);
+    const types = ['string', 'number'];
+    if (types.includes(typeof(value)))
+      val = new BigNumber(value);
+    else val = value;
+
+    const tokens = val.shiftedBy(decimalsNr); //can have exponent like 1.2345e18
+    const tokens2 = tokens.toFixed(); //this removes exponent and has all digits
+    return tokens2;
   }
 
   fromBigNumberToInteger(value, decimals = 18) {
@@ -86,6 +103,26 @@ class numbers {
   fromDecimals(value, decimals) {
     return Number(
       parseFloat(value / 10 ** decimals).toPrecision(decimals),
+    ).noExponents();
+  }
+
+  // parse value from smart contract to BigNumber because Number loose precision.
+  // value can be BigNumber, number or string, if string it will be converted to BigNumber
+  fromDecimalsToBN(value, decimals) {
+    let val;
+    const decimalsNr = Number(decimals);
+    const types = ['string', 'number'];
+    if (types.includes(typeof(value)))
+      val = new BigNumber(value);
+    else val = value;
+
+    return val.shiftedBy(-decimalsNr);
+  }
+
+  fromTokens(value, decimals) {
+	  let precision = '1e' + decimals;
+    return Number(
+      value / precision
     ).noExponents();
   }
 

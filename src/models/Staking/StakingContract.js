@@ -363,7 +363,7 @@ class StakingContract extends IContract {
       this.params.contract.getContract().methods.getMySubscriptions(address),
       { call: true },
     );
-    return res.map((r) => Numbers.fromExponential(r));
+    return res.map(r => Numbers.fromExponential(r));
   };
 
   /**
@@ -377,12 +377,12 @@ class StakingContract extends IContract {
 
     /* Get All Subscriptions */
     const subscriptions = await Promise.all(
-      products.map(async (product) => {
+      products.map(async product => {
         const productObj = await this.getProduct({
           product_id: product,
         });
         return Promise.all(
-          productObj.subscriptionIds.map(async (subscription_id) => this.getSubscription({
+          productObj.subscriptionIds.map(async subscription_id => this.getSubscription({
             subscription_id,
             product_id: product,
           })),
@@ -415,7 +415,7 @@ class StakingContract extends IContract {
     const products = await this.getProducts();
 
     const allProducts = await Promise.all(
-      products.map(async (product) => {
+      products.map(async product => {
         const productObj = await this.getProduct({
           product_id: product,
         });

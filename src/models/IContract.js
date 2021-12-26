@@ -101,7 +101,7 @@ class IContract {
               resolve(receipt);
             }
           })
-          .on('error', (err) => {
+          .on('error', err => {
             reject(err);
           });
       });
@@ -111,18 +111,18 @@ class IContract {
       const data = method.encodeABI();
       return this.params.contract
         .send(this.acc.getAccount(), data, value)
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     }
 
     if (this.acc && call) {
-      return method.call({ from: this.acc.getAddress() }).catch((err) => {
+      return method.call({ from: this.acc.getAddress() }).catch(err => {
         throw err;
       });
     }
 
-    return method.call().catch((err) => {
+    return method.call().catch(err => {
       throw err;
     });
   };
@@ -165,7 +165,7 @@ class IContract {
    * @param {Object} params
    * @void
    */
-  updateParams = (params) => {
+  updateParams = params => {
     if (!params || typeof params !== 'object' || Array.isArray(params)) {
       throw new Error('Supplied params should be a valid object');
     }
@@ -347,7 +347,7 @@ class IContract {
    * Called at start when testing or at login on MAINNET
    */
   _loadDataFromWeb3Connection() {
-    this.web3 = this.web3Connection.web3;
+    this.web3 = this.web3Connection.getWeb3();
     this.acc = this.web3Connection.account;
 
     // update some params properties with new values
@@ -355,7 +355,7 @@ class IContract {
       ...this.params,
       web3: this.web3,
       contract: new Contract(
-        this.web3,
+        this.web3Connection,
         this.params.abi,
         this.params.contractAddress,
       ),
@@ -398,6 +398,16 @@ class IContract {
   }
 
   /**
+   * Get current/selected user account in use if available,
+   * or selected signer wallet/address otherwise.
+   * @function
+   * @return {Promise<string>} Account/Wallet in use
+   */
+  async getUserCurrentAccount() {
+    return await this.web3Connection.getCurrentAccount();
+  }
+
+  /**
    * Get contract current user/sender address
    * @return {Promise<string>|string}
    */
@@ -412,6 +422,26 @@ class IContract {
    */
   getUserETHBalance() {
     return this.web3Connection.getETHBalance();
+  }
+
+  /**
+   * @function
+   * @description Get user wallets/signers from current provider
+   * @return {Promise<Array>}
+   */
+  async getSigners() {
+    return await this.web3Connection.getSigners();
+  }
+
+  /**
+   * @function
+   * @description Switch current user account to a new one
+   * @param {Address} newAccount New user wallet/account address in use
+   * @return {Promise<void>}
+   */
+  switchWallet(newAccount) {
+    this.web3Connection.switchWallet(newAccount);
+    return this;
   }
 }
 

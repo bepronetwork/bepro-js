@@ -17,6 +17,7 @@
   "root": true,
 
   "rules": {
+    "arrow-parens": ["error", "as-needed"],
     "camelcase": 0,
     "max-len": ["warn", 120, 2, {
       "ignoreUrls": true,
