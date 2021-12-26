@@ -125,94 +125,120 @@ export default class Loophole extends IContract {
    * @param {address} newOwner
    * @returns {Promise<void>}
    */
-  // transferOwnership(newOwner) {
-  //   return this.__sendTx(this.getContract().methods.transferOwnership(newOwner))
+  // transferOwnership({ newOwner }, options) {
+  //   return this.__sendTx(this.getContract().methods.transferOwnership(newOwner, options))
   // };
 
   /**
    * Add/enable new pool, only owner mode
    * @dev ADD | NEW TOKEN POOL
-   * @param {address} token Token address as IERC20
-   * @param {uint256} allocPoint Pool allocation point/share distributed to this pool from mining rewards
+   * @param {Object} params
+   * @param {address} params.token Token address as IERC20
+   * @param {uint256} params.allocPoint Pool allocation point/share distributed to this pool from mining rewards
    * @returns {Promise<uint256>} pid added token pool index
    */
-  async add(token, allocPoint) {
-    return await this.__sendTx(this.getContract().methods.add(token, allocPoint));
+  async add({ token, allocPoint }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.add(token, allocPoint),
+      options,
+    );
   }
 
   /**
    * Update pool allocation point/share
    * @dev UPDATE | ALLOCATION POINT
-   * @param {uint256} Pool id
-   * @param {uint256} allocPoint Set allocation point/share for pool id
-   * @param {bool} withUpdate Update all pools and distribute mining reward for all
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {uint256} params.allocPoint Set allocation point/share for pool id
+   * @param {bool} params.withUpdate Update all pools and distribute mining reward for all
    * @returns {Promise<void>}
    */
-  async set(pid, allocPoint, withUpdate) {
-    return await this.__sendTx(this.getContract().methods.set(pid, allocPoint, withUpdate));
+  async set({ pid, allocPoint, withUpdate }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.set(pid, allocPoint, withUpdate),
+      options,
+    );
   }
 
   /**
    * Stake tokens on given pool id
-   * @param {uint256} pid Pool id
-   * @param {uint256} amount The token amount user wants to stake to the pool.
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {uint256} params.amount The token amount user wants to stake to the pool.
    * @returns {Promise<void>}
    */
-  async stake(pid, amount) {
+  async stake({ pid, amount }, options) {
     const amount2 = await this.fromBNToDecimals(amount, pid);
-    return await this.__sendTx(this.getContract().methods.stake(pid, amount2));
+    return await this.__sendTx(
+      this.getContract().methods.stake(pid, amount2),
+      options,
+    );
   }
 
   /**
    * User exit staking amount from main pool, require main pool only
-   * @param {uint256} pid Pool id
-   * @param {uint256} amount The token amount user wants to exit/unstake from the pool.
-   * @param {uint256} amountOutMinimum The min LP token amount expected to be received from exchange,
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {uint256} params.amount The token amount user wants to exit/unstake from the pool.
+   * @param {uint256} params.amountOutMinimum The min LP token amount expected to be received from exchange,
    * needed from outside for security reasons, using zero value in production is discouraged.
    * @returns {Promise<uint256>} net tokens amount sent to user address
    */
-  async exit(pid, amount, amountOutMinimum) {
+  async exit({ pid, amount, amountOutMinimum }, options) {
     const amount2 = await this.fromBNToDecimals(amount, pid);
-    return await this.__sendTx(this.getContract().methods.exit(pid, amount2, amountOutMinimum));
+    return await this.__sendTx(
+      this.getContract().methods.exit(pid, amount2, amountOutMinimum),
+      options,
+    );
   }
 
   /**
    * User exit staking amount from LOOP pool, require LOOP pool only
-   * @param {uint256} amount The token amount user wants to exit/unstake from the pool.
+   * @param {Object} params
+   * @param {uint256} params.amount The token amount user wants to exit/unstake from the pool.
    * @returns {Promise<uint256>} net tokens amount sent to user address
    */
-  async exitLP(amount) {
+  async exitLP({ amount }, options) {
     const amount2 = Numbers.fromBNToDecimals(amount, this.LPTokenContract().getDecimals());
-    return await this.__sendTx(this.getContract().methods.exit(amount2));
+    return await this.__sendTx(
+      this.getContract().methods.exit(amount2),
+      options,
+    );
   }
 
   /**
    * View pending LP token rewards for user
    * @dev VIEW | PENDING REWARD
-   * @param {uint256} pid Pool id of main pool
-   * @param {address} user User address to check pending rewards for
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id of main pool
+   * @param {address} params.user User address to check pending rewards for
    * @returns {Promise<uint256>} Pending LP token rewards for user
    */
-  async getUserReward(pid, user) {
+  async getUserReward({ pid, user }) {
     const res = await this.getContract().methods.getUserReward(pid, user).call();
     return await this.fromDecimalsToBN(res, pid);
   }
 
   /**
    * User collects his share of LP tokens reward
-   * @param {uint256} pid Pool id
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
    * @returns {Promise<uint256>} LP reward tokens amount sent to user address
    */
-  async collectRewards(pid) {
-    return await this.__sendTx(this.getContract().methods.collectRewards(pid));
+  async collectRewards({ pid }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.collectRewards(pid),
+      options,
+    );
   }
 
   // TODO: fix this fn, it always returns zero
   /**
-   * @param {uint256} pid
+   * @param {Object} params
+   * @param {uint256} params.pid
    * @returns {Promise<uint256>}
    */
-  async collectRewardsCall(pid) {
+  async collectRewardsCall({ pid }) {
     const res = await this.getContract().methods.collectRewards(pid).call();
     console.log('collectRewardsCall.bp-0: ', res);
     return await this.fromDecimalsToBN(res, pid);
@@ -222,10 +248,10 @@ export default class Loophole extends IContract {
    * @param {uint256} pid
    * @returns {Promise<uint256[]>}
    */
-  /* async collectRewardsAll() {
-    const res = await this.__sendTx(this.getContract().methods.collectRewardsAll());
-    return res;
-  } */
+  // async collectRewardsAll(options) {
+  //   const res = await this.__sendTx(this.getContract().methods.collectRewardsAll(), options);
+  //   return res;
+  // }
 
   /**
    * @param {uint256} pid
@@ -241,22 +267,26 @@ export default class Loophole extends IContract {
     return res;
   } */
 
-  // / Current total user stake in a given pool
-  // / @param pid Pool id
-  // / @param user The user address
-  // / @returns {Promise<uint256>} stake tokens amount
-  async currentStake(pid, user) {
+  /**
+   * Current total user stake in a given pool
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {address} params.user The user address
+   * @returns {Promise<uint256>} stake tokens amount
+   */
+  async currentStake({ pid, user }) {
     const res = await this.getContract().methods.currentStake(pid, user).call();
     return await this.fromDecimalsToBN(res, pid);
   }
 
   /**
    * Percentage of how much a user has earned so far from the other users exit, would be just a statistic
-   * @param {uint256} pid Pool id
-   * @param {address} user The user address
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {address} params.user The user address
    * @returns {Promise<uint256>} earnings percent as integer
    */
-  async earnings(pid, user) {
+  async earnings({ pid, user }) {
     const res = await this.getContract().methods.earnings(pid, user).call();
     return await this.fromDecimalsToBN(res, pid);
   }
@@ -264,11 +294,12 @@ export default class Loophole extends IContract {
   /**
    * Get blocks range given two block numbers, usually computes blocks elapsed since last mining reward block.
    * @dev RETURN | BLOCK RANGE SINCE LAST REWARD AS REWARD MULTIPLIER | INCLUDES START BLOCK
-   * @param {uint256} from block start
-   * @param {uint256} to block end
+   * @param {Object} params
+   * @param {uint256} params.from block start
+   * @param {uint256} params.to block end
    * @returns {Promise<uint256>} blocks count
    */
-  async getBlocksFromRange(from, to) {
+  async getBlocksFromRange({ from, to }) {
     const res = await this.getContract().methods.getBlocksFromRange(from, to).call();
     return BigNumber(res);
   }
@@ -278,29 +309,37 @@ export default class Loophole extends IContract {
    * @dev UPDATE | (ALL) REWARD VARIABLES | BEWARE: HIGH GAS POTENTIAL
    * @returns {Promise<void>}
    */
-  async massUpdatePools() {
-    return await this.__sendTx(this.getContract().methods.massUpdatePools());
+  async massUpdatePools(options) {
+    return await this.__sendTx(
+      this.getContract().methods.massUpdatePools(),
+      options,
+    );
   }
 
   /**
    * Update pool to trigger LP tokens reward since last reward mining block
    * @dev UPDATE | (ONE POOL) REWARD VARIABLES
-   * @param {uint256} pid Pool id
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
    * @returns {Promise<void>}
    */
-  async updatePool(pid) {
-    return await this.__sendTx(this.getContract().methods.updatePool(pid));
+  async updatePool({ pid }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.updatePool(pid),
+      options,
+    );
   }
 
   /**
    * Update pool to trigger LP tokens reward since last reward mining block, function call for results and no transaction
    * @dev UPDATE | (ONE POOL) REWARD VARIABLES
-   * @param {uint256} pid Pool id
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
    * @returns {Promise<uint256>} blocksElapsed Blocks elapsed since last reward block
    * @returns {Promise<uint256>} lpTokensReward Amount of LP tokens reward since last reward block
    * @returns {Promise<uint256>} accLPtokensPerShare Pool accumulated LP tokens per pool token (per share)
    */
-  async updatePoolCall(pid) {
+  async updatePoolCall({ pid }) {
     const res = await this.getContract().methods.updatePool(pid).call();
     // res.blocksElapsed, res.lpTokensReward, res.accLPtokensPerShare
     const decimals = this.LPTokenContract().getDecimals();
@@ -316,10 +355,11 @@ export default class Loophole extends IContract {
 
   /**
    * Get LP tokens reward for given pool id, only MAIN pool, LOOP pool reward will always be zero
-   * @param {uint256} pid Pool id
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
    * @returns {Promise<uint256>} tokensReward Tokens amount as reward based on last mining block
    */
-  async getPoolReward(pid) {
+  async getPoolReward({ pid }) {
     // LP tokens reward
     const res = await this.getContract().methods.getPoolReward(pid).call();
     const decimals = this.LPTokenContract().getDecimals();
@@ -329,10 +369,11 @@ export default class Loophole extends IContract {
 
   /**
    * Get pool token decimals given pool id
-   * @param {uint256} pid Pool id
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
    * @returns {Promise<uint256>} poolTokenDecimals
    */
-  async getPoolTokenDecimals(pid) {
+  async getPoolTokenDecimals({ pid }) {
     // TODO: cache decimals by pid for token address
     const res = await this.getContract().methods.getPool(pid).call();
     return await this.ETHUtils().decimals(res[0]); // token = res[0]
@@ -348,7 +389,7 @@ export default class Loophole extends IContract {
   async fromDecimalsToBN(amount, pid) {
     return Numbers.fromDecimalsToBN(
       amount,
-      await this.getPoolTokenDecimals(pid),
+      await this.getPoolTokenDecimals({ pid }),
     );
   }
 
@@ -362,7 +403,7 @@ export default class Loophole extends IContract {
   async fromBNToDecimals(amount, pid) {
     return Numbers.fromBNToDecimals(
       amount,
-      await this.getPoolTokenDecimals(pid),
+      await this.getPoolTokenDecimals({ pid }),
     );
   }
 
@@ -394,10 +435,11 @@ export default class Loophole extends IContract {
 
   /**
    * Get pool attributes
-   * @param {uint256} pid Pool id
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
    * @returns {Promise<Loophole~PoolInfo>}
    */
-  async getPool(pid) {
+  async getPool({ pid }) {
     const res = await this.getContract().methods.getPool(pid).call();
     const token = res[0];
     const decimals = await this.ETHUtils().decimals(token);
@@ -418,10 +460,11 @@ export default class Loophole extends IContract {
 
   /**
    * Get pool attributes, raw with no conversion.
-   * @param {uint256} pid
+   * @param {Object} params
+   * @param {uint256} params.pid
    * @returns {Promise<Loophole~PoolInfo>}
    */
-  async getPoolInfo(pid) {
+  async getPoolInfo({ pid }) {
     const res = await this.getContract().methods.getPoolInfo(pid).call();
     // TODO ???
     return res;
@@ -444,11 +487,12 @@ export default class Loophole extends IContract {
 
   /**
    * Get pool attributes as struct
-   * @param {uint256} pid Pool id
-   * @param {address} user User address
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {address} params.user User address
    * @returns {Promise<Loophole~UserInfo>}
    */
-  async getUserInfo(pid, user) {
+  async getUserInfo({ pid, user }) {
     const res = await this.getContract().methods.getUserInfo(pid, user).call();
     return {
       ...res,
@@ -461,22 +505,24 @@ export default class Loophole extends IContract {
 
   /**
    * Get total accumulated 'entry stake' so far for a given user address in a pool id
-   * @param {uint256} pid Pool id
-   * @param {address} user User address
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {address} params.user User address
    * @returns {Promise<uint256>} user entry stake amount in a given pool
    */
-  async getTotalEntryStakeUser(pid, user) {
+  async getTotalEntryStakeUser({ pid, user }) {
     const res = await this.getContract().methods.getTotalEntryStakeUser(pid, user).call();
     return await this.fromDecimalsToBN(res, pid);
   }
 
   /**
    * Get total accumulated 'unstake' so far for a given user address in a pool id
-   * @param {uint256} pid Pool id
-   * @param {address} user User address
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {address} params.user User address
    * @returns {Promise<uint256>} user unstake amount in a given pool
    */
-  async getTotalUnstakeUser(pid, user) {
+  async getTotalUnstakeUser({ pid, user }) {
     const res = await this.getContract().methods.getTotalUnstakeUser(pid, user).call();
     return await this.fromDecimalsToBN(res, pid);
   }
@@ -486,18 +532,19 @@ export default class Loophole extends IContract {
   // SOLUTION? maybe return only what is greather than zero?
   /**
    * Get 'entry stake adjusted' for a given user address in a pool id
-   * @param {uint256} pid Pool id
-   * @param {address} user User address
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {address} params.user User address
    * @returns {Promise<uint256>} user entry stake adjusted amount in given pool
    */
-  async getCurrentEntryStakeUser(pid, user) {
+  async getCurrentEntryStakeUser({ pid, user }) {
     // const res = await this.getContract().methods.getCurrentEntryStakeUser(pid, user).call();
     // return await this.fromDecimalsToBN(res, pid);
     let selExitPenalty;
     if (this.isLoopPoolId(pid)) {
       selExitPenalty = await this.exitPenaltyLP();
     } else selExitPenalty = await this.exitPenalty();
-    const userInfo = await this.getUserInfo(pid, user);
+    const userInfo = await this.getUserInfo({ pid, user });
     const totalGrossUnstaked = userInfo.unstake.div(1 - selExitPenalty);
     return userInfo.entryStake.minus(totalGrossUnstaked);
   }
@@ -513,11 +560,12 @@ export default class Loophole extends IContract {
 
   /**
    * Get 'entry stake adjusted' for a given user address in a pool id
-   * @param {uint256} pid Pool id
-   * @param {address} user User address
+   * @param {Object} params
+   * @param {uint256} params.pid Pool id
+   * @param {address} params.user User address
    * @returns {Promise<uint256>} user entry stake adjusted amount in given pool
    */
-  async getEntryStakeAdjusted(pid, user) {
+  async getEntryStakeAdjusted({ pid, user }) {
     const res = await this.getContract().methods.getEntryStakeAdjusted(pid, user).call();
     return await this.fromDecimalsToBN(res, pid);
   }
@@ -543,8 +591,6 @@ export default class Loophole extends IContract {
         contractAddress: this.params.LPTokenAddress,
       });
     }
-    /* Assert Token Contract */
-    await this.params.LPTokenContract.login();
     await this.params.LPTokenContract.__assert();
 
     if (!this.params.ETHUtils) {
@@ -553,8 +599,6 @@ export default class Loophole extends IContract {
         contractAddress: this.params.ethUtilsAddress,
       });
     }
-    /* Assert Token Contract */
-    await this.params.ETHUtils.login();
     await this.params.ETHUtils.__assert();
   };
 

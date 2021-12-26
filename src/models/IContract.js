@@ -41,7 +41,7 @@ class IContract {
 
     this.params = {
       abi,
-      contract: this.web3Connection.web3 ? new Contract(this.web3Connection.web3, abi, contractAddress) : null,
+      contract: this.web3Connection.web3 ? new Contract(this.web3Connection, abi, contractAddress) : null,
       contractAddress,
       gasFactor,
       tokenAddress,

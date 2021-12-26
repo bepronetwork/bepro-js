@@ -22,34 +22,38 @@ export default class TickMathTest extends IContract {
   }
 
   /**
-   * @param {int24} tick
+   * @param {Object} params
+   * @param {int24} params.tick
    * @returns {Promise<uint160>}
    */
-  async getSqrtRatioAtTick(tick) {
+  async getSqrtRatioAtTick({ tick }) {
     return BigNumber(await this.getContract().methods.getSqrtRatioAtTick(tick).call());
   }
 
   /**
-   * @param {int24} tick
+   * @param {Object} params
+   * @param {int24} params.tick
    * @returns {Promise<uint256>}
    */
-  async getGasCostOfGetSqrtRatioAtTick(tick) {
+  async getGasCostOfGetSqrtRatioAtTick({ tick }) {
     return BigNumber(await this.getContract().methods.getGasCostOfGetSqrtRatioAtTick(tick).call());
   }
 
   /**
-   * @param {uint160} sqrtPriceX96
+   * @param {Object} params
+   * @param {uint160} params.sqrtPriceX96
    * @returns {Promise<int24>}
    */
-  async getTickAtSqrtRatio(sqrtPriceX96) {
+  async getTickAtSqrtRatio({ sqrtPriceX96 }) {
     return BigNumber(await this.getContract().methods.getTickAtSqrtRatio(sqrtPriceX96).call());
   }
 
   /**
-   * @param {uint160} sqrtPriceX96
+   * @param {Object} params
+   * @param {uint160} params.sqrtPriceX96
    * @returns {Promise<uint256>}
    */
-  async getGasCostOfGetTickAtSqrtRatio(sqrtPriceX96) {
+  async getGasCostOfGetTickAtSqrtRatio({ sqrtPriceX96 }) {
     return BigNumber(await this.getContract().methods.getGasCostOfGetTickAtSqrtRatio(sqrtPriceX96).call());
   }
 

@@ -38,35 +38,51 @@ export default class SwapRouter extends IContract {
   }
 
   /**
-   * @param {tuple} params
+   * @param {Object} params
+   * @param {tuple} params.tuple
    * @returns {Promise<uint256>} amountOut
    */
-  async exactInput(params) {
-    return await this.__sendTx(this.getContract().methods.exactInput(params));
+  async exactInput({ tuple }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.exactInput(tuple),
+      options,
+    );
   }
 
   /**
-   * @param {tuple} params
+   * @param {Object} params
+   * @param {tuple} params.tuple
    * @returns {Promise<uint256>} amountOut
    */
-  async exactInputSingle(params) {
-    return await this.__sendTx(this.getContract().methods.exactInputSingle(params));
+  async exactInputSingle({ tuple }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.exactInputSingle(tuple),
+      options,
+    );
   }
 
   /**
-   * @param {tuple} params
+   * @param {Object} params
+   * @param {tuple} params.tuple
    * @returns {Promise<uint256>} amountIn
    */
-  async exactOutput(params) {
-    return await this.__sendTx(this.getContract().methods.exactOutput(params));
+  async exactOutput({ tuple }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.exactOutput(tuple),
+      options,
+    );
   }
 
   /**
-   * @param {tuple} params
+   * @param {Object} params
+   * @param {tuple} params.tuple
    * @returns {Promise<uint256>} amountIn
    */
-  async exactOutputSingle(params) {
-    return await this.__sendTx(this.getContract().methods.exactOutputSingle(params));
+  async exactOutputSingle({ tuple }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.exactOutputSingle(tuple),
+      options,
+    );
   }
 
   /**
@@ -81,119 +97,173 @@ export default class SwapRouter extends IContract {
    * @param {bytes[]} data
    * @returns {Promise<bytes[]>} results
    */
-  async multicall(data) {
-    return await this.__sendTx(this.getContract().methods.multicall(data));
+  async multicall({ data }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.multicall(data),
+      options,
+    );
   }
 
   /**
    * @returns {Promise<void>}
    */
-  async refundETH() {
-    return await this.__sendTx(this.getContract().methods.refundETH());
+  async refundETH(options) {
+    return await this.__sendTx(
+      this.getContract().methods.refundETH(),
+      options,
+    );
   }
 
   /**
-   * @param {address} token
-   * @param {uint256} value
-   * @param {uint256} deadline
-   * @param {uint8} v
-   * @param {bytes32} r
-   * @param {bytes32} s
+   * @param {Object} params
+   * @param {address} params.token
+   * @param {uint256} params.value
+   * @param {uint256} params.deadline
+   * @param {uint8} params.v
+   * @param {bytes32} params.r
+   * @param {bytes32} params.s
    * @returns {Promise<void>}
    */
-  async selfPermit(token, value, deadline, v, r, s) {
-    return await this.__sendTx(this.getContract().methods.selfPermit(token, value, deadline, v, r, s));
+  async selfPermit({
+    token, value, deadline, v, r, s,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.selfPermit(token, value, deadline, v, r, s),
+      options,
+    );
   }
 
   /**
-   * @param {address} token
-   * @param {uint256} nonce
-   * @param {uint256} expiry
-   * @param {uint8} v
-   * @param {bytes32} r
-   * @param {bytes32} s
+   * @param {Object} params
+   * @param {address} params.token
+   * @param {uint256} params.nonce
+   * @param {uint256} params.expiry
+   * @param {uint8} params.v
+   * @param {bytes32} params.r
+   * @param {bytes32} params.s
    * @returns {Promise<void>}
    */
-  async selfPermitAllowed(token, nonce, expiry, v, r, s) {
-    return await this.__sendTx(this.getContract().methods.selfPermitAllowed(token, nonce, expiry, v, r, s));
+  async selfPermitAllowed({
+    token, nonce, expiry, v, r, s,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.selfPermitAllowed(token, nonce, expiry, v, r, s),
+      options,
+    );
   }
 
   /**
-   * @param {address} token
-   * @param {uint256} nonce
-   * @param {uint256} expiry
-   * @param {uint8} v
-   * @param {bytes32} r
-   * @param {bytes32} s
+   * @param {Object} params
+   * @param {address} params.token
+   * @param {uint256} params.nonce
+   * @param {uint256} params.expiry
+   * @param {uint8} params.v
+   * @param {bytes32} params.r
+   * @param {bytes32} params.s
    * @returns {Promise<void>}
    */
-  async selfPermitAllowedIfNecessary(token, nonce, expiry, v, r, s) {
-    return await this.__sendTx(this.getContract().methods.selfPermitAllowedIfNecessary(token, nonce, expiry, v, r, s));
+  async selfPermitAllowedIfNecessary({
+    token, nonce, expiry, v, r, s,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.selfPermitAllowedIfNecessary(token, nonce, expiry, v, r, s),
+      options,
+    );
   }
 
   /**
-   * @param {address} token
-   * @param {uint256} value
-   * @param {uint256} deadline
-   * @param {uint8} v
-   * @param {bytes32} r
-   * @param {bytes32} s
+   * @param {Object} params
+   * @param {address} params.token
+   * @param {uint256} params.value
+   * @param {uint256} params.deadline
+   * @param {uint8} params.v
+   * @param {bytes32} params.r
+   * @param {bytes32} params.s
    * @returns {Promise<void>}
    */
-  async selfPermitIfNecessary(token, value, deadline, v, r, s) {
-    return await this.__sendTx(this.getContract().methods.selfPermitIfNecessary(token, value, deadline, v, r, s));
+  async selfPermitIfNecessary({
+    token, value, deadline, v, r, s,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.selfPermitIfNecessary(token, value, deadline, v, r, s),
+      options,
+    );
   }
 
   /**
-   * @param {address} token
-   * @param {uint256} amountMinimum
-   * @param {address} recipient
+   * @param {Object} params
+   * @param {address} params.token
+   * @param {uint256} params.amountMinimum
+   * @param {address} params.recipient
    * @returns {Promise<void>}
    */
-  async sweepToken(token, amountMinimum, recipient) {
-    return await this.__sendTx(this.getContract().methods.sweepToken(token, amountMinimum, recipient));
+  async sweepToken({ token, amountMinimum, recipient }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.sweepToken(token, amountMinimum, recipient),
+      options,
+    );
   }
 
   /**
-   * @param {address} token
-   * @param {uint256} amountMinimum
-   * @param {address} recipient
-   * @param {uint256} feeBips
-   * @param {address} feeRecipient
+   * @param {Object} params
+   * @param {address} params.token
+   * @param {uint256} params.amountMinimum
+   * @param {address} params.recipient
+   * @param {uint256} params.feeBips
+   * @param {address} params.feeRecipient
    * @returns {Promise<void>}
    */
-  async sweepTokenWithFee(token, amountMinimum, recipient, feeBips, feeRecipient) {
-    return await this.__sendTx(this.getContract().methods.sweepTokenWithFee(token, amountMinimum, recipient, feeBips, feeRecipient));
+  async sweepTokenWithFee({
+    token, amountMinimum, recipient, feeBips, feeRecipient,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.sweepTokenWithFee(token, amountMinimum, recipient, feeBips, feeRecipient),
+      options,
+    );
   }
 
   /**
-   * @param {int256} amount0Delta
-   * @param {int256} amount1Delta
-   * @param {bytes} _data
+   * @param {Object} params
+   * @param {int256} params.amount0Delta
+   * @param {int256} params.amount1Delta
+   * @param {bytes} params._data
    * @returns {Promise<void>}
    */
-  // async uniswapV3SwapCallback(amount0Delta, amount1Delta, _data) {
-  //  return await this.__sendTx(this.getContract().methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, _data))
+  // async uniswapV3SwapCallback({ amount0Delta, amount1Delta, _data }, options) {
+  //  return await this.__sendTx(
+  //    this.getContract().methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, _data),
+  //    options,
+  //  );
   // };
 
   /**
-   * @param {uint256} amountMinimum
-   * @param {address} recipient
+   * @param {Object} params
+   * @param {uint256} params.amountMinimum
+   * @param {address} params.recipient
    * @returns {Promise<void>}
    */
-  async unwrapWETH9(amountMinimum, recipient) {
-    return await this.__sendTx(this.getContract().methods.unwrapWETH9(amountMinimum, recipient));
+  async unwrapWETH9({ amountMinimum, recipient }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.unwrapWETH9(amountMinimum, recipient),
+      options,
+    );
   }
 
   /**
-   * @param {uint256} amountMinimum
-   * @param {address} recipient
-   * @param {uint256} feeBips
-   * @param {address} feeRecipient
+   * @param {Object} params
+   * @param {uint256} params.amountMinimum
+   * @param {address} params.recipient
+   * @param {uint256} params.feeBips
+   * @param {address} params.feeRecipient
    * @returns {Promise<void>}
    */
-  async unwrapWETH9WithFee(amountMinimum, recipient, feeBips, feeRecipient) {
-    return await this.__sendTx(this.getContract().methods.unwrapWETH9WithFee(amountMinimum, recipient, feeBips, feeRecipient));
+  async unwrapWETH9WithFee({
+    amountMinimum, recipient, feeBips, feeRecipient,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.unwrapWETH9WithFee(amountMinimum, recipient, feeBips, feeRecipient),
+      options,
+    );
   }
 
   /**

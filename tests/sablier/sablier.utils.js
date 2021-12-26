@@ -145,7 +145,7 @@ const runBeforeEach = async () => {
   // console.log('---cToken.bp2');
   await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SALARY.toString(10) });
   // console.log('---cToken.bp3.devConstants.STANDARD_SALARY: ', devConstants.STANDARD_SALARY.toString(10));
-  await _this.cToken.mint(STANDARD_SALARY.toString(10)); // devConstants.STANDARD_SALARY.toString(10));
+  await _this.cToken.mint({ mintAmount: STANDARD_SALARY.toString(10) }); // devConstants.STANDARD_SALARY.toString(10));
   // console.log('---cToken.bp4');
 
   // this.nonStandardERC20Token = await NonStandardERC20.new(opts);

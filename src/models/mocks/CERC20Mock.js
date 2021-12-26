@@ -63,10 +63,11 @@ class CERC20Mock extends ERC20Contract {
   /**
      * Get the underlying balance of the `owner`
      * @dev This also accrues interest in a transaction
-     * @param {address} The address of the account to query
+     * @param {Object} params
+     * @param {address} params.owner The address of the account to query
      * @returns {Promise<uint256>} The amount of underlying owned by `owner`
      */
-  async balanceOfUnderlying(owner) {
+  async balanceOfUnderlying({ owner }) {
     const balance = await this.getContract().methods.balanceOfUnderlying(owner).call();
     return Numbers.fromDecimalsToBN(
       balance,
@@ -91,48 +92,60 @@ class CERC20Mock extends ERC20Contract {
   /**
      * Sender supplies assets into the market and receives cTokens in exchange
      * Accrues interest whether or not the operation succeeds, unless reverted
-     * @param {uint256} The amount of the underlying asset to supply
+     * @param {Object} params
+     * @param {uint256} params.mintAmount The amount of the underlying asset to supply
      * @returns {Promise<bool>} true=success, otherwise a failure
      */
-  async mint(mintAmount) {
+  async mint({ mintAmount }, options) {
     const decimals = this.getERC20Contract().getDecimals();
     const mintAmountWithDecimals = Numbers.fromBNToDecimals(
       mintAmount,
       decimals,
     );
-    return await this.__sendTx(this.getContract().methods.mint(mintAmountWithDecimals));
+    return await this.__sendTx(
+      this.getContract().methods.mint(mintAmountWithDecimals),
+      options,
+    );
     // return await this.__sendTx(this.getContract().methods.mint(mintAmount));
   }
 
   /**
      * Sender supplies underlying to the money market
      * @dev This is just a mock
-     * @param {uint256} supplyAmount The amount of underlying to supply
+     * @param {Object} params
+     * @param {uint256} params.supplyAmount The amount of underlying to supply
      * @returns {Promise<bool>} true=success, otherwise a failure
      */
-  async supplyUnderlying(supplyAmount) {
+  async supplyUnderlying({ supplyAmount }, options) {
     const decimals = this.getERC20Contract().getDecimals();
     const supplyAmountWithDecimals = Numbers.fromBNToDecimals(
       supplyAmount,
       decimals,
     );
-    return await this.__sendTx(this.getContract().methods.supplyUnderlying(supplyAmountWithDecimals));
+    return await this.__sendTx(
+      this.getContract().methods.supplyUnderlying(supplyAmountWithDecimals),
+      options,
+    );
     // return await this.__sendTx(this.getContract().methods.supplyUnderlying(supplyAmount));;
   }
 
   /**
      * Sender redeems cTokens in exchange for a specified amount of underlying asset
      * @dev This is just a mock
-     * @param {uint256} redeemAmount The amount of underlying to redeem
+     * @param {Object} params
+     * @param {uint256} params.redeemAmount The amount of underlying to redeem
      * @returns {Promise<bool>} true=success, otherwise a failure
      */
-  async redeemUnderlying(redeemAmount) {
+  async redeemUnderlying({ redeemAmount }, options) {
     const decimals = this.getERC20Contract().getDecimals();
     const redeemAmountWithDecimals = Numbers.fromBNToDecimals(
       redeemAmount,
       decimals,
     );
-    return await this.__sendTx(this.getContract().methods.redeemUnderlying(redeemAmountWithDecimals));
+    return await this.__sendTx(
+      this.getContract().methods.redeemUnderlying(redeemAmountWithDecimals),
+      options,
+    );
     // return await this.__sendTx(this.getContract().methods.redeemUnderlying(redeemAmount));
   }
 
@@ -158,7 +171,6 @@ class CERC20Mock extends ERC20Contract {
       });
     }
     /* Assert Token Contract */
-    await this.params.ERC20Contract.login();
     await this.params.ERC20Contract.__assert();
   };
 

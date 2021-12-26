@@ -213,7 +213,7 @@ context('sablier.CancelCompoundingStream.context', async () => {
       streamId = Number(result.events.CreateStream.returnValues.streamId);
 	    // console.log('---CancelCompoundingStream.streamId.bp0: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); // , this.opts);
-      await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
+      await _this.cToken.supplyUnderlying({ supplytAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
     });
 
     describe('when the sablier fee is not zero and is not 100', () => {
@@ -258,7 +258,7 @@ context('sablier.CancelCompoundingStream.context', async () => {
       streamId = Number(result.events.CreateStream.returnValues.streamId);
 	    // console.log('---CancelCompoundingStream.streamId.bp1: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); // , this.opts);
-      await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
+      await _this.cToken.supplyUnderlying({ supplytAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
     });
 
     describe('when the sablier fee is not zero and is not 100', () => {
@@ -303,7 +303,7 @@ context('sablier.CancelCompoundingStream.context', async () => {
       streamId = Number(result.events.CreateStream.returnValues.streamId);
 	    // console.log('---CancelCompoundingStream.streamId.bp2: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); // , this.opts);
-      await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
+      await _this.cToken.supplyUnderlying({ supplytAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
     });
 
     describe('when the sablier fee is not zero and is not 100', () => {

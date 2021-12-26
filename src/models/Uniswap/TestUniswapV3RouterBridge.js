@@ -34,39 +34,39 @@ export default class TestUniswapV3RouterBridge extends IContract {
   }
 
   /**
-   * @param {address} tokenIn
-   * @param {address} tokenOut
-   * @param {uint24} poolFee
-   * @param {uint256} amountIn
-   * @param {uint256} amountOutMinimum
+   * @param {Object} params
+   * @param {address} params.tokenIn
+   * @param {address} params.tokenOut
+   * @param {uint24} params.poolFee
+   * @param {uint256} params.amountIn
+   * @param {uint256} params.amountOutMinimum
    * @returns {Promise<uint256>} amountOut
    */
-  async swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
+  async swapExactInputSingleEx({
+    tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum,
+  }, options) {
     return await this.__sendTx(
       this.getContract().methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum),
+      options,
     );
-  }
-
-  async swapExactInputSingleExCall(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
-    return await this.getContract().methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum).call();
   }
 
   /**
-   * @param {address} tokenIn
-   * @param {address} tokenOut
-   * @param {uint24} poolFee
-   * @param {uint256} amountOut
-   * @param {uint256} amountInMaximum
+   * @param {Object} params
+   * @param {address} params.tokenIn
+   * @param {address} params.tokenOut
+   * @param {uint24} params.poolFee
+   * @param {uint256} params.amountOut
+   * @param {uint256} params.amountInMaximum
    * @returns {Promise<uint256>} amountIn
    */
-  async swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
+  async swapExactOutputSingleEx({
+    tokenIn, tokenOut, poolFee, amountOut, amountInMaximum,
+  }, options) {
     return await this.__sendTx(
       this.getContract().methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum),
+      options,
     );
-  }
-
-  async swapExactOutputSingleExCall(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
-    return await this.getContract().methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum).call();
   }
 
   /**

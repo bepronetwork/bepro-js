@@ -87,7 +87,7 @@ context('sablier.TakeEarnings.context', async () => {
 		      streamId = Number(result.events.CreateStream.returnValues.streamId);
 		      // console.log('---TakeEarnings.result.streamId:', streamId);
           await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) });
-          await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
+          await _this.cToken.supplyUnderlying({ supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
         });
 
 		    describe('when the amount is not zero', () => {

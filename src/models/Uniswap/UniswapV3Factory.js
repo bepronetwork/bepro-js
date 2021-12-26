@@ -13,39 +13,49 @@ export default class UniswapV3Factory extends IContract {
   }
 
   /**
-   * @param {address} tokenA
-   * @param {address} tokenB
-   * @param {uint24} fee
+   * @param {Object} params
+   * @param {address} params.tokenA
+   * @param {address} params.tokenB
+   * @param {uint24} params.fee
    * @returns {Promise<address>} pool
    */
-  async createPool(tokenA, tokenB, fee) {
-    return await this.__sendTx(this.getContract().methods.createPool(tokenA, tokenB, fee));
+  async createPool({ tokenA, tokenB, fee }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.createPool(tokenA, tokenB, fee),
+      options,
+    );
   }
 
   /**
-   * @param {uint24} fee
-   * @param {int24} tickSpacing
+   * @param {Object} params
+   * @param {uint24} params.fee
+   * @param {int24} params.tickSpacing
    * @returns {Promise<void>}
    */
-  async enableFeeAmount(fee, tickSpacing) {
-    return await this.__sendTx(this.getContract().methods.enableFeeAmount(fee, tickSpacing));
+  async enableFeeAmount({ fee, tickSpacing }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.enableFeeAmount(fee, tickSpacing),
+      options,
+    );
   }
 
   /**
-   * @param {uint24}
+   * @param {Object} params
+   * @param {uint24} params.fee
    * @returns {Promise<int24>}
    */
-  async feeAmountTickSpacing(fee) {
+  async feeAmountTickSpacing({ fee }) {
     return await this.getContract().methods.feeAmountTickSpacing(fee).call();
   }
 
   /**
-   * @param {address} tokenA
-   * @param {address} tokenB
-   * @param {uint24} fee
+   * @param {Object} params
+   * @param {address} params.tokenA
+   * @param {address} params.tokenB
+   * @param {uint24} params.fee
    * @returns {Promise<address>}
    */
-  async getPool(tokenA, tokenB, fee) {
+  async getPool({ tokenA, tokenB, fee }) {
     return await this.getContract().methods.getPool(tokenA, tokenB, fee).call();
   }
 
@@ -79,10 +89,14 @@ export default class UniswapV3Factory extends IContract {
   }
 
   /**
-   * @param {address} _owner
+   * @param {Object} params
+   * @param {address} params.owner
    * @returns {Promise<void>}
    */
-  async setOwner(_owner) {
-    return await this.__sendTx(this.getContract().methods.setOwner(_owner));
+  async setOwner({ owner }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.setOwner(owner),
+      options,
+    );
   }
 }

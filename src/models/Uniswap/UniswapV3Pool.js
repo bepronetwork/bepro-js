@@ -18,13 +18,17 @@ export default class UniswapV3Pool extends IContract {
    */
 
   /**
-   * @param {int24} tickLower
-   * @param {int24} tickUpper
-   * @param {uint128} amount
+   * @param {Object} params
+   * @param {int24} params.tickLower
+   * @param {int24} params.tickUpper
+   * @param {uint128} params.amount
    * @returns {Promise<UniswapV3Pool~burn>}
    */
-  async burn(tickLower, tickUpper, amount) {
-    const res = await this.__sendTx(this.getContract().methods.burn(tickLower, tickUpper, amount));
+  async burn({ tickLower, tickUpper, amount }, options) {
+    const res = await this.__sendTx(
+      this.getContract().methods.burn(tickLower, tickUpper, amount),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -37,15 +41,21 @@ export default class UniswapV3Pool extends IContract {
    */
 
   /**
-   * @param {address} recipient
-   * @param {int24} tickLower
-   * @param {int24} tickUpper
-   * @param {uint128} amount0Requested
-   * @param {uint128} amount1Requested
+   * @param {Object} params
+   * @param {address} params.recipient
+   * @param {int24} params.tickLower
+   * @param {int24} params.tickUpper
+   * @param {uint128} params.amount0Requested
+   * @param {uint128} params.amount1Requested
    * @returns {Promise<UniswapV3Pool~collect>}
    */
-  async collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested) {
-    const res = await this.__sendTx(this.getContract().methods.collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested));
+  async collect({
+    recipient, tickLower, tickUpper, amount0Requested, amount1Requested,
+  }, options) {
+    const res = await this.__sendTx(
+      this.getContract().methods.collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -58,13 +68,17 @@ export default class UniswapV3Pool extends IContract {
    */
 
   /**
-   * @param {address} recipient
-   * @param {uint128} amount0Requested
-   * @param {uint128} amount1Requested
+   * @param {Object} params
+   * @param {address} params.recipient
+   * @param {uint128} params.amount0Requested
+   * @param {uint128} params.amount1Requested
    * @returns {Promise<UniswapV3Pool~collectProtocol>}
    */
-  async collectProtocol(recipient, amount0Requested, amount1Requested) {
-    const res = await this.__sendTx(this.getContract().methods.collectProtocol(recipient, amount0Requested, amount1Requested));
+  async collectProtocol({ recipient, amount0Requested, amount1Requested }, options) {
+    const res = await this.__sendTx(
+      this.getContract().methods.collectProtocol(recipient, amount0Requested, amount1Requested),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -100,30 +114,44 @@ export default class UniswapV3Pool extends IContract {
   }
 
   /**
-   * @param {address} recipient
-   * @param {uint256} amount0
-   * @param {uint256} amount1
-   * @param {bytes} data
+   * @param {Object} params
+   * @param {address} params.recipient
+   * @param {uint256} params.amount0
+   * @param {uint256} params.amount1
+   * @param {bytes} params.data
    * @returns {Promise<void>}
    */
-  async flash(recipient, amount0, amount1, data) {
-    return await this.__sendTx(this.getContract().methods.flash(recipient, amount0, amount1, data));
+  async flash({
+    recipient, amount0, amount1, data,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.flash(recipient, amount0, amount1, data),
+      options,
+    );
   }
 
   /**
-   * @param {uint16} observationCardinalityNext
+   * @param {Object} params
+   * @param {uint16} params.observationCardinalityNext
    * @returns {Promise<void>}
    */
-  async increaseObservationCardinalityNext(observationCardinalityNext) {
-    return await this.__sendTx(this.getContract().methods.increaseObservationCardinalityNext(observationCardinalityNext));
+  async increaseObservationCardinalityNext({ observationCardinalityNext }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.increaseObservationCardinalityNext(observationCardinalityNext),
+      options,
+    );
   }
 
   /**
-   * @param {uint160} sqrtPriceX96
+   * @param {Object} params
+   * @param {uint160} params.sqrtPriceX96
    * @returns {Promise<void>}
    */
-  async initialize(sqrtPriceX96) {
-    return await this.__sendTx(this.getContract().methods.initialize(sqrtPriceX96));
+  async initialize({ sqrtPriceX96 }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.initialize(sqrtPriceX96),
+      options,
+    );
   }
 
   /**
@@ -146,15 +174,21 @@ export default class UniswapV3Pool extends IContract {
    */
 
   /**
-   * @param {address} recipient
-   * @param {int24} tickLower
-   * @param {int24} tickUpper
-   * @param {uint128} amount
-   * @param {bytes} data
+   * @param {Object} params
+   * @param {address} params.recipient
+   * @param {int24} params.tickLower
+   * @param {int24} params.tickUpper
+   * @param {uint128} params.amount
+   * @param {bytes} params.data
    * @returns {Promise<UniswapV3Pool~mint>}
    */
-  async mint(recipient, tickLower, tickUpper, amount, data) {
-    const res = await this.__sendTx(this.getContract().methods.mint(recipient, tickLower, tickUpper, amount, data));
+  async mint({
+    recipient, tickLower, tickUpper, amount, data,
+  }, options) {
+    const res = await this.__sendTx(
+      this.getContract().methods.mint(recipient, tickLower, tickUpper, amount, data),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -172,9 +206,9 @@ export default class UniswapV3Pool extends IContract {
    * @param {uint256}
    * @returns {Promise<UniswapV3Pool~observations>}
    */
-  /* async observations() {
-      return await this.getContract().methods.observations().call();
-    }; */
+  // async observations() {
+  //   return await this.getContract().methods.observations().call();
+  // };
 
   /** @typedef {Object} UniswapV3Pool~observeType
    * @property {int56[]} tickCumulatives
@@ -182,12 +216,16 @@ export default class UniswapV3Pool extends IContract {
    */
 
   /**
-   * @param {uint32[]} secondsAgos
+   * @param {Object} params
+   * @param {uint32[]} params.secondsAgos
    * @returns {Promise<UniswapV3Pool~observe>}
    */
-  /* async observe(secondsAgos) {
-      return await this.__sendTx(this.getContract().methods.observe(secondsAgos));
-    }; */
+  async observe({ secondsAgos }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.observe(secondsAgos),
+      options,
+    );
+  }
 
   /** @typedef {Object} UniswapV3Pool~positionsType
    * @property {uint128} liquidity
@@ -201,9 +239,9 @@ export default class UniswapV3Pool extends IContract {
    * @param {bytes32}
    * @returns {Promise<UniswapV3Pool~positions>}
    */
-  /* async positions() {
-      return await this.getContract().methods.positions().call();
-    }; */
+  // async positions() {
+  //   return await this.getContract().methods.positions().call();
+  // };
 
   /** @typedef {Object} UniswapV3Pool~protocolFeesType
    * @property {uint128} token0
@@ -222,12 +260,16 @@ export default class UniswapV3Pool extends IContract {
   }
 
   /**
-   * @param {uint8} feeProtocol0
-   * @param {uint8} feeProtocol1
+   * @param {Object} params
+   * @param {uint8} params.feeProtocol0
+   * @param {uint8} params.feeProtocol1
    * @returns {Promise<void>}
    */
-  async setFeeProtocol(feeProtocol0, feeProtocol1) {
-    return await this.__sendTx(this.getContract().methods.setFeeProtocol(feeProtocol0, feeProtocol1));
+  async setFeeProtocol({ feeProtocol0, feeProtocol1 }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.setFeeProtocol(feeProtocol0, feeProtocol1),
+      options,
+    );
   }
 
   /** @typedef {Object} UniswapV3Pool~slot0Type
@@ -263,12 +305,16 @@ export default class UniswapV3Pool extends IContract {
    */
 
   /**
-   * @param {int24} tickLower
-   * @param {int24} tickUpper
+   * @param {Object} params
+   * @param {int24} params.tickLower
+   * @param {int24} params.tickUpper
    * @returns {Promise<UniswapV3Pool~snapshotCumulativesInside>}
    */
-  async snapshotCumulativesInside(tickLower, tickUpper) {
-    const res = await this.__sendTx(this.getContract().methods.snapshotCumulativesInside(tickLower, tickUpper));
+  async snapshotCumulativesInside({ tickLower, tickUpper }, options) {
+    const res = await this.__sendTx(
+      this.getContract().methods.snapshotCumulativesInside(tickLower, tickUpper),
+      options,
+    );
     return {
       tickCumulativeInside: res[0],
       secondsPerLiquidityInsideX128: res[1],
@@ -282,15 +328,21 @@ export default class UniswapV3Pool extends IContract {
    */
 
   /**
-   * @param {address} recipient
-   * @param {bool} zeroForOne
-   * @param {int256} amountSpecified
-   * @param {uint160} sqrtPriceLimitX96
-   * @param {bytes} data
+   * @param {Object} params
+   * @param {address} params.recipient
+   * @param {bool} params.zeroForOne
+   * @param {int256} params.amountSpecified
+   * @param {uint160} params.sqrtPriceLimitX96
+   * @param {bytes} params.data
    * @returns {Promise<UniswapV3Pool~swap>}
    */
-  async swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data) {
-    const res = await this.__sendTx(this.getContract().methods.swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data));
+  async swap({
+    recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data,
+  }, options) {
+    const res = await this.__sendTx(
+      this.getContract().methods.swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -301,9 +353,9 @@ export default class UniswapV3Pool extends IContract {
    * @param {int16}
    * @returns {Promise<uint256>}
    */
-  /* async tickBitmap() {
-      return await this.getContract().methods.tickBitmap().call();
-    }; */
+  // async tickBitmap() {
+  //   return await this.getContract().methods.tickBitmap().call();
+  // };
 
   /**
    * @returns {Promise<int24>}
