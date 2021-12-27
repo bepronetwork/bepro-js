@@ -66,5 +66,5 @@ describe(`ERC20`, () => {
 
   after(() => {
     console.table({erc20ContractAddress});
-  })
+  });
 });

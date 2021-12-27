@@ -23,24 +23,25 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     super(web3Connection, NetworkAbi.abi as AbiItem[], contractAddress);
   }
 
-  async getTransactionTokenAddress(): Promise<string> {
+  async getTransactionTokenAddress() {
     return this.callTx(await this.contract.methods.transactionToken());
   }
 
-  async getSettlerTokenAddress(): Promise<string> {
+  async getSettlerTokenAddress() {
     return this.callTx(await this.contract.methods.settlerToken());
   }
 
-  async getIssuesByAddress(address: string): Promise<number[]> {
-    return this.callTx(await this.contract.methods.getIssuesByAddress(address));
+  async getIssuesByAddress(address: string) {
+    const ids = await this.callTx(await this.contract.methods.getIssuesByAddress(address));
+    return ids.map(id => +id);
   }
 
   async getAmountOfIssuesOpened(): Promise<number> {
-    return this.callTx(await this.contract.methods.incrementIssueID());
+    return +(await this.callTx(await this.contract.methods.incrementIssueID()));
   }
 
-  async getAmountOfIssuesClosed(): Promise<number> {
-    return this.callTx(await this.contract.methods.closedIdsCount());
+  async getAmountOfIssuesClosed() {
+    return +(await this.callTx(await this.contract.methods.closedIdsCount()));
   }
 
   async getOraclesByAddress(address: string) {
@@ -72,8 +73,8 @@ export class Network extends Model<NetworkMethods> implements Deployable {
   //   return parseInt(await this.sendTx(this.contract.methods.percentageNeededForApprove(), true), 10);
   // }
 
-  async percentageNeededForDispute(): Promise<number> {
-    return this.callTx(this.contract.methods.percentageNeededForDispute());
+  async percentageNeededForDispute() {
+    return +(await this.callTx(this.contract.methods.percentageNeededForDispute()));
   }
 
   // Method does not exist
@@ -82,15 +83,15 @@ export class Network extends Model<NetworkMethods> implements Deployable {
   // }
 
   async mergeCreatorFeeShare() {
-    return this.callTx(this.contract.methods.mergeCreatorFeeShare());
+    return +(await this.callTx(this.contract.methods.mergeCreatorFeeShare()));
   }
 
   async disputableTime() {
-    return this.callTx(this.contract.methods.disputableTime());
+    return +(await this.callTx(this.contract.methods.disputableTime()));
   }
 
   async redeemTime() {
-    return this.callTx(this.contract.methods.redeemTime())
+    return +(await this.callTx(this.contract.methods.redeemTime()))
   }
 
   async getTokensStaked(): Promise<number> {
@@ -109,29 +110,29 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     return await this.getOraclesByAddress(address) >= await this.COUNCIL_AMOUNT();
   }
 
-  async changeCouncilAmount(value: string): Promise<TransactionReceipt> {
+  async changeCouncilAmount(value: string) {
     const amount = toSmartContractDecimals(value, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.changeCOUNCIL_AMOUNT(amount as number));
   }
 
-  async changeRedeemTime(amount: number): Promise<TransactionReceipt> {
+  async changeRedeemTime(amount: number) {
     return this.sendTx(this.contract.methods.changeRedeemTime(amount as number));
   }
 
-  async changeDisputableTime(amount: number): Promise<TransactionReceipt> {
+  async changeDisputableTime(amount: number) {
     return this.sendTx(this.contract.methods.changeDisputableTime(amount as number));
   }
 
-  async isIssueInDraft(issueId: number): Promise<boolean> {
-    return this.callTx(this.contract.methods.isIssueInDraft(issueId));
+  async isIssueInDraft(issueId: number) {
+    return !!(await this.callTx(this.contract.methods.isIssueInDraft(issueId)));
   }
 
-  async isMergeDisputed(issueId: number, mergeId: number): Promise<boolean> {
-    return this.callTx(this.contract.methods.isMergeDisputed(issueId, mergeId))
+  async isMergeDisputed(issueId: number, mergeId: number) {
+    return !!(await this.callTx(this.contract.methods.isMergeDisputed(issueId, mergeId)));
   }
 
   async isMergeInDraft(id: number, mergeId: number) {
-    return this.sendTx(this.contract.methods.isMergeInDraft(id, mergeId))
+    return !!(await this.callTx(this.contract.methods.isMergeInDraft(id, mergeId)))
   }
 
   async getIssueByCID(cid: string): Promise<NetworkIssue> {
