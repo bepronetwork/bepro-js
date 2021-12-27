@@ -11,6 +11,7 @@ const {camelCase, paramCase, capitalCase} = require('change-case')
  * @property {string} type
  * @property {boolean} [indexed]
  * @property {boolean} [optional]
+ * @property {Contract~AbiOption~Input[]} [components]
  * @property {*} [defaultValue]
  */
 
@@ -80,9 +81,12 @@ const parseOutput = (outputs) => {
 
   const template = `ContractCallMethod<%content%>`;
 
-  let content = outputs.map((o, index) => `'${index}': ${SolidityTypes[o.type]}`).join(`; `);
+  const _templateContent = (index, type) => `'${index}': ${SolidityTypes[type]}`
+  const _templateMapper = (o, index) => !o.components ? _templateContent(index, o.type) : o.components.map(_templateMapper).join(`; `);
 
-  if (outputs.length === 1)
+  let content = outputs.map(_templateMapper).join(`; `);
+
+  if (outputs.length === 1 && !outputs[0].components)
     content = content.replace(`'0': `, ``).replace(`;`, ``);
   else content = `{${content}}`;
 
@@ -140,9 +144,12 @@ const AbiParser = (filePath = ``) => {
   const _classBody = abis.map(option => makeFn(option, true)).join(`\n`);
 
   const abiItemConstructor = contract.abi.filter(option => !option.anonymous && option.type === "constructor");
-  const abiInputs = parseInputsName(abiItemConstructor[0].inputs)
-  const deployOptions = `const deployOptions = {\n        data: ${contract.contractName}Json.bytecode,\n        arguments: [${parseInputsName(abiItemConstructor[0].inputs, undefined, true)}]\n    };`
-  const constructorWithDeployer = _constructor+`  async deployJsonAbi(${abiInputs}) {\n    ${deployOptions}\n\n    return this.deploy(deployOptions, this.web3Connection.Account);\n  }\n\n`;
+  let constructorWithDeployer = ``;
+  if (abiItemConstructor.length) {
+    const abiInputs = parseInputsName(abiItemConstructor[0].inputs)
+    const deployOptions = `const deployOptions = {\n        data: ${contract.contractName}Json.bytecode,\n        arguments: [${parseInputsName(abiItemConstructor[0].inputs, undefined, true)}]\n    };`
+    constructorWithDeployer = _constructor+`  async deployJsonAbi(${abiInputs}) {\n    ${deployOptions}\n\n    return this.deploy(deployOptions, this.web3Connection.Account);\n  }\n\n`;
+  }
 
   const _interface = makeClass(classHeader(contract.contractName), content, ["import {ContractSendMethod} from 'web3-eth-contract';", "import {ContractCallMethod} from '@methods/contract-call-method';"]);
 
