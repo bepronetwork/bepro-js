@@ -17,7 +17,7 @@ export interface LoopholeMethods {
   add(token: string, allocPoint: number) :ContractCallMethod<number>;
   set(pid: number, allocPoint: number, withUpdate: boolean) :ContractSendMethod;
   stake(pid: number, amount: number) :ContractSendMethod;
-  exit(pid: number, amount: number, amountOutMinimum: number) :ContractCallMethod<number>;
+  exit(pid: number, amount?: number, amountOutMinimum?: number) :ContractCallMethod<number>;
   exit(amount: number) :ContractCallMethod<number>;
   getUserReward(pid: number, userAddress: string) :ContractCallMethod<number>;
   collectRewards(pid: number) :ContractCallMethod<number>;
@@ -30,9 +30,9 @@ export interface LoopholeMethods {
   getBlockTimestamp() :ContractCallMethod<number>;
   getBlockNumber() :ContractCallMethod<number>;
   getPool(pid: number) :ContractCallMethod<{'0': string; '1': number; '2': number; '3': number; '4': number; '5': number; '6': number}>;
-  getPoolInfo(pid: number) :ContractCallMethod<undefined>;
+  getPoolInfo(pid: number) :ContractCallMethod<{'0': string; '1': number; '2': number; '3': number; '4': number; '5': number; '6': number}>;
   poolsCount() :ContractCallMethod<number>;
-  getUserInfo(pid: number, user: string) :ContractCallMethod<undefined>;
+  getUserInfo(pid: number, user: string) :ContractCallMethod<{'0': number; '1': number; '2': number; '3': number}>;
   getTotalEntryStakeUser(pid: number, user: string) :ContractCallMethod<number>;
   getTotalUnstakeUser(pid: number, user: string) :ContractCallMethod<number>;
   getEntryStakeAdjusted(pid: number, user: string) :ContractCallMethod<number>;

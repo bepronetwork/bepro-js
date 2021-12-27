@@ -11,7 +11,7 @@ import {toSmartContractDate} from '@utils/numbers';
 import realFvrPack from '@utils/real-fvr-pack';
 
 export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly purchaseTokenAddress?: string) {
     super(web3Connection, OpenerRealFvrJson as any as AbiItem[], contractAddress);
   }
 
@@ -22,10 +22,9 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
     if (!this.contract)
       await super.loadContract();
 
-    const purchaseToken = await this._purchaseToken();
-
+    const purchaseToken = await this._purchaseToken() || this.purchaseTokenAddress;
     if (!purchaseToken)
-      return console.warn(Errors.MissingERC20AddressOnContractPleaseSetPurchaseToken);
+      throw new Error(Errors.MissingERC20AddressOnContractPleaseSetPurchaseToken);
 
     this._erc20 = new ERC20(this.web3Connection, purchaseToken);
     await this._erc20.loadContract();
