@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-import truffleAssert from 'truffle-assertions';
 import Account from './utils/Account';
 
 const ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
