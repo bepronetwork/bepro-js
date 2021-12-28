@@ -28,12 +28,16 @@ export class Model<Methods = any> {
   get web3(): Web3 { return this.connection.Web3; }
   get account(): Account { return this.connection.Account; }
 
+  loadAbi() {
+    this._contract = new Web3Contract(this.web3, this.abi, this.contractAddress);
+  }
+
   loadContract() {
     if (!this.contractAddress)
       throw new Error(Errors.MissingContractAddress)
 
     try {
-      this._contract = new Web3Contract(this.web3, this.abi, this.contractAddress);
+      this.loadAbi();
     } catch (e) {
       throw e;
     }

@@ -14,8 +14,14 @@ export function defaultWeb3Connection() {
 }
 
 export async function erc20Deployer(name: string, symbol: string, cap = toSmartContractDecimals(1000000, 18) as number, web3Connection: Web3Connection|Web3ConnectionOptions) {
+  if (!(web3Connection instanceof Web3Connection))
+    web3Connection = new Web3Connection(web3Connection)
+
+  await web3Connection.start();
+
   const deployer = new ERC20(web3Connection);
-  await deployer.start();
+  await deployer.loadAbi();
+
   const address = await deployer.connection.getAddress();
   return deployer.deployJsonAbi(name, symbol, cap, address);
 }

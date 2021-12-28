@@ -18,8 +18,9 @@ describe(`Network`, () => {
   const cap = toSmartContractDecimals(1000000) as number;
   const newCouncilAmount = '100001';
 
-  before(() => {
+  before(async () => {
     web3Connection = defaultWeb3Connection();
+    await web3Connection.start();
   })
 
   if (!networkContractAddress) {
@@ -40,7 +41,7 @@ describe(`Network`, () => {
 
       it(`Deploys a Network Contract`, async () => {
         const deployer = new Network(web3Connection);
-        await deployer.start();
+        await deployer.loadAbi();
         const receipt = await deployer.deployJsonAbi(settlerToken!, transactionToken!, deployer.connection.Account.address);
         expect(receipt.contractAddress).to.not.be.empty;
         networkContractAddress = receipt.contractAddress;
@@ -208,20 +209,23 @@ describe(`Network`, () => {
           cid = web3Connection.Web3.utils.randomHex(4);
         });
 
-        it (`Opens issue`, async () => {
+        it(`Opens issue`, async () => {
           const receipt = await network.openIssue(cid, 1);
           expect(receipt.blockHash, `open issue hash`).to.not.be.empty;
         })
 
         describe(`after redeemTime()`, () => {
           before((done) => {
-            setTimeout(() => done(), 62 * 1000)
+            network.getIssueByCID(cid)
+                   .then(_issue => {
+                     issue = _issue;
+                     setTimeout(() => done(), +new Date(issue.creationDate + 62 * 1000) - +new Date())
+                   });
           });
 
           it(`Waited`, () => {});
 
           it(`Recognizes as finished`, async () => {
-            issue = await network.getIssueByCID(cid);
             const recognize = await network.recognizeAsFinished(issue._id);
             expect(recognize.blockHash, `recognize hash`).to.not.be.empty;
           });
@@ -256,7 +260,6 @@ describe(`Network`, () => {
             const closed = await network.closeIssue(issue._id, 1);
             expect(closed.blockHash, `closed hash`).to.not.be.empty;
           });
-
         });
       });
     });

@@ -56,7 +56,8 @@
         "truffle-plugin-verify": "^0.5.8",
         "ganache-time-traveler": "^1.0.5",
         "ganache-cli": "^6.12.2",
-        "@truffle/hdwallet-provider": "^2.0.0"
+        "@truffle/hdwallet-provider": "^2.0.0",
+        "date-fns": "^2.27.0"
     },
     "author": "",
     "license": "ISC"
