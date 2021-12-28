@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import truffleAssert from 'truffle-assertions';
 import Account from './utils/Account';
 
 const ETH_URL_TESTNET = 'https://rinkeby.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b';
@@ -81,16 +82,19 @@ class Web3Connection {
   start(provider) {
     if (provider) {
       this.web3 = new Web3(provider);
-    } else if (this.localtest) {
+    }
+    else if (this.localtest) {
       this.web3 = new Web3(
         new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST),
         // NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
         null,
         { transactionConfirmationBlocks: 1 },
       );
-    } else if (this.opt.web3Connection.toLowerCase().includes('http')) {
+    }
+    else if (this.opt.web3Connection.toLowerCase().includes('http')) {
       this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
-    } else {
+    }
+    else {
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(this.opt.web3Connection));
     }
 
@@ -103,7 +107,8 @@ class Web3Connection {
 
     if (typeof window !== 'undefined') {
       window.web3 = this.web3;
-    } else if (!this.test) {
+    }
+    else if (!this.test) {
       throw new Error(
         'Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet',
       );

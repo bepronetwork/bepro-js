@@ -164,17 +164,13 @@ class ERC20Contract extends IContract {
    * @returns {Promise<number>} allowance amount
    */
   allowance = async ({ address, spenderAddress }) => {
-    try {
-      const approvedAmount = Numbers.fromDecimalsToBN(
-        await this.getContract()
-          .methods.allowance(address, spenderAddress)
-          .call(),
-        this.getDecimals(),
-      );
-      return approvedAmount;
-    } catch (err) {
-      throw err;
-    }
+    const approvedAmount = Numbers.fromDecimalsToBN(
+      await this.getContract()
+        .methods.allowance(address, spenderAddress)
+        .call(),
+      this.getDecimals(),
+    );
+    return approvedAmount;
   };
 
   /**

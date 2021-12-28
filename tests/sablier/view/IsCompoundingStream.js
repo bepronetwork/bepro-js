@@ -1,7 +1,8 @@
-const BigNumber = require('bignumber.js');
-const dayjs = require('dayjs');
-const truffleAssert = require('truffle-assertions');
-const { dappConstants } = require('../../../src/sablier/dev-utils');
+import BigNumber from 'bignumber.js';
+import dayjs from 'dayjs';
+import truffleAssert from 'truffle-assertions';
+import { dappConstants } from '../../../src/sablier/dev-utils';
+import sablierUtils from '../sablier.utils';
 
 const {
   STANDARD_RECIPIENT_SHARE_PERCENTAGE,
@@ -12,12 +13,10 @@ const {
   STANDARD_TIME_DELTA,
 } = dappConstants;
 
-const sablierUtils = require('../sablier.utils');
-
 context('sablier.IsCompoundingStream.context', async () => {
-  let alice;// = _this.alice;
-  let bob;// = _this.bob;
-  let sender;// = _this.alice;
+  // let alice;// = _this.alice;
+  // let bob;// = _this.bob;
+  // let sender;// = _this.alice;
   let recipient;// = _this.bob;
   // const opts = { from: sender };
   let now;// = new BigNumber(dayjs().unix());
@@ -26,9 +25,9 @@ context('sablier.IsCompoundingStream.context', async () => {
 
   before('sablier.IsCompoundingStream.before', async () => {
     await sablierUtils.initConfig();
-    alice = _this.alice;
-    bob = _this.bob;
-    sender = _this.alice;
+    // alice = _this.alice;
+    // bob = _this.bob;
+    // sender = _this.alice;
     recipient = _this.bob;
     now = new BigNumber(dayjs().unix());
     startTime = now.plus(STANDARD_TIME_OFFSET);
@@ -55,8 +54,8 @@ context('sablier.IsCompoundingStream.context', async () => {
         recipientSharePercentage,
       });
       // streamId = Number(result.logs[0].args.streamId);
-	    streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    // console.log('---IsCompoundingStream.streamId.bp0: ', streamId);
+      streamId = Number(result.events.CreateStream.returnValues.streamId);
+      // console.log('---IsCompoundingStream.streamId.bp0: ', streamId);
     });
 
     it('returns true', async () => {
@@ -72,7 +71,7 @@ context('sablier.IsCompoundingStream.context', async () => {
     // const stopTime = startTime.plus(STANDARD_TIME_DELTA);
 
     beforeEach(async () => {
-	    /// startTime = now.plus(STANDARD_TIME_OFFSET);
+      /// startTime = now.plus(STANDARD_TIME_OFFSET);
       /// stopTime = startTime.plus(STANDARD_TIME_DELTA);
 
       await _this.token.approve({ address: _this.sablier.getAddress(), amount: deposit });
@@ -80,8 +79,8 @@ context('sablier.IsCompoundingStream.context', async () => {
         recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
       });
       // streamId = Number(result.logs[0].args.streamId);
-	    streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    // console.log('---IsCompoundingStream.streamId.bp1: ', streamId);
+      streamId = Number(result.events.CreateStream.returnValues.streamId);
+      // console.log('---IsCompoundingStream.streamId.bp1: ', streamId);
     });
 
     it('returns false', async () => {

@@ -1,17 +1,14 @@
-import Numbers from '../../../../src/utils/Numbers';
-
-const BigNumber = require('bignumber.js');
-const dayjs = require('dayjs');
-const truffleAssert = require('truffle-assertions');
-const { dappConstants, mochaContexts } = require('../../../../src/sablier/dev-utils');
-const beproAssert = require('../../../../build/utils/beproAssert');
+import BigNumber from 'bignumber.js';
+import dayjs from 'dayjs';
+import truffleAssert from 'truffle-assertions';
+import { dappConstants, mochaContexts } from '../../../../src/sablier/dev-utils';
+import beproAssert from '../../../../build/utils/beproAssert';
+import sablierUtils from '../../sablier.utils';
 
 const { contextForStreamDidEnd, contextForStreamDidStartButNotEnd } = mochaContexts;
 const {
   FIVE_UNITS, STANDARD_SALARY, STANDARD_SCALE, STANDARD_TIME_OFFSET, STANDARD_TIME_DELTA,
 } = dappConstants;
-
-const sablierUtils = require('../../sablier.utils');
 
 let streamId;
 let recipient;
@@ -55,7 +52,10 @@ function runTests() {
             // Intuitively, one may say we don't have to tolerate the block time variation here.
             // However, the Sablier balance for the recipient can only go up from the bottom
             // low of `balance` - `amount`, due to uncontrollable runtime costs.
-            newBalance.should.tolerateTheBlockTimeVariation(new BigNumber(balance).minus(withdrawalAmount), STANDARD_SCALE);
+            newBalance.should.tolerateTheBlockTimeVariation(
+              new BigNumber(balance).minus(withdrawalAmount),
+              STANDARD_SCALE,
+            );
           });
         });
 
@@ -166,7 +166,7 @@ function runTests() {
 context('sablier.WithdrawFromStream.context', () => {
   let alice;// = _this.alice;
   let bob;// = _this.bob;
-  let eve;// = _this.eve;
+  // let eve;// = _this.eve;
   let now;// = new BigNumber(dayjs().unix());
   let startTime;// = now.plus(STANDARD_TIME_OFFSET);
   let stopTime;// = startTime.plus(STANDARD_TIME_DELTA);
@@ -175,7 +175,7 @@ context('sablier.WithdrawFromStream.context', () => {
     await sablierUtils.initConfig();
     alice = _this.alice;
     bob = _this.bob;
-    eve = _this.eve;
+    // eve = _this.eve;
     sender = _this.alice;
     recipient = _this.bob;
     now = new BigNumber(dayjs().unix());
@@ -201,8 +201,8 @@ context('sablier.WithdrawFromStream.context', () => {
         startTime,
         stopTime,
       });
-	    streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    // console.log('---WithdrawFromStream.streamId: ', streamId);
+      streamId = Number(result.events.CreateStream.returnValues.streamId);
+      // console.log('---WithdrawFromStream.streamId: ', streamId);
     });
 
     describe('when the caller is the sender of the stream', () => {
@@ -245,8 +245,13 @@ context('sablier.WithdrawFromStream.context', () => {
       recipient = _this.bob;
       _this.sablier.switchWallet(recipient);
 
-      const streamId = new BigNumber(419863);
-      await truffleAssert.reverts(_this.sablier.withdrawFromStream({ streamId, amount: FIVE_UNITS }), 'stream does not exist');
+      await truffleAssert.reverts(
+        _this.sablier.withdrawFromStream({
+          streamId: new BigNumber(419863),
+          amount: FIVE_UNITS,
+        }),
+        'stream does not exist',
+      );
     });
   });
 });

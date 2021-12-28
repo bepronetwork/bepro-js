@@ -1,4 +1,4 @@
-/* eslint-disable global-require , import/no-unresolved, import/no-extraneous-dependencies */
+/* eslint-disable global-require, import/no-unresolved */
 const index = {
   ierc20: require('../contracts/Token.json'),
   erc20distribution: require('../contracts/ERC20Distribution.json'),

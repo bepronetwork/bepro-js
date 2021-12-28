@@ -4,11 +4,6 @@
   ],
 
   "globals": {
-    "artifacts": true,
-    "before": true,
-    "context": true,
-    "contract": true,
-    "it": true,
     "window": true
   },
 
@@ -18,6 +13,7 @@
 
   "rules": {
     "arrow-parens": ["error", "as-needed"],
+    "brace-style": ["error", "stroustrup"],
     "camelcase": 0,
     "max-len": ["warn", 120, 2, {
       "ignoreUrls": true,

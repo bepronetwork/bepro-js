@@ -248,7 +248,8 @@ context('ERC721 Collectibles', async () => {
           to: userAddress,
           tokenID: 1003,
         });
-      } catch (err) {
+      }
+      catch (err) {
         assert(
           err.message.indexOf('Token Id not registered') >= 0,
           'erc721Contract.mint should fail with expected error',

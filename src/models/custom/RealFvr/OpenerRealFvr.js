@@ -48,7 +48,8 @@ class OpenerRealFvr extends IContract {
     try {
       // Assert Token Contract
       await this.params.ERC20Contract.__assert();
-    } catch (err) {
+    }
+    catch (err) {
       throw new Error(`Problem on ERC20 Assert, confirm ERC20 'tokenAddress'${err}`);
     }
   };

@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-// eslint-disable-next-line no-unused-vars
 
 import BigNumber from 'bignumber.js';
 

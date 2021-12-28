@@ -1,5 +1,4 @@
 import { uniswapRouterBridge } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 
 /** @typedef {Object} TestUniswapV3RouterBridge~Options
@@ -29,8 +28,8 @@ export default class TestUniswapV3RouterBridge extends IContract {
   /**
    * @returns {Promise<address>}
    */
-  async swapRouter() {
-    return await this.getContract().methods.swapRouter().call();
+  swapRouter() {
+    return this.getContract().methods.swapRouter().call();
   }
 
   /**
@@ -42,10 +41,10 @@ export default class TestUniswapV3RouterBridge extends IContract {
    * @param {uint256} params.amountOutMinimum
    * @returns {Promise<uint256>} amountOut
    */
-  async swapExactInputSingleEx({
+  swapExactInputSingleEx({
     tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum),
       options,
     );
@@ -60,10 +59,10 @@ export default class TestUniswapV3RouterBridge extends IContract {
    * @param {uint256} params.amountInMaximum
    * @returns {Promise<uint256>} amountIn
    */
-  async swapExactOutputSingleEx({
+  swapExactOutputSingleEx({
     tokenIn, tokenOut, poolFee, amountOut, amountInMaximum,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum),
       options,
     );

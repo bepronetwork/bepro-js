@@ -1,17 +1,14 @@
-import { expect, assert } from 'chai';
-
-const BigNumber = require('bignumber.js');
-const dayjs = require('dayjs');
-const truffleAssert = require('truffle-assertions');
-const { dappConstants, mochaContexts } = require('../../../src/sablier/dev-utils');
+import BigNumber from 'bignumber.js';
+import dayjs from 'dayjs';
+import truffleAssert from 'truffle-assertions';
+import { dappConstants, mochaContexts } from '../../../src/sablier/dev-utils';
+import sablierUtils from '../sablier.utils';
 
 const { STANDARD_SALARY, STANDARD_TIME_OFFSET, STANDARD_TIME_DELTA } = dappConstants;
 const { contextForStreamDidEnd, contextForStreamDidStartButNotEnd } = mochaContexts;
 
-const sablierUtils = require('../sablier.utils');
-
 context('sablier.DeltaOf.context', () => {
-  let sender;// = _this.alice;
+  // let sender;// = _this.alice;
   let recipient;// = _this.bob;
   // const opts = { from: sender };
   let now;// = new BigNumber(dayjs().unix());
@@ -20,7 +17,7 @@ context('sablier.DeltaOf.context', () => {
 
   before('sablier.DeltaOf.before', async () => {
     await sablierUtils.initConfig();
-    sender = _this.alice;
+    // sender = _this.alice;
     recipient = _this.bob;
     now = new BigNumber(dayjs().unix());
     startTime = now.plus(STANDARD_TIME_OFFSET);
@@ -36,13 +33,13 @@ context('sablier.DeltaOf.context', () => {
 
     beforeEach(async () => {
       await _this.token.approve({ address: _this.sablier.getAddress(), amount: deposit });
-	    const result = await _this.sablier.createStream({
+      const result = await _this.sablier.createStream({
         recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
       });
       // console.log('---DeltaOf.streamId.bp0: ', result); //.events[0].returnValues);
-	    // streamId = Number(result.logs[0].args.streamId);
-	    streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    console.log('---DeltaOf.streamId: ', streamId);
+      // streamId = Number(result.logs[0].args.streamId);
+      streamId = Number(result.events.CreateStream.returnValues.streamId);
+      // console.log('---DeltaOf.streamId: ', streamId);
     });
 
     describe('when the stream did not start', () => {
@@ -55,9 +52,10 @@ context('sablier.DeltaOf.context', () => {
     contextForStreamDidStartButNotEnd(() => {
       it('returns the time the number of seconds that passed since the start time', async () => {
         const delta = await _this.sablier.deltaOf({ streamId });
-        delta.should.bignumber.satisfy(num =>
-          // return num.isEqualTo(new BigNumber(5)) || num.isEqualTo(new BigNumber(5).plus(1));
-		       BigNumber(num).isEqualTo(BigNumber(5)) || BigNumber(num).isEqualTo(BigNumber(5).plus(1)));
+        delta.should.bignumber.satisfy(
+          // num => num.isEqualTo(new BigNumber(5)) || num.isEqualTo(new BigNumber(5).plus(1)),
+          num => BigNumber(num).isEqualTo(BigNumber(5)) || BigNumber(num).isEqualTo(BigNumber(5).plus(1)),
+        );
       });
     });
 

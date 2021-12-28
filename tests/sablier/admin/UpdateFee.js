@@ -1,13 +1,9 @@
-import { expect, assert } from 'chai';
-
-const BigNumber = require('bignumber.js');
-const truffleAssert = require('truffle-assertions');
-const { dappConstants } = require('../../../src/sablier/dev-utils');
-const beproAssert = require('../../../build/utils/beproAssert');
+import BigNumber from 'bignumber.js';
+import { dappConstants } from '../../../src/sablier/dev-utils';
+import beproAssert from '../../../build/utils/beproAssert';
+import sablierUtils from '../sablier.utils';
 
 const { STANDARD_SABLIER_FEE } = dappConstants;
-
-const sablierUtils = require('../sablier.utils');
 
 context('sablier.UpdateFee.context', () => {
   let admin;// = _this.alice;
@@ -21,14 +17,14 @@ context('sablier.UpdateFee.context', () => {
     // const opts = { from: admin };
 
     describe('when the fee is a valid percentage', () => {
-	    const newFee = STANDARD_SABLIER_FEE;
+      const newFee = STANDARD_SABLIER_FEE;
 
       it('updates the fee', async () => {
         _this.sablier.switchWallet(admin);
         await _this.sablier.updateFee({ feePercentage: newFee });
         const result = await _this.sablier.fee();
-		    // The new fee is a mantissa
-		    result.should.be.bignumber.equal(newFee);
+        // The new fee is a mantissa
+        result.should.be.bignumber.equal(newFee);
       });
     });
 
@@ -36,7 +32,7 @@ context('sablier.UpdateFee.context', () => {
       it('reverts', async () => {
         _this.sablier.switchWallet(admin);
         const newFee = new BigNumber(110);
-		    await beproAssert.reverts(_this.sablier.updateFee({ feePercentage: newFee }), 'fee percentage higher than 100%');
+        await beproAssert.reverts(_this.sablier.updateFee({ feePercentage: newFee }), 'fee percentage higher than 100%');
       });
     });
   });

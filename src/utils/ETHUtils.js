@@ -1,8 +1,6 @@
+import BigNumber from 'bignumber.js';
 import { ethutils } from '../interfaces';
 import IContract from '../models/IContract';
-import Numbers from './Numbers';
-
-const BigNumber = require('bignumber.js');
 
 /**
  * ETHUtils Object
@@ -19,8 +17,8 @@ export default class ETHUtils extends IContract {
    * @param {address} tokenAddress
    * @returns {Promise<string>}
    */
-  async name(tokenAddress) {
-    return await this.getContract().methods.name(tokenAddress).call();
+  name(tokenAddress) {
+    return this.getContract().methods.name(tokenAddress).call();
   }
 
   /**
@@ -28,8 +26,8 @@ export default class ETHUtils extends IContract {
    * @param {address} tokenAddress
    * @returns {Promise<string>}
    */
-  async symbol(tokenAddress) {
-    return await this.getContract().methods.symbol(tokenAddress).call();
+  symbol(tokenAddress) {
+    return this.getContract().methods.symbol(tokenAddress).call();
   }
 
   /**
@@ -63,7 +61,7 @@ export default class ETHUtils extends IContract {
    * @returns {Promise<uint256,uint256>}
    */
   async blockNumberAndTimestamp() {
-    const [blockNumber, blocktimestamp] = await this.getContract().methods.blockNumberAndTimestamp().call();
+    const [blockNumber, blockTimestamp] = await this.getContract().methods.blockNumberAndTimestamp().call();
     return [
       BigNumber(blockNumber),
       BigNumber(blockTimestamp),

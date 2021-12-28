@@ -47,7 +47,8 @@ context('Generics', async () => {
         await erc20.start();
 
         assert.fail();
-      } catch (err) {
+      }
+      catch (err) {
         assert(
           err.message.indexOf(
             'Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet',
@@ -80,7 +81,8 @@ context('Generics', async () => {
       try {
         await erc20.getUserAddress();
         assert.fail();
-      } catch (err) {
+      }
+      catch (err) {
         assert(
           err.message.indexOf('undefined') >= 0,
           'erc20.getUserAddress should fail with expected error',

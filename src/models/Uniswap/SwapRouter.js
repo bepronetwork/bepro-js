@@ -1,5 +1,4 @@
 import { swapRouter } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 
 /** @typedef {Object} SwapRouter~Options
@@ -32,7 +31,7 @@ export default class SwapRouter extends IContract {
   /**
    * @returns {Promise<address>}
    */
-  async WETH9() {
+  WETH9() {
     // return await this.getContract().methods.WETH9().call();
     return this.params.weth9;
   }
@@ -42,8 +41,8 @@ export default class SwapRouter extends IContract {
    * @param {tuple} params.tuple
    * @returns {Promise<uint256>} amountOut
    */
-  async exactInput({ tuple }, options) {
-    return await this.__sendTx(
+  exactInput({ tuple }, options) {
+    return this.__sendTx(
       this.getContract().methods.exactInput(tuple),
       options,
     );
@@ -54,8 +53,8 @@ export default class SwapRouter extends IContract {
    * @param {tuple} params.tuple
    * @returns {Promise<uint256>} amountOut
    */
-  async exactInputSingle({ tuple }, options) {
-    return await this.__sendTx(
+  exactInputSingle({ tuple }, options) {
+    return this.__sendTx(
       this.getContract().methods.exactInputSingle(tuple),
       options,
     );
@@ -66,8 +65,8 @@ export default class SwapRouter extends IContract {
    * @param {tuple} params.tuple
    * @returns {Promise<uint256>} amountIn
    */
-  async exactOutput({ tuple }, options) {
-    return await this.__sendTx(
+  exactOutput({ tuple }, options) {
+    return this.__sendTx(
       this.getContract().methods.exactOutput(tuple),
       options,
     );
@@ -78,8 +77,8 @@ export default class SwapRouter extends IContract {
    * @param {tuple} params.tuple
    * @returns {Promise<uint256>} amountIn
    */
-  async exactOutputSingle({ tuple }, options) {
-    return await this.__sendTx(
+  exactOutputSingle({ tuple }, options) {
+    return this.__sendTx(
       this.getContract().methods.exactOutputSingle(tuple),
       options,
     );
@@ -88,7 +87,7 @@ export default class SwapRouter extends IContract {
   /**
    * @returns {Promise<address>}
    */
-  async factory() {
+  factory() {
     // return await this.getContract().methods.factory().call();
     return this.params.factory;
   }
@@ -97,8 +96,8 @@ export default class SwapRouter extends IContract {
    * @param {bytes[]} data
    * @returns {Promise<bytes[]>} results
    */
-  async multicall({ data }, options) {
-    return await this.__sendTx(
+  multicall({ data }, options) {
+    return this.__sendTx(
       this.getContract().methods.multicall(data),
       options,
     );
@@ -107,8 +106,8 @@ export default class SwapRouter extends IContract {
   /**
    * @returns {Promise<void>}
    */
-  async refundETH(options) {
-    return await this.__sendTx(
+  refundETH(options) {
+    return this.__sendTx(
       this.getContract().methods.refundETH(),
       options,
     );
@@ -124,10 +123,10 @@ export default class SwapRouter extends IContract {
    * @param {bytes32} params.s
    * @returns {Promise<void>}
    */
-  async selfPermit({
+  selfPermit({
     token, value, deadline, v, r, s,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.selfPermit(token, value, deadline, v, r, s),
       options,
     );
@@ -143,10 +142,10 @@ export default class SwapRouter extends IContract {
    * @param {bytes32} params.s
    * @returns {Promise<void>}
    */
-  async selfPermitAllowed({
+  selfPermitAllowed({
     token, nonce, expiry, v, r, s,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.selfPermitAllowed(token, nonce, expiry, v, r, s),
       options,
     );
@@ -162,10 +161,10 @@ export default class SwapRouter extends IContract {
    * @param {bytes32} params.s
    * @returns {Promise<void>}
    */
-  async selfPermitAllowedIfNecessary({
+  selfPermitAllowedIfNecessary({
     token, nonce, expiry, v, r, s,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.selfPermitAllowedIfNecessary(token, nonce, expiry, v, r, s),
       options,
     );
@@ -181,10 +180,10 @@ export default class SwapRouter extends IContract {
    * @param {bytes32} params.s
    * @returns {Promise<void>}
    */
-  async selfPermitIfNecessary({
+  selfPermitIfNecessary({
     token, value, deadline, v, r, s,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.selfPermitIfNecessary(token, value, deadline, v, r, s),
       options,
     );
@@ -197,8 +196,8 @@ export default class SwapRouter extends IContract {
    * @param {address} params.recipient
    * @returns {Promise<void>}
    */
-  async sweepToken({ token, amountMinimum, recipient }, options) {
-    return await this.__sendTx(
+  sweepToken({ token, amountMinimum, recipient }, options) {
+    return this.__sendTx(
       this.getContract().methods.sweepToken(token, amountMinimum, recipient),
       options,
     );
@@ -213,10 +212,10 @@ export default class SwapRouter extends IContract {
    * @param {address} params.feeRecipient
    * @returns {Promise<void>}
    */
-  async sweepTokenWithFee({
+  sweepTokenWithFee({
     token, amountMinimum, recipient, feeBips, feeRecipient,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.sweepTokenWithFee(token, amountMinimum, recipient, feeBips, feeRecipient),
       options,
     );
@@ -229,8 +228,8 @@ export default class SwapRouter extends IContract {
    * @param {bytes} params._data
    * @returns {Promise<void>}
    */
-  // async uniswapV3SwapCallback({ amount0Delta, amount1Delta, _data }, options) {
-  //  return await this.__sendTx(
+  // uniswapV3SwapCallback({ amount0Delta, amount1Delta, _data }, options) {
+  //  return this.__sendTx(
   //    this.getContract().methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, _data),
   //    options,
   //  );
@@ -242,8 +241,8 @@ export default class SwapRouter extends IContract {
    * @param {address} params.recipient
    * @returns {Promise<void>}
    */
-  async unwrapWETH9({ amountMinimum, recipient }, options) {
-    return await this.__sendTx(
+  unwrapWETH9({ amountMinimum, recipient }, options) {
+    return this.__sendTx(
       this.getContract().methods.unwrapWETH9(amountMinimum, recipient),
       options,
     );
@@ -257,10 +256,10 @@ export default class SwapRouter extends IContract {
    * @param {address} params.feeRecipient
    * @returns {Promise<void>}
    */
-  async unwrapWETH9WithFee({
+  unwrapWETH9WithFee({
     amountMinimum, recipient, feeBips, feeRecipient,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.unwrapWETH9WithFee(amountMinimum, recipient, feeBips, feeRecipient),
       options,
     );

@@ -1,8 +1,9 @@
-const dayjs = require('dayjs');
-const BigNumber = require('bignumber.js');
-const truffleAssert = require('truffle-assertions');
-const { dappConstants } = require('../../../../src/sablier/dev-utils');
-const beproAssert = require('../../../../build/utils/beproAssert');
+import dayjs from 'dayjs';
+import BigNumber from 'bignumber.js';
+import truffleAssert from 'truffle-assertions';
+import { dappConstants } from '../../../../src/sablier/dev-utils';
+import beproAssert from '../../../../build/utils/beproAssert';
+import sablierUtils from '../../sablier.utils';
 
 const {
   ONE_PERCENT_MANTISSA,
@@ -14,8 +15,6 @@ const {
   STANDARD_TIME_OFFSET,
 } = dappConstants;
 
-const sablierUtils = require('../../sablier.utils');
-
 /**
  * We do not tests all the logical branches as in `CreateStream.js`, because these are unit tests.
  * The `createCompoundingStream` method uses `createStream`, so if that fails with non-compliant erc20
@@ -23,8 +22,8 @@ const sablierUtils = require('../../sablier.utils');
  */
 context('sablier.CreateCompoundingStream.context', async () => {
 // function shouldBehaveLikeCreateCompoundingStream(_this) { //alice, bob) {
-  let alice;// = _this.alice;
-  let bob;// = _this.bob;
+  // let alice;// = _this.alice;
+  // let bob;// = _this.bob;
   let sender;// = alice;
   let recipient;// = bob;
   const deposit = STANDARD_SALARY_CTOKEN.toString(10);
@@ -35,8 +34,8 @@ context('sablier.CreateCompoundingStream.context', async () => {
 
   before('sablier.CreateCompoundingStream.before', async () => {
     await sablierUtils.initConfig();
-    alice = _this.alice;
-    bob = _this.bob;
+    // alice = _this.alice;
+    // bob = _this.bob;
     sender = _this.alice;
     recipient = _this.bob;
     now = new BigNumber(dayjs().unix());
@@ -57,8 +56,8 @@ context('sablier.CreateCompoundingStream.context', async () => {
         const recipientSharePercentage = STANDARD_RECIPIENT_SHARE_PERCENTAGE;
 
         it('creates the compounding stream', async () => {
-		      const paused = await _this.sablier.isPaused();
-		      console.log('---sablier.CreateCompoundingStream.isPaused: ', paused);
+          await _this.sablier.isPaused();
+          // console.log('---sablier.CreateCompoundingStream.isPaused: ', paused);
 
           const result = await _this.sablier.createCompoundingStream({
             recipient,
@@ -72,7 +71,7 @@ context('sablier.CreateCompoundingStream.context', async () => {
           const exchangeRateInitial = new BigNumber(await _this.cToken.exchangeRateCurrent());
 
           const streamId = Number(result.events.CreateStream.returnValues.streamId);
-		      console.log('---CreateCompoundingStream.streamId: ', streamId);
+          // console.log('---CreateCompoundingStream.streamId: ', streamId);
           const compoundingStreamObject = await _this.sablier.getCompoundingStream({ streamId });
           compoundingStreamObject.sender.should.be.equal(sender);
           compoundingStreamObject.recipient.should.be.equal(recipient);

@@ -1,13 +1,5 @@
-const chaiPlugin = require('./chaiPlugin');
-const devConstants = require('./constants');
-const dappConstants = require('./dappConstants');
-const errors = require('./errors');
-const mochaContexts = require('./mochaContexts');
-
-module.exports = {
-  chaiPlugin,
-  devConstants,
-  dappConstants,
-  errors,
-  mochaContexts,
-};
+export { default as chaiPlugin } from './chaiPlugin';
+export { default as devConstants } from './constants';
+export { default as dappConstants } from './dappConstants';
+export { default as errors } from './errors';
+export * as mochaContexts from './mochaContexts';

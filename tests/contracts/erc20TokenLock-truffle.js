@@ -1,12 +1,9 @@
+import { assert, expect } from 'chai';
+import moment from 'moment';
+// import traveler from 'ganache-time-traveler';
+
 const ERC20Test = artifacts.require('./ERC20Test.sol');
 const ERC20TokenLock = artifacts.require('./ERC20TokenLock.sol');
-
-const { assert } = require('chai');
-// const truffleAssert = require('truffle-assertions');
-const { expect } = require('chai');
-const moment = require('moment');
-const traveler = require('ganache-time-traveler');
-// const Numbers = require('../src/utils/Numbers');
 
 const TEST_CONTRACT_NAME = 'ERC20TokenLock'; // require("./common.js");
 const TEST_TAG = `${TEST_CONTRACT_NAME}-truffle-tests - `;
@@ -33,12 +30,12 @@ contract(TEST_CONTRACT_NAME, async accounts => {
   let erc20Lock; // erc20 token lock contract
 
   // 'beforeEach' function will run before each test creating a new instance of the contract each time
-  let snapshotId;
+  // let snapshotId;
 
   /* before(async () => {
-	console.log('--- erc20tokenlock.setup_before ---' + process.cwd());
-	const snapshot = await traveler.takeSnapshot();
-	snapshotId = snapshot.result;
+  console.log('--- erc20tokenlock.setup_before ---' + process.cwd());
+  const snapshot = await traveler.takeSnapshot();
+  snapshotId = snapshot.result;
   }); */
 
   /* after(async () => {
@@ -47,7 +44,7 @@ contract(TEST_CONTRACT_NAME, async accounts => {
   }); */
 
   before('setup contract for each test', async () => {
-    console.log(`--- erc20tokenlock setup_before ---${process.cwd()}`);
+    // console.log(`--- erc20tokenlock setup_before ---${process.cwd()}`);
     // let ffc = await FiatToken.deployed();
 
     erc20Test = await ERC20Test.new(name, symbol, cap, { from: owner });
@@ -156,7 +153,8 @@ contract(TEST_CONTRACT_NAME, async accounts => {
           from: user1,
         });
         assert.fail();
-      } catch (error) {
+      }
+      catch (error) {
         // console.log('error >> ', error);
         assert(
           error.message.indexOf('revert') >= 0,
@@ -181,7 +179,8 @@ contract(TEST_CONTRACT_NAME, async accounts => {
           from: user1,
         });
         assert.fail();
-      } catch (error) {
+      }
+      catch (error) {
         // console.log('error >> ', error);
         assert(
           error.message.indexOf('revert') >= 0,
@@ -257,7 +256,8 @@ contract(TEST_CONTRACT_NAME, async accounts => {
       try {
         await erc20Lock.release({ from: userAddress });
         assert.fail();
-      } catch (error) {
+      }
+      catch (error) {
         // console.log('error >> ', error);
         assert(
           error.message.indexOf('revert') >= 0,

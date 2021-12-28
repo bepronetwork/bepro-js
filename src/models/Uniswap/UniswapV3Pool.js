@@ -1,5 +1,4 @@
 import { uniswapPool } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 
 /**
@@ -88,29 +87,29 @@ export default class UniswapV3Pool extends IContract {
   /**
    * @returns {Promise<address>}
    */
-  async factory() {
-    return await this.getContract().methods.factory().call();
+  factory() {
+    return this.getContract().methods.factory().call();
   }
 
   /**
    * @returns {Promise<uint24>}
    */
-  async fee() {
-    return await this.getContract().methods.fee().call();
+  fee() {
+    return this.getContract().methods.fee().call();
   }
 
   /**
    * @returns {Promise<uint256>}
    */
-  async feeGrowthGlobal0X128() {
-    return await this.getContract().methods.feeGrowthGlobal0X128().call();
+  feeGrowthGlobal0X128() {
+    return this.getContract().methods.feeGrowthGlobal0X128().call();
   }
 
   /**
    * @returns {Promise<uint256>}
    */
-  async feeGrowthGlobal1X128() {
-    return await this.getContract().methods.feeGrowthGlobal1X128().call();
+  feeGrowthGlobal1X128() {
+    return this.getContract().methods.feeGrowthGlobal1X128().call();
   }
 
   /**
@@ -121,10 +120,10 @@ export default class UniswapV3Pool extends IContract {
    * @param {bytes} params.data
    * @returns {Promise<void>}
    */
-  async flash({
+  flash({
     recipient, amount0, amount1, data,
   }, options) {
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.flash(recipient, amount0, amount1, data),
       options,
     );
@@ -135,8 +134,8 @@ export default class UniswapV3Pool extends IContract {
    * @param {uint16} params.observationCardinalityNext
    * @returns {Promise<void>}
    */
-  async increaseObservationCardinalityNext({ observationCardinalityNext }, options) {
-    return await this.__sendTx(
+  increaseObservationCardinalityNext({ observationCardinalityNext }, options) {
+    return this.__sendTx(
       this.getContract().methods.increaseObservationCardinalityNext(observationCardinalityNext),
       options,
     );
@@ -147,8 +146,8 @@ export default class UniswapV3Pool extends IContract {
    * @param {uint160} params.sqrtPriceX96
    * @returns {Promise<void>}
    */
-  async initialize({ sqrtPriceX96 }, options) {
-    return await this.__sendTx(
+  initialize({ sqrtPriceX96 }, options) {
+    return this.__sendTx(
       this.getContract().methods.initialize(sqrtPriceX96),
       options,
     );
@@ -157,15 +156,15 @@ export default class UniswapV3Pool extends IContract {
   /**
    * @returns {Promise<uint128>}
    */
-  async liquidity() {
-    return await this.getContract().methods.liquidity().call();
+  liquidity() {
+    return this.getContract().methods.liquidity().call();
   }
 
   /**
    * @returns {Promise<uint128>}
    */
-  async maxLiquidityPerTick() {
-    return await this.getContract().methods.maxLiquidityPerTick().call();
+  maxLiquidityPerTick() {
+    return this.getContract().methods.maxLiquidityPerTick().call();
   }
 
   /** @typedef {Object} UniswapV3Pool~mintType
@@ -220,8 +219,8 @@ export default class UniswapV3Pool extends IContract {
    * @param {uint32[]} params.secondsAgos
    * @returns {Promise<UniswapV3Pool~observe>}
    */
-  async observe({ secondsAgos }, options) {
-    return await this.__sendTx(
+  observe({ secondsAgos }, options) {
+    return this.__sendTx(
       this.getContract().methods.observe(secondsAgos),
       options,
     );
@@ -265,8 +264,8 @@ export default class UniswapV3Pool extends IContract {
    * @param {uint8} params.feeProtocol1
    * @returns {Promise<void>}
    */
-  async setFeeProtocol({ feeProtocol0, feeProtocol1 }, options) {
-    return await this.__sendTx(
+  setFeeProtocol({ feeProtocol0, feeProtocol1 }, options) {
+    return this.__sendTx(
       this.getContract().methods.setFeeProtocol(feeProtocol0, feeProtocol1),
       options,
     );
@@ -353,15 +352,15 @@ export default class UniswapV3Pool extends IContract {
    * @param {int16}
    * @returns {Promise<uint256>}
    */
-  // async tickBitmap() {
-  //   return await this.getContract().methods.tickBitmap().call();
+  // tickBitmap() {
+  //   return this.getContract().methods.tickBitmap().call();
   // };
 
   /**
    * @returns {Promise<int24>}
    */
-  async tickSpacing() {
-    return await this.getContract().methods.tickSpacing().call();
+  tickSpacing() {
+    return this.getContract().methods.tickSpacing().call();
   }
 
   /** @typedef {Object} UniswapV3Pool~ticksType
@@ -396,14 +395,14 @@ export default class UniswapV3Pool extends IContract {
   /**
    * @returns {Promise<address>}
    */
-  async token0() {
-    return await this.getContract().methods.token0().call();
+  token0() {
+    return this.getContract().methods.token0().call();
   }
 
   /**
    * @returns {Promise<address>}
    */
-  async token1() {
-    return await this.getContract().methods.token1().call();
+  token1() {
+    return this.getContract().methods.token1().call();
   }
 }

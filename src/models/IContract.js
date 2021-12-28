@@ -401,8 +401,8 @@ class IContract {
    * @function
    * @return {Promise<string>} Account/Wallet in use
    */
-  async getUserCurrentAccount() {
-    return await this.web3Connection.getCurrentAccount();
+  getUserCurrentAccount() {
+    return this.web3Connection.getCurrentAccount();
   }
 
   /**
@@ -427,8 +427,8 @@ class IContract {
    * @description Get user wallets/signers from current provider
    * @return {Promise<Array>}
    */
-  async getSigners() {
-    return await this.web3Connection.getSigners();
+  getSigners() {
+    return this.web3Connection.getSigners();
   }
 
   /**

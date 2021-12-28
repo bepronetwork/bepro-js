@@ -1,10 +1,6 @@
-const truffleAssert = require('truffle-assertions');
-
-const sablierUtils = require('../sablier.utils');
-
 context('sablier.GetEarnings.context', async () => {
-  let alice;// = _this.alice;
-  let sender;// = alice;
+  // let alice;// = _this.alice;
+  // let sender;// = alice;
   // const opts = { from: sender };
 
   /* describe("when the ctoken is not whitelisted", () => {

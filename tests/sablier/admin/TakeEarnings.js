@@ -1,12 +1,9 @@
-/* eslint-disable no-await-in-loop */
-// const { dappConstants } = require("@sablier/dev-utils");
-// const project_root = process.cwd();
-// const { dappConstants, devConstants, mochaContexts } = require(project_root + "/src/sablier/dev-utils");
-const BigNumber = require('bignumber.js');
-const dayjs = require('dayjs');
-const truffleAssert = require('truffle-assertions');
-const { dappConstants, devConstants, mochaContexts } = require('../../../src/sablier/dev-utils');
-const beproAssert = require('../../../build/utils/beproAssert');
+import BigNumber from 'bignumber.js';
+import dayjs from 'dayjs';
+import truffleAssert from 'truffle-assertions';
+import { dappConstants, mochaContexts } from '../../../src/sablier/dev-utils';
+import beproAssert from '../../../build/utils/beproAssert';
+import sablierUtils from '../sablier.utils';
 
 const {
   FIVE_UNITS_CTOKEN,
@@ -20,12 +17,10 @@ const {
 } = dappConstants;
 const { contextForStreamDidStartButNotEnd } = mochaContexts;
 
-const sablierUtils = require('../sablier.utils');
-
 context('sablier.TakeEarnings.context', async () => {
   let alice;// = _this.alice;
-  let bob;// = _this.bob;
-  let eve;// = _this.eve;
+  // let bob;// = _this.bob;
+  // let eve;// = _this.eve;
   let admin;// = alice;
   let recipient;// = _this.bob;
   let now;// = new BigNumber(dayjs().unix());
@@ -35,8 +30,8 @@ context('sablier.TakeEarnings.context', async () => {
   before('sablier.TakeEarnings.before', async () => {
     await sablierUtils.initConfig();
     alice = _this.alice;
-    bob = _this.bob;
-    eve = _this.eve;
+    // bob = _this.bob;
+    // eve = _this.eve;
     admin = alice;
     recipient = _this.bob;
     now = new BigNumber(dayjs().unix());
@@ -65,12 +60,14 @@ context('sablier.TakeEarnings.context', async () => {
         // const now = new BigNumber(dayjs().unix());
         // const startTime = now.plus(STANDARD_TIME_OFFSET);
         // const stopTime = startTime.plus(STANDARD_TIME_DELTA);
-        console.log('---TakeEarnings.bp1');
 
         beforeEach(async () => {
           await _this.cToken.approve({ address: _this.sablier.getAddress(), amount: deposit });
-		      const allowance = await _this.cToken.allowance({ address: _this.userAddress, spenderAddress: _this.sablier.getAddress() });
-		      const result = await _this.sablier.createCompoundingStream({
+          await _this.cToken.allowance({
+            address: _this.userAddress,
+            spenderAddress: _this.sablier.getAddress(),
+          });
+          const result = await _this.sablier.createCompoundingStream({
             recipient,
             deposit,
             tokenAddress: _this.cToken.getAddress(),
@@ -80,22 +77,27 @@ context('sablier.TakeEarnings.context', async () => {
             recipientSharePercentage,
           });
           // const res = await beproAssert.createTransactionResult(_this.sablier.getContract(), result.transactionHash);
-		      // console.log('---TakeEarnings.result.beproAssert\n', res);
-		      // const res2 = await truffleAssert.createTransactionResult(_this.sablier.getContract(), result.transactionHash);
-		      // console.log('---TakeEarnings.result.truffleAssert\n', res2);
-		      // streamId = Number(result.logs[0].args.streamId);
-		      streamId = Number(result.events.CreateStream.returnValues.streamId);
-		      // console.log('---TakeEarnings.result.streamId:', streamId);
-          await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) });
-          await _this.cToken.supplyUnderlying({ supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
+          // console.log('---TakeEarnings.result.beproAssert\n', res);
+          // const res2 = await truffleAssert.createTransactionResult(_this.sablier.getContract(), result.transactionHash);
+          // console.log('---TakeEarnings.result.truffleAssert\n', res2);
+          // streamId = Number(result.logs[0].args.streamId);
+          streamId = Number(result.events.CreateStream.returnValues.streamId);
+          // console.log('---TakeEarnings.result.streamId:', streamId);
+          await _this.token.approve({
+            address: _this.cToken.getAddress(),
+            amount: STANDARD_SUPPLY_AMOUNT.toString(10),
+          });
+          await _this.cToken.supplyUnderlying({
+            supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10),
+          });
         });
 
-		    describe('when the amount is not zero', () => {
+        describe('when the amount is not zero', () => {
           const amount = FIVE_UNITS_CTOKEN.toString(10);
 
-		      contextForStreamDidStartButNotEnd(() => {
+          contextForStreamDidStartButNotEnd(() => {
             it('takes the earnings', async () => {
-              const balance0 = await _this.cToken.balanceOf(_this.userAddress);
+              await _this.cToken.balanceOf(_this.userAddress);
               await _this.sablier.withdrawFromStream({ streamId, amount });
               const balance = await _this.cToken.balanceOf(admin);
               const earningsAmount = await _this.sablier.getEarnings({ tokenAddress: _this.cToken.getAddress() });

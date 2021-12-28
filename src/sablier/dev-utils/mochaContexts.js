@@ -1,16 +1,12 @@
-/* eslint-disable func-names */
-/* global afterEach, beforeEach, describe */
-const BigNumber = require('bignumber.js');
-const dayjs = require('dayjs');
-const traveler = require('ganache-time-traveler');
+import BigNumber from 'bignumber.js';
+// import dayjs from 'dayjs';
+import traveler from 'ganache-time-traveler';
 
-const devConstants = require('./constants');
+import devConstants from './constants';
 
 const { STANDARD_TIME_OFFSET, STANDARD_TIME_DELTA } = devConstants;
 
-// import Numbers from '../../utils/Numbers';
-
-function contextForStreamDidStartButNotEnd(functions) {
+export const contextForStreamDidStartButNotEnd = functions => {
   let now;// = new BigNumber(dayjs().unix());
 
   describe('when the stream did start but not end', () => {
@@ -30,9 +26,9 @@ function contextForStreamDidStartButNotEnd(functions) {
       await traveler.advanceBlockAndSetTime(now.toNumber());
     });
   });
-}
+};
 
-function contextForStreamDidEnd(functions) {
+export const contextForStreamDidEnd = functions => {
   let now;// = new BigNumber(dayjs().unix());
 
   describe('when the stream did end', () => {
@@ -53,9 +49,4 @@ function contextForStreamDidEnd(functions) {
       await traveler.advanceBlockAndSetTime(now.toNumber());
     });
   });
-}
-
-module.exports = {
-  contextForStreamDidStartButNotEnd,
-  contextForStreamDidEnd,
 };

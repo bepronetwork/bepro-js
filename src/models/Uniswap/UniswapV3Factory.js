@@ -1,5 +1,4 @@
 import { uniswapFactory } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 
 /**
@@ -19,8 +18,8 @@ export default class UniswapV3Factory extends IContract {
    * @param {uint24} params.fee
    * @returns {Promise<address>} pool
    */
-  async createPool({ tokenA, tokenB, fee }, options) {
-    return await this.__sendTx(
+  createPool({ tokenA, tokenB, fee }, options) {
+    return this.__sendTx(
       this.getContract().methods.createPool(tokenA, tokenB, fee),
       options,
     );
@@ -32,8 +31,8 @@ export default class UniswapV3Factory extends IContract {
    * @param {int24} params.tickSpacing
    * @returns {Promise<void>}
    */
-  async enableFeeAmount({ fee, tickSpacing }, options) {
-    return await this.__sendTx(
+  enableFeeAmount({ fee, tickSpacing }, options) {
+    return this.__sendTx(
       this.getContract().methods.enableFeeAmount(fee, tickSpacing),
       options,
     );
@@ -44,8 +43,8 @@ export default class UniswapV3Factory extends IContract {
    * @param {uint24} params.fee
    * @returns {Promise<int24>}
    */
-  async feeAmountTickSpacing({ fee }) {
-    return await this.getContract().methods.feeAmountTickSpacing(fee).call();
+  feeAmountTickSpacing({ fee }) {
+    return this.getContract().methods.feeAmountTickSpacing(fee).call();
   }
 
   /**
@@ -55,15 +54,15 @@ export default class UniswapV3Factory extends IContract {
    * @param {uint24} params.fee
    * @returns {Promise<address>}
    */
-  async getPool({ tokenA, tokenB, fee }) {
-    return await this.getContract().methods.getPool(tokenA, tokenB, fee).call();
+  getPool({ tokenA, tokenB, fee }) {
+    return this.getContract().methods.getPool(tokenA, tokenB, fee).call();
   }
 
   /**
    * @returns {Promise<address>}
    */
-  async owner() {
-    return await this.getContract().methods.owner().call();
+  owner() {
+    return this.getContract().methods.owner().call();
   }
 
   /** @typedef {Object} UniswapV3Factory~parametersType
@@ -93,8 +92,8 @@ export default class UniswapV3Factory extends IContract {
    * @param {address} params.owner
    * @returns {Promise<void>}
    */
-  async setOwner({ owner }, options) {
-    return await this.__sendTx(
+  setOwner({ owner }, options) {
+    return this.__sendTx(
       this.getContract().methods.setOwner(owner),
       options,
     );

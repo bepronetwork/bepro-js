@@ -1,15 +1,14 @@
-const BigNumber = require('bignumber.js');
-const truffleAssert = require('truffle-assertions');
-
-const sablierUtils = require('../sablier.utils');
+import BigNumber from 'bignumber.js';
+import truffleAssert from 'truffle-assertions';
+import sablierUtils from '../sablier.utils';
 
 context('sablier.GetStream.context', async () => {
-  let sender;// = alice;
+  // let sender;// = alice;
   // const opts = { from: sender };
 
   before('sablier.GetStream.before', async () => {
     await sablierUtils.initConfig();
-    sender = _this.alice;
+    // sender = _this.alice;
   });
 
   describe('when the stream does not exist', () => {

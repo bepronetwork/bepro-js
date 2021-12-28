@@ -2,8 +2,6 @@ import { sablier } from '../../interfaces';
 import IContract from '../IContract';
 import Numbers from '../../utils/Numbers';
 
-const assert = require('assert');
-
 /**
  * Sablier Object for decentralized escrow payments
  * @class Sablier
@@ -20,8 +18,8 @@ export default class Sablier extends IContract {
    * @param {address} params.account Address to assign pauser role to.
    * @returns {Promise<void>}
    */
-  async addPauser({ account }, options) {
-    return await this.__sendTx(
+  addPauser({ account }, options) {
+    return this.__sendTx(
       this.getContract().methods.addPauser(account),
       options,
     );
@@ -31,8 +29,8 @@ export default class Sablier extends IContract {
    * Pause contract.
    * @returns {Promise<void>}
    */
-  async pause(options) {
-    return await this.__sendTx(
+  pause(options) {
+    return this.__sendTx(
       this.getContract().methods.pause(),
       options,
     );
@@ -42,8 +40,8 @@ export default class Sablier extends IContract {
    * Unpause/resume contract.
    * @returns {Promise<void>}
    */
-  async unpause(options) {
-    return await this.__sendTx(
+  unpause(options) {
+    return this.__sendTx(
       this.getContract().methods.unpause(),
       options,
     );
@@ -55,16 +53,16 @@ export default class Sablier extends IContract {
    * @param {address} params.account Address to check.
    * @returns {Promise<bool>}
    */
-  async isPauser({ account }) {
-    return await this.getContract().methods.isPauser(account).call();
+  isPauser({ account }) {
+    return this.getContract().methods.isPauser(account).call();
   }
 
   /**
    * Counter for new stream ids.
    * @returns {Promise<uint256>}
    */
-  async nextStreamId() {
-    return await this.getContract().methods.nextStreamId().call();
+  nextStreamId() {
+    return this.getContract().methods.nextStreamId().call();
   }
 
   /**
@@ -84,8 +82,8 @@ export default class Sablier extends IContract {
    * @param {uint256} params.feePercentage The new fee as a percentage, for example 75 means 75%.
    * @returns {Promise<void>}
    */
-  async updateFee({ feePercentage }, options) {
-    return await this.__sendTx(
+  updateFee({ feePercentage }, options) {
+    return this.__sendTx(
       this.getContract().methods.updateFee(feePercentage),
       options,
     );
@@ -105,7 +103,7 @@ export default class Sablier extends IContract {
       amount,
       decimals,
     );
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.takeEarnings(tokenAddress, amountWithDecimals),
       options,
     );
@@ -156,8 +154,8 @@ export default class Sablier extends IContract {
    * @param {uint256} params.streamId The id of the stream for which to query the delta.
    * @returns {Promise<uint256>} delta The time delta in seconds.
    */
-  async deltaOf({ streamId }) {
-    return await this.getContract().methods.deltaOf(streamId).call();
+  deltaOf({ streamId }) {
+    return this.getContract().methods.deltaOf(streamId).call();
   }
 
   /**
@@ -171,9 +169,7 @@ export default class Sablier extends IContract {
   async balanceOf({ streamId, who }) {
     const decimals = await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
     const balance = await this.getContract().methods.balanceOf(streamId, who).call();
-    const ret = Numbers.fromDecimalsToBN(balance, decimals);
-    console.log('---Sablier.balanceOf.RAW: decimals ', decimals, ' | balance: ', balance);
-    return ret;
+    return Numbers.fromDecimalsToBN(balance, decimals);
   }
 
   /**
@@ -182,8 +178,8 @@ export default class Sablier extends IContract {
    * @param {uint256} params.streamId The id of the compounding stream to check.
    * @returns {Promise<bool>} True if it is a compounding stream, otherwise false.
    */
-  async isCompoundingStream({ streamId }) {
-    return await this.getContract().methods.isCompoundingStream(streamId).call();
+  isCompoundingStream({ streamId }) {
+    return this.getContract().methods.isCompoundingStream(streamId).call();
   }
 
   /**
@@ -264,8 +260,7 @@ export default class Sablier extends IContract {
   async getEarnings({ tokenAddress }) {
     const earnings = await this.getContract().methods.getEarnings(tokenAddress).call();
     const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
-    const ret1 = Numbers.fromDecimalsToBN(earnings, decimals);
-    return ret1;
+    return Numbers.fromDecimalsToBN(earnings, decimals);
   }
 
   /**
@@ -295,7 +290,7 @@ export default class Sablier extends IContract {
   }, options) {
     const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const depositWithDecimals = Numbers.fromBNToDecimals(deposit, decimals);
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.createStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime),
       options,
     );
@@ -323,8 +318,16 @@ export default class Sablier extends IContract {
   }, options) {
     const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const depositWithDecimals = Numbers.fromBNToDecimals(deposit, decimals);
-    return await this.__sendTx(
-      this.getContract().methods.createCompoundingStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage),
+    return this.__sendTx(
+      this.getContract().methods.createCompoundingStream(
+        recipient,
+        depositWithDecimals,
+        tokenAddress,
+        startTime,
+        stopTime,
+        senderSharePercentage,
+        recipientSharePercentage,
+      ),
       options,
     );
   }
@@ -343,7 +346,7 @@ export default class Sablier extends IContract {
   async withdrawFromStream({ streamId, amount }, options) {
     const decimals = await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(amount, decimals);
-    return await this.__sendTx(
+    return this.__sendTx(
       this.getContract().methods.withdrawFromStream(streamId, amountWithDecimals),
       options,
     );
@@ -358,8 +361,8 @@ export default class Sablier extends IContract {
    * @param {uint256} params.streamId The id of the stream to cancel.
    * @returns {Promise<bool>} True if success, otherwise false.
    */
-  async cancelStream({ streamId }, options) {
-    return await this.__sendTx(
+  cancelStream({ streamId }, options) {
+    return this.__sendTx(
       this.getContract().methods.cancelStream(streamId),
       options,
     );
@@ -370,8 +373,8 @@ export default class Sablier extends IContract {
    * This is an utility function for DApp layer when converting to float numbers.
    * @param streamId The id of the stream.
    */
-  async getTokenDecimalsFromStream({ streamId }) {
-    return await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
+  getTokenDecimalsFromStream({ streamId }) {
+    return this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
   }
 
   /**
@@ -379,7 +382,7 @@ export default class Sablier extends IContract {
    * @return {Promise<void>}
    * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
    */
-  __assert = async () => {
+  __assert = () => {
     if (!this.getAddress()) {
       throw new Error(
         'Contract is not deployed, first deploy it and provide a contract address',

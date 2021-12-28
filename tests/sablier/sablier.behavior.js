@@ -1,4 +1,4 @@
-// eslint-disable-next-line max-len
+/* eslint-disable global-require */
 
 context('sablier.behavior.context', () => {
   /* describe("initialization", function() {

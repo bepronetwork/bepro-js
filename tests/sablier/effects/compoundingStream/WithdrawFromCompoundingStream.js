@@ -1,10 +1,9 @@
-import Numbers from '../../../../build/utils/Numbers';
-
-const BigNumber = require('bignumber.js');
-const dayjs = require('dayjs');
-const truffleAssert = require('truffle-assertions');
-const { dappConstants, mochaContexts } = require('../../../../src/sablier/dev-utils');
-const beproAssert = require('../../../../build/utils/beproAssert');
+import BigNumber from 'bignumber.js';
+import dayjs from 'dayjs';
+import truffleAssert from 'truffle-assertions';
+import { dappConstants, mochaContexts } from '../../../../src/sablier/dev-utils';
+import beproAssert from '../../../../build/utils/beproAssert';
+import sablierUtils from '../../sablier.utils';
 
 const {
   FIVE_UNITS_CTOKEN,
@@ -20,13 +19,9 @@ const {
 } = dappConstants;
 const { contextForStreamDidEnd, contextForStreamDidStartButNotEnd } = mochaContexts;
 
-const sablierUtils = require('../../sablier.utils');
-
 let sender;
 let recipient;
-let deposit;
 let streamId;
-let tokenDecimals;
 
 function runTests() {
   describe('when not paused', () => {
@@ -68,7 +63,10 @@ function runTests() {
 
       it('transfers the tokens and pays the interest to the recipient of the stream', async () => {
         const balance = await _this.cToken.balanceOf(recipient);
-        const { senderInterest, sablierInterest } = await _this.sablier.interestOf({ streamId, amount: streamedAmount });
+        const { senderInterest, sablierInterest } = await _this.sablier.interestOf({
+          streamId,
+          amount: streamedAmount,
+        });
         await _this.sablier.withdrawFromStream({ streamId, amount: streamedAmount });
         const netWithdrawalAmount = new BigNumber(streamedAmount).minus(senderInterest).minus(sablierInterest);
         const newBalance = await _this.cToken.balanceOf(recipient);
@@ -84,8 +82,11 @@ function runTests() {
         const newBalance = await _this.cToken.balanceOf(_this.sablier.getAddress());
         // The sender and the recipient's interests are included in `amount`,
         // so we don't subtract them again
-        newEarnings.should.tolerateTheBlockTimeVariation(new BigNumber(earnings).plus(sablierInterest), STANDARD_SCALE_INTEREST);
-		    newBalance.should.tolerateTheBlockTimeVariation(
+        newEarnings.should.tolerateTheBlockTimeVariation(
+          new BigNumber(earnings).plus(sablierInterest),
+          STANDARD_SCALE_INTEREST,
+        );
+        newBalance.should.tolerateTheBlockTimeVariation(
           new BigNumber(balance).minus(streamedAmount).plus(sablierInterest),
           STANDARD_SCALE_INTEREST,
         );
@@ -108,7 +109,10 @@ function runTests() {
         // Intuitively, one may say we don't have to tolerate the block time variation here.
         // However, the Sablier balance for the recipient can only go up from the bottom
         // low of `balance` - `amount`, due to uncontrollable runtime costs.
-        newBalance.should.tolerateTheBlockTimeVariation(new BigNumber(balance).minus(streamedAmount), STANDARD_SCALE_CTOKEN);
+        newBalance.should.tolerateTheBlockTimeVariation(
+          new BigNumber(balance).minus(streamedAmount),
+          STANDARD_SCALE_CTOKEN,
+        );
       });
     });
 
@@ -139,7 +143,10 @@ function runTests() {
 
       it('transfers the tokens and pays the interest to the recipient of the stream', async () => {
         const balance = await _this.cToken.balanceOf(recipient);
-        const { senderInterest, sablierInterest } = await _this.sablier.interestOf({ streamId, amount: streamedAmount });
+        const { senderInterest, sablierInterest } = await _this.sablier.interestOf({
+          streamId,
+          amount: streamedAmount,
+        });
         await _this.sablier.withdrawFromStream({ streamId, amount: streamedAmount });
         const netWithdrawalAmount = BigNumber(streamedAmount).minus(senderInterest).minus(sablierInterest);
         const newBalance = await _this.cToken.balanceOf(recipient);
@@ -155,7 +162,10 @@ function runTests() {
         const newBalance = await _this.cToken.balanceOf(_this.sablier.getAddress());
         // The sender and the recipient's interests are included in `amount`,
         // so we don't subtract them again
-        newEarnings.should.tolerateTheBlockTimeVariation(new BigNumber(earnings).plus(sablierInterest), STANDARD_SCALE_INTEREST);
+        newEarnings.should.tolerateTheBlockTimeVariation(
+          new BigNumber(earnings).plus(sablierInterest),
+          STANDARD_SCALE_INTEREST,
+        );
         newBalance.should.tolerateTheBlockTimeVariation(
           new BigNumber(balance).minus(streamedAmount).plus(sablierInterest),
           STANDARD_SCALE_INTEREST,
@@ -198,8 +208,8 @@ function runTests() {
 }
 
 context('sablier.WithdrawFromCompoundingStream.context', async () => {
-  let alice;// = _this.alice;
-  let bob;// = _this.bob;
+  // let alice;// = _this.alice;
+  // let bob;// = _this.bob;
   const deposit = STANDARD_SALARY_CTOKEN.toString(10);
   let now;// = new BigNumber(dayjs().unix());
   let startTime;// = now.plus(STANDARD_TIME_OFFSET);
@@ -207,8 +217,8 @@ context('sablier.WithdrawFromCompoundingStream.context', async () => {
 
   before('sablier.WithdrawFromCompoundingStream.before', async () => {
     await sablierUtils.initConfig();
-    alice = _this.alice;
-    bob = _this.bob;
+    // alice = _this.alice;
+    // bob = _this.bob;
     sender = _this.alice;
     recipient = _this.bob;
     now = new BigNumber(dayjs().unix());
@@ -239,11 +249,11 @@ context('sablier.WithdrawFromCompoundingStream.context', async () => {
         senderSharePercentage,
         recipientSharePercentage,
       });
-	    streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    // console.log('---WithdrawFromCompoundingStream.streamId.bp0: ', streamId);
+      streamId = Number(result.events.CreateStream.returnValues.streamId);
+      // console.log('---WithdrawFromCompoundingStream.streamId.bp0: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) });
       await _this.cToken.supplyUnderlying({ supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
-	    tokenDecimals = await _this.sablier.getTokenDecimalsFromStream({ streamId });
+      await _this.sablier.getTokenDecimalsFromStream({ streamId });
     });
 
     describe('when the sablier fee is not zero and is not 100', () => {
@@ -256,7 +266,7 @@ context('sablier.WithdrawFromCompoundingStream.context', async () => {
 
     describe('when the sablier fee is 0', () => {
       beforeEach(async () => {
-	    await _this.sablier.updateFee({ feePercentage: BigNumber(0) });
+        await _this.sablier.updateFee({ feePercentage: BigNumber(0) });
       });
 
       runTests();
@@ -286,7 +296,7 @@ context('sablier.WithdrawFromCompoundingStream.context', async () => {
         recipientSharePercentage,
       });
       streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    // console.log('---WithdrawFromCompoundingStream.streamId.bp1: ', streamId);
+      // console.log('---WithdrawFromCompoundingStream.streamId.bp1: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) });
       await _this.cToken.supplyUnderlying({ supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
     });
@@ -331,7 +341,7 @@ context('sablier.WithdrawFromCompoundingStream.context', async () => {
         recipientSharePercentage,
       });
       streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    // console.log('---WithdrawFromCompoundingStream.streamId.bp2: ', streamId);
+      // console.log('---WithdrawFromCompoundingStream.streamId.bp2: ', streamId);
       await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) });
       await _this.cToken.supplyUnderlying({ supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
     });

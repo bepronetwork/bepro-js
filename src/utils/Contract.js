@@ -31,7 +31,8 @@ class Contract {
                 resolve(receipt);
               }
             });
-        } catch (ex) {
+        }
+        catch (ex) {
           reject(ex);
         }
       });
@@ -74,7 +75,8 @@ class Contract {
         .on('error', err => {
           reject(err);
         });
-    } catch (err) {
+    }
+    catch (err) {
       reject(err);
     }
   });

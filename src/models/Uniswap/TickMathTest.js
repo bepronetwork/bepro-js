@@ -1,8 +1,7 @@
-import { tickMathTest } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
-import IContract from '../IContract';
+import BigNumber from 'bignumber.js';
 
-const BigNumber = require('bignumber.js');
+import { tickMathTest } from '../../interfaces';
+import IContract from '../IContract';
 
 /** @typedef {Object} TickMathTest~Options
 * @property {Boolean} test

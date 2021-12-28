@@ -250,7 +250,8 @@ context('ERC20TokenLock Contract', async () => {
       try {
         await erc20Lock.release({ address: userAddress });
         assert.fail();
-      } catch (err) {
+      }
+      catch (err) {
         assert(
           err.message.indexOf('tokens release date not reached') >= 0,
           'ERC20TokenLock.release should fail with expected error',

@@ -1,18 +1,14 @@
-import { expect, assert } from 'chai';
+import chai, { expect } from 'chai';
+import traveler from 'ganache-time-traveler';
+import BigNumber from 'bignumber.js';
+import chaiBigNumber from 'chai-bignumber';
+
 import { mochaAsync } from '../utils';
 import {
-  ERC20Contract, Network, NetworkFactory, ETHUtils, ERC20Mock,
+  ERC20Contract, Network, NetworkFactory, ERC20Mock,
 } from '../../build';
 import Numbers from '../../build/utils/Numbers';
 import beproAssert from '../../build/utils/beproAssert';
-
-const truffleAssert = require('truffle-assertions');
-
-const traveler = require('ganache-time-traveler');
-
-const BigNumber = require('bignumber.js');
-const chai = require('chai');
-const chaiBigNumber = require('chai-bignumber');
 
 chai.should();
 chai.use(chaiBigNumber(BigNumber));
@@ -22,7 +18,6 @@ global.web3 = undefined; // = web3Conn.web3;
 
 let snapshotId;
 
-let deployed_tokenAddress;
 const testConfig = {
   test: true,
   localtest: true, // ganache local blockchain
@@ -42,14 +37,13 @@ context('NetworkFactory Contract', async () => {
   let network2;
   let networkAddress2;
   let userAddress; //= user1
-  let user1; let user2; let user3; let
-    user4;
-  let app;
+  let user1;
+  let user2;
+  let user3;
 
   // load users/addresses/signers from connected wallet via contract
   const loadSigners = async contract => { // contract is IContract
-    console.log('...loadSigners');
-    [user1, user2, user3, user4] = await contract.getSigners();
+    [user1, user2, user3] = await contract.getSigners();
     userAddress = user1;
   };
 
@@ -59,17 +53,18 @@ context('NetworkFactory Contract', async () => {
     if (testConfig.localtest) {
       /// set global web3 object for ganache time traveler testing
       web3 = token.web3Connection.web3;
-      console.log('---networkFactory.before.web3: ', (web3 != null));
+      // console.log('---networkFactory.before.web3: ', (web3 != null));
       ///
 
       /// take blockchain snapshot
       const snapshot = await traveler.takeSnapshot();
       snapshotId = snapshot.result;
-      console.log('+++networkFactory.before.');
-      console.log('--- take blockchain snapshot ---');
+      // console.log('+++networkFactory.before.');
+      // console.log('--- take blockchain snapshot ---');
       ///
-    } else {
-      console.log('--- we only take blockchain snapshot for localtest ---');
+    }
+    else {
+      // console.log('--- we only take blockchain snapshot for localtest ---');
     }
   });
 
@@ -77,7 +72,7 @@ context('NetworkFactory Contract', async () => {
     networkFactory = new NetworkFactory(testConfig);
     // console.log("NetworkFactory", networkFactory)
     userAddress = await networkFactory.getUserAddress(); // local test with ganache
-    console.log(`networkFactory.userAddress: ${userAddress}`);
+    // console.log(`networkFactory.userAddress: ${userAddress}`);
   });
 
   /// this function is needed in all contracts working with an ERC20Contract token
@@ -97,9 +92,9 @@ context('NetworkFactory Contract', async () => {
       });
       await transactionalERC20.__assert();
       expect(res).to.not.equal(false);
-      console.log(
-        `TransactionalERC20Contract.deployed_tokenAddress: ${transactionalERC20.getAddress()}`,
-      );
+      // console.log(
+      //   `TransactionalERC20Contract.deployed_tokenAddress: ${transactionalERC20.getAddress()}`,
+      // );
     }),
   );
 
@@ -120,9 +115,9 @@ context('NetworkFactory Contract', async () => {
       });
       await settlerERC20.__assert();
       expect(res).to.not.equal(false);
-      console.log(
-        `SettlerERC20Contract.deployed_tokenAddress: ${settlerERC20.getAddress()}`,
-      );
+      // console.log(
+      //   `SettlerERC20Contract.deployed_tokenAddress: ${settlerERC20.getAddress()}`,
+      // );
     }),
   );
 
@@ -141,9 +136,9 @@ context('NetworkFactory Contract', async () => {
       });
       await beproERC20.__assert();
       expect(res).to.not.equal(false);
-      console.log(
-        `BeproERC20Contract.deployed_tokenAddress: ${beproERC20.getAddress()}`,
-      );
+      // console.log(
+      //   `BeproERC20Contract.deployed_tokenAddress: ${beproERC20.getAddress()}`,
+      // );
     }),
   );
 
@@ -169,9 +164,9 @@ context('NetworkFactory Contract', async () => {
       networkFactoryAddress = networkFactory.getAddress();
       expect(res).to.not.equal(false);
       expect(networkFactoryAddress).to.equal(res.contractAddress);
-      console.log(
-        `NetworkFactory.contractAddress: ${networkFactoryAddress}`,
-      );
+      // console.log(
+      //   `NetworkFactory.contractAddress: ${networkFactoryAddress}`,
+      // );
 
       // get/read more wallets for testing
       await loadSigners(networkFactory);
@@ -268,9 +263,9 @@ context('NetworkFactory Contract', async () => {
       const networksAmount = await networkFactory.networksAmount();
       networksAmount.should.be.bignumber.equal(1);
 
-      const networkAddress1 = await networkFactory.getNetworkById(0);
-      const networkAddress2 = await networkFactory.getNetworkByAddress(userAddress);
-      networkAddress1.should.be.equal(networkAddress2);
+      const address1 = await networkFactory.getNetworkById(0);
+      const address2 = await networkFactory.getNetworkByAddress(userAddress);
+      address1.should.be.equal(address2);
 
       // should emit event CreatedNetwork(uint256 indexed id, address indexed opener, uint256 indexed amount);
       const networkId = BigNumber(tx.events.CreatedNetwork.returnValues.id);
@@ -308,7 +303,7 @@ context('NetworkFactory Contract', async () => {
       networkFactory.switchWallet(user2);
       await networkFactory.lock({ tokenAmount: TOKENS_AMOUNT_1M });
 
-      const tx = await networkFactory.createNetwork({
+      await networkFactory.createNetwork({
         settlerToken: settlerERC20.getAddress(),
         transactionalToken: transactionalERC20.getAddress(),
       });
@@ -317,15 +312,15 @@ context('NetworkFactory Contract', async () => {
       const networksAmount = await networkFactory.networksAmount();
       networksAmount.should.be.bignumber.equal(2);
 
-      const networkAddress1 = await networkFactory.getNetworkById(0);
-      const networkAddress2 = await networkFactory.getNetworkByAddress(userAddress);
-      networkAddress1.should.be.equal(networkAddress2);
+      const address1 = await networkFactory.getNetworkById(0);
+      const address2 = await networkFactory.getNetworkByAddress(userAddress);
+      address1.should.be.equal(address2);
 
-      const networkAddress3 = await networkFactory.getNetworkById(1);
-      const networkAddress4 = await networkFactory.getNetworkByAddress(user2);
-      networkAddress3.should.be.equal(networkAddress4);
+      const address3 = await networkFactory.getNetworkById(1);
+      const address4 = await networkFactory.getNetworkByAddress(user2);
+      address3.should.be.equal(address4);
 
-      networkAddress1.should.not.be.equal(networkAddress3);
+      address1.should.not.be.equal(address3);
 
       // check tokensLockedTotal
       const tokensLockedTotal = await networkFactory.tokensLockedTotal();
@@ -424,9 +419,9 @@ context('NetworkFactory Contract', async () => {
     mochaAsync(async () => {
       network.switchWallet(user1);
       // approve tokens
-      let tx = await network.approveTransactionalERC20Token();
+      await network.approveTransactionalERC20Token();
       // open issue
-      tx = await network.openIssue({
+      await network.openIssue({
         cid: 'openissue1',
         tokenAmount: TOKENS_AMOUNT_1K,
       });
@@ -490,9 +485,9 @@ context('NetworkFactory Contract', async () => {
       const networksAmount = await networkFactory.networksAmount();
       networksAmount.should.be.bignumber.equal(3);
 
-      const networkAddress1 = await networkFactory.getNetworkById(2);
-      const networkAddress2 = await networkFactory.getNetworkByAddress(user2);
-      networkAddress1.should.be.equal(networkAddress2);
+      const address1 = await networkFactory.getNetworkById(2);
+      const address2 = await networkFactory.getNetworkByAddress(user2);
+      address1.should.be.equal(address2);
 
       // should emit event CreatedNetwork(uint256 indexed id, address indexed opener, uint256 indexed amount);
       const networkId = BigNumber(tx.events.CreatedNetwork.returnValues.id);
@@ -507,10 +502,11 @@ context('NetworkFactory Contract', async () => {
   after('NetworkFactory::after_hook', async () => {
     if (testConfig.localtest) {
       await traveler.revertToSnapshot(snapshotId);
-      console.log('+++networkFactory.after.');
-      console.log('--- revert blockchain to initial snapshot ---');
-    } else {
-      console.log('--- we only revert blockchain to initial snapshot for localtest ---');
+      // console.log('+++networkFactory.after.');
+      // console.log('--- revert blockchain to initial snapshot ---');
+    }
+    else {
+      // console.log('--- we only revert blockchain to initial snapshot for localtest ---');
     }
   });
 });

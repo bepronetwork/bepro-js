@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   AUTH_BOTH: 'only the sender or the recipient of the stream can perform this action',
   AUTH_RECIPIENT: 'only the stream recipient is allowed to perform this action',
   AUTH_SENDER: 'only the stream sender is allowed to perform this action',

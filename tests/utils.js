@@ -19,7 +19,8 @@ export const runAfter = (func, delayMs) => new Promise((resolve, reject) => {
     try {
       const res = await func();
       resolve(res);
-    } catch (err) {
+    }
+    catch (err) {
       reject(err);
     }
   }, delayMs);

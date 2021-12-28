@@ -2,7 +2,7 @@
 //* based on "truffle-assertions": "^0.8.2"
 //*
 
-const AssertionError = require('assertion-error');
+import AssertionError from 'assertion-error';
 
 const createAssertionMessage = (passedMessage, defaultMessage) => {
   let assertionMessage = defaultMessage;
@@ -119,7 +119,8 @@ const createTransactionResult = async (contract, transactionHash) => {
 const passes = async (asyncFn, message) => {
   try {
     await asyncFn;
-  } catch (error) {
+  }
+  catch (error) {
     const assertionMessage = createAssertionMessage(message, `Failed with ${error}`);
     throw new AssertionError(assertionMessage);
   }
@@ -128,11 +129,13 @@ const passes = async (asyncFn, message) => {
 const fails = async (asyncFn, errorType, reason, message) => {
   try {
     await asyncFn;
-  } catch (error) {
+  }
+  catch (error) {
     if (errorType && !error.message.includes(errorType)) {
       const assertionMessage = createAssertionMessage(message, `Expected to fail with ${errorType}, but failed with: ${error}`);
       throw new AssertionError(assertionMessage);
-    } else if (reason && !error.message.includes(reason)) {
+    }
+    else if (reason && !error.message.includes(reason)) {
       const assertionMessage = createAssertionMessage(message, `Expected to fail with ${reason}, but failed with: ${error}`);
       throw new AssertionError(assertionMessage);
     }
@@ -150,7 +153,7 @@ const ErrorType = {
   INVALID_JUMP: 'invalid JUMP',
 };
 
-module.exports = {
+export default {
   eventEmitted: (result, eventType, filter, message) => {
     assertEventEmittedFromTxResult(result, eventType, filter, message);
   },
@@ -158,6 +161,7 @@ module.exports = {
     assertEventNotEmittedFromTxResult(result, eventType, filter, message);
   },
   prettyPrintEmittedEvents: (result, indentationSize) => {
+    // eslint-disable-next-line no-console
     console.log(getPrettyEmittedEventsString(result, indentationSize));
   },
   createTransactionResult: (contract, transactionHash) => (

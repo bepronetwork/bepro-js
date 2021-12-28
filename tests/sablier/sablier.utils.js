@@ -1,22 +1,12 @@
-// const { devConstants } = require("@sablier/dev-utils");
-// const project_root = process.cwd();
-import { expect, assert } from 'chai';
-import { mochaAsync, mochaContextAsync } from '../utils';
-import { ERC20Contract, Sablier, ETHUtils } from '../../build';
+import { expect } from 'chai';
+import traveler from 'ganache-time-traveler';
+
+import { Sablier, ETHUtils } from '../../build';
 import CERC20Mock from '../../build/models/mocks/CERC20Mock';
 import ERC20Mock from '../../build/models/mocks/ERC20Mock';
+import { dappConstants, devConstants } from '../../src/sablier/dev-utils';
 
-const traveler = require('ganache-time-traveler');
-const { dappConstants, devConstants } = require('../../src/sablier/dev-utils');
-// import Numbers from "../../build/utils/Numbers";
-
-// import beproAssert from '../../build/utils/beproAssert';
-
-// const truffleAssert = require("truffle-assertions");
-// const BigNumber = require("bignumber.js");
-
-const { INITIAL_EXCHANGE_RATE, STANDARD_SALARY } = dappConstants;
-const { STANDARD_SABLIER_FEE } = dappConstants;
+const { STANDARD_SALARY } = dappConstants;
 
 // const lockSeconds = 30; // lock tokens for x amount of seconds
 // let endDate = moment().add(lockSeconds, "seconds");
@@ -38,11 +28,11 @@ global._this = {};
 
 let snapshotId;
 
-let erc20Contract;
+// let erc20Contract;
 let sablier;
 let userAddress;
-let contractAddress;
-let deployed_contractAddress;
+// let contractAddress;
+// let deployed_contractAddress;
 
 const deployEthUtils = async () => {
   const ethUtils = new ETHUtils(testConfig);
@@ -59,7 +49,7 @@ const initConfig = async () => {
   const token = new ERC20Mock(testConfig);
   expect(token).to.not.equal(null);
   // console.log('---sablier.initConfig.bp0');
-  const res = await token.deploy();
+  await token.deploy();
   // console.log('---sablier.initConfig.bp1');
   await token.__assert();
   // console.log('---sablier.initConfig.bp2');
@@ -69,13 +59,13 @@ const initConfig = async () => {
   // console.log('---sablier.initConfig.bp3');
 
   if (!_this.ethUtils) {
-    console.log('...sablier.deployEthUtils...');
+    // console.log('...sablier.deployEthUtils...');
     await deployEthUtils();
   }
 
   // if (testConfig.localtest) {
-  //	/// set global web3 object for ganache time traveler testing
-  //	web3 = token.web3Connection.web3;
+  //  /// set global web3 object for ganache time traveler testing
+  //  web3 = token.web3Connection.web3;
   // }
   // console.log('...initConfig.end');
 };
@@ -86,22 +76,23 @@ const runBefore = async () => {
   if (testConfig.localtest) {
     /// set global web3 object for ganache time traveler testing
     web3 = token.web3Connection.web3;
-    console.log('---sablier.before.web3: ', (web3 != null));
+    // console.log('---sablier.before.web3: ', (web3 != null));
     ///
 
     /// take blockchain snapshot
     const snapshot = await traveler.takeSnapshot();
     snapshotId = snapshot.result;
-    console.log('+++sablier.before.');
-    console.log('--- take blockchain snapshot ---');
+    // console.log('+++sablier.before.');
+    // console.log('--- take blockchain snapshot ---');
     ///
-  } else {
-    console.log('--- we only take blockchain snapshot for localtest ---');
+  }
+  else {
+    // console.log('--- we only take blockchain snapshot for localtest ---');
   }
 };
 
 const runBeforeEach = async () => {
-  console.log('---sablier.beforeEach.hook---');
+  // console.log('---sablier.beforeEach.hook---');
 
   await initConfig();
   userAddress = _this.userAddress;
@@ -121,8 +112,8 @@ const runBeforeEach = async () => {
 
   res = await sablier.deploy();
   await sablier.__assert();
-  contractAddress = sablier.getAddress();
-  deployed_contractAddress = sablier.getAddress();
+  // contractAddress = sablier.getAddress();
+  // deployed_contractAddress = sablier.getAddress();
   // console.log("Deployed Sablier address: " + deployed_contractAddress);
   expect(res).to.not.equal(false);
 
@@ -160,14 +151,15 @@ const runAfter = async () => {
 
   if (testConfig.localtest) {
     await traveler.revertToSnapshot(snapshotId);
-    console.log('+++sablier.after.');
-    console.log('--- revert blockchain to initial snapshot ---');
-  } else {
-    console.log('--- we only revert blockchain to initial snapshot for localtest ---');
+    // console.log('+++sablier.after.');
+    // console.log('--- revert blockchain to initial snapshot ---');
+  }
+  else {
+    // console.log('--- we only revert blockchain to initial snapshot for localtest ---');
   }
 };
 
-module.exports = {
+export default {
   initConfig,
   runBefore,
   runBeforeEach,

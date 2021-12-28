@@ -42,7 +42,8 @@ context('Application', async () => {
       try {
         app = new Application();
         assert.fail();
-      } catch (err) {
+      }
+      catch (err) {
         assert(
           err.message.indexOf('undefined') >= 0,
           'new Application() should fail with expected error',
