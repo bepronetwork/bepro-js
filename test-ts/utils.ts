@@ -2,11 +2,18 @@ import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {Web3Connection} from '@base/web3-connection';
 import {ERC20} from '@models/erc20';
 import {toSmartContractDecimals} from '@utils/numbers';
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
+import {expect} from 'chai';
+
+export function getPrivateKeyFromFile() {
+  return Object.values(JSON.parse(readFileSync(resolve('./keys.json'), 'utf-8')).private_keys)[0] as string;
+}
 
 export function defaultWeb3Connection() {
   const options: Web3ConnectionOptions = {
     web3Host: process.env.WEB3_HOST_PROVIDER,
-    privateKey: process.env.WALLET_PRIVATE_KEY,
+    privateKey: process.env.WALLET_PRIVATE_KEY || getPrivateKeyFromFile(),
     skipWindowAssignment: true,
   }
 
@@ -28,4 +35,15 @@ export async function erc20Deployer(name: string, symbol: string, cap = toSmartC
 
 export function newWeb3Account(web3Connection: Web3Connection) {
   return web3Connection.Web3.eth.accounts.create(`0xB3pR0Te511Ng`);
+}
+
+export async function shouldBeRejected(promise: Promise<any>, withErrorMessage?: string) {
+  try {
+    await promise;
+    expect(`to have failed`).to.not.exist;
+  } catch (e: any) {
+    if (withErrorMessage)
+      expect(e?.message).to.contain(withErrorMessage);
+    else expect(e).to.exist;
+  }
 }

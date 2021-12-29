@@ -24,7 +24,7 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
     if (!this.contract)
       super.loadContract();
 
-    this._decimals = await this.callTx(this.contract.methods.decimals());
+    this._decimals = await this.callTx(this.contract.methods.decimals()) || 18;
   }
 
   async name(): Promise<string> {

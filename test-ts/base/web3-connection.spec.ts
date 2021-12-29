@@ -3,6 +3,7 @@ import {expect} from 'chai';
 import {Web3Connection} from '@base/web3-connection';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {Errors} from '@interfaces/error-enum';
+import {getPrivateKeyFromFile} from '../utils';
 
 describe(`Web3Connection`, () => {
   it(`start() fails because missing web3host`, () => {
@@ -15,7 +16,7 @@ describe(`Web3Connection`, () => {
     before(() => {
       const options: Web3ConnectionOptions = {
         web3Host: process.env.WEB3_HOST_PROVIDER,
-        privateKey: process.env.WALLET_PRIVATE_KEY,
+        privateKey: process.env.WALLET_PRIVATE_KEY || getPrivateKeyFromFile(),
         skipWindowAssignment: true,
       }
 
@@ -35,8 +36,8 @@ describe(`Web3Connection`, () => {
       expect(await web3Connection.getBalance()).to.not.be.empty;
     });
 
-    it(`getETHNetworkId matches .env`, async () => {
-      expect(await web3Connection.getETHNetworkId()).to.not.eq(+process.env.WEB3_ETH_NETWORK_ID!);
+    it(`get ETHNetworkId`, async () => {
+      expect(await web3Connection.getETHNetworkId()).to.not.be.empty;
     });
   })
 })

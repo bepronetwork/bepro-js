@@ -12,6 +12,7 @@ import {Deployable} from '@interfaces/deployable';
 import {NetworkMethods} from '@methods/network';
 import {OraclesSummary} from '@interfaces/oracles-summary';
 import {AbiItem} from 'web3-utils';
+import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 
 export class Network extends Model<NetworkMethods> implements Deployable {
   private _transactionToken!: ERC20;
@@ -19,7 +20,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
   get transactionToken() { return this._transactionToken; }
   get settlerToken() { return this._settlerToken; }
 
-  constructor(web3Connection: Web3Connection, contractAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
     super(web3Connection, NetworkAbi.abi as AbiItem[], contractAddress);
   }
 

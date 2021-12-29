@@ -20,12 +20,12 @@
         "pretest": "npm run build && truffle compile && truffle migrate --network development",
         "prepublishOnly": "npm run build",
         "test:js": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test-ts/**/*.spec.{ts,tsx}' --pretty",
-        "test:truffle": "npm run truffle -- test --network development ./tests/contracts/erc20TokenLock-truffle.js",
+        "test:truffle": "truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
         "build": "npm run compile && babel ./src --out-dir lib --copy-files -d ./build",
         "build-ts": "tsc && tscpaths -p tsconfig.json -s ./src-ts -o ./dist",
         "docs": "typedoc",
         "clean:contracts": "rimraf build/contracts && ./node_modules/.bin/truffle compile",
-        "ganache:start": "ganache-cli -p 8545 -q"
+        "ganache:start": "ganache -p 8545 -q --account_keys_path keys.json "
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.2",
@@ -37,27 +37,27 @@
         "web3": "^1.6.1"
     },
     "devDependencies": {
+        "@truffle/hdwallet-provider": "^2.0.0",
         "@types/chai": "^4.3.0",
         "@types/mocha": "^9.0.0",
         "@types/yargs": "^17.0.7",
         "chai": "^4.3.4",
         "change-case": "^4.1.2",
+        "date-fns": "^2.27.0",
+        "ganache": "^7.0.0-beta.2",
+        "ganache-time-traveler": "^1.0.5",
         "mocha": "^9.1.3",
         "mocha-multi-reporters": "^1.5.1",
+        "truffle": "^5.4.26",
+        "truffle-assertions": "^0.8.2",
+        "truffle-plugin-verify": "^0.5.8",
         "ts-node": "^10.4.0",
+        "tsc-alias": "^1.5.0",
         "tsconfig-paths": "^3.12.0",
         "tscpaths": "^0.0.9",
         "typedoc": "^0.22.10",
         "typescript": "4.5.3",
-        "yargs": "^17.3.0",
-        "tsc-alias": "^1.5.0",
-        "truffle": "^5.4.3",
-        "truffle-assertions": "^0.8.2",
-        "truffle-plugin-verify": "^0.5.8",
-        "ganache-time-traveler": "^1.0.5",
-        "ganache-cli": "^6.12.2",
-        "@truffle/hdwallet-provider": "^2.0.0",
-        "date-fns": "^2.27.0"
+        "yargs": "^17.3.0"
     },
     "author": "",
     "license": "ISC"

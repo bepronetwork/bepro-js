@@ -10,8 +10,8 @@ import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {Errors} from '@interfaces/error-enum';
 
 export class NetworkFactory extends Model<NetworkFactoryMethods> implements Deployable {
-  private _settlerToken!: ERC20;
-  get settlerToken() { return this._settlerToken; }
+  private _erc20!: ERC20;
+  get erc20() { return this._erc20; }
 
   constructor(web3Connection: Web3Connection, contractAddress?: string) {
     super(web3Connection, NetworkFactoryAbi.abi as AbiItem[], contractAddress);
@@ -30,7 +30,7 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
   }
 
   async getBEPROLocked() {
-    return fromDecimals(await this.callTx(this.contract.methods.tokensLockedTotal()), this.settlerToken.decimals)
+    return +fromDecimals(await this.callTx(this.contract.methods.tokensLockedTotal()), this.erc20.decimals)
   }
 
   async getLockedStakedByAddress(address: string) {
@@ -38,7 +38,7 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
   }
 
   async OPERATOR_AMOUNT() {
-    return this.callTx(this.contract.methods.OPERATOR_AMOUNT());
+    return +fromDecimals(await this.callTx(this.contract.methods.OPERATOR_AMOUNT(), this.erc20.decimals));
   }
 
   async isOperator(address: string) {
@@ -46,11 +46,11 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
   }
 
   async approveSettlerERC20Token() {
-    return this.settlerToken.approve(this.contractAddress!, await this.settlerToken.totalSupply())
+    return this.erc20.approve(this.contractAddress!, await this.erc20.totalSupply())
   }
 
   async isApprovedSettlerToken(address: string = this.contractAddress!, amount: number) {
-    return this.settlerToken.isApproved(address, amount)
+    return this.erc20.isApproved(address, amount)
   }
 
   async getSettlerTokenAddress() {
@@ -61,15 +61,15 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.settlerToken.decimals) as number))
+    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.erc20.decimals) as number))
   }
 
   async unlock() {
     return this.sendTx(this.contract.methods.unlock());
   }
 
-  async createNetwork(settlerToken: string, transactionalToken: string) {
-    return this.sendTx(this.contract.methods.createNetwork(settlerToken, transactionalToken));
+  async createNetwork(erc20: string, transactionalToken: string) {
+    return this.sendTx(this.contract.methods.createNetwork(erc20, transactionalToken));
   }
 
   async start() {
@@ -81,7 +81,8 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
     if (!this.contract)
       super.loadContract();
 
-    this._settlerToken = new ERC20(this.web3Connection, await this.getSettlerTokenAddress())
+    this._erc20 = new ERC20(this.web3Connection, await this.getSettlerTokenAddress());
+    await this._erc20.loadContract();
   }
 
   deployJsonAbi(erc20ContractAddress: string): Promise<TransactionReceipt> {
