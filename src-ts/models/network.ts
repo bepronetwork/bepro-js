@@ -148,19 +148,25 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     return networkMerge(await this.callTx(this.contract.methods.getMergeById(issueId, mergeId)), this.transactionToken.decimals)
   }
 
-  async approveSettlerERC20Token() {
-    return this.settlerToken.approve(this.contractAddress!, await this.settlerToken.totalSupply())
+  async approveSettlerERC20Token(amount?: number, address = this.contractAddress!) {
+    if (!amount)
+      amount = await this.settlerToken.totalSupply();
+
+    return this.settlerToken.approve(address, amount);
   }
 
-  async approveTransactionalERC20Token() {
-    return this.transactionToken.approve(this.contractAddress!, await this.transactionToken.totalSupply())
+  async approveTransactionalERC20Token(amount?: number, address = this.contractAddress!) {
+    if (!amount)
+      amount = await this.transactionToken.totalSupply();
+
+    return this.transactionToken.approve(address, amount)
   }
 
-  async isApprovedSettlerToken(address: string = this.contractAddress!, amount: number) {
+  async isApprovedSettlerToken(amount: number, address: string = this.contractAddress!) {
     return this.settlerToken.isApproved(address, amount)
   }
 
-  async isApprovedTransactionalToken(address: string = this.contractAddress!, amount: number) {
+  async isApprovedTransactionalToken(amount: number, address: string = this.contractAddress!) {
     return this.transactionToken.isApproved(address, amount)
   }
 
@@ -193,9 +199,6 @@ export class Network extends Model<NetworkMethods> implements Deployable {
   }
 
   async updateIssue(id: number, amount: number) {
-    if (amount <= 0)
-      throw new Error(Errors.AmountNeedsToBeHigherThanZero);
-
     return this.sendTx(this.contract.methods.updateIssue(id, toSmartContractDecimals(amount, this.settlerToken.decimals, true) as number))
   }
 

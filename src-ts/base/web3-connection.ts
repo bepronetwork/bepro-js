@@ -38,6 +38,8 @@ export class Web3Connection {
     this.web3 = new Web3((window as any).ethereum)
     await (window as any).ethereum.enable();
 
+    this.web3.eth.handleRevert = false;
+
     if (!this.options.skipWindowAssignment)
       (window as any).web3 = this.web3;
 

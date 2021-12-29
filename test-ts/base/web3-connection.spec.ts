@@ -37,7 +37,7 @@ describe(`Web3Connection`, () => {
     });
 
     it(`get ETHNetworkId`, async () => {
-      expect(await web3Connection.getETHNetworkId()).to.not.be.empty;
+      expect(await web3Connection.getETHNetworkId()).to.exist;
     });
   })
 })

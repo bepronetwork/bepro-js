@@ -26,7 +26,7 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
   }
 
   async getAmountOfNetworksForked() {
-    return this.callTx(this.contract.methods.networksAmount())
+    return +(await this.callTx(this.contract.methods.networksAmount()));
   }
 
   async getBEPROLocked() {

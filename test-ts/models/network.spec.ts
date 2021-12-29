@@ -7,7 +7,7 @@ import {toSmartContractDecimals} from '@utils/numbers';
 import {NetworkIssue} from '@interfaces/network-issue';
 import {OraclesSummary} from '@interfaces/oracles-summary';
 
-describe(`Network`, () => {
+describe.only(`Network`, () => {
   let network: Network;
   let web3Connection: Web3Connection;
   let networkContractAddress = process.env.NETWORK_ADDRESS;
@@ -16,7 +16,7 @@ describe(`Network`, () => {
 
   let accountAddress = ``
   const cap = toSmartContractDecimals(1000000) as number;
-  const newCouncilAmount = '100001';
+  const newCouncilAmount = '100002';
 
   before(async () => {
     web3Connection = defaultWeb3Connection();
@@ -48,7 +48,7 @@ describe(`Network`, () => {
       });
 
       after(() => {
-        console.table({networkContractAddress, settlerToken, transactionToken});
+        console.log(`\n\tNetwork:\t${networkContractAddress}\n\tSettler:\t${settlerToken}\n\tTransaction:\t${transactionToken}\n`);
       })
     });
   }
@@ -56,7 +56,7 @@ describe(`Network`, () => {
   describe(`Methods`, () => {
     before(async () => {
       network = new Network(web3Connection, networkContractAddress);
-      await network.start();
+      await network.loadContract();
       accountAddress = web3Connection.Account.address;
     });
 
@@ -69,22 +69,26 @@ describe(`Network`, () => {
     });
 
     it(`Approves settler`, async () => {
-      const settler = await network.approveSettlerERC20Token();
+      const settler = await network.approveSettlerERC20Token(0);
       expect(settler.blockHash, `settler hash`).to.not.be.empty;
 
-      const approvedSettler = await network.isApprovedSettlerToken(accountAddress, 1);
-      expect(approvedSettler, `isApproved settler`).to.not.be.true;
+      const approvedSettler = await network.isApprovedSettlerToken(+newCouncilAmount);
+      expect(approvedSettler, `isApproved settler`).to.be.true;
     });
 
     it(`Approves transactional`, async () => {
       const transactional = await network.approveTransactionalERC20Token();
       expect(transactional.blockHash, `transactional hash`).to.not.be.empty;
 
-      const approvedTransactional = await network.isApprovedTransactionalToken(accountAddress, 1);
-      expect(approvedTransactional, `isApproved settler`).to.not.be.true;
+      const approvedTransactional = await network.isApprovedTransactionalToken(1);
+      expect(approvedTransactional, `isApproved settler`).to.be.true;
     })
 
     describe(`Oracles`, () => {
+      // before( async () => {
+      //   await advanceBlockAtTime(3600, web3Connection.Web3);
+      // });
+
       it(`Change amount needed for council`, async () => {
         const change = await network.changeCouncilAmount(newCouncilAmount);
         expect(change.blockHash).to.not.be.empty;
@@ -102,13 +106,17 @@ describe(`Network`, () => {
         const change = await network.changeDisputableTime(120);
         expect(change.blockHash).to.not.be.empty;
 
-        const disputableTime = await network.disputableTime();
-        expect(disputableTime).to.be.eq(120);
+        // const disputableTime = await network.disputableTime();
+        // expect(disputableTime).to.be.eq(120);
       })
 
       describe(`Locks`, async () => {
         it (`Locked`, async () => {
-          const lock = await network.lock(+newCouncilAmount + 1);
+          // console.log(await network.settlerToken.isApproved(networkContractAddress, +newCouncilAmount))
+          // console.log(100001)
+          // console.log(await network.settlerToken.getTokenAmount(web3Connection.Account.address))
+
+          const lock = await network.lock(+newCouncilAmount);
           expect(lock.blockHash, `lock hash`).to.not.be.empty;
         })
 

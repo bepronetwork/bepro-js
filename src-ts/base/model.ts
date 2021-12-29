@@ -72,17 +72,17 @@ export class Model<Methods = any> {
   }
 
   async sendTx(method: ContractSendMethod, value?: any): Promise<TransactionReceipt> {
+    return this.contract.sendSignedTx(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, this.account.address));
+  }
 
-    if (this.account)
-      return this.contract.send(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, this.account.address));
-
+  async sendUnsignedTx(method: ContractSendMethod, value?: any) {
     const from = (await this.web3.eth.getAccounts())[0];
     return new Promise((resolve, reject) => {
 
       method.send({from, value, ...this.contract.txOptions(method, value, from)})
-            .on(`confirmation`, (_n: number, receipt: TransactionReceipt) => resolve(receipt))
+            .on(`receipt`, (receipt: TransactionReceipt) => resolve(receipt))
             .on(`error`, (e) => reject(e));
-    })
+    });
   }
 
   protected async deploy(deployOptions: DeployOptions, account?: Account) {

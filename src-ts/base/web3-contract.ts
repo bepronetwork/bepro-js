@@ -15,17 +15,20 @@ export interface Web3ContractOptions {
   auto: boolean; // default: true, auto = true will calculate needed values if none is provided.
 }
 
-export class Web3Contract<Methods = any> {
-  protected contract!: Contract;
+export class Web3Contract<Methods = any, Events = any> {
+  readonly self!: Contract;
+
 
   constructor(readonly web3: Web3,
               readonly abi: AbiItem[],
               readonly address?: string,
               readonly options: Web3ContractOptions = {auto: true}) {
-    this.contract = new web3.eth.Contract(abi, address);
+    this.self = new web3.eth.Contract(abi, address);
   }
 
-  get methods(): Methods { return this.contract.methods; }
+  get methods(): Methods { return this.self.methods; }
+  get events(): Events { return this.self.events; }
+
   async txOptions(method: ContractSendMethod, value?: string, from?: string) {
     let {gas = 0, gasAmount = 0, gasPrice = ``, gasFactor = 1, auto = false} = this.options || {};
 
@@ -86,7 +89,7 @@ export class Web3Contract<Methods = any> {
   /**
    * Sends a signed transaction with the provided account
    */
-  async send(account: Account, data: string, value = ``, txOptions: Partial<TransactionConfig>): Promise<TransactionReceipt> {
+  async sendSignedTx(account: Account, data: string, value = ``, txOptions: Partial<TransactionConfig>): Promise<TransactionReceipt> {
     return new Promise(async (resolve, reject) => {
       try {
 
@@ -94,18 +97,12 @@ export class Web3Contract<Methods = any> {
         const to = this.address;
         const signedTx = await account.signTransaction({from, to, data, value, ...txOptions});
 
-        function onConfirmation(number: number, receipt: TransactionReceipt) {
-          if (DEFAULT_CONFIRMATIONS_NEEDED >= number)
-            resolve(receipt);
-        }
-
         this.web3.eth.sendSignedTransaction(signedTx.rawTransaction!)
-            .on(`confirmation`, onConfirmation)
+            .on(`receipt`, (receipt) => { resolve(receipt) })
             .on(`error`, (err) => reject(err));
       } catch (e) {
         reject(e);
       }
     })
-
   }
 }

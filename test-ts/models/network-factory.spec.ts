@@ -1,11 +1,11 @@
 import {Network, NetworkFactory, Web3Connection} from '../../src-ts';
-import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
+import {fromDecimals, toSmartContractDecimals} from '../../src-ts/utils/numbers';
 import {shouldBeRejected, defaultWeb3Connection, erc20Deployer} from '../utils';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src-ts/interfaces/error-enum';
 
-describe.only(`NetworkFactory`, () => {
+describe(`NetworkFactory`, () => {
 
   let web3Connection: Web3Connection;
   let networkFactoryContractAddress = process.env.NETWORK_FACTORY_ADDRESS;
@@ -42,7 +42,7 @@ describe.only(`NetworkFactory`, () => {
       networkFactoryContractAddress = receipt.contractAddress;
     });
     after(() => {
-      console.log(`\tDeployed Factory: ${networkFactoryContractAddress}\n\tDeployed ERC20: ${settlerToken}\n`)
+      console.log(`\n\tDeployed Factory: ${networkFactoryContractAddress}\n\tDeployed ERC20: ${settlerToken}\n`)
     })
   });
 
@@ -58,10 +58,6 @@ describe.only(`NetworkFactory`, () => {
     it(`Matches token address`, async () => {
       expect(await networkFactory.getSettlerTokenAddress()).to.be.eq(settlerToken);
     });
-
-    // it(`Matches cap`, async () => {
-    //   expect(await networkFactory.OPERATOR_AMOUNT()).to.be.eq(+fromDecimals(cap));
-    // });
 
     it(`Throws because no locked amount`, async () => {
       await shouldBeRejected(networkFactory.createNetwork(settlerToken!, settlerToken!), `has to lock`);
@@ -81,17 +77,17 @@ describe.only(`NetworkFactory`, () => {
 
     it(`Approves and locks settler`, async () => {
       await networkFactory.approveSettlerERC20Token();
-      const tx = await networkFactory.lock(cap)
+      const tx = await networkFactory.lock(+fromDecimals(cap))
       expect(tx.blockHash, `lock action`).to.not.be.empty;
-      expect(await networkFactory.getBEPROLocked(), `locked total`).to.eq(cap);
+      expect(await networkFactory.getBEPROLocked(), `locked total`).to.eq(+fromDecimals(cap));
     });
 
     it(`Should create a new network`, async () => {
       const tx = await networkFactory.createNetwork(networkToken!, networkToken!);
-
       expect(await networkFactory.getAmountOfNetworksForked(), `Amount of networks`).to.eq(1);
-      expect(tx.events, `Events`).to.exist;
-      expect(Object.keys(tx.events!), `CreatedNetwork`).to.contain.oneOf(['CreatedNetwork']);
+
+      const event = await networkFactory.contract.self.getPastEvents(`CreatedNetwork`, {filter: {transactionHash: tx.transactionHash}})
+      expect(event[0].returnValues[1], `Event opener`).to.be.eq(web3Connection.Account.address);
     });
 
     it(`Throws because one network per user`, async () => {
@@ -102,7 +98,8 @@ describe.only(`NetworkFactory`, () => {
       let network!: Network;
 
       before(async () => {
-        network = new Network(web3Connection, await networkFactory.getNetworkByAddress(web3Connection.Account.address))
+        network = new Network(web3Connection, await networkFactory.getNetworkByAddress(web3Connection.Account.address));
+        await network.loadContract();
       })
 
       it(`Locks tokens and throws because can't unlock`, async () => {
@@ -115,7 +112,8 @@ describe.only(`NetworkFactory`, () => {
       it(`Creates an issue and throws because can't unlock`, async () => {
         await network.openIssue(`cid1`, 10);
         await shouldBeRejected(networkFactory.unlock(), `have 0 Transactional`);
-        await network.redeemIssue(0);
+        await network.updateIssue(1, 0);
+        await network.redeemIssue(1);
       });
 
       it(`Should unlock because issue was redeemed`, async () => {
@@ -123,6 +121,8 @@ describe.only(`NetworkFactory`, () => {
       });
 
       it(`Creates a new network because we have already unlocked`, async () => {
+        await networkFactory.approveSettlerERC20Token();
+        await networkFactory.lock(+fromDecimals(cap))
         expect((await networkFactory.createNetwork(settlerToken!, settlerToken!))?.blockHash).to.exist;
       })
     })
