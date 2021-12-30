@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 //* ganache local test assertions utils
 //* based on "truffle-assertions": "^0.8.2"
 //*

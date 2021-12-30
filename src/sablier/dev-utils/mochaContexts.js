@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 import BigNumber from 'bignumber.js';
 // import dayjs from 'dayjs';
 import traveler from 'ganache-time-traveler';
