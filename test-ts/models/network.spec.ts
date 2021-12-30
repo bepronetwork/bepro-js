@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Network} from '@models/network';
-import {defaultWeb3Connection, erc20Deployer, increaseTime, newWeb3Account} from '../utils';
+import {defaultWeb3Connection, erc20Deployer, increaseTime, newWeb3Account,} from '../utils';
 import {Web3Connection} from '@base/web3-connection';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {NetworkIssue} from '@interfaces/network-issue';
@@ -74,6 +74,12 @@ describe(`Network`, () => {
 
       const approvedSettler = await network.isApprovedSettlerToken(+newCouncilAmount);
       expect(approvedSettler, `isApproved settler`).to.be.true;
+
+      const events = await network.settlerToken.contract.self.getPastEvents(`Approval`, {fromBlock: settler.blockNumber});
+
+      expect(events[0].returnValues['spender']).to.be.eq(networkContractAddress);
+      expect(events[0].returnValues['owner']).to.be.eq(accountAddress);
+      expect(events[0].returnValues['value']).to.be.eq(cap);
     });
 
     it(`Approves transactional`, async () => {
@@ -85,9 +91,7 @@ describe(`Network`, () => {
     })
 
     describe(`Oracles`, () => {
-      // before( async () => {
-      //   await advanceBlockAtTime(3600, web3Connection.Web3);
-      // });
+
 
       it(`Change amount needed for council`, async () => {
         const change = await network.changeCouncilAmount(newCouncilAmount);
@@ -110,25 +114,23 @@ describe(`Network`, () => {
         // expect(disputableTime).to.be.eq(120);
       })
 
-      describe.skip(`Locks`, async () => {
+      describe(`Locks`, async () => {
         it (`Locked`, async () => {
           const lock = await network.lock(+newCouncilAmount);
-          expect(lock.blockHash, `lock hash`).to.not.be.empty;
+          expect(lock.transactionHash, `lock hash`).to.not.be.empty;
         })
 
         it(`assert locked`, async () => {
-          const isCouncil = await network.isCouncil(accountAddress);
-          expect(isCouncil, `is council`).to.be.true;
+          expect(await network.isCouncil(accountAddress), `is council`).to.be.true;
         })
 
         it(`Check bepro staked`, async () => {
-          const beproStaked = await network.getBEPROStaked();
-          expect(beproStaked, `bepro staked`).to.be.greaterThan(0);
+          expect(await network.getBEPROStaked(), `bepro staked`).to.be.greaterThan(0);
         });
 
       });
 
-      describe.skip('delegation', () => {
+      describe('delegation', () => {
         let receiver: string;
         let delegated: OraclesSummary;
 
@@ -158,7 +160,7 @@ describe(`Network`, () => {
 
       });
 
-      describe.skip(`Unlock`, () => {
+      describe(`Unlock`, () => {
         it (`unlocks`, async () => {
           const amount = await network.getOraclesByAddress(accountAddress);
           const unlock = await network.unlock(amount, accountAddress);
@@ -229,25 +231,25 @@ describe(`Network`, () => {
             expect(recognize.blockHash, `recognize hash`).to.not.be.empty;
           });
 
-          it.skip(`Proposes issue merge`, async () => {
+          it(`Proposes issue merge`, async () => {
             await network.lock(+newCouncilAmount+1);
             const proposal = await network.proposeIssueMerge(issue._id, [accountAddress], [1]);
             expect(proposal.blockHash, `proposal hash`).to.not.be.empty;
           });
 
-          it.skip(`Disputes issue merge`, async () => {
+          it(`Disputes issue merge`, async () => {
             await network.lock(1);
             const dispute = await network.disputeMerge(issue._id, 0);
             expect(dispute.blockHash, `dispute blockhash`).to.not.be.empty;
           });
 
-          it.skip(`Asserts merge dispute`, async () => {
+          it(`Asserts merge dispute`, async () => {
             const disputed = await network.isMergeDisputed(issue._id, 0);
             expect(disputed, `disputed`).to.be.true;
           });
         })
 
-        describe.skip(`after disputableTime()`, () => {
+        describe(`after disputableTime()`, () => {
           before(async () => {
             await network.proposeIssueMerge(issue._id, [accountAddress], [1])
             await increaseTime(61, web3Connection.Web3);

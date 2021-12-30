@@ -174,7 +174,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.settlerToken.decimals) as number ))
+    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.settlerToken.decimals) as number))
   }
 
   async unlock(amount: number, from: string) {
@@ -236,7 +236,8 @@ export class Network extends Model<NetworkMethods> implements Deployable {
       throw new Error(Errors.MissingContractAddress);
 
     const transactionAddress = await this.getTransactionTokenAddress();
-    const settlerAddress = await this.getTransactionTokenAddress();
+    const settlerAddress = await this.getSettlerTokenAddress();
+
     this._transactionToken = new ERC20(this.web3Connection, transactionAddress);
     this._settlerToken = new ERC20(this.web3Connection, settlerAddress);
 

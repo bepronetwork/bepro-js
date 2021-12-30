@@ -3,10 +3,10 @@ import {ERC20} from '@models/erc20';
 import {expect} from 'chai';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {describe} from 'mocha';
-import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile,} from '../utils';
+import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, shouldBeRejected,} from '../utils';
 import {Web3Connection, Web3Contract} from '../../src-ts';
 
-describe.only(`ERC20`, () => {
+describe(`ERC20`, () => {
   let erc20: ERC20;
   let erc20ContractAddress = process.env.ERC20_ADDRESS;
   let contractExisted = !!erc20ContractAddress;
@@ -79,7 +79,9 @@ describe.only(`ERC20`, () => {
       await _erc20.transferFrom(web3Connection.Account.address, newAddress, 3);
 
       expect(await erc20.getTokenAmount(newAddress)).to.eq(3);
-    })
+      expect(await erc20.allowance(newAddress, web3Connection.Account.address)).to.be.eq(0)
+      await shouldBeRejected(erc20.transferFrom(newAddress, web3Connection.Account.address, 3));
+    });
   });
 
   after(() => {
