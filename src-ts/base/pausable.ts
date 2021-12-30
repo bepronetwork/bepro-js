@@ -5,7 +5,7 @@ import {PausableMethods} from '@methods/pausable';
 export class Pausable extends UseModel<PausableMethods> {
 
   async paused() {
-    return this.model.sendTx(this.model.contract.methods.paused());
+    return this.model.callTx(this.model.contract.methods.paused());
   }
 
   async whenNotPaused() {

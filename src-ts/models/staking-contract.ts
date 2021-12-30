@@ -19,15 +19,20 @@ export class StakingContract extends Model<StakingContractMethods> implements De
     super(web3Connection, StakingContractJson as any as AbiItem[], contractAddress);
   }
 
-  readonly ownable = new Ownable(this);
-  readonly pausable = new Pausable(this);
-
+  private _pausable!: Pausable;
+  private _ownable!: Ownable;
   private _erc20!: ERC20;
+
+  get pausable() { return this._pausable }
+  get ownable() { return this._ownable }
   get erc20() { return this._erc20; }
 
   async loadContract() {
     if (!this.contract)
       super.loadContract();
+
+    this._ownable = new Ownable(this);
+    this._pausable = new Pausable(this);
 
     this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods.erc20()));
     await this._erc20.loadContract();

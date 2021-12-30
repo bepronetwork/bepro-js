@@ -49,8 +49,11 @@ export async function shouldBeRejected(promise: Promise<any>, withErrorMessage?:
     else expect(e).to.exist;
   }
 }
+
+const payload = (method: string, params: any[] = []) => ({jsonrpc: `2.0`, method, params, id: 0});
+
 export async function increaseTime(time: number, web3: Web3) {
-  const payload = (method: string, params: any[] = []) => ({jsonrpc: `2.0`, method, params, id: 0});
+
   const timeAdvance = payload(`evm_increaseTime`, [time]);
   const mine = payload(`evm_mine`, []);
   const provider = (web3.currentProvider as HttpProvider|WebsocketProvider);
@@ -66,4 +69,20 @@ export async function increaseTime(time: number, web3: Web3) {
       })
     })
   });
+}
+
+export async function revertChain(web3: Web3) {
+  return new Promise((resolve, reject) => {
+    (web3.currentProvider as HttpProvider|WebsocketProvider)
+      .send(payload(`evm_revert`, []),
+            (err, resp) => {
+              if (err)
+                reject(err)
+              resolve(resp);
+            })
+  })
+}
+
+export async function hasTxBlockNumber(promise: Promise<any>) {
+  expect(await promise, `Failed tx`).property('blockNumber').to.exist;
 }

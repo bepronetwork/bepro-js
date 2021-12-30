@@ -14,14 +14,16 @@ import {Ownable} from '@base/ownable';
 import {IsOwnable, IsPausable} from '@interfaces/modifiers';
 
 export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Deployable, IsOwnable, IsPausable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
     super(web3Connection, ERC20TokenLock.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;
-  readonly pausable = new Pausable(this);
-  readonly ownable = new Ownable(this);
+  private _pausable!: Pausable;
+  private _ownable!: Ownable;
 
+  get pausable() { return this._pausable }
+  get ownable() { return this._ownable }
   get erc20() { return this._erc20; }
 
   async getMaxLock() {
@@ -37,7 +39,7 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
   }
 
   async totalAmountStaked() {
-    return fromDecimals(await this.callTx(this.contract.methods.totalAmountStaked()), this.erc20.decimals);
+    return +fromDecimals(await this.callTx(this.contract.methods.totalAmountStaked()), this.erc20.decimals);
   }
 
   async canRelease(address: string) {
@@ -45,7 +47,7 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
   }
 
   async getLockedTokens(address: string) {
-    return fromDecimals(await this.callTx(this.contract.methods.getLockedTokens(address)), this.erc20.decimals)
+    return +fromDecimals(await this.callTx(this.contract.methods.getLockedTokens(address)), this.erc20.decimals)
   }
 
   async getLockedTokensInfo(address: string) {
@@ -66,10 +68,6 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
     return this.erc20.approve(this.contractAddress!, await this.erc20.totalSupply());
   }
 
-  /**
-   * @param amount amount to lock
-   * @param endDate number of date in milliseconds
-   */
   async lock(amount: number, endDate: number) {
     await this.pausable.whenNotPaused();
 
@@ -86,12 +84,7 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
   }
 
   async release() {
-    const {endDate, amount} = await this.getLockedTokensInfo(await this.connection.getAddress());
-
-    if (!amount || +new Date() <= endDate)
-      throw new Error(Errors.NoLockedAmountOrNotReleaseDate)
-
-    return this.callTx(this.contract.methods.release())
+    return this.sendTx(this.contract.methods.release())
   }
 
   async start() {
@@ -103,6 +96,9 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
     if (!this.contract)
       super.loadContract();
 
+    this._ownable = new Ownable(this);
+    this._pausable = new Pausable(this);
+
     this._erc20 = new ERC20(this.web3Connection, await this.getERC20TokenAddress());
     await this._erc20.loadContract();
   }
@@ -113,7 +109,7 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
 
     const options = {
       data: ERC20TokenLock.bytecode,
-      params: [erc20ContractAddress || this.erc20.contractAddress]
+      arguments: [erc20ContractAddress || this.erc20.contractAddress]
     }
 
     return this.deploy(options);

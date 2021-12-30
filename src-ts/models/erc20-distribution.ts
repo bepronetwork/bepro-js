@@ -19,12 +19,18 @@ export class ERC20Distribution extends Model<ERC20DistributionMethods> implement
   private _erc20!: ERC20;
   get erc20() { return this._erc20; }
 
-  readonly pausable = new Pausable(this);
-  readonly ownable = new Ownable(this);
+  private _pausable!: Pausable;
+  private _ownable!: Ownable;
+
+  get pausable() { return this._pausable }
+  get ownable() { return this._ownable }
 
   async loadContract() {
     if (!this.contract)
       super.loadContract();
+
+    this._ownable = new Ownable(this);
+    this._pausable = new Pausable(this);
 
     this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods.erc20()));
     await this._erc20.loadContract();
