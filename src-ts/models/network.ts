@@ -174,7 +174,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.settlerToken.decimals) as number))
+    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.settlerToken.decimals) as number ))
   }
 
   async unlock(amount: number, from: string) {

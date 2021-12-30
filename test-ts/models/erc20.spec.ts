@@ -3,9 +3,10 @@ import {ERC20} from '@models/erc20';
 import {expect} from 'chai';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {describe} from 'mocha';
-import {defaultWeb3Connection, erc20Deployer} from '../utils';
+import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile,} from '../utils';
+import {Web3Connection, Web3Contract} from '../../src-ts';
 
-describe(`ERC20`, () => {
+describe.only(`ERC20`, () => {
   let erc20: ERC20;
   let erc20ContractAddress = process.env.ERC20_ADDRESS;
   let contractExisted = !!erc20ContractAddress;
@@ -62,6 +63,23 @@ describe(`ERC20`, () => {
     it(`Checks that transfer was successful`, async () => {
       expect(await erc20.getTokenAmount(web3Connection.Account.address)).to.be.lessThanOrEqual(+capAmount - 1);
     });
+
+    it(`Approves other and other sends to himself`, async () => {
+      const newAccount = web3Connection.Web3.eth.accounts.privateKeyToAccount(getPrivateKeyFromFile(1));
+      const privateKey = newAccount.privateKey;
+      const newAddress = newAccount.address;
+      const web3con = new Web3Connection({privateKey, web3Host: web3Connection.options.web3Host});
+      const _erc20 = new ERC20(web3con, erc20.contractAddress);
+
+      const empty = new Web3Contract(web3Connection.Web3, [], undefined, {gasAmount: 90000, auto: true});
+      await empty.sendSignedTx(web3Connection.Account, undefined as any, toSmartContractDecimals(1) as string, await empty.txOptions(undefined as any))
+
+      await _erc20.start();
+      await erc20.approve(newAddress, 1000);
+      await _erc20.transferFrom(web3Connection.Account.address, newAddress, 3);
+
+      expect(await erc20.getTokenAmount(newAddress)).to.eq(3);
+    })
   });
 
   after(() => {

@@ -75,7 +75,7 @@ export class Model<Methods = any> {
     return this.contract.sendSignedTx(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, this.account.address));
   }
 
-  async sendUnsignedTx(method: ContractSendMethod, value?: any) {
+  async sendUnsignedTx(method: ContractSendMethod, value?: any): Promise<TransactionReceipt> {
     const from = (await this.web3.eth.getAccounts())[0];
     return new Promise((resolve, reject) => {
 

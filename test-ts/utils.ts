@@ -8,8 +8,8 @@ import {expect} from 'chai';
 import Web3 from 'web3';
 import {HttpProvider, WebsocketProvider} from 'web3-core';
 
-export function getPrivateKeyFromFile() {
-  return Object.values(JSON.parse(readFileSync(resolve('./keys.json'), 'utf-8')).private_keys)[0] as string;
+export function getPrivateKeyFromFile(index = 0) {
+  return Object.values(JSON.parse(readFileSync(resolve('./keys.json'), 'utf-8')).private_keys)[index] as string;
 }
 
 export function defaultWeb3Connection() {
@@ -49,23 +49,21 @@ export async function shouldBeRejected(promise: Promise<any>, withErrorMessage?:
     else expect(e).to.exist;
   }
 }
-export async function advanceBlockAtTime(time: number, web3: Web3) {
-  return new Promise((resolve, reject) => {
-    (web3.currentProvider as HttpProvider|WebsocketProvider).send(
-      {
-        jsonrpc: "2.0",
-        method: "evm_mine",
-        params: [time],
-        id: new Date().getTime(),
-      },
-      async (err, _) => {
-        if (err) {
-          return reject(err);
-        }
-        const newBlockHash = (await web3.eth.getBlock("latest")).hash;
+export async function increaseTime(time: number, web3: Web3) {
+  const payload = (method: string, params: any[] = []) => ({jsonrpc: `2.0`, method, params, id: 0});
+  const timeAdvance = payload(`evm_increaseTime`, [time]);
+  const mine = payload(`evm_mine`, []);
+  const provider = (web3.currentProvider as HttpProvider|WebsocketProvider);
 
-        return resolve(newBlockHash);
-      },
-    );
+  return new Promise((resolve, reject) => {
+    provider.send(timeAdvance, (err,) => {
+      if (err)
+        reject(err);
+      else provider.send(mine, (err, resp) => {
+        if (err)
+          reject(err)
+        resolve(resp);
+      })
+    })
   });
 }

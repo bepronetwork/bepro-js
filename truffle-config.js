@@ -1,6 +1,6 @@
 
 require('dotenv').config();
-const HDWalletProvider = require("@truffle/hdwallet-provider");
+
 
 module.exports = {
   networks: {
@@ -8,12 +8,6 @@ module.exports = {
       host: '127.0.0.1',
       port: 8545,
       // network_id: '*', // Match any network id
-    },
-    ropsten: {
-      provider: new HDWalletProvider(process.env.WALLET_PRIVATE_KEY, process.env.WEB3_HOST_PROVIDER),
-      network_id: 3,
-      //gas: 500000,
-      networkCheckTimeout: 100000,
     }
   },
   // config custom test folder for smart contracts
