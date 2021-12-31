@@ -202,7 +202,7 @@ class CERC20Mock extends ERC20Contract {
 
     const underlying = this.getERC20Contract().getAddress();
 
-    const params = [underlying, initialExchangeRate, decimals];
+    const params = [ underlying, initialExchangeRate, decimals ];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */

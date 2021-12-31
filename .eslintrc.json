@@ -12,6 +12,7 @@
   "root": true,
 
   "rules": {
+    "array-bracket-spacing": ["error", "always"],
     "arrow-parens": ["error", "as-needed"],
     "brace-style": ["error", "stroustrup"],
     "camelcase": 0,

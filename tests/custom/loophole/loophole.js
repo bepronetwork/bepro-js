@@ -161,12 +161,12 @@ const validateWallet = wallet1 => {
 const loadSigners = async contract => { // contract is IContract
   // console.log('...loadSigners');
   // userAddress = await contract.getUserAddress();
-  [userAddress, userAddress2, userAddress3, userAddress4, userAddress5] = await contract.getSigners();
+  [ userAddress, userAddress2, userAddress3, userAddress4, userAddress5 ] = await contract.getAccounts();
   owner = userAddress;
 };
 
 // forward blockchain with x number of blocks, for testing purposes
-const forwardBlocks = async nblocks => Promise.all([...new Array(nblocks)].map(() => traveler.advanceBlock()));
+const forwardBlocks = async nblocks => Promise.all([ ...new Array(nblocks) ].map(() => traveler.advanceBlock()));
 
 const addWethPool = async () => {
   /// >>> setup loophole, add WETH pool
@@ -299,7 +299,7 @@ const fundLoopholeWithLP = async () => {
   await lpToken.transferTokenAmount({ toAddress: loopholeAddress, tokenAmount: BigNumber(TOKEN_AMOUNT_1M) });
 };
 
-const usersStake = async (pid, [userA, userB, userC, userD], [stakeA, stakeB, stakeC, stakeD]) => {
+const usersStake = async (pid, [ userA, userB, userC, userD ], [ stakeA, stakeB, stakeC, stakeD ]) => {
   loophole.switchWallet(userA);
   await loophole.stake({
     pid,
@@ -1521,7 +1521,7 @@ context('Loophole contract', () => {
       // const investorB = wallets[1];
       // const investorC = wallets[2];
       // const investorD = wallets[3];
-      const [investorA, investorB, investorC, investorD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+      const [ investorA, investorB, investorC, investorD ] = [ userAddress2, userAddress3, userAddress4, userAddress5 ];
       // const [investorA, investorB, investorC, investorD] = [userAddress, userAddress2, userAddress3, userAddress4];
       // assert we have all these wallets and we are NOT on a test net with a single account
       validateWallet(investorA);
@@ -1927,7 +1927,7 @@ context('Loophole contract', () => {
     });
 
     it('should exit/unstake with no revert/error', async () => {
-      const [investorA, investorB, investorC, investorD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+      const [ investorA, investorB, investorC, investorD ] = [ userAddress2, userAddress3, userAddress4, userAddress5 ];
       // assert we have all these wallets and we are NOT on a test net with a single account
       validateWallet(investorA);
       validateWallet(investorB);
@@ -2106,7 +2106,7 @@ context('Loophole contract', () => {
     });
 
     it('should exit/unstake with no revert/error', async () => {
-      const [investorA, investorB, investorC, investorD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+      const [ investorA, investorB, investorC, investorD ] = [ userAddress2, userAddress3, userAddress4, userAddress5 ];
       // assert we have all these wallets and we are NOT on a test net with a single account
       validateWallet(investorA);
       validateWallet(investorB);
@@ -2289,7 +2289,7 @@ context('Loophole contract', () => {
     // });
   });
 
-  let [userA, userB, userC, userD] = [0, 0, 0, 0];
+  let [ userA, userB, userC, userD ] = [ 0, 0, 0, 0 ];
   const wethShare = 0.3;
   const wbtcShare = 0.7;
   const wethBlocks = 9; // forward blocks
@@ -2373,7 +2373,7 @@ context('Loophole contract', () => {
       // deploy a NEW loophole contract
       await deployLoophole(setupWethAndWbtcPoolsConfig);
 
-      [userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+      [ userA, userB, userC, userD ] = [ userAddress2, userAddress3, userAddress4, userAddress5 ];
 
       await fundLoopholeWithLP();
       // approve WETH transfers for loophole contract
@@ -3443,7 +3443,7 @@ context('Loophole contract', () => {
       // deploy a NEW loophole contract
       await deployLoophole(setupWethAndWbtcPoolsConfig);
 
-      [userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+      [ userA, userB, userC, userD ] = [ userAddress2, userAddress3, userAddress4, userAddress5 ];
 
       await fundLoopholeWithLP();
       await approveBulkWethTransfers(userA, userB, userC, userD);
@@ -3451,12 +3451,12 @@ context('Loophole contract', () => {
     });
 
     it('users should stake some weth into WETH pool', async () => {
-      await usersStake(wethPid, [userA, userB, userC], [stakeA, stakeB, stakeC]);
+      await usersStake(wethPid, [ userA, userB, userC ], [ stakeA, stakeB, stakeC ]);
     });
 
     it('users should stake some LP into LOOP pool', async () => {
       // NOTE: use same amounts for weth and LP tokens for simplicity
-      await usersStake(lpPid, [userA, userB, userC], [stakeA, stakeB, stakeC]);
+      await usersStake(lpPid, [ userA, userB, userC ], [ stakeA, stakeB, stakeC ]);
 
       // NOTE: assert users stakes in the LOOP pool
       const userAstake = await loophole.currentStake({
@@ -3611,7 +3611,7 @@ context('Loophole contract', () => {
       // deploy a NEW loophole contract
       await deployLoophole(setupWethAndWbtcPoolsConfig);
 
-      [userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+      [ userA, userB, userC, userD ] = [ userAddress2, userAddress3, userAddress4, userAddress5 ];
 
       await fundLoopholeWithLP();
       await approveBulkWethTransfers(userA, userB, userC, userD);
@@ -3621,7 +3621,7 @@ context('Loophole contract', () => {
       // NOTE: setup conditions for last user exit
 
       // users stake weth
-      await usersStake(wethPid, [userA, userB], [stakeA, stakeB]);
+      await usersStake(wethPid, [ userA, userB ], [ stakeA, stakeB ]);
 
       // userA exits
       loophole.switchWallet(userA);
@@ -3705,7 +3705,7 @@ context('Loophole contract', () => {
       // deploy a NEW loophole contract
       await deployLoophole(setupWethAndWbtcPoolsConfig);
 
-      [userA, userB, userC, userD] = [userAddress2, userAddress3, userAddress4, userAddress5];
+      [ userA, userB, userC, userD ] = [ userAddress2, userAddress3, userAddress4, userAddress5 ];
 
       await fundLoopholeWithLP();
       await approveBulkWethTransfers(userA, userB, userC);
@@ -3715,7 +3715,7 @@ context('Loophole contract', () => {
       // NOTE: setup conditions for last user exit
 
       // users stake weth
-      await usersStake(wethPid, [userA, userB, userC], [stakeX, stakeY, stakeZ]);
+      await usersStake(wethPid, [ userA, userB, userC ], [ stakeX, stakeY, stakeZ ]);
 
       // userA exits
       loophole.switchWallet(userA);

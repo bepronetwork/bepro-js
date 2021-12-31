@@ -621,7 +621,7 @@ export default class Loophole extends IContract {
 
     const lpTokenDecimals = await this.ETHUtils().decimals(lpToken);
     const lpTokensPerBlock1 = Numbers.fromBNToDecimals(lpTokensPerBlock, lpTokenDecimals);
-    const params = [swapRouter, lpToken, lpTokensPerBlock1, startBlock, exitPenalty, exitPenaltyLP];
+    const params = [ swapRouter, lpToken, lpTokensPerBlock1, startBlock, exitPenalty, exitPenaltyLP ];
 
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;

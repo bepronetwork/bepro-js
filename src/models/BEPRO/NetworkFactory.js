@@ -260,7 +260,7 @@ class NetworkFactory extends IContract {
   deploy = async ({
     beproAddress, callback,
   }) => {
-    const params = [beproAddress];
+    const params = [ beproAddress ];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */

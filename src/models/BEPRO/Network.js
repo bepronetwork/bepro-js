@@ -681,7 +681,7 @@ class Network extends IContract {
   deploy = async ({
     settlerTokenAddress, transactionTokenAddress, governanceAddress, callback,
   }) => {
-    const params = [settlerTokenAddress, transactionTokenAddress, governanceAddress];
+    const params = [ settlerTokenAddress, transactionTokenAddress, governanceAddress ];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */

@@ -273,7 +273,7 @@ export default class SwapRouter extends IContract {
    * @return {Promise<*|undefined>}
    */
   deploy = async ({ callback } = {}) => {
-    const params = [this.params.factory, this.params.weth9];
+    const params = [ this.params.factory, this.params.weth9 ];
 
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;

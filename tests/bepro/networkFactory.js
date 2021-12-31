@@ -43,7 +43,7 @@ context('NetworkFactory Contract', async () => {
 
   // load users/addresses/signers from connected wallet via contract
   const loadSigners = async contract => { // contract is IContract
-    [user1, user2, user3] = await contract.getSigners();
+    [ user1, user2, user3 ] = await contract.getAccounts();
     userAddress = user1;
   };
 

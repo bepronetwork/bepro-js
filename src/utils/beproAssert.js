@@ -31,7 +31,7 @@ const assertEventListEmpty = (list, passedMessage, defaultMessage) => {
 /* Returns event string in the form of EventType(arg1, arg2, ...) */
 const getPrettyEventString = (eventType, args) => {
   let argString = '';
-  Object.entries(args).forEach(([key, value]) => {
+  Object.entries(args).forEach(([ key, value ]) => {
     argString += `, ${key}: ${value}`;
   });
   argString = argString.replace(', ', '');

@@ -225,7 +225,7 @@ class ERC20Contract extends IContract {
     if (!cap) {
       throw new Error('Please provide a cap');
     }
-    const params = [name, symbol, cap, distributionAddress];
+    const params = [ name, symbol, cap, distributionAddress ];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */

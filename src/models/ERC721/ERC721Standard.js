@@ -133,7 +133,7 @@ class ERC721Standard extends IContract {
     if (!symbol) {
       throw new Error('Please provide a symbol');
     }
-    const params = [name, symbol];
+    const params = [ name, symbol ];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */

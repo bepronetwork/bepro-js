@@ -177,7 +177,7 @@ class Web3Connection {
     if (this.selectedWallet === undefined || this.selectedWallet == null) { // we check for undefined and null
       const accounts = await this.web3.eth.getAccounts();
       // this.selectedWallet = accounts[0];
-      [this.selectedWallet] = accounts;
+      [ this.selectedWallet ] = accounts;
     }
     return this.selectedWallet;
   }

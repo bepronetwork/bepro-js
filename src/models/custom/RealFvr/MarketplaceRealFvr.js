@@ -204,7 +204,7 @@ class MarketplaceRealFvr extends IContract {
   deploy = async ({
     erc20TokenAddress = '0x0000000000000000000000000000000000000000', erc721TokenAddress, callback,
   }) => {
-    const params = [erc20TokenAddress, erc721TokenAddress];
+    const params = [ erc20TokenAddress, erc721TokenAddress ];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */

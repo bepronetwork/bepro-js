@@ -86,7 +86,7 @@ const Numbers = {
   fromBNToDecimals(value, decimals) {
     let val;
     const decimalsNr = Number(decimals);
-    const types = ['string', 'number'];
+    const types = [ 'string', 'number' ];
     if (types.includes(typeof (value))) val = new BigNumber(value);
     else val = value;
 
@@ -108,7 +108,7 @@ const Numbers = {
   fromDecimalsToBN(value, decimals) {
     let val;
     const decimalsNr = Number(decimals);
-    const types = ['string', 'number'];
+    const types = [ 'string', 'number' ];
     if (types.includes(typeof (value))) val = new BigNumber(value);
     else val = value;
 

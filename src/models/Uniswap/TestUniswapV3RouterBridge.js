@@ -79,7 +79,7 @@ export default class TestUniswapV3RouterBridge extends IContract {
   deploy = async ({
     callback,
   } = {}) => {
-    const params = [this.params.swapRouterAddress];
+    const params = [ this.params.swapRouterAddress ];
 
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;

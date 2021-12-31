@@ -310,7 +310,7 @@ class ERC20TokenLock extends IContract {
     if (!this.getERC20Contract()) {
       throw new Error('No Token Address Provided');
     }
-    const params = [this.getERC20Contract().getAddress()];
+    const params = [ this.getERC20Contract().getAddress() ];
 
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;

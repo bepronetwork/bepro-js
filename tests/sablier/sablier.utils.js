@@ -54,7 +54,7 @@ const initConfig = async () => {
   await token.__assert();
   // console.log('---sablier.initConfig.bp2');
 
-  [_this.alice, _this.bob, _this.carol, _this.eve] = await token.getSigners();
+  [ _this.alice, _this.bob, _this.carol, _this.eve ] = await token.getAccounts();
   _this.userAddress = _this.alice;
   // console.log('---sablier.initConfig.bp3');
 

@@ -429,7 +429,7 @@ class OpenerRealFvr extends IContract {
   deploy = async ({
     name, symbol, tokenAddress, callback,
   }) => {
-    const params = [name, symbol, tokenAddress];
+    const params = [ name, symbol, tokenAddress ];
     const res = await this.__deploy(params, callback);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */

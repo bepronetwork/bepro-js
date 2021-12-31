@@ -175,8 +175,8 @@ context('Network Contract', async () => {
       /* Call the function */
       res = await networkContract.proposeIssueMerge({
         issueID: 1,
-        prAddresses: ['0x139F33B91cF790524dD72c1F9B96E7949A5Bb798', '0x139F33B91cF790524dD72c1F9B96E7949A5Bb798'],
-        prAmounts: [800, 200],
+        prAddresses: [ '0x139F33B91cF790524dD72c1F9B96E7949A5Bb798', '0x139F33B91cF790524dD72c1F9B96E7949A5Bb798' ],
+        prAmounts: [ 800, 200 ],
       });
       expect(res).to.not.equal(false);
       /* Get result */
