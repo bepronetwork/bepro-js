@@ -108,7 +108,9 @@ const createTransactionResult = async (contract, transactionHash) => {
     const transactionReceipt = web3.eth.getTransactionReceipt(transactionHash);
     const { blockNumber } = transactionReceipt;
     contract.allEvents({ fromBlock: blockNumber, toBlock: blockNumber }).get((error, events) => {
-      if (error) reject(error);
+      if (error) {
+        reject(error);
+      }
       resolve({
         tx: transactionHash,
         receipt: transactionReceipt,

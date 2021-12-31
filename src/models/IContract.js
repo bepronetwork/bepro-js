@@ -48,7 +48,9 @@ class IContract {
       web3Connection: this.web3Connection,
     };
 
-    if (this.web3Connection.test) this._loadDataFromWeb3Connection();
+    if (this.web3Connection.test) {
+      this._loadDataFromWeb3Connection();
+    }
   }
 
   /**
@@ -382,7 +384,9 @@ class IContract {
    */
   async login() {
     const loginOk = await this.web3Connection.login();
-    if (loginOk) this._loadDataFromWeb3Connection();
+    if (loginOk) {
+      this._loadDataFromWeb3Connection();
+    }
     return loginOk;
   }
 

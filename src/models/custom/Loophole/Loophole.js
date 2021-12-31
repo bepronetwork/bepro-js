@@ -534,7 +534,9 @@ export default class Loophole extends IContract {
     if (this.isLoopPoolId(pid)) {
       selExitPenalty = await this.exitPenaltyLP();
     }
-    else selExitPenalty = await this.exitPenalty();
+    else {
+      selExitPenalty = await this.exitPenalty();
+    }
     const userInfo = await this.getUserInfo({ pid, user });
     const totalGrossUnstaked = userInfo.unstake.div(1 - selExitPenalty);
     return userInfo.entryStake.minus(totalGrossUnstaked);

@@ -157,7 +157,9 @@ class Web3Connection {
    * @return {Promise<string>} Account/Wallet in use
    */
   getCurrentAccount() {
-    if (this.account) return this.account;
+    if (this.account) {
+      return this.account;
+    }
     // return selected wallet in use otherwise
     return this.getAddress();
   }
@@ -201,8 +203,12 @@ class Web3Connection {
    * @return {Promise<void>}
    */
   switchWallet(newAccount) {
-    if (this.account) this.account = newAccount;
-    else this.selectedWallet = newAccount;
+    if (this.account) {
+      this.account = newAccount;
+    }
+    else {
+      this.selectedWallet = newAccount;
+    }
   }
 
   /**

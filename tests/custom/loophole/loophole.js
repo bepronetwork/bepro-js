@@ -208,8 +208,12 @@ const deployLoophole = async ({ startBlockNumber = 1, setupWeth = false, setupWb
 
   // deployedBlock = await ethUtils.blockNumber();
   // deployedBlock = BigNumber(0);
-  if (startBlockNumber) initStartBlock = startBlockNumber; // 0
-  else initStartBlock = BigNumber(1); // 0
+  if (startBlockNumber) {
+    initStartBlock = startBlockNumber;
+  } // 0
+  else {
+    initStartBlock = BigNumber(1);
+  } // 0
 
   // Create Contract
   const testConfig2 = {
@@ -274,10 +278,18 @@ const approveBulkWethTransfers = async (user1, user2, user3, user4) => {
     // console.log('...approveBulkWethTransfers: no users defined');
     return;
   }
-  if (user1) await approveWethTransfers(user1);
-  if (user2) await approveWethTransfers(user2);
-  if (user3) await approveWethTransfers(user3);
-  if (user4) await approveWethTransfers(user4);
+  if (user1) {
+    await approveWethTransfers(user1);
+  }
+  if (user2) {
+    await approveWethTransfers(user2);
+  }
+  if (user3) {
+    await approveWethTransfers(user3);
+  }
+  if (user4) {
+    await approveWethTransfers(user4);
+  }
 };
 
 // 4 normal users approve LP transfers to loophole contract
@@ -286,10 +298,18 @@ const approveBulkLPTransfers = async (user1, user2, user3, user4) => {
     // console.log('...approveBulkLPTransfers: no users defined');
     return;
   }
-  if (user1) await approveLPTransfers(user1);
-  if (user2) await approveLPTransfers(user2);
-  if (user3) await approveLPTransfers(user3);
-  if (user4) await approveLPTransfers(user4);
+  if (user1) {
+    await approveLPTransfers(user1);
+  }
+  if (user2) {
+    await approveLPTransfers(user2);
+  }
+  if (user3) {
+    await approveLPTransfers(user3);
+  }
+  if (user4) {
+    await approveLPTransfers(user4);
+  }
 };
 
 // send LP tokens to loophole contract and approve LP transfers by loophole for 4 users

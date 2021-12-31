@@ -18,12 +18,16 @@ const noExponents = value => {
   if (mag < 0) {
     z = `${sign}0.`;
     // eslint-disable-next-line no-plusplus
-    while (mag++) z += '0';
+    while (mag++) {
+      z += '0';
+    }
     return z + str.replace(/^-/, '');
   }
   mag -= str.length;
   // eslint-disable-next-line no-plusplus
-  while (mag--) z += '0';
+  while (mag--) {
+    z += '0';
+  }
   return str + z;
 };
 
@@ -84,11 +88,11 @@ const Numbers = {
   // value can be BigNumber, number or string, if string it will be converted to BigNumber
   // returns a string
   fromBNToDecimals(value, decimals) {
-    let val;
     const decimalsNr = Number(decimals);
     const types = [ 'string', 'number' ];
-    if (types.includes(typeof (value))) val = new BigNumber(value);
-    else val = value;
+    const val = types.includes(typeof (value))
+      ? new BigNumber(value)
+      : value;
 
     const tokens = val.shiftedBy(decimalsNr); // can have exponent like 1.2345e18
     const tokens2 = tokens.toFixed(); // this removes exponent and has all digits
@@ -106,11 +110,11 @@ const Numbers = {
   // parse value from smart contract to BigNumber because Number loose precision.
   // value can be BigNumber, number or string, if string it will be converted to BigNumber
   fromDecimalsToBN(value, decimals) {
-    let val;
     const decimalsNr = Number(decimals);
     const types = [ 'string', 'number' ];
-    if (types.includes(typeof (value))) val = new BigNumber(value);
-    else val = value;
+    const val = types.includes(typeof (value))
+      ? new BigNumber(value)
+      : value;
 
     return val.shiftedBy(-decimalsNr);
   },
