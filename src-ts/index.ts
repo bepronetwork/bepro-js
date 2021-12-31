@@ -1,6 +1,6 @@
 export * from '@models/erc20';
 export * from '@models/erc20-token-lock';
-export * from '@models/erc721-colectibles';
+export * from '@models/erc721-collectibles';
 export * from '@models/erc721-standard';
 export * from '@models/eth-utils';
 export * from '@models/loophole';
@@ -40,6 +40,7 @@ export * from '@interfaces/web3-connection-options';
 export * from '@methods/contract-call-method';
 export * from '@methods/erc20';
 export * from '@methods/erc20-token-lock';
+export * from '@methods/erc721-colectibles';
 export * from '@methods/erc721-standard';
 export * from '@methods/eth-utils';
 export * from '@methods/locked-tokens-info';

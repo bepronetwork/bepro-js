@@ -8,7 +8,7 @@ import {AbiItem} from 'web3-utils';
 import {ERC20} from '@models/erc20';
 import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 
-export class ERC721Colectibles extends Model<ERC721ColectiblesMethods> implements Deployable {
+export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
     super(web3Connection, ERC721ColectiblesJson as any as AbiItem[], contractAddress);
   }

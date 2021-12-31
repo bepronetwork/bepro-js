@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Network} from '@models/network';
-import {defaultWeb3Connection, erc20Deployer, increaseTime, newWeb3Account,} from '../utils';
+import {defaultWeb3Connection, erc20Deployer, increaseTime, newWeb3Account, revertChain,} from '../utils';
 import {Web3Connection} from '@base/web3-connection';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {NetworkIssue} from '@interfaces/network-issue';
@@ -21,6 +21,12 @@ describe(`Network`, () => {
   before(async () => {
     web3Connection = defaultWeb3Connection();
     await web3Connection.start();
+
+    before(async () => {
+      await web3Connection.start()
+      await revertChain(web3Connection.Web3);
+    })
+
   })
 
   if (!networkContractAddress) {

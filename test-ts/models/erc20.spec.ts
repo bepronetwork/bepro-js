@@ -3,13 +3,12 @@ import {ERC20} from '@models/erc20';
 import {expect} from 'chai';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {describe} from 'mocha';
-import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, shouldBeRejected,} from '../utils';
+import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, revertChain, shouldBeRejected,} from '../utils';
 import {Web3Connection, Web3Contract} from '../../src-ts';
 
 describe(`ERC20`, () => {
   let erc20: ERC20;
-  let erc20ContractAddress = process.env.ERC20_ADDRESS;
-  let contractExisted = !!erc20ContractAddress;
+  let erc20ContractAddress: string;
 
   const capAmount = process.env.ERC20_CAP || '10';
   const cap = toSmartContractDecimals(capAmount, 18) as number;
@@ -18,14 +17,17 @@ describe(`ERC20`, () => {
 
   const web3Connection = defaultWeb3Connection();
 
-  if (!erc20ContractAddress) {
-    it(`Deploys a ERC20 Contract`, async () => {
-      const receipt = await erc20Deployer(name, symbol, cap, web3Connection);
+  before(async () => {
+    await web3Connection.start()
+    await revertChain(web3Connection.Web3);
+  })
 
-      expect(receipt.contractAddress).to.not.be.empty;
-      erc20ContractAddress = receipt.contractAddress!;
-    });
-  }
+  it(`Deploys a ERC20 Contract`, async () => {
+    const receipt = await erc20Deployer(name, symbol, cap, web3Connection);
+
+    expect(receipt.contractAddress).to.not.be.empty;
+    erc20ContractAddress = receipt.contractAddress!;
+  });
 
   describe(`new ERC20 Contract methods`, () => {
     before(async () => {
@@ -38,10 +40,7 @@ describe(`ERC20`, () => {
       expect(await erc20.name(), `Name`).to.eq(name);
       expect(await erc20.symbol(), `Symbol`).to.eq(symbol);
 
-      if (contractExisted)
-        expect(await erc20.getTokenAmount(web3Connection.Account.address)).to.be.greaterThan(0);
-      else
-        expect(await erc20.getTokenAmount(web3Connection.Account.address)).to.eq(+capAmount);
+      expect(await erc20.getTokenAmount(web3Connection.Account.address)).to.eq(+capAmount);
     });
 
     it(`Approves usage`, async () => {

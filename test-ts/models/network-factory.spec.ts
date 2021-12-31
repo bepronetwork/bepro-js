@@ -1,6 +1,6 @@
 import {Network, NetworkFactory, Web3Connection} from '../../src-ts';
 import {fromDecimals, toSmartContractDecimals} from '../../src-ts/utils/numbers';
-import {shouldBeRejected, defaultWeb3Connection, erc20Deployer} from '../utils';
+import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, revertChain} from '../utils';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src-ts/interfaces/error-enum';
@@ -17,6 +17,7 @@ describe(`NetworkFactory`, () => {
   before(async () => {
     web3Connection = defaultWeb3Connection();
     await web3Connection.start();
+    await revertChain(web3Connection.Web3);
   })
 
 
