@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import BigNumber from 'bignumber.js';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants } from '../../../../src/sablier/dev-utils';
 import beproAssert from '../../../../build/utils/beproAssert';
 import sablierUtils from '../../sablier.utils';
@@ -124,8 +123,8 @@ context('sablier.CreateCompoundingStream.context', async () => {
         const recipientSharePercentage = new BigNumber(140);
 
         it('reverts', async () => {
-          await truffleAssert.reverts(
-            _this.sablier.createCompoundingStream({
+          await beproAssert.reverts(
+            () => _this.sablier.createCompoundingStream({
               recipient,
               deposit,
               tokenAddress: _this.cToken.getAddress(),
@@ -145,8 +144,8 @@ context('sablier.CreateCompoundingStream.context', async () => {
       const recipientSharePercentage = STANDARD_RECIPIENT_SHARE_PERCENTAGE;
 
       it("reverts", async () => {
-        await truffleAssert.reverts(
-          _this.sablier.createCompoundingStream({
+        await beproAssert.reverts(
+          () => _this.sablier.createCompoundingStream({
             recipient,
             deposit,
             tokenAddress: _this.cToken.getAddress(),
@@ -171,8 +170,8 @@ context('sablier.CreateCompoundingStream.context', async () => {
     });
 
     it('reverts', async () => {
-      await truffleAssert.reverts(
-        _this.sablier.createCompoundingStream({
+      await beproAssert.reverts(
+        () => _this.sablier.createCompoundingStream({
           recipient,
           deposit,
           tokenAddress: _this.cToken.getAddress(),

@@ -77,7 +77,6 @@
         "onchange": "^7.1.0",
         "pre-commit": "^1.2.2",
         "truffle": "^5.4.26",
-        "truffle-assertions": "^0.8.2",
         "truffle-plugin-verify": "^0.5.8"
     },
     "author": "",

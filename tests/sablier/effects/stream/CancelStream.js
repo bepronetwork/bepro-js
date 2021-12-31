@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants, mochaContexts } from '../../../../src/sablier/dev-utils';
 import beproAssert from '../../../../build/utils/beproAssert';
 import sablierUtils from '../../sablier.utils';
@@ -19,7 +18,10 @@ function runTests() {
   describe('when the stream did not start', () => {
     it('cancels the stream', async () => {
       await _this.sablier.cancelStream({ streamId });
-      await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.getStream({ streamId }),
+        'stream does not exist',
+      );
     });
 
     it('transfers all tokens to the sender of the stream', async () => {
@@ -40,7 +42,10 @@ function runTests() {
 
     it('cancels the stream', async () => {
       await _this.sablier.cancelStream({ streamId });
-      await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.getStream({ streamId }),
+        'stream does not exist',
+      );
     });
 
     it('transfers the tokens to the sender of the stream', async () => {
@@ -73,7 +78,10 @@ function runTests() {
 
     it('cancels the stream', async () => {
       await _this.sablier.cancelStream({ streamId });
-      await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.getStream({ streamId }),
+        'stream does not exist',
+      );
     });
 
     it('transfers nothing to the sender of the stream', async () => {
@@ -163,8 +171,8 @@ context('sablier.CancelStream.context', async () => {
       it('reverts', async () => {
         _this.sablier.switchWallet(_this.eve);
 
-        await truffleAssert.reverts(
-          _this.sablier.cancelStream({ streamId }),
+        await beproAssert.reverts(
+          () => _this.sablier.cancelStream({ streamId }),
           'caller is not the sender or the recipient of the stream',
         );
       });
@@ -179,9 +187,12 @@ context('sablier.CancelStream.context', async () => {
       recipient = _this.bob;
       _this.sablier.switchWallet(recipient);
 
-      await truffleAssert.reverts(_this.sablier.cancelStream({
-        streamId: new BigNumber(419863),
-      }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.cancelStream({
+          streamId: new BigNumber(419863),
+        }),
+        'stream does not exist',
+      );
     });
   });
 });

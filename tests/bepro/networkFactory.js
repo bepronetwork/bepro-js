@@ -196,7 +196,7 @@ context('NetworkFactory Contract', async () => {
     mochaAsync(async () => {
       // require(tokensLocked[msg.sender] >= OPERATOR_AMOUNT, "Operator has to lock +1M BEPRO to fork the Network");
       await beproAssert.reverts(
-        networkFactory.createNetwork({
+        () => networkFactory.createNetwork({
           settlerToken: settlerERC20.getAddress(),
           transactionalToken: transactionalERC20.getAddress(),
         }),
@@ -210,7 +210,7 @@ context('NetworkFactory Contract', async () => {
     mochaAsync(async () => {
       // reverts
       await beproAssert.fails(
-        networkFactory.lock({ tokenAmount: 0 }),
+        () => networkFactory.lock({ tokenAmount: 0 }),
         // "Token Amount needs to be higher than 0"
         'Token Amount has to be higher than 0',
       );
@@ -221,7 +221,7 @@ context('NetworkFactory Contract', async () => {
     'should revert when trying to lock tokens without prior approval for transferFrom',
     mochaAsync(async () => {
       await beproAssert.reverts(
-        networkFactory.lock({ tokenAmount: TOKENS_AMOUNT_1K }),
+        () => networkFactory.lock({ tokenAmount: TOKENS_AMOUNT_1K }),
         // "Needs Allowance"
       );
     }),
@@ -283,7 +283,7 @@ context('NetworkFactory Contract', async () => {
       // require(networksByAddress[msg.sender] == address(0), "Only one Network per user at a time");
 
       await beproAssert.reverts(
-        networkFactory.createNetwork({
+        () => networkFactory.createNetwork({
           settlerToken: settlerERC20.getAddress(),
           transactionalToken: transactionalERC20.getAddress(),
         }),
@@ -339,7 +339,7 @@ context('NetworkFactory Contract', async () => {
       networkFactory.switchWallet(user3);
 
       await beproAssert.reverts(
-        networkFactory.unlock(),
+        () => networkFactory.unlock(),
         'Needs to have tokens locked',
       );
     }),
@@ -390,7 +390,7 @@ context('NetworkFactory Contract', async () => {
 
       networkFactory.switchWallet(user1);
       await beproAssert.reverts(
-        networkFactory.unlock(),
+        () => networkFactory.unlock(),
         'Network has to have 0 Settler Tokens',
       );
     }),
@@ -435,7 +435,7 @@ context('NetworkFactory Contract', async () => {
 
       networkFactory.switchWallet(user1);
       await beproAssert.reverts(
-        networkFactory.unlock(),
+        () => networkFactory.unlock(),
         'Network has to have 0 Transactional Tokens',
       );
     }),

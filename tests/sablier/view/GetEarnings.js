@@ -5,7 +5,10 @@ context('sablier.GetEarnings.context', async () => {
 
   /* describe("when the ctoken is not whitelisted", () => {
     it("reverts", async () => { //async function() {
-      await truffleAssert.reverts(_this.sablier.getEarnings({ tokenAddress: _this.token.getAddress() }), "token is not cToken");
+      await beproAssert.reverts(
+        () => _this.sablier.getEarnings({ tokenAddress: _this.token.getAddress() }),
+        "token is not cToken",
+      );
     });
   }); */
 });

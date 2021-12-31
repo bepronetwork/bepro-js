@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants, mochaContexts } from '../../../src/sablier/dev-utils';
 import sablierUtils from '../sablier.utils';
+import beproAssert from '../../../build/utils/beproAssert';
 
 const {
   FIVE_UNITS, STANDARD_SALARY, STANDARD_SCALE, STANDARD_TIME_OFFSET, STANDARD_TIME_DELTA,
@@ -114,7 +114,10 @@ context('sablier.BalanceOf.context', async () => {
   describe('when the stream does not exist', () => {
     it('reverts', async () => {
       const streamId = new BigNumber(419863);
-      await truffleAssert.reverts(_this.sablier.balanceOf({ streamId, who: sender }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.balanceOf({ streamId, who: sender }),
+        'stream does not exist',
+      );
     });
   });
 });

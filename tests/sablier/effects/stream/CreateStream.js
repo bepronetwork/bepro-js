@@ -2,7 +2,6 @@ import { assert } from 'chai';
 
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import Numbers from '../../../../build/utils/Numbers';
 import { dappConstants } from '../../../../src/sablier/dev-utils';
 import beproAssert from '../../../../build/utils/beproAssert';
@@ -125,8 +124,8 @@ context('sablier.CreateStream.context', async () => {
                   });
 
                   it('reverts', async () => {
-                    await truffleAssert.reverts(
-                      _this.sablier.createStream({
+                    await beproAssert.reverts(
+                      () => _this.sablier.createStream({
                         recipient,
                         deposit,
                         tokenAddress: _this.token.getAddress(),
@@ -149,8 +148,8 @@ context('sablier.CreateStream.context', async () => {
                 });
 
                 it('reverts', async () => {
-                  await truffleAssert.reverts(
-                    _this.sablier.createStream({
+                  await beproAssert.reverts(
+                    () => _this.sablier.createStream({
                       recipient,
                       deposit,
                       tokenAddress: _this.token.getAddress(),
@@ -171,8 +170,8 @@ context('sablier.CreateStream.context', async () => {
                 const deposit = new BigNumber(0).toString(10);
 
                 it('reverts', async () => {
-                  await truffleAssert.reverts(
-                    _this.sablier.createStream({
+                  await beproAssert.reverts(
+                    () => _this.sablier.createStream({
                       recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
                     }),
                     'deposit is zero',
@@ -186,8 +185,8 @@ context('sablier.CreateStream.context', async () => {
 
                 it('reverts', async () => {
                   // console.log('---sablier.CreateStream...bp0. deposit: ', deposit);
-                  await truffleAssert.reverts(
-                    _this.sablier.createStream({
+                  await beproAssert.reverts(
+                    () => _this.sablier.createStream({
                       recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
                     }),
                     'deposit smaller than time delta',
@@ -199,8 +198,8 @@ context('sablier.CreateStream.context', async () => {
                 const deposit = STANDARD_SALARY.plus(5).toString(10);
 
                 it('reverts', async () => {
-                  await truffleAssert.reverts(
-                    _this.sablier.createStream({
+                  await beproAssert.reverts(
+                    () => _this.sablier.createStream({
                       recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
                     }),
                     'deposit not multiple of time delta',
@@ -216,11 +215,11 @@ context('sablier.CreateStream.context', async () => {
             /// const stopTime = startTime.plus(STANDARD_TIME_DELTA);
 
             it('reverts', async () => {
-              await truffleAssert.reverts(
-                _this.sablier.createStream({
+              await beproAssert.reverts(
+                () => _this.sablier.createStream({
                   recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
                 }),
-                truffleAssert.ErrorType.REVERT,
+                beproAssert.ErrorType.REVERT,
               );
             });
           });
@@ -243,15 +242,15 @@ context('sablier.CreateStream.context', async () => {
             const deposit = STANDARD_SALARY.toString(10);
 
             it('reverts', async () => {
-              await truffleAssert.reverts(
-                _this.sablier.createStream({
+              await beproAssert.reverts(
+                () => _this.sablier.createStream({
                   recipient,
                   deposit,
                   tokenAddress: _this.token.getAddress(),
                   startTime: eachStartTime,
                   stopTime: eachStopTime,
                 }),
-                truffleAssert.ErrorType.REVERT,
+                beproAssert.ErrorType.REVERT,
               );
             });
           });
@@ -260,11 +259,11 @@ context('sablier.CreateStream.context', async () => {
             const deposit = STANDARD_SALARY.multipliedBy(2).toString(10);
 
             it('reverts', async () => {
-              await truffleAssert.reverts(
-                _this.sablier.createStream({
+              await beproAssert.reverts(
+                () => _this.sablier.createStream({
                   recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
                 }),
-                truffleAssert.ErrorType.REVERT,
+                beproAssert.ErrorType.REVERT,
               );
             });
           });
@@ -290,30 +289,30 @@ context('sablier.CreateStream.context', async () => {
           });
 
           it("reverts", async () => {
-            await truffleAssert.reverts(
-              _this.sablier.createStream({
+            await beproAssert.reverts(
+              () => _this.sablier.createStream({
                 recipient,
                 deposit,
                 tokenAddress: _this.nonStandardERC20Token.getAddress(),
                 startTime: eachStartTime,
                 stopTime: eachStopTime,
               }),
-              truffleAssert.ErrorType.REVERT,
+              beproAssert.ErrorType.REVERT,
             );
           });
         }); */
 
         describe('when the token contract is the zero address', () => {
           it('reverts', async () => {
-            await truffleAssert.reverts(
-              _this.sablier.createStream({
+            await beproAssert.reverts(
+              () => _this.sablier.createStream({
                 recipient,
                 deposit,
                 tokenAddress: ZERO_ADDRESS,
                 startTime: eachStartTime,
                 stopTime: eachStopTime,
               }),
-              truffleAssert.ErrorType.REVERT,
+              beproAssert.ErrorType.REVERT,
             );
           });
         });
@@ -328,8 +327,8 @@ context('sablier.CreateStream.context', async () => {
 
       it('reverts', async () => {
         recipient = sender;
-        await truffleAssert.reverts(
-          _this.sablier.createStream({
+        await beproAssert.reverts(
+          () => _this.sablier.createStream({
             recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
           }),
           'stream to the caller',
@@ -343,8 +342,8 @@ context('sablier.CreateStream.context', async () => {
       /// const stopTime = startTime.plus(STANDARD_TIME_DELTA);
 
       it('reverts', async () => {
-        await truffleAssert.reverts(
-          _this.sablier.createStream({
+        await beproAssert.reverts(
+          () => _this.sablier.createStream({
             recipient: _this.sablier.getAddress(),
             deposit,
             tokenAddress: _this.token.getAddress(),
@@ -363,8 +362,8 @@ context('sablier.CreateStream.context', async () => {
 
       it('reverts', async () => {
         assert.equal(recipient, ZERO_ADDRESS, 'recipient must be ZERO_ADDRESS');
-        await truffleAssert.reverts(
-          _this.sablier.createStream({
+        await beproAssert.reverts(
+          () => _this.sablier.createStream({
             recipient: ZERO_ADDRESS,
             deposit,
             tokenAddress: _this.token.getAddress(),
@@ -390,8 +389,8 @@ context('sablier.CreateStream.context', async () => {
     });
 
     it('reverts', async () => {
-      await truffleAssert.reverts(
-        _this.sablier.createStream({
+      await beproAssert.reverts(
+        () => _this.sablier.createStream({
           recipient, deposit, tokenAddress: _this.token.getAddress(), startTime, stopTime,
         }),
         'Pausable: paused',

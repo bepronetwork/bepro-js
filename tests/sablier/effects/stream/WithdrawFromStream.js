@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants, mochaContexts } from '../../../../src/sablier/dev-utils';
 import beproAssert from '../../../../build/utils/beproAssert';
 import sablierUtils from '../../sablier.utils';
@@ -22,8 +21,8 @@ function runTests() {
         const withdrawalAmount = FIVE_UNITS.toString(10);
 
         it('reverts', async () => {
-          await truffleAssert.reverts(
-            _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+          await beproAssert.reverts(
+            () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
             'amount exceeds the available balance',
           );
         });
@@ -63,8 +62,8 @@ function runTests() {
           const withdrawalAmount = FIVE_UNITS.multipliedBy(2).toString(10);
 
           it('reverts', async () => {
-            await truffleAssert.reverts(
-              _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+            await beproAssert.reverts(
+              () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
               'amount exceeds the available balance',
             );
           });
@@ -113,7 +112,10 @@ function runTests() {
 
             it('deletes the stream object', async () => {
               await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
-              await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
+              await beproAssert.reverts(
+                () => _this.sablier.getStream({ streamId }),
+                'stream does not exist',
+              );
             });
           });
         });
@@ -122,8 +124,8 @@ function runTests() {
           const withdrawalAmount = STANDARD_SALARY.plus(FIVE_UNITS).toString(10);
 
           it('reverts', async () => {
-            await truffleAssert.reverts(
-              _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+            await beproAssert.reverts(
+              () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
               'amount exceeds the available balance',
             );
           });
@@ -135,8 +137,8 @@ function runTests() {
       const withdrawalAmount = new BigNumber(0).toString(10);
 
       it('reverts', async () => {
-        await truffleAssert.reverts(
-          _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+        await beproAssert.reverts(
+          () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
           'amount is zero',
         );
       });
@@ -155,8 +157,8 @@ function runTests() {
     });
 
     it('reverts', async () => {
-      await truffleAssert.reverts(
-        _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+      await beproAssert.reverts(
+        () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
         'Pausable: paused',
       );
     });
@@ -229,8 +231,8 @@ context('sablier.WithdrawFromStream.context', () => {
       it('reverts', async () => {
         _this.sablier.switchWallet(_this.eve);
 
-        await truffleAssert.reverts(
-          _this.sablier.withdrawFromStream({ streamId, amount: FIVE_UNITS }),
+        await beproAssert.reverts(
+          () => _this.sablier.withdrawFromStream({ streamId, amount: FIVE_UNITS }),
           'caller is not the sender or the recipient of the stream',
         );
       });
@@ -245,8 +247,8 @@ context('sablier.WithdrawFromStream.context', () => {
       recipient = _this.bob;
       _this.sablier.switchWallet(recipient);
 
-      await truffleAssert.reverts(
-        _this.sablier.withdrawFromStream({
+      await beproAssert.reverts(
+        () => _this.sablier.withdrawFromStream({
           streamId: new BigNumber(419863),
           amount: FIVE_UNITS,
         }),

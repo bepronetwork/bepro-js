@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants, mochaContexts } from '../../../../src/sablier/dev-utils';
 import beproAssert from '../../../../build/utils/beproAssert';
 import sablierUtils from '../../sablier.utils';
@@ -29,8 +28,8 @@ function runTests() {
       const streamedAmount = FIVE_UNITS_CTOKEN.toString(10);
 
       it('reverts', async () => {
-        await truffleAssert.reverts(
-          _this.sablier.withdrawFromStream({ streamId, amount: streamedAmount }), // this.opts);
+        await beproAssert.reverts(
+          () => _this.sablier.withdrawFromStream({ streamId, amount: streamedAmount }), // this.opts);
           'amount exceeds the available balance',
         );
       });
@@ -184,8 +183,14 @@ function runTests() {
 
       it('deletes the stream objects', async () => {
         await _this.sablier.withdrawFromStream({ streamId, amount: streamedAmount });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), 'stream does not exist');
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
     });
   });
@@ -199,8 +204,8 @@ function runTests() {
     });
 
     it('reverts', async () => {
-      await truffleAssert.reverts(
-        _this.sablier.withdrawFromStream({ streamId, amount: streamedAmount }), // , this.opts),
+      await beproAssert.reverts(
+        () => _this.sablier.withdrawFromStream({ streamId, amount: streamedAmount }), // , this.opts),
         'Pausable: paused',
       );
     });

@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants } from '../../../src/sablier/dev-utils';
 import sablierUtils from '../sablier.utils';
+import beproAssert from '../../../build/utils/beproAssert';
 
 const { STANDARD_SALARY, STANDARD_TIME_OFFSET, STANDARD_TIME_DELTA } = dappConstants;
 
@@ -43,8 +43,8 @@ context('sablier.GetCompoundingStream.context', async () => {
     });
 
     it('reverts', async () => {
-      await truffleAssert.reverts(
-        _this.sablier.getCompoundingStream({ streamId }),
+      await beproAssert.reverts(
+        () => _this.sablier.getCompoundingStream({ streamId }),
         'compounding stream does not exist',
       );
     });
@@ -53,7 +53,10 @@ context('sablier.GetCompoundingStream.context', async () => {
   describe('when the stream does not exist', () => {
     it('reverts', async () => {
       const streamId = new BigNumber(419863);
-      await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.getCompoundingStream({ streamId }),
+        'stream does not exist',
+      );
     });
   });
 });

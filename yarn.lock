@@ -11846,13 +11846,6 @@ trim-right@^1.0.1:
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
   integrity sha1-yy4SAwZ+DI3h9hQJS5/kVwTqYAM=
 
-truffle-assertions@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/truffle-assertions/-/truffle-assertions-0.8.2.tgz#6f0fda2cbc9f9dae597d6a1c81c28bdf7fe85595"
-  integrity sha512-WpUlGMsttkNHuIRYk7Th3I/4d2TeCxDhQI2ZiY+poI8dtfii4seIMXATB9aQLHU+uHAKWxpRJcTzZzm2zl/JnA==
-  dependencies:
-    assertion-error "^1.1.0"
-
 truffle-plugin-verify@^0.5.8:
   version "0.5.20"
   resolved "https://registry.yarnpkg.com/truffle-plugin-verify/-/truffle-plugin-verify-0.5.20.tgz#3e8e7059bac716319575e584469c1304f21e0ff5"

@@ -4,7 +4,10 @@ context('sablier.behavior.context', () => {
   /* describe("initialization", function() {
     it("reverts when the cTokenManager contract is the zero address", async function() {
       const opts = { from: alice };
-      await truffleAssert.reverts(Sablier.new(ZERO_ADDRESS, opts), "cTokenManager contract is the zero address");
+      await beproAssert.reverts(
+        () => Sablier.new(ZERO_ADDRESS, opts),
+        "cTokenManager contract is the zero address",
+      );
     });
   }); */
 

@@ -814,7 +814,7 @@ context('Loophole contract', () => {
     it('should revert when not owner user tries to add new staking pool', async () => {
       const allocPoint = 1;
       loophole.switchWallet(userAddress2);
-      await beproAssert.reverts(loophole.add({
+      await beproAssert.reverts(() => loophole.add({
         token: wethAddress,
         allocPoint,
       }), 'OR'); // 'Owner Required'
@@ -890,7 +890,7 @@ context('Loophole contract', () => {
 
     it('should revert when trying to add existing staking pool WETH', async () => {
       const allocPoint = 1;
-      await beproAssert.reverts(loophole.add({
+      await beproAssert.reverts(() => loophole.add({
         token: wethAddress,
         allocPoint,
       }), 'TPE'); // 'Token Pool Exists'
@@ -903,7 +903,7 @@ context('Loophole contract', () => {
       const pid = 1;
       const allocPoint = 2;
       const withUpdate = false;
-      await beproAssert.reverts(loophole.set({
+      await beproAssert.reverts(() => loophole.set({
         pid,
         allocPoint,
         withUpdate,
@@ -915,7 +915,7 @@ context('Loophole contract', () => {
       const pid = 0;
       const allocPoint = 2;
       const withUpdate = false;
-      await beproAssert.reverts(loophole.set({
+      await beproAssert.reverts(() => loophole.set({
         pid,
         allocPoint,
         withUpdate,
@@ -926,7 +926,7 @@ context('Loophole contract', () => {
       const pid = 3;
       const allocPoint = 2;
       const withUpdate = false;
-      await beproAssert.reverts(loophole.set({
+      await beproAssert.reverts(() => loophole.set({
         pid,
         allocPoint,
         withUpdate,
@@ -937,7 +937,7 @@ context('Loophole contract', () => {
       const pid = 1;
       const allocPoint = 1;
       const withUpdate = false;
-      await beproAssert.reverts(loophole.set({
+      await beproAssert.reverts(() => loophole.set({
         pid,
         allocPoint,
         withUpdate,
@@ -1081,11 +1081,11 @@ context('Loophole contract', () => {
     });
 
     it('should revert when trying to mine LOOP pool', async () => {
-      await beproAssert.reverts(loophole.updatePool({ pid: lpPid }), 'PID_LOOP'); // PID is LOOP pool
+      await beproAssert.reverts(() => loophole.updatePool({ pid: lpPid }), 'PID_LOOP'); // PID is LOOP pool
     });
 
     it('should revert when trying to mine inexistent pool', async () => {
-      await beproAssert.reverts(loophole.updatePool({ pid: invalidPid }), 'PID_OORI'); // 'PID Out Of Range Index'
+      await beproAssert.reverts(() => loophole.updatePool({ pid: invalidPid }), 'PID_OORI'); // 'PID Out Of Range Index'
     });
 
     // NOTE: when totalPool is zero, only update lastRewardBlock
@@ -1160,7 +1160,7 @@ context('Loophole contract', () => {
   describe('#currentStake', async () => {
     // requireValidPid(pid)
     it('should revert when trying to read user current stake of inexistent pool', async () => {
-      await beproAssert.reverts(loophole.currentStake({
+      await beproAssert.reverts(() => loophole.currentStake({
         pid: invalidPid,
         user: userAddress,
       }), 'PID_OORI'); // 'PID Out Of Range Index'
@@ -1178,7 +1178,7 @@ context('Loophole contract', () => {
   describe('#getUserInfo', async () => {
     // requireValidPid(pid)
     it('should revert when trying to read user info of inexistent pool', async () => {
-      await beproAssert.reverts(loophole.getUserInfo({
+      await beproAssert.reverts(() => loophole.getUserInfo({
         pid: invalidPid,
         user: userAddress,
       }), 'PID_OORI'); // 'PID Out Of Range Index'
@@ -1195,7 +1195,7 @@ context('Loophole contract', () => {
   describe('#getUserReward', async () => {
     // requireMainPool(pid)
     it('should revert when trying to read user reward of LOOP pool', async () => {
-      await beproAssert.reverts(loophole.getUserReward({
+      await beproAssert.reverts(() => loophole.getUserReward({
         pid: lpPid,
         user: userAddress,
       }), 'PID_LOOP'); // 'PID is LOOP pool'
@@ -1203,7 +1203,7 @@ context('Loophole contract', () => {
 
     // requireValidPid(pid)
     it('should revert when trying to read user reward of inexistent pool', async () => {
-      await beproAssert.reverts(loophole.getUserReward({
+      await beproAssert.reverts(() => loophole.getUserReward({
         pid: invalidPid,
         user: userAddress,
       }), 'PID_OORI'); // 'PID Out Of Range Index'
@@ -1222,7 +1222,7 @@ context('Loophole contract', () => {
   describe('#getPoolReward', async () => {
     // requireValidPid(pid)
     it('should revert when trying to read pool reward of inexistent pool', async () => {
-      await beproAssert.reverts(loophole.getPoolReward({ pid: invalidPid }), 'PID_OORI'); // 'PID Out Of Range Index'
+      await beproAssert.reverts(() => loophole.getPoolReward({ pid: invalidPid }), 'PID_OORI'); // 'PID Out Of Range Index'
     });
 
     it('should read pool reward of weth pool', async () => {
@@ -1243,7 +1243,7 @@ context('Loophole contract', () => {
     });
 
     it('should revert when staking into inexistent pool', async () => {
-      await beproAssert.reverts(loophole.stake({
+      await beproAssert.reverts(() => loophole.stake({
         pid: invalidPid,
         amount: 1000,
       }), 'PID_OORI'); // 'PID Out Of Range Index'
@@ -1838,11 +1838,11 @@ context('Loophole contract', () => {
 
   describe('#when collectRewards', async () => {
     it('should revert when when collecting LP rewards from LOOP pool', async () => {
-      await beproAssert.reverts(loophole.collectRewards({ pid: lpPid }), 'PID_LOOP'); // PID is LOOP pool
+      await beproAssert.reverts(() => loophole.collectRewards({ pid: lpPid }), 'PID_LOOP'); // PID is LOOP pool
     });
 
     it('should revert when collecting LP rewards from inexistent pool', async () => {
-      await beproAssert.reverts(loophole.collectRewards({ pid: invalidPid }), 'PID_OORI'); // 'PID Out Of Range Index'
+      await beproAssert.reverts(() => loophole.collectRewards({ pid: invalidPid }), 'PID_OORI'); // 'PID Out Of Range Index'
     });
 
     // NOTE: test case not needed as we work with wrapped tokens
@@ -1888,7 +1888,7 @@ context('Loophole contract', () => {
     it('should revert when "from" block is greater than "to" block', async () => {
       const to = 0;
       const from = 1;
-      await beproAssert.reverts(loophole.getBlocksFromRange({ from, to }));
+      await beproAssert.reverts(() => loophole.getBlocksFromRange({ from, to }));
     });
 
     it('should return 1 when "to" block is 3 and "from" block is 2', async () => {

@@ -32,7 +32,10 @@ context('sablier.UpdateFee.context', () => {
       it('reverts', async () => {
         _this.sablier.switchWallet(admin);
         const newFee = new BigNumber(110);
-        await beproAssert.reverts(_this.sablier.updateFee({ feePercentage: newFee }), 'fee percentage higher than 100%');
+        await beproAssert.reverts(
+          () => _this.sablier.updateFee({ feePercentage: newFee }),
+          'fee percentage higher than 100%',
+        );
       });
     });
   });
@@ -44,7 +47,7 @@ context('sablier.UpdateFee.context', () => {
     it('reverts', async () => {
       _this.sablier.switchWallet(_this.eve);
       await beproAssert.reverts(
-        _this.sablier.updateFee({ feePercentage: newFee }),
+        () => _this.sablier.updateFee({ feePercentage: newFee }),
         beproAssert.ErrorType.REVERT,
       );
     });

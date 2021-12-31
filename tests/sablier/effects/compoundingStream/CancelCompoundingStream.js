@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants, mochaContexts } from '../../../../src/sablier/dev-utils';
 import beproAssert from '../../../../build/utils/beproAssert';
 import sablierUtils from '../../sablier.utils';
@@ -30,8 +29,14 @@ function runTests() {
     describe('when the stream did not start', () => {
       it('cancels the stream', async () => {
         await _this.sablier.cancelStream({ streamId });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), 'stream does not exist');
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
     });
 
@@ -40,8 +45,14 @@ function runTests() {
 
       it('cancels the stream', async () => {
         await _this.sablier.cancelStream({ streamId });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), 'stream does not exist');
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
 
       it('transfers the tokens and pays the interest to the sender of the stream', async () => {
@@ -105,8 +116,14 @@ function runTests() {
 
       it('cancels the stream', async () => {
         await _this.sablier.cancelStream({ streamId });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), 'stream does not exist');
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
 
       it('transfers the tokens and pays the interest to the sender of the stream', async () => {
@@ -167,8 +184,14 @@ function runTests() {
 
       it('cancels the stream', async () => {
         await _this.sablier.cancelStream({ streamId });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), 'stream does not exist');
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
     });
   });

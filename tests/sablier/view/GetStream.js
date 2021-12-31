@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
-import truffleAssert from 'truffle-assertions';
 import sablierUtils from '../sablier.utils';
+import beproAssert from '../../../build/utils/beproAssert';
 
 context('sablier.GetStream.context', async () => {
   // let sender;// = alice;
@@ -14,7 +14,10 @@ context('sablier.GetStream.context', async () => {
   describe('when the stream does not exist', () => {
     it('reverts', async () => {
       const streamId = new BigNumber(419863);
-      await truffleAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.getStream({ streamId }),
+        'stream does not exist',
+      );
     });
   });
 });

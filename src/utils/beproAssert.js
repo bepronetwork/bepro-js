@@ -118,9 +118,9 @@ const createTransactionResult = async (contract, transactionHash) => {
   });
 };
 
-const passes = async (asyncFn, message) => {
+const passes = async (fn, message) => {
   try {
-    await asyncFn;
+    await fn();
   }
   catch (error) {
     const assertionMessage = createAssertionMessage(message, `Failed with ${error}`);
@@ -128,9 +128,9 @@ const passes = async (asyncFn, message) => {
   }
 };
 
-const fails = async (asyncFn, errorType, reason, message) => {
+const fails = async (fn, errorType, reason, message) => {
   try {
-    await asyncFn;
+    await fn();
   }
   catch (error) {
     if (errorType && !error.message.includes(errorType)) {
@@ -166,17 +166,9 @@ export default {
     // eslint-disable-next-line no-console
     console.log(getPrettyEmittedEventsString(result, indentationSize));
   },
-  createTransactionResult: (contract, transactionHash) => (
-    createTransactionResult(contract, transactionHash)
-  ),
-  passes: async (asyncFn, message) => (
-    passes(asyncFn, message)
-  ),
-  fails: async (asyncFn, errorType, reason, message) => (
-    fails(asyncFn, errorType, reason, message)
-  ),
-  reverts: async (asyncFn, reason, message) => (
-    fails(asyncFn, ErrorType.REVERT, reason, message)
-  ),
+  createTransactionResult,
+  passes,
+  fails,
+  reverts: (fn, reason, message) => fails(fn, ErrorType.REVERT, reason, message),
   ErrorType,
 };

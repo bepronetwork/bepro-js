@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants } from '../../../src/sablier/dev-utils';
 import sablierUtils from '../sablier.utils';
+import beproAssert from '../../../build/utils/beproAssert';
 
 const {
   STANDARD_RECIPIENT_SHARE_PERCENTAGE,
@@ -92,7 +92,10 @@ context('sablier.IsCompoundingStream.context', async () => {
   describe('when the stream does not exist', () => {
     it('reverts', async () => {
       const streamId = new BigNumber(419863);
-      await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.getCompoundingStream({ streamId }),
+        'stream does not exist',
+      );
     });
   });
 });

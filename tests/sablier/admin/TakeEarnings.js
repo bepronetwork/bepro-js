@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
-import truffleAssert from 'truffle-assertions';
 import { dappConstants, mochaContexts } from '../../../src/sablier/dev-utils';
 import beproAssert from '../../../build/utils/beproAssert';
 import sablierUtils from '../sablier.utils';
@@ -78,8 +77,8 @@ context('sablier.TakeEarnings.context', async () => {
           });
           // const res = await beproAssert.createTransactionResult(_this.sablier.getContract(), result.transactionHash);
           // console.log('---TakeEarnings.result.beproAssert\n', res);
-          // const res2 = await truffleAssert.createTransactionResult(_this.sablier.getContract(), result.transactionHash);
-          // console.log('---TakeEarnings.result.truffleAssert\n', res2);
+          // const res2 = await beproAssert.createTransactionResult(_this.sablier.getContract(), result.transactionHash);
+          // console.log('---TakeEarnings.result.beproAssert\n', res2);
           // streamId = Number(result.logs[0].args.streamId);
           streamId = Number(result.events.CreateStream.returnValues.streamId);
           // console.log('---TakeEarnings.result.streamId:', streamId);
@@ -112,7 +111,10 @@ context('sablier.TakeEarnings.context', async () => {
           const amount = new BigNumber(0).toString(10);
 
           it('reverts', async () => {
-            await truffleAssert.reverts(_this.sablier.takeEarnings({ tokenAddress: _this.cToken.getAddress(), amount }), 'amount is zero');
+            await beproAssert.reverts(
+              () => _this.sablier.takeEarnings({ tokenAddress: _this.cToken.getAddress(), amount }),
+              'amount is zero',
+            );
           });
         });
       });
@@ -121,8 +123,8 @@ context('sablier.TakeEarnings.context', async () => {
         const amount = new BigNumber(8123101);
 
         it('reverts', async () => {
-          await truffleAssert.reverts(
-            _this.sablier.takeEarnings({ tokenAddress: _this.cToken.getAddress(), amount }),
+          await beproAssert.reverts(
+            () => _this.sablier.takeEarnings({ tokenAddress: _this.cToken.getAddress(), amount }),
             'amount exceeds the available balance',
           );
         });
@@ -133,8 +135,8 @@ context('sablier.TakeEarnings.context', async () => {
       const amount = new BigNumber(8123101);
 
       it("reverts", async function() {
-        await truffleAssert.reverts(
-          this.sablier.takeEarnings(this.cToken.address, amount, opts),
+        await beproAssert.reverts(
+          () => this.sablier.takeEarnings(this.cToken.address, amount, opts),
           "cToken is not whitelisted",
         );
       });
@@ -144,7 +146,10 @@ context('sablier.TakeEarnings.context', async () => {
   describe('when the stream does not exist', () => {
     it('reverts', async () => {
       const streamId = new BigNumber(419863);
-      await beproAssert.reverts(_this.sablier.getStream({ streamId }), 'stream does not exist');
+      await beproAssert.reverts(
+        () => _this.sablier.getStream({ streamId }),
+        'stream does not exist',
+      );
     });
   });
 
@@ -155,7 +160,7 @@ context('sablier.TakeEarnings.context', async () => {
     it('reverts', async () => {
       _this.sablier.switchWallet(_this.eve);
       await beproAssert.reverts(
-        _this.sablier.takeEarnings({ tokenAddress: _this.cToken.getAddress(), amount }),
+        () => _this.sablier.takeEarnings({ tokenAddress: _this.cToken.getAddress(), amount }),
         beproAssert.ErrorType.REVERT,
       );
     });
