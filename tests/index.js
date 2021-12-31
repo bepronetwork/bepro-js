@@ -1,23 +1,33 @@
-/* eslint-disable global-require */
-
 context('Unit Tests', async () => {
-  require('./application');
-  require('./generics');
-  require('./dexStorage');
+  [
+    'application',
+    'generics',
+    'dexStorage',
 
-  require('./erc20Contract');
-  require('./erc20TokenLock');
+    'erc20Contract',
+    'erc20TokenLock',
 
-  require('./erc721Collectibles');
+    'erc721Collectibles',
 
-  require('./stakingContract');
-  require('./votingContract');
+    'stakingContract',
+    'votingContract',
 
-  require('./bepro/network');
-  require('./bepro/networkFactory');
+    'bepro/network',
+    'bepro/networkFactory',
 
-  require('./custom/realfvr/index');
+    'custom/realfvr/index',
 
-  require('./sablier/sablier');
-  require('./custom/loophole/loophole');
+    'sablier/sablier',
+    'custom/loophole/loophole',
+  ].map(test => {
+    try {
+      // eslint-disable-next-line global-require, import/no-dynamic-require
+      return require(`./${test}`);
+    }
+    catch (ex) {
+      // eslint-disable-next-line no-console
+      console.error(ex);
+      return ex;
+    }
+  });
 });
