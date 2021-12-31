@@ -11,7 +11,7 @@ import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
 import {expect} from 'chai';
 import {addSeconds} from 'date-fns'
 
-describe.only(`ERC20TokenLock`, () => {
+describe(`ERC20TokenLock`, () => {
   let contractAddress!: string;
   let accountAddress!: string;
   let tokenLock: Erc20TokenLock;

@@ -6,11 +6,11 @@ import ERC721ColectiblesJson from '@abi/ERC721Colectibles.json';
 import {ERC721ColectiblesMethods} from '@methods/erc721-colectibles';
 import {AbiItem} from 'web3-utils';
 import {ERC20} from '@models/erc20';
-import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
+import {fromDecimals, toSmartContractDecimals,} from '@utils/numbers';
 
 export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
-    super(web3Connection, ERC721ColectiblesJson as any as AbiItem[], contractAddress);
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly _purchaseToken?: string) {
+    super(web3Connection, ERC721ColectiblesJson.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;
@@ -20,7 +20,7 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
     if (!this.contract)
       super.loadContract();
 
-    this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods._purchaseToken()));
+    this._erc20 = new ERC20(this.web3Connection, this._purchaseToken || await this.callTx(this.contract.methods._purchaseToken()));
     await this._erc20.loadContract();
   }
 
@@ -55,7 +55,7 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
   }
 
   async _currentTokenId() {
-    return this.callTx(this.contract.methods._currentTokenId());
+    return +(await this.callTx(this.contract.methods._currentTokenId()))
   }
 
   async _feeAddress() {
@@ -83,7 +83,7 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
   }
 
   async openedPacks() {
-    return this.callTx(this.contract.methods._openedPacks());
+    return +(await this.callTx(this.contract.methods._openedPacks()));
   }
 
   async pricePerPack() {
@@ -138,8 +138,8 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
     return this.callTx(this.contract.methods.ownerOf(tokenId));
   }
 
-  async registeredIDs(v1: string, v2: number) {
-    return this.callTx(this.contract.methods.registeredIDs(v1, v2));
+  async registeredIDs(address: string, tokenId: number) {
+    return this.callTx(this.contract.methods.registeredIDs(address, tokenId));
   }
 
   async registeredIDsArray(v1: string, v2: number) {
@@ -163,7 +163,8 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
   }
 
   async setPricePerPack(newPrice: number) {
-    return this.sendTx(this.contract.methods.setPricePerPack(toSmartContractDecimals(newPrice, this.erc20.decimals) as number));
+    return this.sendTx(this.contract.methods.setPricePerPack(toSmartContractDecimals(newPrice, this.erc20.decimals, true) as number));
+    // return this.sendTx(this.contract.methods.setPricePerPack(newPrice));
   }
 
   async setPurchaseTokenAddress(purchaseToken: string) {
@@ -231,7 +232,7 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
   }
 
   async getRegisteredIDs(_address: string) {
-    return this.callTx(this.contract.methods.getRegisteredIDs(_address));
+    return (await this.callTx(this.contract.methods.getRegisteredIDs(_address))).map(id => +id);
   }
 
 }
