@@ -12,7 +12,7 @@ import sablierInterest from '@utils/sablier-interest';
 
 export class Sablier extends Model<SablierMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
-    super(web3Connection, SablierJson as any as AbiItem[], contractAddress);
+    super(web3Connection, SablierJson.abi as AbiItem[], contractAddress);
   }
 
   async deployJsonAbi() {

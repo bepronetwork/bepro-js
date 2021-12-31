@@ -12,7 +12,7 @@ import realFvrPack from '@utils/real-fvr-pack';
 
 export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly purchaseTokenAddress?: string) {
-    super(web3Connection, OpenerRealFvrJson as any as AbiItem[], contractAddress);
+    super(web3Connection, OpenerRealFvrJson.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;

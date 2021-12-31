@@ -8,7 +8,7 @@ import {AbiItem} from 'web3-utils';
 
 export class UniswapV3RouterBridge extends Model<UniswapV3RouterBridgeMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
-    super(web3Connection, TestUniswapV3RouterBridgeJson as any as AbiItem[], contractAddress);
+    super(web3Connection, TestUniswapV3RouterBridgeJson.abi as AbiItem[], contractAddress);
   }
 
   async deployJsonAbi(_swapRouter: string) {

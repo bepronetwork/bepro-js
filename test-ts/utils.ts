@@ -91,3 +91,11 @@ export async function hasTxBlockNumber(promise: Promise<any>) {
     expect(e, `Should not have been rejected`).to.be.empty;
   }
 }
+
+export function calculateAPR(apr = 1, start = 0,
+                                   end = 0, amount = 1) {
+  const timePassed = +end-+start;
+  const ms = 60;
+  return ((((apr / 365 / 24 / ms) * timePassed) / ms) * amount) / 100;
+}
+

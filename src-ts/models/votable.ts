@@ -13,7 +13,7 @@ import poolInformation from '@utils/pool-information';
 
 export class Votable extends Model<VotableMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
-    super(web3Connection, VotableJson as any as AbiItem[], contractAddress);
+    super(web3Connection, VotableJson.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;

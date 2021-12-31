@@ -3,7 +3,7 @@ import {ERC721Collectibles} from '../../src-ts';
 import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
 import {expect} from 'chai';
 
-describe.only(`ERC271Collectibles`, () => {
+describe(`ERC271Collectibles`, () => {
   let contract: ERC721Collectibles;
   let purchaseTokenAddress!: string;
   let contractAddress!: string;

@@ -22,7 +22,7 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
               readonly ethUtilsAddress?: string,
               readonly lpTokenAddress?: string,
               readonly swapRouterAddress?: string) {
-    super(web3Connection, LoopholeJson as any as AbiItem[], contractAddress);
+    super(web3Connection, LoopholeJson.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;

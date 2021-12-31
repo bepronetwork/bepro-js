@@ -13,7 +13,7 @@ import {toSmartContractDate, toSmartContractDecimals} from '@utils/numbers';
 
 export class ERC20Distribution extends Model<ERC20DistributionMethods> implements Deployable, IsOwnable, IsPausable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
-    super(web3Connection, ERC20DistributionJson as any as AbiItem[], contractAddress);
+    super(web3Connection, ERC20DistributionJson.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;

@@ -138,7 +138,7 @@ const AbiParser = (filePath = ``) => {
 
   const content = abis.map(option => makeFn(option)).join(`\n`);
 
-  const _super = `super(web3Connection, ${contract.contractName}Json as any as AbiItem[], contractAddress);`;
+  const _super = `super(web3Connection, ${contract.contractName}Json.abi as AbiItem[], contractAddress);`;
   const _constructor = `  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {\n    ${_super}\n  }\n\n`;
 
   const _classBody = abis.map(option => makeFn(option, true)).join(`\n`);

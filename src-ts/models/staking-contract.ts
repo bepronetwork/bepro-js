@@ -15,8 +15,8 @@ import stakeSubscription from '@utils/stake-subscription';
 import {Errors} from '@interfaces/error-enum';
 
 export class StakingContract extends Model<StakingContractMethods> implements Deployable, IsOwnable, IsPausable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
-    super(web3Connection, StakingContractJson as any as AbiItem[], contractAddress);
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly stakeTokenAddress?: string) {
+    super(web3Connection, StakingContractJson.abi as AbiItem[], contractAddress);
   }
 
   private _pausable!: Pausable;
@@ -34,7 +34,7 @@ export class StakingContract extends Model<StakingContractMethods> implements De
     this._ownable = new Ownable(this);
     this._pausable = new Pausable(this);
 
-    this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods.erc20()));
+    this._erc20 = new ERC20(this.web3Connection, this.stakeTokenAddress || await this.callTx(this.contract.methods.erc20()));
     await this._erc20.loadContract();
   }
 
@@ -105,7 +105,7 @@ export class StakingContract extends Model<StakingContractMethods> implements De
   }
 
   async getProductIds() {
-    return this.callTx(this.contract.methods.getProductIds());
+    return (await this.callTx(this.contract.methods.getProductIds())).map(id => +id);
   }
 
   async getMySubscriptions(_address: string) {
