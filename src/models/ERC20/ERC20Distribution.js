@@ -134,14 +134,13 @@ class ERC20Distribution extends IContract {
   /**
      * Deploy the Contract
      * @function
-     * @param {Object} params
-     * @param {function():void} params.callback
+     * @param {IContract~TxOptions} options
      * @return {Promise<*|undefined>}
      * @throws {Error} No Token Address Provided
      */
-  deploy = async ({ callback } = {}) => {
+  deploy = async options => {
     const params = [];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

@@ -20,8 +20,10 @@ context('sablier.UpdateFee.context', () => {
       const newFee = STANDARD_SABLIER_FEE;
 
       it('updates the fee', async () => {
-        _this.sablier.switchWallet(admin);
-        await _this.sablier.updateFee({ feePercentage: newFee });
+        await _this.sablier.updateFee(
+          { feePercentage: newFee },
+          { from: admin },
+        );
         const result = await _this.sablier.fee();
         // The new fee is a mantissa
         result.should.be.bignumber.equal(newFee);
@@ -30,10 +32,12 @@ context('sablier.UpdateFee.context', () => {
 
     describe('when the fee is not a valid percentage', () => {
       it('reverts', async () => {
-        _this.sablier.switchWallet(admin);
         const newFee = new BigNumber(110);
         await beproAssert.reverts(
-          () => _this.sablier.updateFee({ feePercentage: newFee }),
+          () => _this.sablier.updateFee(
+            { feePercentage: newFee },
+            { from: admin },
+          ),
           'fee percentage higher than 100%',
         );
       });
@@ -45,9 +49,11 @@ context('sablier.UpdateFee.context', () => {
     const newFee = STANDARD_SABLIER_FEE;
 
     it('reverts', async () => {
-      _this.sablier.switchWallet(_this.eve);
       await beproAssert.reverts(
-        () => _this.sablier.updateFee({ feePercentage: newFee }),
+        () => _this.sablier.updateFee(
+          { feePercentage: newFee },
+          { from: _this.eve },
+        ),
         beproAssert.ErrorType.REVERT,
       );
     });

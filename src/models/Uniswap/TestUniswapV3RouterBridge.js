@@ -71,17 +71,14 @@ export default class TestUniswapV3RouterBridge extends IContract {
   /**
    * Deploy the TestUniswapV3RouterBridge Contract
    * @function
-   * @param {Object} params Parameters
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} No Token Address Provided
    */
-  deploy = async ({
-    callback,
-  } = {}) => {
+  deploy = async options => {
     const params = [ this.params.swapRouterAddress ];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

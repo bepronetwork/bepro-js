@@ -301,18 +301,17 @@ class ERC20TokenLock extends IContract {
   /**
    * Deploy the ERC20 Token Lock Contract
    * @function
-   * @param {Object} params
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} No Token Address Provided
    */
-  deploy = async ({ callback } = {}) => {
+  deploy = async options => {
     if (!this.getERC20Contract()) {
       throw new Error('No Token Address Provided');
     }
     const params = [ this.getERC20Contract().getAddress() ];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

@@ -252,20 +252,20 @@ const deployLoophole = async ({ startBlockNumber = 1, setupWeth = false, setupWb
   }
 };
 
-const approveWethTransfers = async (user1 = userAddress) => {
-  weth.switchWallet(user1);
-  await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
-};
+const approveWethTransfers = (from = userAddress) => weth.approve(
+  { address: loopholeAddress, amount: wethBnMaxUint256 },
+  { from },
+);
 
-const approveWbtcTransfers = async (user1 = userAddress) => {
-  wbtc.switchWallet(user1);
-  await wbtc.approve({ address: loopholeAddress, amount: wbtcBnMaxUint256 });
-};
+const approveWbtcTransfers = (from = userAddress) => wbtc.approve(
+  { address: loopholeAddress, amount: wbtcBnMaxUint256 },
+  { from },
+);
 
-const approveLPTransfers = async (user1 = userAddress) => {
-  lpToken.switchWallet(user1);
-  await lpToken.approve({ address: loopholeAddress, amount: lpBnMaxUint256 });
-};
+const approveLPTransfers = (from = userAddress) => lpToken.approve(
+  { address: loopholeAddress, amount: lpBnMaxUint256 },
+  { from },
+);
 
 // const approveTransfers = async (user1 = userAddress) => {
 //   await approveWethTransfers(user1);
@@ -314,46 +314,41 @@ const approveBulkLPTransfers = async (user1, user2, user3, user4) => {
 
 // send LP tokens to loophole contract and approve LP transfers by loophole for 4 users
 const fundLoopholeWithLP = async () => {
-  lpToken.switchWallet(userAddress);
   // transfer LP tokens to loophole contract
   await lpToken.transferTokenAmount({ toAddress: loopholeAddress, tokenAmount: BigNumber(TOKEN_AMOUNT_1M) });
 };
 
 const usersStake = async (pid, [ userA, userB, userC, userD ], [ stakeA, stakeB, stakeC, stakeD ]) => {
-  loophole.switchWallet(userA);
-  await loophole.stake({
-    pid,
-    amount: stakeA,
-  });
+  await loophole.stake(
+    { amount: stakeA, pid },
+    { from: userA },
+  );
 
   if (userB) {
-    loophole.switchWallet(userB);
-    await loophole.stake({
-      pid,
-      amount: stakeB,
-    });
+    await loophole.stake(
+      { amount: stakeB, pid },
+      { from: userB },
+    );
   }
   else {
     // console.log('---usersStake.userB not defined to stake');
   }
 
   if (userC) {
-    loophole.switchWallet(userC);
-    await loophole.stake({
-      pid,
-      amount: stakeC,
-    });
+    await loophole.stake(
+      { amount: stakeC, pid },
+      { from: userC },
+    );
   }
   else {
     // console.log('---usersStake.userC not defined to stake');
   }
 
   if (userD) {
-    loophole.switchWallet(userD);
-    await loophole.stake({
-      pid,
-      amount: stakeD,
-    });
+    await loophole.stake(
+      { amount: stakeD, pid },
+      { from: userD },
+    );
   }
   else {
     // console.log('---usersStake.userD not defined to stake');
@@ -741,11 +736,13 @@ context('Loophole contract', () => {
 
     it('should pick startBlock over block number when adding pool for last reward block', async () => {
       // NOTE: add WETH pool for testing
-      loophole.switchWallet(owner);
-      await loophole.add({
-        token: wethAddress,
-        allocPoint: wethAllocPoint,
-      });
+      await loophole.add(
+        {
+          token: wethAddress,
+          allocPoint: wethAllocPoint,
+        },
+        { from: owner },
+      );
 
       // NOTE: get pool info and check lastRewardBlock
       const p = await loophole.getPool({ pid: wethPid });
@@ -764,11 +761,13 @@ context('Loophole contract', () => {
 
     it('should pick block number over startBlock when adding pool for last reward block', async () => {
       // NOTE: add WETH pool for testing
-      loophole.switchWallet(owner);
-      await loophole.add({
-        token: wethAddress,
-        allocPoint: wethAllocPoint,
-      });
+      await loophole.add(
+        {
+          token: wethAddress,
+          allocPoint: wethAllocPoint,
+        },
+        { from: owner },
+      );
 
       // NOTE: get pool info and check lastRewardBlock
       // only 2 blocks should have passed with latest transaction, loophole deploy and add weth pool
@@ -832,13 +831,13 @@ context('Loophole contract', () => {
 
   describe('#Loophole staking pools ADD', async () => {
     it('should revert when not owner user tries to add new staking pool', async () => {
-      const allocPoint = 1;
-      loophole.switchWallet(userAddress2);
-      await beproAssert.reverts(() => loophole.add({
-        token: wethAddress,
-        allocPoint,
-      }), 'OR'); // 'Owner Required'
-      loophole.switchWallet(owner);
+      await beproAssert.reverts(() => loophole.add(
+        {
+          allocPoint: 1,
+          token: wethAddress,
+        },
+        { from: userAddress2 },
+      ), 'OR');
     });
 
     it('should add new staking pools WETH and WBTC and emit PoolAdded events', async () => {
@@ -919,16 +918,14 @@ context('Loophole contract', () => {
 
   describe('#Loophole staking pools SET', async () => {
     it('should revert when not owner user tries to set/update staking pool WETH', async () => {
-      loophole.switchWallet(userAddress2);
-      const pid = 1;
-      const allocPoint = 2;
-      const withUpdate = false;
-      await beproAssert.reverts(() => loophole.set({
-        pid,
-        allocPoint,
-        withUpdate,
-      }), 'OR'); // 'Owner Required'
-      loophole.switchWallet(owner);
+      await beproAssert.reverts(() => loophole.set(
+        {
+          allocPoint: 2,
+          pid: 1,
+          withUpdate: false,
+        },
+        { from: userAddress2 },
+      ), 'OR');
     });
 
     it('should revert when trying to set/update LOOP pool', async () => {
@@ -1555,7 +1552,6 @@ context('Loophole contract', () => {
       const amountB = 100; // B stake
       const amountC = 50; // C stake
       const amountD = 100; // D stake
-      let newAddress;
 
       await loophole.currentStake({
         pid,
@@ -1580,75 +1576,73 @@ context('Loophole contract', () => {
       // console.log('pool.totalDistributedPenalty: ', res.totalDistributedPenalty);
 
       /// investorA
-      // console.log('testcase.bp-0');
-      newAddress = await loophole.switchWallet(investorA).getUserAddress();
-      // console.log('testcase.bp-1');
-      expect(newAddress).to.equal(investorA);
-      weth.switchWallet(investorA);
-      // lpToken.switchWallet(investorA);
-
       // already approved for investorA as it is the first wallet
-      await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
+      await weth.approve(
+        { address: loopholeAddress, amount: wethBnMaxUint256 },
+        { from: investorA },
+      );
       // console.log('investorA.weth.allowance: ', await weth.allowance({ address: investorA, spenderAddress: loopholeAddress }));
-      // await lpToken.approve({ address: loopholeAddress, amount: lpBnMaxUint256 });
+      // await lpToken.approve(
+      //   { address: loopholeAddress, amount: lpBnMaxUint256 },
+      //   { from: investorA },
+      // );
       // console.log('investorA.lp.allowance: ', await lpToken.allowance({ address: investorA, spenderAddress: loopholeAddress }));
 
-      let amount = amountA; // A stake
-      await loophole.stake({
-        pid,
-        amount,
-      });
+      await loophole.stake(
+        { amount: amountA, pid },
+        { from: investorA },
+      );
 
       /// investorB
-      newAddress = await loophole.switchWallet(investorB).getUserAddress();
-      expect(newAddress).to.equal(investorB);
-      weth.switchWallet(investorB);
-      // lpToken.switchWallet(investorB);
-
-      await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
+      await weth.approve(
+        { address: loopholeAddress, amount: wethBnMaxUint256 },
+        { from: investorB },
+      );
       // console.log('investorB.weth.allowance: ', await weth.allowance({ address: investorB, spenderAddress: loopholeAddress }));
-      // await lpToken.approve({ address: loopholeAddress, amount: lpBnMaxUint256 });
+      // await lpToken.approve(
+      //   { address: loopholeAddress, amount: lpBnMaxUint256 },
+      //   { from: investorB },
+      // );
       // console.log('investorB.lp.allowance: ', await lpToken.allowance({ address: investorB, spenderAddress: loopholeAddress }));
 
-      amount = amountB; // B stake
-      await loophole.stake({
-        pid,
-        amount,
-      });
+      await loophole.stake(
+        { amount: amountB, pid },
+        { from: investorB },
+      );
 
       /// investorC
-      newAddress = await loophole.switchWallet(investorC).getUserAddress();
-      expect(newAddress).to.equal(investorC);
-      weth.switchWallet(investorC);
-      // lpToken.switchWallet(investorC);
-
-      await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
+      await weth.approve(
+        { address: loopholeAddress, amount: wethBnMaxUint256 },
+        { from: investorC },
+      );
       // console.log('investorC.weth.allowance: ', await weth.allowance({ address: investorC, spenderAddress: loopholeAddress }));
-      // await lpToken.approve({ address: loopholeAddress, amount: lpBnMaxUint256 });
+      // await lpToken.approve(
+      //   { address: loopholeAddress, amount: lpBnMaxUint256 },
+      //   { from: investorC },
+      // );
       // console.log('investorC.lp.allowance: ', await lpToken.allowance({ address: investorC, spenderAddress: loopholeAddress }));
 
-      amount = amountC; // C stake
-      await loophole.stake({
-        pid,
-        amount,
-      });
+      await loophole.stake(
+        { amount: amountC, pid },
+        { from: investorC },
+      );
 
       /// investorD
-      newAddress = await loophole.switchWallet(investorD).getUserAddress();
-      expect(newAddress).to.equal(investorD);
-      weth.switchWallet(investorD);
-      // lpToken.switchWallet(investorD);
-
-      await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
+      await weth.approve(
+        { address: loopholeAddress, amount: wethBnMaxUint256 },
+        { from: investorD },
+      );
       // console.log('investorD.weth.allowance: ', await weth.allowance({ address: investorD, spenderAddress: loopholeAddress }));
-      // await lpToken.approve({ address: loopholeAddress, amount: lpBnMaxUint256 });
+      // await lpToken.approve(
+      //   { address: loopholeAddress, amount: lpBnMaxUint256 },
+      //   { from: investorD },
+      // );
       // console.log('investorD.lp.allowance: ', await lpToken.allowance({ address: investorD, spenderAddress: loopholeAddress }));
 
-      amount = amountD; // D stake
-      await loophole.stake({
-        pid,
-        amount,
-      });
+      await loophole.stake(
+        { amount: amountD, pid },
+        { from: investorD },
+      );
 
       // >>> assert staked amounts match
       await weth.balanceOf(investorA);
@@ -1723,57 +1717,54 @@ context('Loophole contract', () => {
 
       // Then, they execute the following operations in this order
       // 1. B unstakes everything  (that is the 100)
-      loophole.switchWallet(investorB);
-      amount = amountB;
-      await loophole.exit({
-        pid,
-        amount,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          amount: amountB,
+          amountOutMinimum,
+          pid,
+        },
+        { from: investorB },
+      );
       // console.log('---loophole.exit.tx.events.TokenExchanged.returnValues: ', tx.events.TokenExchanged.returnValues);
 
       // 2. B stakes 75
-      // loophole.switchWallet(investorB);
-      amount = 75;
-      await loophole.stake({
-        pid,
-        amount,
-      });
+      await loophole.stake(
+        { amount: 75, pid },
+        { from: investorB },
+      );
 
       // 3. C unstakes everything
-      loophole.switchWallet(investorC);
-      amount = amountC;
-      await loophole.exit({
-        pid,
-        amount,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          amount: amountC,
+          amountOutMinimum,
+          pid,
+        },
+        { from: investorC },
+      );
       // console.log('---loophole.exit.tx.events.TokenExchanged.returnValues: ', tx.events.TokenExchanged.returnValues);
 
       // 4. B stakes 200
-      loophole.switchWallet(investorB);
-      amount = 200;
-      await loophole.stake({
-        pid,
-        amount,
-      });
+      await loophole.stake(
+        { amount: 200, pid },
+        { from: investorB },
+      );
 
       // 5. B stakes 100
-      loophole.switchWallet(investorB);
-      amount = 100;
-      await loophole.stake({
-        pid,
-        amount,
-      });
+      await loophole.stake(
+        { amount: 100, pid },
+        { from: investorB },
+      );
 
       // 6. B unstakes 100
-      loophole.switchWallet(investorB);
-      amount = 100;
-      await loophole.exit({
-        pid,
-        amount,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          amount: 100,
+          amountOutMinimum,
+          pid,
+        },
+        { from: investorB },
+      );
       // console.log('---loophole.exit.tx.events.TokenExchanged.returnValues: ', tx.events.TokenExchanged.returnValues);
 
       // The final result for the variables should the following for a main pool:
@@ -1961,29 +1952,30 @@ context('Loophole contract', () => {
 
       const amountOutMinimum = 0; // do NOT use zero this in production
 
-      loophole.switchWallet(investorA);
-      // weth.switchWallet(investorA);
       // already approved for investorA as it is the first wallet
-      // await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
+      // await weth.approve(
+      //   { address: loopholeAddress, amount: wethBnMaxUint256 },
+      //   { from: investorA },
+      // );
       await approveWethTransfers(investorA);
       // console.log('investorA.weth.allowance: ', await weth.allowance({ address: investorA, spenderAddress: loopholeAddress }));
 
-      await loophole.stake({
-        pid,
-        amount: amountA,
-      });
+      await loophole.stake(
+        { amount: amountA, pid },
+        { from: investorA },
+      );
 
-      loophole.switchWallet(investorB);
-      // weth.switchWallet(investorB);
-      // already approved for investorA as it is the first wallet
-      // await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
+      // await weth.approve(
+      //   { address: loopholeAddress, amount: wethBnMaxUint256 },
+      //   { from: investorB },
+      // );
       await approveWethTransfers(investorB);
       // console.log('investorB.weth.allowance: ', await weth.allowance({ address: investorB, spenderAddress: loopholeAddress }));
 
-      await loophole.stake({
-        pid,
-        amount: amountB,
-      });
+      await loophole.stake(
+        { amount: amountB, pid },
+        { from: investorB },
+      );
 
       const invAstake = await loophole.currentStake({
         pid,
@@ -2001,11 +1993,14 @@ context('Loophole contract', () => {
       // investorB exits whole amount 10k WETH, 2k WETH is paid as penalty:
       // 1k WETH goes to other users in WETH pool
       // 1k WETH is converted to LP tokens and goes to LOOP pool
-      await loophole.exit({
-        pid,
-        amount: amountB,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          amount: amountB,
+          amountOutMinimum,
+          pid,
+        },
+        { from: investorB },
+      );
 
       // check investorA and investorB new stakes
       const invAstake2 = await loophole.currentStake({
@@ -2056,13 +2051,14 @@ context('Loophole contract', () => {
       invBstakeUser.should.be.bignumber.equal(0);
 
       // investorA exit 50% and check stake
-      loophole.switchWallet(investorA);
-      const halfAmount = 550; // 1100 / 2;
-      await loophole.exit({
-        pid,
-        amount: halfAmount,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          pid,
+          amount: 550, // 1100 / 2;
+          amountOutMinimum,
+        },
+        { from: investorA },
+      );
       const invAstake3 = await loophole.currentStake({
         pid,
         user: investorA,
@@ -2087,12 +2083,14 @@ context('Loophole contract', () => {
       poolInfo.totalDistributedPenalty.should.be.bignumber.equal(expectedTotalDistributedPenalty);
 
       // investorA exit other 50% and check stake
-      loophole.switchWallet(investorA);
-      await loophole.exit({
-        pid,
-        amount: 605,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          amount: 605,
+          amountOutMinimum,
+          pid,
+        },
+        { from: investorA },
+      );
       const invAstake4 = await loophole.currentStake({
         pid,
         user: investorA,
@@ -2140,29 +2138,30 @@ context('Loophole contract', () => {
 
       const amountOutMinimum = 0; // do NOT use zero this in production
 
-      loophole.switchWallet(investorA);
-      // weth.switchWallet(investorA);
       // already approved for investorA as it is the first wallet
-      // await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
+      // await weth.approve(
+      //   { address: loopholeAddress, amount: wethBnMaxUint256 },
+      //   { from: investorA },
+      // );
       await approveWethTransfers(investorA);
       // console.log('investorA.weth.allowance: ', await weth.allowance({ address: investorA, spenderAddress: loopholeAddress }));
 
-      await loophole.stake({
-        pid,
-        amount: amountA,
-      });
+      await loophole.stake(
+        { amount: amountA, pid },
+        { from: investorA },
+      );
 
-      loophole.switchWallet(investorB);
-      // weth.switchWallet(investorB);
-      // already approved for investorA as it is the first wallet
-      // await weth.approve({ address: loopholeAddress, amount: wethBnMaxUint256 });
+      // await weth.approve(
+      //   { address: loopholeAddress, amount: wethBnMaxUint256 },
+      //   { from: investorB },
+      // );
       await approveWethTransfers(investorB);
       // console.log('investorB.weth.allowance: ', await weth.allowance({ address: investorB, spenderAddress: loopholeAddress }));
 
-      await loophole.stake({
-        pid,
-        amount: amountB,
-      });
+      await loophole.stake(
+        { amount: amountB, pid },
+        { from: investorB },
+      );
 
       const invAstake = await loophole.currentStake({
         pid,
@@ -2180,11 +2179,14 @@ context('Loophole contract', () => {
       // investorB exits whole amount 100 WETH, 20 WETH is paid as penalty:
       // 10 WETH goes to other users in WETH pool
       // 10 WETH is converted to LP tokens and goes to LOOP pool
-      await loophole.exit({
-        pid,
-        amount: amountB,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          amount: amountB,
+          amountOutMinimum,
+          pid,
+        },
+        { from: investorB },
+      );
 
       // check investorA and investorB new stakes
       const invAstake2 = await loophole.currentStake({
@@ -2235,12 +2237,14 @@ context('Loophole contract', () => {
       invBstakeUser.should.be.bignumber.equal(0);
 
       // investorA exit all and check stake
-      loophole.switchWallet(investorA);
-      await loophole.exit({
-        pid,
-        amount: 10010,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          amount: 10010,
+          amountOutMinimum,
+          pid,
+        },
+        { from: investorA },
+      );
       const invAstake3 = await loophole.currentStake({
         pid,
         user: investorA,
@@ -2440,12 +2444,10 @@ context('Loophole contract', () => {
       let userDreward;
       // let lpTokensReward = 15; // 1 block * 50 LP per block * 0.3 weth share = 15
 
-      // NOTE:
-      loophole.switchWallet(userA);
-      await loophole.stake({
-        pid,
-        amount: stakeA,
-      });
+      await loophole.stake(
+        { amount: stakeA, pid },
+        { from: userA },
+      );
 
       // 2 blocks passed by for liquidity mining
       pool = await loophole.getPool({ pid });
@@ -2467,12 +2469,10 @@ context('Loophole contract', () => {
       // console.log('---pool.lastRewardBlock: ', pool.lastRewardBlock);
       blockNumber.should.be.bignumber.equal(pool.lastRewardBlock);
 
-      // NOTE:
-      loophole.switchWallet(userB);
-      await loophole.stake({
-        pid,
-        amount: stakeB,
-      });
+      await loophole.stake(
+        { amount: stakeB, pid },
+        { from: userB },
+      );
 
       // NOTE: pool.accLPtokensPerShare will look at totalPool before user staking tokens
       // , in this case 1000 as userA staking deposit
@@ -2491,12 +2491,10 @@ context('Loophole contract', () => {
       pAccLPtokensPerShare.should.be.bignumber.equal(0.015); // accLPtokensPerShareExpected
       // const userBaccLPtokensPerShare = pAccLPtokensPerShare;
 
-      // NOTE:
-      loophole.switchWallet(userC);
-      await loophole.stake({
-        pid,
-        amount: stakeC,
-      });
+      await loophole.stake(
+        { amount: stakeC, pid },
+        { from: userC },
+      );
 
       // NOTE: pool.accLPtokensPerShare will look at totalPool before user staking tokens,
       // in this case 3000 as userA + userB staking deposits
@@ -2516,11 +2514,10 @@ context('Loophole contract', () => {
       // const userCaccLPtokensPerShare = pAccLPtokensPerShare;
 
       // NOTE:
-      loophole.switchWallet(userD);
-      await loophole.stake({
-        pid,
-        amount: stakeD,
-      });
+      await loophole.stake(
+        { amount: stakeD, pid },
+        { from: userD },
+      );
 
       // NOTE: pool.accLPtokensPerShare will look at totalPool before user staking tokens,
       // in this case 6000 as userA + userB + userC staking deposits
@@ -2545,7 +2542,6 @@ context('Loophole contract', () => {
       await forwardBlocks(forwardXBlocks);
 
       // get LP rewards
-      // loophole.switchWallet(userA);
 
       // const poolReward = await loophole.getPoolReward({ pid: pid });
       // const blocks = Number(1); /// 1 tx since last liquidity mining
@@ -2690,7 +2686,6 @@ context('Loophole contract', () => {
 
     // NOTE: check updatePoolCall
     it('should test updatePoolCall and return zero [from staking pool WETH]', async () => {
-      loophole.switchWallet(userA);
       const res = await loophole.updatePoolCall({ pid: wethPid });
       // console.log('loophole.updatePoolCall.wethPid.res: ', res);
       // 15 is LP tokens reward per WETH pool per block, is 30% WETH pool from 50 LP reward per block
@@ -2708,8 +2703,10 @@ context('Loophole contract', () => {
       // console.log('---userAreward1: ', userAreward1);
       // usually userAreward1 should be 28.5 with the transactions we had so far
 
-      loophole.switchWallet(userA);
-      const tx = await loophole.collectRewards({ pid: wethPid });
+      const tx = await loophole.collectRewards(
+        { pid: wethPid },
+        { from: userA },
+      );
       // console.log('loophole.collectRewards.wethPid.tx: ', tx);
       // console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
 
@@ -2740,8 +2737,10 @@ context('Loophole contract', () => {
 
     // NOTE: check collectRewards
     it('userA should collect LP rewards for 1 mined block [from staking pool WETH]', async () => {
-      loophole.switchWallet(userA);
-      const tx = await loophole.collectRewards({ pid: wethPid });
+      const tx = await loophole.collectRewards(
+        { pid: wethPid },
+        { from: userA },
+      );
       // console.log('loophole.collectRewards.wethPid: ', tx);
       // console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
 
@@ -2775,7 +2774,6 @@ context('Loophole contract', () => {
 
     // NOTE: check no pending LP rewards
     it('userA should have no pending LP rewards [from staking pool WETH]', async () => {
-      loophole.switchWallet(userA);
       const rewards = await loophole.getUserReward({
         pid: wethPid,
         user: userA,
@@ -2792,12 +2790,14 @@ context('Loophole contract', () => {
 
       // NOTE: do NOT use amountOutMinimum = 0 in production
       const amountOutMinimum = 0;
-      loophole.switchWallet(userA);
-      await loophole.exit({
-        pid: wethPid,
-        amount: stakeA,
-        amountOutMinimum,
-      });
+      await loophole.exit(
+        {
+          amount: stakeA,
+          amountOutMinimum,
+          pid: wethPid,
+        },
+        { from: userA },
+      );
 
       // NOTE: userA should have got paid LP rewards for 1 block in unstake tx
       lpBalance2 = await lpToken.balanceOf(userA);
@@ -2832,8 +2832,10 @@ context('Loophole contract', () => {
     });
 
     it('userA should NOT collect any LP rewards at this point [from staking pool WETH]', async () => {
-      loophole.switchWallet(userA);
-      const tx = await loophole.collectRewards({ pid: wethPid });
+      const tx = await loophole.collectRewards(
+        { pid: wethPid },
+        { from: userA },
+      );
       // console.log('loophole.collectRewards.wethPid: ', tx);
       // console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
 
@@ -2897,10 +2899,11 @@ context('Loophole contract', () => {
     // NOTE: this test WILL FAIL due to numbers rounding error when calculating users stake amounts
     // NOTE: userB exits, check userA has NOT benefited, userC and userD did benefit from userB exit
     it('userB exits/unstakes all [from WETH pool]', async () => {
-      loophole.switchWallet(userB);
-
       // NOTE: userB should collect LP rewards pending/left
-      let tx = await loophole.collectRewards({ pid: wethPid });
+      let tx = await loophole.collectRewards(
+        { pid: wethPid },
+        { from: userB },
+      );
 
       // NOTE: makre sure userB has no pending LP rewards
       const rewards = await loophole.getUserReward({
@@ -2937,11 +2940,14 @@ context('Loophole contract', () => {
 
       // NOTE: do NOT use amountOutMinimum = 0 in production
       const amountOutMinimum = 0;
-      tx = await loophole.exit({
-        pid: wethPid,
-        amount: userBnewStake,
-        amountOutMinimum,
-      });
+      tx = await loophole.exit(
+        {
+          amount: userBnewStake,
+          amountOutMinimum,
+          pid: wethPid,
+        },
+        { from: userB },
+      );
       // console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
       const expectedPaidRewardDecimals = BigNumber(tx.events.Collect.returnValues.reward);
       const expectedPaidReward = Numbers.fromDecimalsToBN(expectedPaidRewardDecimals, lpDecimals);
@@ -3017,8 +3023,10 @@ context('Loophole contract', () => {
     });
 
     it('userB should NOT collect any LP rewards at this point [from staking pool WETH]', async () => {
-      loophole.switchWallet(userB);
-      const tx = await loophole.collectRewards({ pid: wethPid });
+      const tx = await loophole.collectRewards(
+        { pid: wethPid },
+        { from: userB },
+      );
       // console.log('loophole.collectRewards.wethPid: ', tx);
       // console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
 
@@ -3045,8 +3053,6 @@ context('Loophole contract', () => {
     });
 
     it('userA should not have any LP rewards pending', async () => {
-      loophole.switchWallet(userA);
-
       // NOTE: userA should not have any LP rewards pending
       const rewards = await loophole.getUserReward({
         pid: wethPid,
@@ -3057,8 +3063,6 @@ context('Loophole contract', () => {
     });
 
     it('userA should have NOT benefited from userB exit/unstake', async () => {
-      loophole.switchWallet(userA);
-
       const userAstakeExpected = 0;
       const userAstake = await loophole.currentStake({
         pid: wethPid,
@@ -3125,13 +3129,13 @@ context('Loophole contract', () => {
       // NOTE: userC stakes to round up total pool stake up to 12,000 weth
       // pool has 10280 at the moment, stake up to 12,000
       const newStake1 = BigNumber(12000 - 10280);
-      loophole.switchWallet(userC);
-      await loophole.stake({
-        pid: wethPid,
-        amount: newStake1,
-      });
-
-      loophole.switchWallet(userB);
+      await loophole.stake(
+        {
+          amount: newStake1,
+          pid: wethPid,
+        },
+        { from: userC },
+      );
 
       // NOTE: test case process
       // 1. pool mine 3 blocks
@@ -3145,10 +3149,13 @@ context('Loophole contract', () => {
 
       // NOTE: userB stakes 3000
       const userBnewStake = BigNumber(3000);
-      await loophole.stake({
-        pid: wethPid,
-        amount: userBnewStake,
-      });
+      await loophole.stake(
+        {
+          amount: userBnewStake,
+          pid: wethPid,
+        },
+        { from: userB },
+      );
 
       // NOTE: at this point the pool should have plus userB new stake
       const newStakeTotal = 12000; // 10280 + userCnewStake; //7280 + 3000 + userCnewStake;
@@ -3188,7 +3195,10 @@ context('Loophole contract', () => {
       userBnewRewards.should.be.bignumber.equal(userBnewRewardsExpected);
 
       // NOTE: userB should collect LP rewards only since he staked not for previous blocks
-      const tx = await loophole.collectRewards({ pid: wethPid });
+      const tx = await loophole.collectRewards(
+        { pid: wethPid },
+        { from: userB },
+      );
       // console.log('loophole.collectRewards.wethPid: ', tx);
       // console.log('tx.events.Collect.returnValues: ', tx.events.Collect.returnValues);
 
@@ -3317,11 +3327,13 @@ context('Loophole contract', () => {
       userStakeTmp.should.be.bignumber.equal(0);
 
       /// await usersStake(lpPid, [userA, userB, userC, userD], [1000, 1000, 1000, 1000]);
-      loophole.switchWallet(userA);
-      await loophole.stake({
-        pid: lpPid,
-        amount: 1000,
-      });
+      await loophole.stake(
+        {
+          amount: 1000,
+          pid: lpPid,
+        },
+        { from: userA },
+      );
       // console.log('---userA.after.stake.getEntryStakeAdjusted: ', await loophole.getEntryStakeAdjusted({
       //   pid: lpPid,
       //   user: userA,
@@ -3332,11 +3344,13 @@ context('Loophole contract', () => {
       // }));
       // console.log('---userA.after.stake.pool: ', await loophole.getPool({ pid: lpPid }));
 
-      loophole.switchWallet(userB);
-      await loophole.stake({
-        pid: lpPid,
-        amount: 1000,
-      });
+      await loophole.stake(
+        {
+          amount: 1000,
+          pid: lpPid,
+        },
+        { from: userB },
+      );
       // console.log('---userB.after.stake.getEntryStakeAdjusted: ', await loophole.getEntryStakeAdjusted({
       //   pid: lpPid,
       //   user: userB,
@@ -3347,11 +3361,13 @@ context('Loophole contract', () => {
       // }));
       // console.log('---userB.after.stake.pool: ', await loophole.getPool({ pid: lpPid }));
 
-      loophole.switchWallet(userC);
-      await loophole.stake({
-        pid: lpPid,
-        amount: 1000,
-      });
+      await loophole.stake(
+        {
+          amount: 1000,
+          pid: lpPid,
+        },
+        { from: userC },
+      );
       // console.log('---userC.after.stake.getEntryStakeAdjusted: ', await loophole.getEntryStakeAdjusted({
       //   pid: lpPid,
       //   user: userC,
@@ -3362,11 +3378,13 @@ context('Loophole contract', () => {
       // }));
       // console.log('---userC.after.stake.pool: ', await loophole.getPool({ pid: lpPid }));
 
-      loophole.switchWallet(userD);
-      await loophole.stake({
-        pid: lpPid,
-        amount: 1000,
-      });
+      await loophole.stake(
+        {
+          amount: 1000,
+          pid: lpPid,
+        },
+        { from: userD },
+      );
       // console.log('---userD.after.stake.getEntryStakeAdjusted: ', await loophole.getEntryStakeAdjusted({
       //   pid: lpPid,
       //   user: userD,
@@ -3503,42 +3521,48 @@ context('Loophole contract', () => {
       // NOTE: use same amounts for weth and LP tokens for simplicity
 
       // NOTE: 10% of 1000 = 100 weth converted to LP as distribution
-      loophole.switchWallet(userA);
       // console.log('weth.stakeA: ', stakeA);
-      tx = await loophole.exit({
-        pid: wethPid,
-        amount: stakeA,
-        amountOutMinimum: amountOutMinimum_ZERO,
-      });
+      tx = await loophole.exit(
+        {
+          amount: stakeA,
+          amountOutMinimum: amountOutMinimum_ZERO,
+          pid: wethPid,
+        },
+        { from: userA },
+      );
       accLPprofit = accLPprofit.plus(BigNumber(tx.events.TokenExchanged.returnValues.tokenAmountLP));
 
       // NOTE: userB has 2000/5000 of total weth pool 5100 = 2040 weth, 10% of that = 204 weth converted to LP as distribution
-      loophole.switchWallet(userB);
       const stakeBnew = await loophole.currentStake({
         pid: wethPid,
         user: userB,
       });
       // console.log('weth.stakeBnew: ', stakeBnew);
-      tx = await loophole.exit({
-        pid: wethPid,
-        amount: stakeBnew,
-        amountOutMinimum: amountOutMinimum_ZERO,
-      });
+      tx = await loophole.exit(
+        {
+          amount: stakeBnew,
+          amountOutMinimum: amountOutMinimum_ZERO,
+          pid: wethPid,
+        },
+        { from: userB },
+      );
       accLPprofit = accLPprofit.plus(BigNumber(tx.events.TokenExchanged.returnValues.tokenAmountLP));
 
       // NOTE: userC has 3000/3000 of total weth pool 3060+204 = 3264 weth
       // 20% of that as userC is last to exit = 326.4*2 = 652.8 weth converted to LP as distribution
-      loophole.switchWallet(userC);
       const stakeCnew = await loophole.currentStake({
         pid: wethPid,
         user: userC,
       });
       // console.log('weth.stakeCnew: ', stakeCnew);
-      tx = await loophole.exit({
-        pid: wethPid,
-        amount: stakeCnew,
-        amountOutMinimum: amountOutMinimum_ZERO,
-      });
+      tx = await loophole.exit(
+        {
+          amount: stakeCnew,
+          amountOutMinimum: amountOutMinimum_ZERO,
+          pid: wethPid,
+        },
+        { from: userC },
+      );
       accLPprofit = accLPprofit.plus(BigNumber(tx.events.TokenExchanged.returnValues.tokenAmountLP));
 
       // NOTE: assert users stakes in the WETH pool
@@ -3644,12 +3668,14 @@ context('Loophole contract', () => {
       await usersStake(wethPid, [ userA, userB ], [ stakeA, stakeB ]);
 
       // userA exits
-      loophole.switchWallet(userA);
-      await loophole.exit({
-        pid: wethPid,
-        amount: stakeA,
-        amountOutMinimum: amountOutMinimum_ZERO,
-      });
+      await loophole.exit(
+        {
+          amount: stakeA,
+          amountOutMinimum: amountOutMinimum_ZERO,
+          pid: wethPid,
+        },
+        { from: userA },
+      );
 
       // NOTE: userA stake was 1000, 10% of it is 100, it went back into the WETH pool for distribution
       const userBnewStake = await loophole.currentStake({
@@ -3674,12 +3700,14 @@ context('Loophole contract', () => {
       lpPool = await loophole.getPool({ pid: lpPid });
 
       // NOTE: userB is last to exit
-      loophole.switchWallet(userB);
-      wethExitTx = await loophole.exit({
-        pid: wethPid,
-        amount: userBnewStake,
-        amountOutMinimum: amountOutMinimum_ZERO,
-      });
+      wethExitTx = await loophole.exit(
+        {
+          amount: userBnewStake,
+          amountOutMinimum: amountOutMinimum_ZERO,
+          pid: wethPid,
+        },
+        { from: userB },
+      );
 
       // NOTE: check pool.totalDistributedPenalty
       p = await loophole.getPool({ pid: wethPid });
@@ -3738,12 +3766,14 @@ context('Loophole contract', () => {
       await usersStake(wethPid, [ userA, userB, userC ], [ stakeX, stakeY, stakeZ ]);
 
       // userA exits
-      loophole.switchWallet(userA);
-      await loophole.exit({
-        pid: wethPid,
-        amount: stakeX,
-        amountOutMinimum: amountOutMinimum_ZERO,
-      });
+      await loophole.exit(
+        {
+          amount: stakeX,
+          amountOutMinimum: amountOutMinimum_ZERO,
+          pid: wethPid,
+        },
+        { from: userA },
+      );
 
       // NOTE: userA stake was 1000, 10% of it is 100, it went back into the WETH pool for distribution
       // userB new stake is 2000+40 = 2040
@@ -3762,13 +3792,15 @@ context('Loophole contract', () => {
       // userC was given 3000/5000 of 100 = 60 (60%)
 
       // userB exits
-      loophole.switchWallet(userB);
       const userBnewStake = stakeY.plus(40); // 2040
-      await loophole.exit({
-        pid: wethPid,
-        amount: userBnewStake,
-        amountOutMinimum: amountOutMinimum_ZERO,
-      });
+      await loophole.exit(
+        {
+          amount: userBnewStake,
+          amountOutMinimum: amountOutMinimum_ZERO,
+          pid: wethPid,
+        },
+        { from: userB },
+      );
 
       // NOTE: last userB stake was 2040, 10% of it is 204, it went back into the WETH pool for distribution
       // userC new stake is 3000+60+204 = 3264

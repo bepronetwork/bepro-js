@@ -14,7 +14,7 @@ let recipient;
 let deposit;
 let sender;
 
-function runTests() {
+function runTests(from) {
   describe('when not paused', () => {
     describe('when the withdrawal amount is higher than 0', () => {
       describe('when the stream did not start', () => {
@@ -22,7 +22,7 @@ function runTests() {
 
         it('reverts', async () => {
           await beproAssert.reverts(
-            () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+            () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from }),
             'amount exceeds the available balance',
           );
         });
@@ -34,19 +34,19 @@ function runTests() {
 
           it('withdraws from the stream', async () => {
             const balance = await _this.token.balanceOf(recipient);
-            await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+            await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
             const newBalance = await _this.token.balanceOf(recipient);
             newBalance.should.be.bignumber.equal(new BigNumber(balance).plus(FIVE_UNITS));
           });
 
           it('emits a withdrawfromstream event', async () => {
-            const result = await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+            const result = await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
             beproAssert.eventEmitted(result, 'WithdrawFromStream');
           });
 
           it('decreases the stream balance', async () => {
             const balance = await _this.sablier.balanceOf({ streamId, who: recipient });
-            await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+            await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
             const newBalance = await _this.sablier.balanceOf({ streamId, who: recipient });
             // Intuitively, one may say we don't have to tolerate the block time variation here.
             // However, the Sablier balance for the recipient can only go up from the bottom
@@ -63,7 +63,7 @@ function runTests() {
 
           it('reverts', async () => {
             await beproAssert.reverts(
-              () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+              () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from }),
               'amount exceeds the available balance',
             );
           });
@@ -77,19 +77,19 @@ function runTests() {
 
             it('withdraws from the stream', async () => {
               const balance = await _this.token.balanceOf(recipient);
-              await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+              await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
               const newBalance = await _this.token.balanceOf(recipient);
               newBalance.should.be.bignumber.equal(new BigNumber(balance).plus(withdrawalAmount));
             });
 
             it('emits a withdrawfromstream event', async () => {
-              const result = await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+              const result = await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
               beproAssert.eventEmitted(result, 'WithdrawFromStream');
             });
 
             it('decreases the stream balance', async () => {
               const balance = await _this.sablier.balanceOf({ streamId, who: recipient });
-              await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+              await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
               const newBalance = await _this.sablier.balanceOf({ streamId, who: recipient });
               newBalance.should.be.bignumber.equal(new BigNumber(balance).minus(withdrawalAmount));
             });
@@ -100,18 +100,18 @@ function runTests() {
 
             it('withdraws from the stream', async () => {
               const balance = await _this.token.balanceOf(recipient);
-              await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+              await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
               const newBalance = await _this.token.balanceOf(recipient);
               newBalance.should.be.bignumber.equal(new BigNumber(balance).plus(withdrawalAmount));
             });
 
             it('emits a withdrawfromstream event', async () => {
-              const result = await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+              const result = await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
               beproAssert.eventEmitted(result, 'WithdrawFromStream');
             });
 
             it('deletes the stream object', async () => {
-              await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount });
+              await _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from });
               await beproAssert.reverts(
                 () => _this.sablier.getStream({ streamId }),
                 'stream does not exist',
@@ -125,7 +125,7 @@ function runTests() {
 
           it('reverts', async () => {
             await beproAssert.reverts(
-              () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+              () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from }),
               'amount exceeds the available balance',
             );
           });
@@ -138,7 +138,7 @@ function runTests() {
 
       it('reverts', async () => {
         await beproAssert.reverts(
-          () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+          () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from }),
           'amount is zero',
         );
       });
@@ -150,15 +150,12 @@ function runTests() {
 
     beforeEach(async () => {
       // Note that `sender` coincides with the owner of the contract
-      const userBackup = await _this.sablier.getUserCurrentAccount();
-      _this.sablier.switchWallet(sender);
-      await _this.sablier.pause(); // ({ from: _this.sender });
-      _this.sablier.switchWallet(userBackup);
+      await _this.sablier.pause({ from: sender });
     });
 
     it('reverts', async () => {
       await beproAssert.reverts(
-        () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }),
+        () => _this.sablier.withdrawFromStream({ streamId, amount: withdrawalAmount }, { from }),
         'Pausable: paused',
       );
     });
@@ -208,31 +205,20 @@ context('sablier.WithdrawFromStream.context', () => {
     });
 
     describe('when the caller is the sender of the stream', () => {
-      beforeEach(() => {
-        // this.opts = { from: this.sender };
-        _this.sablier.switchWallet(sender);
-      });
-
-      runTests();
+      runTests(sender);
     });
 
     describe('when the caller is the recipient of the stream', () => {
-      beforeEach(() => {
-        // this.opts = { from: this.recipient };
-        _this.sablier.switchWallet(recipient);
-      });
-
-      runTests();
+      runTests(recipient);
     });
 
     describe('when the caller is not the sender or the recipient of the stream', () => {
-      // const opts = { from: eve };
-
       it('reverts', async () => {
-        _this.sablier.switchWallet(_this.eve);
-
         await beproAssert.reverts(
-          () => _this.sablier.withdrawFromStream({ streamId, amount: FIVE_UNITS }),
+          () => _this.sablier.withdrawFromStream(
+            { streamId, amount: FIVE_UNITS },
+            { from: _this.eve },
+          ),
           'caller is not the sender or the recipient of the stream',
         );
       });
@@ -240,18 +226,15 @@ context('sablier.WithdrawFromStream.context', () => {
   });
 
   describe('when the stream does not exist', () => {
-    // const recipient = bob;
-    // const opts = { from: recipient };
-
     it('reverts', async () => {
-      recipient = _this.bob;
-      _this.sablier.switchWallet(recipient);
-
       await beproAssert.reverts(
-        () => _this.sablier.withdrawFromStream({
-          streamId: new BigNumber(419863),
-          amount: FIVE_UNITS,
-        }),
+        () => _this.sablier.withdrawFromStream(
+          {
+            amount: FIVE_UNITS,
+            streamId: new BigNumber(419863),
+          },
+          { from: _this.bob },
+        ),
         'stream does not exist',
       );
     });

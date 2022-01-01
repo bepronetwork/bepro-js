@@ -322,21 +322,23 @@ class ERC721Collectibles extends IContract {
    * @param {*} params.erc20Purchase
    * @param {string} params.feeAddress
    * @param {string} params.otherAddress
-   * @param {*} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} Please provide an erc20 address for purchases
    * @throws {Error} Please provide a name
    * @throws {Error} Please provide a symbol
    */
-  deploy = async ({
-    name,
-    symbol,
-    limitedAmount = 0,
-    erc20Purchase,
-    feeAddress = '0x0000000000000000000000000000000000000001',
-    otherAddress = '0x0000000000000000000000000000000000000001',
-    callback,
-  }) => {
+  deploy = async (
+    {
+      name,
+      symbol,
+      limitedAmount = 0,
+      erc20Purchase,
+      feeAddress = '0x0000000000000000000000000000000000000001',
+      otherAddress = '0x0000000000000000000000000000000000000001',
+    },
+    options,
+  ) => {
     if (!erc20Purchase) {
       throw new Error('Please provide an erc20 address for purchases');
     }
@@ -357,7 +359,7 @@ class ERC721Collectibles extends IContract {
       feeAddress,
       otherAddress,
     ];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

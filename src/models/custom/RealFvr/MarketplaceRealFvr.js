@@ -30,7 +30,6 @@ class MarketplaceRealFvr extends IContract {
     if (!this.isETHTransaction()) {
       // Set Token Address Contract for easy access
       this.params.ERC20Contract = new ERC20Contract({
-        acc: this.acc,
         contractAddress: this.params.tokenAddress,
         web3Connection: this.web3Connection,
       });
@@ -46,7 +45,6 @@ class MarketplaceRealFvr extends IContract {
 
     // Set Token Address Contract for easy access
     this.params.ERC721Contract = new ERC721Contract({
-      acc: this.acc,
       contractAddress: this.params.tokenAddress,
       web3Connection: this.web3Connection,
     });
@@ -199,13 +197,18 @@ class MarketplaceRealFvr extends IContract {
      * @param {Object} params Parameters
      * @param {Address} params.erc20TokenAddress Address of the Contract - Optional (Dont insert if you want to use ETH or BNB or the native currency)
      * @param {Address} params.erc721TokenAddress Address of the Contract
+     * @param {IContract~TxOptions} options
      * @returns {Boolean} Success the Tx Object if operation was successful
      */
-  deploy = async ({
-    erc20TokenAddress = '0x0000000000000000000000000000000000000000', erc721TokenAddress, callback,
-  }) => {
+  deploy = async (
+    {
+      erc20TokenAddress = '0x0000000000000000000000000000000000000000',
+      erc721TokenAddress,
+    },
+    options,
+  ) => {
     const params = [ erc20TokenAddress, erc721TokenAddress ];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

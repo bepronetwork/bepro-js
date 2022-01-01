@@ -8,19 +8,30 @@ class Contract {
     this.contract = new this.web3.eth.Contract(contract_json.abi, address);
   }
 
-  async deploy(account, abi, byteCode, args = [], callback = () => {}) {
+  async deploy(abi, byteCode, options = {}) {
+    const { web3Connection } = this;
+    const {
+      account, args, callback, from, gasAmount, gasFactor, gasPrice,
+    } = options;
+
     this.contract = new this.web3.eth.Contract(abi);
+
+    const txGasPrice = gasPrice || await web3Connection.web3.eth.getGasPrice();
+    const txGasAmount = gasAmount || (await web3Connection.web3.eth.getBlock('latest')).gasLimit;
+    const txGasFactor = gasFactor || 1;
+    const txGas = Math.round(txGasAmount * txGasFactor);
+
     if (account) {
       const txSigned = await account.getAccount().signTransaction({
-        data: this.contract
+        data: this.getContract()
           .deploy({
+            arguments: args || [],
             data: byteCode,
-            arguments: args,
           })
           .encodeABI(),
         from: account.getAddress(),
-        gasPrice: 5000000000,
-        gas: 8913388,
+        gas: txGas,
+        gasPrice: txGasPrice,
       });
       return new Promise((resolve, reject) => {
         try {
@@ -37,37 +48,34 @@ class Contract {
         }
       });
     }
-    const userAddress = await this.web3Connection.getAddress();
+    const txFrom = from || await web3Connection.getAddress();
     const res = await this.__metamaskDeploy({
-      byteCode,
       args,
-      acc: userAddress,
+      byteCode,
       callback,
+      from: txFrom,
+      gas: txGas,
+      gasPrice: txGasPrice,
     });
     this.address = res.contractAddress;
     return res;
   }
 
   __metamaskDeploy = ({
-    byteCode, args, acc, callback = () => {},
+    byteCode, args, callback, ...options
   }) => new Promise((resolve, reject) => {
     try {
       this.getContract()
         .deploy({
           data: byteCode,
-          arguments: args,
+          arguments: args || [],
         })
-        .send({
-          from: acc,
-          // BUGFIX: without gas and gasPrice set here, we get the following error:
-          // Error: Node error: {"message":"base fee exceeds gas limit","code":-32000,"data":{"stack":"Error: base fee exceeds gas limit
-          // ,gasPrice : 180000000000
-          // ,gas : 5913388
-          gasPrice: 500000000,
-          gas: 5913388, // 6721975
-        })
+        .send(options)
         .on('confirmation', (confirmationNumber, receipt) => {
-          callback(confirmationNumber);
+          if (callback) {
+            callback(confirmationNumber);
+          }
+
           if (confirmationNumber > 0) {
             resolve(receipt);
           }

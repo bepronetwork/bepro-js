@@ -174,41 +174,19 @@ class Web3Connection {
       return this.account.getAddress();
     }
 
-    // const accounts = await this.web3.eth.getAccounts();
-    // return accounts[0];
-    if (this.selectedWallet === undefined || this.selectedWallet == null) { // we check for undefined and null
-      const accounts = await this.web3.eth.getAccounts();
-      // this.selectedWallet = accounts[0];
-      [ this.selectedWallet ] = accounts;
-    }
-    return this.selectedWallet;
+    const accounts = await this.web3.eth.getAccounts();
+    return accounts[0];
   }
 
   /**
-   * Get signers connected via login()
+   * Get accounts connected via login()
    * @function
    * @return {Promise<Array<string>>} Addresses array available
    */
-  async getSigners() {
-    if (this.account) return [this.account.getAddress()];
-
-    const accounts = await this.web3.eth.getAccounts();
-    return accounts;
-  }
-
-  /**
-   * @function
-   * @description Switch current user account/signer to a new one
-   * @param {Address|Account} newAccount New user wallet/signer address in use or new account
-   * @return {Promise<void>}
-   */
-  switchWallet(newAccount) {
-    if (this.account) {
-      this.account = newAccount;
-    }
-    else {
-      this.selectedWallet = newAccount;
-    }
+  async getAccounts() {
+    return this.account
+      ? [ this.account.getAddress() ]
+      : this.web3.eth.getAccounts();
   }
 
   /**

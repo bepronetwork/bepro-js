@@ -48,13 +48,13 @@ class ERC20Mock extends ERC20Contract {
   /**
    * Deploy ERC20Mock
    * @function
-   * @param {Object} params Parameters
+   * @param {IContract~TxOptions} options
    * @returns {Promise<Transaction>} Transaction
    */
-  deploy = async ({ callback } = {}) => {
+  deploy = async options => {
     const params = [];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

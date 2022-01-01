@@ -424,13 +424,15 @@ class OpenerRealFvr extends IContract {
    * @param {string} params.name Name of the Contract
    * @param {string} params.symbol Symbol of the Contract
    * @param {Address} params.tokenAddress token Address of the purchase Token in use
+   * @param {IContract~TxOptions} options
    * @returns {Promise<boolean>} Success the Tx Object if operation was successful
    */
-  deploy = async ({
-    name, symbol, tokenAddress, callback,
-  }) => {
+  deploy = async (
+    { name, symbol, tokenAddress },
+    options,
+  ) => {
     const params = [ name, symbol, tokenAddress ];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

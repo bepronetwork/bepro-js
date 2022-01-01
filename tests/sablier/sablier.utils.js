@@ -105,8 +105,13 @@ const runBeforeEach = async () => {
   await _this.token.__assert();
   // console.log('---sablier.before hook.bp2');
 
-  _this.token.switchWallet(_this.alice);
-  await _this.token.mint({ to: userAddress, amount: STANDARD_SALARY.multipliedBy(3).toString(10) });
+  await _this.token.mint(
+    {
+      amount: STANDARD_SALARY.multipliedBy(3).toString(10),
+      to: userAddress,
+    },
+    { from: _this.alice },
+  );
 
   sablier = new Sablier(testConfig);
 
@@ -134,7 +139,13 @@ const runBeforeEach = async () => {
   // console.log('---cToken.bp1');
   await _this.cToken.__assert();
   // console.log('---cToken.bp2');
-  await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SALARY.toString(10) });
+  await _this.token.approve(
+    {
+      address: _this.cToken.getAddress(),
+      amount: STANDARD_SALARY.toString(10),
+    },
+    { from: _this.alice },
+  );
   // console.log('---cToken.bp3.devConstants.STANDARD_SALARY: ', devConstants.STANDARD_SALARY.toString(10));
   await _this.cToken.mint({ mintAmount: STANDARD_SALARY.toString(10) }); // devConstants.STANDARD_SALARY.toString(10));
   // console.log('---cToken.bp4');

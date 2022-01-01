@@ -298,15 +298,22 @@ context('NetworkFactory Contract', async () => {
       // send user2 required tokens to create Network
       await beproERC20.transferTokenAmount({ toAddress: user2, tokenAmount: TOKENS_AMOUNT_1M });
 
-      beproERC20.switchWallet(user2);
-      await beproERC20.approve({ address: networkFactoryAddress, amount: TOKENS_AMOUNT_1M });
-      networkFactory.switchWallet(user2);
-      await networkFactory.lock({ tokenAmount: TOKENS_AMOUNT_1M });
+      await beproERC20.approve(
+        { address: networkFactoryAddress, amount: TOKENS_AMOUNT_1M },
+        { from: user2 },
+      );
+      await networkFactory.lock(
+        { tokenAmount: TOKENS_AMOUNT_1M },
+        { from: user2 },
+      );
 
-      await networkFactory.createNetwork({
-        settlerToken: settlerERC20.getAddress(),
-        transactionalToken: transactionalERC20.getAddress(),
-      });
+      await networkFactory.createNetwork(
+        {
+          settlerToken: settlerERC20.getAddress(),
+          transactionalToken: transactionalERC20.getAddress(),
+        },
+        { from: user2 },
+      );
 
       // checks
       const networksAmount = await networkFactory.networksAmount();
@@ -326,20 +333,15 @@ context('NetworkFactory Contract', async () => {
       const tokensLockedTotal = await networkFactory.tokensLockedTotal();
       const tokensLockedTotalExpected = 2 * Number(TOKENS_AMOUNT_1M);
       tokensLockedTotal.should.be.bignumber.equal(tokensLockedTotalExpected);
-
-      beproERC20.switchWallet(userAddress);
-      networkFactory.switchWallet(userAddress);
     }),
   );
 
   it(
     'should revert when trying to unlock zero tokens',
     mochaAsync(async () => {
-      // user3 has no bepro tokens locked, can not unlock any
-      networkFactory.switchWallet(user3);
-
       await beproAssert.reverts(
-        () => networkFactory.unlock(),
+        // user3 has no bepro tokens locked, can not unlock any
+        () => networkFactory.unlock({ from: user3 }),
         'Needs to have tokens locked',
       );
     }),
@@ -375,10 +377,7 @@ context('NetworkFactory Contract', async () => {
   it(
     'should lock settler tokens on Network 1',
     mochaAsync(async () => {
-      settlerERC20.switchWallet(user1);
       await settlerERC20.approve({ address: networkAddress, amount: TOKENS_AMOUNT_1M });
-
-      network.switchWallet(user1);
       await network.lock({ tokenAmount: TOKENS_AMOUNT_1M });
     }),
   );
@@ -388,7 +387,6 @@ context('NetworkFactory Contract', async () => {
     mochaAsync(async () => {
       // require(Network(networksByAddress[msg.sender]).oraclesStaked() == 0, "Network has to have 0 Settler Tokens");
 
-      networkFactory.switchWallet(user1);
       await beproAssert.reverts(
         () => networkFactory.unlock(),
         'Network has to have 0 Settler Tokens',
@@ -402,7 +400,6 @@ context('NetworkFactory Contract', async () => {
       const oraclesStaked1 = await network.oraclesStaked();
       const settlerBalance1 = await settlerERC20.balanceOf(user1);
 
-      network.switchWallet(user1);
       await network.unlock({ tokenAmount: TOKENS_AMOUNT_1M, from: user1 });
 
       // checks
@@ -417,7 +414,6 @@ context('NetworkFactory Contract', async () => {
   it(
     'should open an issue on Network 1 to lock transactional tokens',
     mochaAsync(async () => {
-      network.switchWallet(user1);
       // approve tokens
       await network.approveTransactionalERC20Token();
       // open issue
@@ -433,7 +429,6 @@ context('NetworkFactory Contract', async () => {
     mochaAsync(async () => {
       // require(Network(networksByAddress[msg.sender]).totalStaked() == 0, "Network has to have 0 Transactional Tokens");
 
-      networkFactory.switchWallet(user1);
       await beproAssert.reverts(
         () => networkFactory.unlock(),
         'Network has to have 0 Transactional Tokens',
@@ -447,8 +442,7 @@ context('NetworkFactory Contract', async () => {
       const tokensLockedTotal1 = await networkFactory.tokensLockedTotal();
       const beproBalance1 = await beproERC20.balanceOf(user2);
 
-      networkFactory.switchWallet(user2);
-      await networkFactory.unlock();
+      await networkFactory.unlock({ from: user2 });
 
       // checks
       const tokensLockedTotal2 = await networkFactory.tokensLockedTotal();
@@ -469,17 +463,24 @@ context('NetworkFactory Contract', async () => {
     'user2 should be able to create another Network as he closed the previous one',
     mochaAsync(async () => {
       // approve and lock bepro tokens
-      beproERC20.switchWallet(user2);
-      await beproERC20.approve({ address: networkFactoryAddress, amount: TOKENS_AMOUNT_1M });
+      await beproERC20.approve(
+        { address: networkFactoryAddress, amount: TOKENS_AMOUNT_1M },
+        { from: user2 },
+      );
 
-      networkFactory.switchWallet(user2);
-      await networkFactory.lock({ tokenAmount: TOKENS_AMOUNT_1M });
+      await networkFactory.lock(
+        { tokenAmount: TOKENS_AMOUNT_1M },
+        { from: user2 },
+      );
 
       // create another Network
-      const tx = await networkFactory.createNetwork({
-        settlerToken: settlerERC20.getAddress(),
-        transactionalToken: transactionalERC20.getAddress(),
-      });
+      const tx = await networkFactory.createNetwork(
+        {
+          settlerToken: settlerERC20.getAddress(),
+          transactionalToken: transactionalERC20.getAddress(),
+        },
+        { from: user2 },
+      );
 
       // checks
       const networksAmount = await networkFactory.networksAmount();

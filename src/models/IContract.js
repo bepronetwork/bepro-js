@@ -14,9 +14,12 @@ import Web3Connection from '../Web3Connection';
 /**
  * @typedef {Object} IContract~TxOptions
  * @property {boolean} call
- * @property [function():void] callback
- * @property {number} gasFactor
  * @property {*} value
+ * @property {function()} callback
+ * @property {string} from
+ * @property {number} gasAmount
+ * @property {number} gasFactor
+ * @property {number} gasPrice
  */
 
 /**
@@ -76,20 +79,23 @@ class IContract {
   __sendTx = async (method, options) => {
     const { call, value } = options || {};
 
-    if (!this.acc && !call) {
+    if (!this.account && !call) {
       const {
-        callback, gasFactor, gasAmount, gasPrice,
+        callback, from, gasAmount, gasFactor, gasPrice,
       } = options || {};
       const { params, web3Connection } = this;
 
-      const from = await web3Connection.getAddress();
+      const txFrom = from || await web3Connection.getAddress();
       const txGasPrice = gasPrice || await web3Connection.web3.eth.getGasPrice();
-      const txGasAmount = gasAmount || await method.estimateGas({ from, value });
+      const txGasAmount = gasAmount || await method.estimateGas({
+        from: txFrom,
+        value,
+      });
       const txGasFactor = gasFactor || params.gasFactor || 1;
 
       return new Promise((resolve, reject) => {
         method.send({
-          from,
+          from: txFrom,
           gas: Math.round(txGasAmount * txGasFactor),
           gasPrice: txGasPrice,
           value,
@@ -109,17 +115,17 @@ class IContract {
       });
     }
 
-    if (this.acc && !call) {
+    if (this.account && !call) {
       const data = method.encodeABI();
       return this.params.contract
-        .send(this.acc.getAccount(), data, value)
+        .send(this.account.getAccount(), data, value)
         .catch(err => {
           throw err;
         });
     }
 
-    if (this.acc && call) {
-      return method.call({ from: this.acc.getAddress() }).catch(err => {
+    if (this.account && call) {
+      return method.call({ from: this.account.getAddress() }).catch(err => {
         throw err;
       });
     }
@@ -132,16 +138,18 @@ class IContract {
   /**
    * Deploy current contract
    * @function
-   * @param {*} params
-   * @param {function()} callback
+   * @param {*} args
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  __deploy = (params, callback) => this.params.contract.deploy(
-    this.acc,
+  __deploy = (args, options) => this.params.contract.deploy(
     this.params.contract.getABI(),
     this.params.contract.getJSON().bytecode,
-    params,
-    callback,
+    {
+      account: this.account,
+      args,
+      ...options,
+    },
   );
 
   /**
@@ -181,13 +189,12 @@ class IContract {
   /**
    * Deploy {@link IContract.params.contract} and call {@link IContract.__assert}
    * @function
-   * @param {Object} params
-   * @param {function():void} callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({ callback }) => {
+  deploy = async options => {
     const params = [];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
@@ -348,7 +355,7 @@ class IContract {
    */
   _loadDataFromWeb3Connection() {
     this.web3 = this.web3Connection.getWeb3();
-    this.acc = this.web3Connection.account;
+    this.account = this.web3Connection.account;
 
     // update some params properties with new values
     this.params = {
@@ -428,22 +435,11 @@ class IContract {
 
   /**
    * @function
-   * @description Get user wallets/signers from current provider
+   * @description Get user wallets from current provider
    * @return {Promise<Array>}
    */
-  getSigners() {
-    return this.web3Connection.getSigners();
-  }
-
-  /**
-   * @function
-   * @description Switch current user account to a new one
-   * @param {Address} newAccount New user wallet/account address in use
-   * @return {Promise<void>}
-   */
-  switchWallet(newAccount) {
-    this.web3Connection.switchWallet(newAccount);
-    return this;
+  getAccounts() {
+    return this.web3Connection.getAccounts();
   }
 }
 

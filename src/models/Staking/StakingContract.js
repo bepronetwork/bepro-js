@@ -459,11 +459,10 @@ class StakingContract extends IContract {
   /**
    * Deploy the Staking Contract
    * @function
-   * @param [Object] params
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*>}
    */
-  deploy = async ({ callback } = {}) => {
+  deploy = async options => {
     if (!this.getERC20Contract()) {
       throw new Error('No Token Address Provided');
     }
@@ -473,7 +472,7 @@ class StakingContract extends IContract {
       this.getERC721Contract() ? this.getERC721Contract().getAddress() : '0x0000000000000000000000000000000000000000',
     ];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

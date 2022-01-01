@@ -205,11 +205,15 @@ class ERC20Contract extends IContract {
    * @param {string} params.symbol Symbol of token
    * @param {number} params.cap Max supply of Token (ex : 100M)
    * @param {Address} params.distributionAddress Where tokens should be sent to initially
+   * @param {IContract~TxOptions} options
    * @returns {Promise<Transaction>} Transaction
    */
-  deploy = async ({
-    name, symbol, cap, distributionAddress, callback,
-  }) => {
+  deploy = async (
+    {
+      name, symbol, cap, distributionAddress,
+    },
+    options,
+  ) => {
     if (!distributionAddress) {
       throw new Error('Please provide an Distribution address for distro');
     }
@@ -226,7 +230,7 @@ class ERC20Contract extends IContract {
       throw new Error('Please provide a cap');
     }
     const params = [ name, symbol, cap, distributionAddress ];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

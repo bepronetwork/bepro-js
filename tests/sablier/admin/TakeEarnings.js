@@ -154,13 +154,14 @@ context('sablier.TakeEarnings.context', async () => {
   });
 
   describe('when the caller is not the admin', () => {
-    // const opts = { from: eve };
     const amount = new BigNumber(8123101);
 
     it('reverts', async () => {
-      _this.sablier.switchWallet(_this.eve);
       await beproAssert.reverts(
-        () => _this.sablier.takeEarnings({ tokenAddress: _this.cToken.getAddress(), amount }),
+        () => _this.sablier.takeEarnings(
+          { amount, tokenAddress: _this.cToken.getAddress() },
+          { from: _this.eve },
+        ),
         beproAssert.ErrorType.REVERT,
       );
     });

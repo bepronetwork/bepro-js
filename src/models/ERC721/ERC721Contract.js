@@ -136,7 +136,7 @@ class ERC721Contract extends IContract {
       .call();
   }
 
-  deploy = async ({ name, symbol, callback }) => {
+  deploy = async ({ name, symbol }, options) => {
     if (!name) {
       throw new Error('Please provide a name');
     }
@@ -145,7 +145,7 @@ class ERC721Contract extends IContract {
       throw new Error('Please provide a symbol');
     }
     const params = [ name, symbol ];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

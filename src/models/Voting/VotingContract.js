@@ -315,12 +315,12 @@ class VotingContract extends IContract {
    * @function
    * @param [Object] params
    * @param {Address} params.erc20Contract
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*>}
    */
-  deploy = async ({ erc20Contract, callback } = {}) => {
+  deploy = async ({ erc20Contract }, options) => {
     const params = [ erc20Contract ];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

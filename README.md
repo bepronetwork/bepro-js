@@ -244,7 +244,11 @@ await staking.availableTokens();
 await stakingTest.availableTokens();
 ```
 
-### Gas Fees
+### Transaction options
+
+Most contract `send` methods (those that act on and potentially alter the state of the blockchain) can be passed an optional argument, taking the form of an object with several properties that control the transaction.
+
+#### Gas Fees
 
 Transaction fees are automatically calculated via web3's own estimation methods.
 
@@ -286,6 +290,26 @@ staking.subscribeProduct(
 Estimated gas fees leverage the following web3 functionalities:
 - [chain's getGasPrice()](https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#getgasprice)
 - [contract method's estimateGas()](https://web3js.readthedocs.io/en/v1.2.11/web3-eth-contract.html?highlight=estimateGas#methods-mymethod-estimategas)
+
+#### Transaction signer
+
+You can get all accounts (wallet addressed) managed by the current wallet provider through:
+
+```javascript
+await app.getAccounts();
+// => [ '0xAbA...', '0xCdD...', '0xEfE...', ... ]
+```
+
+By default all transactions will be signed by the first account, which is considered currently active. Any transaction on any contract, including deployment, can be signed by any of the connected accounts:
+
+```javascript
+await staking.deploy({ from: '0xCdC...' });
+
+await staking.subscribeProduct(
+  { address, product_id, amount },
+  { from: '0xCdC...' },
+);
+```
 
 ## Contribution
 

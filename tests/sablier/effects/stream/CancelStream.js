@@ -14,10 +14,10 @@ let recipient;
 let deposit;
 let sender;
 
-function runTests() {
+function runTests(from) {
   describe('when the stream did not start', () => {
     it('cancels the stream', async () => {
-      await _this.sablier.cancelStream({ streamId });
+      await _this.sablier.cancelStream({ streamId }, { from });
       await beproAssert.reverts(
         () => _this.sablier.getStream({ streamId }),
         'stream does not exist',
@@ -26,13 +26,13 @@ function runTests() {
 
     it('transfers all tokens to the sender of the stream', async () => {
       const balance = await _this.token.balanceOf(sender);
-      await _this.sablier.cancelStream({ streamId });
+      await _this.sablier.cancelStream({ streamId }, { from });
       const newBalance = await _this.token.balanceOf(sender);
       newBalance.should.be.bignumber.equal(BigNumber(balance).plus(deposit));
     });
 
     it('emits a cancel event', async () => {
-      const result = await _this.sablier.cancelStream({ streamId });
+      const result = await _this.sablier.cancelStream({ streamId }, { from });
       beproAssert.eventEmitted(result, 'CancelStream');
     });
   });
@@ -41,7 +41,7 @@ function runTests() {
     const streamedAmount = FIVE_UNITS.toString(10);
 
     it('cancels the stream', async () => {
-      await _this.sablier.cancelStream({ streamId });
+      await _this.sablier.cancelStream({ streamId }, { from });
       await beproAssert.reverts(
         () => _this.sablier.getStream({ streamId }),
         'stream does not exist',
@@ -50,7 +50,7 @@ function runTests() {
 
     it('transfers the tokens to the sender of the stream', async () => {
       const balance = await _this.token.balanceOf(sender);
-      await _this.sablier.cancelStream({ streamId });
+      await _this.sablier.cancelStream({ streamId }, { from });
       const newBalance = await _this.token.balanceOf(sender);
       const tolerateByAddition = false;
       newBalance.should.tolerateTheBlockTimeVariation(
@@ -62,13 +62,13 @@ function runTests() {
 
     it('transfers the tokens to the recipient of the stream', async () => {
       const balance = await _this.token.balanceOf(recipient);
-      await _this.sablier.cancelStream({ streamId });
+      await _this.sablier.cancelStream({ streamId }, { from });
       const newBalance = await _this.token.balanceOf(recipient);
       newBalance.should.tolerateTheBlockTimeVariation(new BigNumber(balance).plus(streamedAmount), STANDARD_SCALE);
     });
 
     it('emits a cancel event', async () => {
-      const result = await _this.sablier.cancelStream({ streamId });
+      const result = await _this.sablier.cancelStream({ streamId }, { from });
       beproAssert.eventEmitted(result, 'CancelStream');
     });
   });
@@ -77,7 +77,7 @@ function runTests() {
     const streamedAmount = STANDARD_SALARY.toString(10);
 
     it('cancels the stream', async () => {
-      await _this.sablier.cancelStream({ streamId });
+      await _this.sablier.cancelStream({ streamId }, { from });
       await beproAssert.reverts(
         () => _this.sablier.getStream({ streamId }),
         'stream does not exist',
@@ -86,20 +86,20 @@ function runTests() {
 
     it('transfers nothing to the sender of the stream', async () => {
       const balance = await _this.token.balanceOf(sender);
-      await _this.sablier.cancelStream({ streamId });
+      await _this.sablier.cancelStream({ streamId }, { from });
       const newBalance = await _this.token.balanceOf(recipient);
       newBalance.should.be.bignumber.equal(balance);
     });
 
     it('transfers all tokens to the recipient of the stream', async () => {
       const balance = await _this.token.balanceOf(recipient);
-      await _this.sablier.cancelStream({ streamId });
+      await _this.sablier.cancelStream({ streamId }, { from });
       const newBalance = await _this.token.balanceOf(recipient);
       newBalance.should.be.bignumber.equal(new BigNumber(balance).plus(streamedAmount));
     });
 
     it('emits a cancel event', async () => {
-      const result = await _this.sablier.cancelStream({ streamId });
+      const result = await _this.sablier.cancelStream({ streamId }, { from });
       beproAssert.eventEmitted(result, 'CancelStream');
     });
   });
@@ -148,31 +148,22 @@ context('sablier.CancelStream.context', async () => {
     });
 
     describe('when the caller is the sender of the stream', () => {
-      beforeEach(() => {
-        // this.opts = { from: this.sender };
-        _this.sablier.switchWallet(sender);
-      });
-
-      runTests();
+      runTests(sender);
     });
 
     describe('when the caller is the recipient of the stream', () => {
-      beforeEach(() => {
-        // this.opts = { from: this.recipient };
-        _this.sablier.switchWallet(recipient);
-      });
-
-      runTests();
+      runTests(recipient);
     });
 
     describe('when the caller is not the sender or the recipient of the stream', () => {
       // const opts = { from: eve };
 
       it('reverts', async () => {
-        _this.sablier.switchWallet(_this.eve);
-
         await beproAssert.reverts(
-          () => _this.sablier.cancelStream({ streamId }),
+          () => _this.sablier.cancelStream(
+            { streamId },
+            { from: _this.eve },
+          ),
           'caller is not the sender or the recipient of the stream',
         );
       });
@@ -184,13 +175,11 @@ context('sablier.CancelStream.context', async () => {
     // const opts = { from: recipient };
 
     it('reverts', async () => {
-      recipient = _this.bob;
-      _this.sablier.switchWallet(recipient);
-
       await beproAssert.reverts(
-        () => _this.sablier.cancelStream({
-          streamId: new BigNumber(419863),
-        }),
+        () => _this.sablier.cancelStream(
+          { streamId: new BigNumber(419863) },
+          { from: _this.bob },
+        ),
         'stream does not exist',
       );
     });

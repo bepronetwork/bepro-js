@@ -607,13 +607,16 @@ export default class Loophole extends IContract {
    * @param {uint256} startBlock
    * @param {uint256} exitPenalty
    * @param {uint256} exitPenaltyLP
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} No Token Address Provided
    */
-  deploy = async ({
-    swapRouter, lpToken, lpTokensPerBlock, startBlock, exitPenalty, exitPenaltyLP, callback,
-  } = {}) => {
+  deploy = async (
+    {
+      swapRouter, lpToken, lpTokensPerBlock, startBlock, exitPenalty, exitPenaltyLP,
+    },
+    options,
+  ) => {
     // if (!this.LPTokenContract()) {
     //  throw new Error('No LPTokenContract Address Provided');
     // }
@@ -625,7 +628,7 @@ export default class Loophole extends IContract {
     const lpTokensPerBlock1 = Numbers.fromBNToDecimals(lpTokensPerBlock, lpTokenDecimals);
     const params = [ swapRouter, lpToken, lpTokensPerBlock1, startBlock, exitPenalty, exitPenaltyLP ];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

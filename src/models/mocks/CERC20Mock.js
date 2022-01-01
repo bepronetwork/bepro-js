@@ -178,12 +178,16 @@ class CERC20Mock extends ERC20Contract {
    * @param {Address} params.underlying The address of the underlying asset
    * @param {uint256} params.initialExchangeRate The initial exchange rate, scaled by 1e18
    * @param {uint256} params.decimals ERC-20 decimal precision of this token
+   * @param {IContract~TxOptions} options
    * @returns {Promise<Transaction>} Transaction
    */
-  deploy = async ({
-    // underlying,
-    initialExchangeRate, decimals, callback,
-  }) => {
+  deploy = async (
+    {
+      // underlying,
+      initialExchangeRate, decimals,
+    },
+    options,
+  ) => {
     // if (!underlying) {
     //  throw new Error('Please provide an underlying asset address');
     // }
@@ -203,7 +207,7 @@ class CERC20Mock extends ERC20Contract {
     const underlying = this.getERC20Contract().getAddress();
 
     const params = [ underlying, initialExchangeRate, decimals ];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
