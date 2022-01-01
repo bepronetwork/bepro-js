@@ -191,19 +191,19 @@ import {
 } from 'bepro-js';
 
 /* 1.1 - Instantiate the App for Metamask functionality (MAINNET) */
-let app = new Application({
+const app = new Application({
   opt: { web3Connection: 'WEB3_LINK' },
 });
 
 /* 1.2 - Instantiate StakingContract Object or any other in a similar way (Staking, ERC20 etc..) */
 // - MAINNET
-let staking = new StakingContract({
+const staking = new StakingContract({
   contractAddress: null, /* Contract Address (optional) */
   opt: { web3Connection: 'WEB3_LINK' },
 });
 
 // - TEST net e.g. Rinkeby
-let stakingTest = new StakingContract({
+const stakingTest = new StakingContract({
   test: true,
   contractAddress: null, /* Contract Address (optional) */
 });
@@ -222,7 +222,9 @@ Application can be initialized with a web3 provider directly, but all connection
 
 ```javascript
 // Use Metamask's provider, could be any other compatible Web3 Provider object from any other lib
-let app = new Application({ opt: { provider: window.ethereum } });
+const app = new Application({
+  opt: { provider: window.ethereum },
+});
 ```
 
 ### Asserting and Deploying contracts
@@ -255,7 +257,7 @@ Transaction fees are automatically calculated via web3's own estimation methods.
 In order to overestimate and avoid out-of-gas transaction errors if necessary, we can pass a second argument with certain parameters to most Contract methods that involve `send` transactions (those requiring gas):
 
 ```javascript
-staking.subscribeProduct(
+await staking.subscribeProduct(
   { address, product_id, amount },
   {
     gasAmount: 201654, // override the estimated gas fee for this method
@@ -268,17 +270,17 @@ staking.subscribeProduct(
 In particular, `gasFactor` is a parameter that can be passed when instantiating the contract, so that gas estimations for every method called on that contract instance will have that factor applied:
 
 ```javascript
-let staking = new StakingContract({
+const staking = new StakingContract({
   contractAddress,
   gasFactor: 1.25 // default 1
   opt: { provider },
 });
 
 // The following will have a gasFactor of 1.25
-staking.subscribeProduct({ address, product_id, amount });
+await staking.subscribeProduct({ address, product_id, amount });
 
 // We can still override it per-method, and pass other parameters as well.
-staking.subscribeProduct(
+await staking.subscribeProduct(
   { address, product_id, amount },
   {
     gasAmount: 201654,
