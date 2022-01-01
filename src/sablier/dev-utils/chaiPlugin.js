@@ -29,11 +29,11 @@ export default chai => {
    * 1. The payment rate is 1 token/ second, which is true for all tests in this repo.
    * 2. By default, the token has 18 decimals
    */
-  chai.Assertion.addMethod('tolerateTheBlockTimeVariation', (
+  chai.Assertion.addMethod('tolerateTheBlockTimeVariation', function tolerateTheBlockTimeVariation(
     inExpected,
     inScale = devConstants.STANDARD_SCALE,
     tolerateByAddition = true,
-  ) => {
+  ) {
     const actual = convert(this._obj);
     const expected = convert(inExpected);
     const scale = convert(inScale);

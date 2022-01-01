@@ -1357,13 +1357,16 @@ context('Loophole contract', () => {
       // NOTE: find out what amount of LP tokens we get in exchange for 200 WETH penalty as 20% penalty of 1000 weth
       // this is the last/only user and all penalty is exchanged for LP tokens
       const amountIn = await loophole.fromBNToDecimals(200, pid);
-      const amountOut = await uniswapV3RouterBridge.swapExactInputSingleExCall({
-        tokenIn: wethAddress, // tokenIn
-        tokenOut: lpTokenAddress, // tokenOut
-        poolFee: poolFee_3000,
-        amountIn,
-        amountOutMinimum,
-      });
+      const amountOut = await uniswapV3RouterBridge.swapExactInputSingleEx(
+        {
+          tokenIn: wethAddress, // tokenIn
+          tokenOut: lpTokenAddress, // tokenOut
+          poolFee: poolFee_3000,
+          amountIn,
+          amountOutMinimum,
+        },
+        { call: true },
+      );
       // NOTE: this is what we get for the very first weth/lp exchange transaction
       const tokenAmountLPExpected = amountOut; // BigNumber('398687572423209140718');
       // amountOut.should.be.bignumber.equal(tokenAmountLPExpected);
@@ -2543,7 +2546,7 @@ context('Loophole contract', () => {
 
       // get LP rewards
 
-      // const poolReward = await loophole.getPoolReward({ pid: pid });
+      // const poolReward = await loophole.getPoolReward({ pid });
       // const blocks = Number(1); /// 1 tx since last liquidity mining
       // const poolRewardExpected = lpTokensPerBlockRaw.times(blocks).times(poolShare); //9*50*1e18*0.3 = 135*1e18
       // poolRewardExpected = 45; // (forwardXBlocks)*15; //lpTokensReward; //BigNumber(lpTokensPerBlock).times(blocks).times(poolShare); //1*50*0.3 = 15

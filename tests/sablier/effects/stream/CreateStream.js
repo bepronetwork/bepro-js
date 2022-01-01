@@ -1,5 +1,3 @@
-import { assert } from 'chai';
-
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import Numbers from '../../../../build/utils/Numbers';
@@ -361,7 +359,6 @@ context('sablier.CreateStream.context', async () => {
       /// const stopTime = startTime.plus(STANDARD_TIME_DELTA);
 
       it('reverts', async () => {
-        assert.equal(recipient, ZERO_ADDRESS, 'recipient must be ZERO_ADDRESS');
         await beproAssert.reverts(
           () => _this.sablier.createStream({
             recipient: ZERO_ADDRESS,
