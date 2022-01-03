@@ -73,6 +73,8 @@ export class StakingContract extends Model<StakingContractMethods> implements De
   }
 
   async subscribeProduct(_product_id: number, _amount: number) {
+    await this.pausable.whenNotPaused();
+
     const amount = toSmartContractDecimals(_amount, this.erc20.decimals) as number;
     const isApproved = await this.erc20.isApproved(this.contractAddress, amount);
 
@@ -145,8 +147,8 @@ export class StakingContract extends Model<StakingContractMethods> implements De
 
   async getTotalProductsAPRAmount() {
     let aprAmount = 0;
-
-    for (const {APR, startDate, endDate, totalMaxAmount} of await this.getAllProducts())
+    const products = await this.getAllProducts();
+    for (const {APR, startDate, endDate, totalMaxAmount} of products)
       aprAmount += await this.getAPRAmount(APR, startDate, endDate, totalMaxAmount);
 
     return aprAmount;
