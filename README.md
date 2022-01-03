@@ -250,6 +250,32 @@ await stakingTest.availableTokens();
 
 Most contract `send` methods (those that act on and potentially alter the state of the blockchain) can be passed an optional argument, taking the form of an object with several properties that control the transaction.
 
+<details>
+  <summary>__sendTx() details for internal development</summary>
+
+  #### `call` instead of `send`
+
+  If you send a truthy property `call`, you are signaling that this transaction is a read-only call to the blockchain, and will thus not incur in any gas fees, value transaction, or even needs to be signed by a specific account.
+
+  ```javascript
+  await this.__sendTx(
+    this.getContract().methods.someMethod(),
+    { call: true },
+  );
+  ```
+
+  #### `value`
+
+  Likewise to above, if a transaction is to have an intrinsic value, this is also passed through this object.
+
+  ```javascript
+  await this.__sendTx(
+    this.getContract().methods.someMethod(),
+    { value: someValue },
+  );
+  ```
+</details>
+
 #### Gas Fees
 
 Transaction fees are automatically calculated via web3's own estimation methods.
