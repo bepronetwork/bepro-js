@@ -1,3 +1,5 @@
+import { assert } from 'chai';
+
 context('Unit Tests', async () => {
   [
     'application',
@@ -25,8 +27,11 @@ context('Unit Tests', async () => {
       return require(`./${test}`);
     }
     catch (ex) {
-      // eslint-disable-next-line no-console
-      console.error(ex);
+      it(
+        `failed to load test file '${test}'`,
+        () => assert.fail(ex),
+      );
+
       return ex;
     }
   });
