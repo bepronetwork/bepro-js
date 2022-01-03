@@ -1,10 +1,6 @@
-import chai from 'chai';
+import { expect } from 'chai';
 import { mochaAsync } from './utils';
 import { DexStorage } from '../build';
-
-const { expect } = chai;
-// var contractAddress = '0x949d274F63127bEd53e21Ed1Dd83dD6ACAfF7f64';
-// this is already deployed on rinkeby network for testing
 
 const base_data = 'hello';
 

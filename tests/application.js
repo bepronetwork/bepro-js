@@ -1,8 +1,6 @@
-import chai, { assert } from 'chai';
+import { assert, expect } from 'chai';
 import { mochaAsync } from './utils';
 import { Application } from '../build';
-
-const { expect } = chai;
 
 context('Application', async () => {
   let app;

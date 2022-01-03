@@ -1,9 +1,8 @@
-import chai from 'chai';
+import { expect } from 'chai';
 import { mochaAsync } from '../../utils';
 import Numbers from '../../../src/utils/Numbers';
 import { ERC20Contract, ERC721Contract, MarketplaceRealFvr } from '../../../build';
 
-const { expect } = chai;
 let contractAddress;
 let deployed_tokenAddress;
 

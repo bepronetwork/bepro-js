@@ -1,6 +1,4 @@
-/* eslint-disable */
 import { create } from 'ipfs-http-client';
-
 
 /**
  * DexStorage Object
@@ -11,7 +9,7 @@ import { create } from 'ipfs-http-client';
 class DexStorage {
   constructor({ ipfsClientHTTP } = { ipfsClientHTTP: { host: 'ipfs.infura.io', port: 5001, protocol: 'https' } }) {
     if (!ipfsClientHTTP) {
-      throw new Error("Please provide a valid ipfsClientHTTP, you can find one at infura.io")
+      throw new Error('Please provide a valid ipfsClientHTTP, you can find one at infura.io');
     }
     this.ipfs = create(ipfsClientHTTP);
   }
@@ -36,21 +34,23 @@ class DexStorage {
    * @returns {String} data (Hash to be used to access the params.data later)
    */
   async get({ cid }) {
-    return new Promise( async (resolve, reject) => {
-      try {
-        for await (const file of this.ipfs.get(cid)) {
-          if (!file.content) continue;
-          const content = []
-          for await (const chunk of file.content) {
-            content.push(chunk)
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const file of this.ipfs.get(cid)) {
+      if (file.content) {
+        const content = [];
+
+        // eslint-disable-next-line no-restricted-syntax
+        for await (const chunk of file.content) {
+          if (chunk) {
+            content.push(chunk);
           }
-          resolve(content.toString())
         }
+
+        return content.join('');
       }
-      catch(err) {
-        reject(err);
-      }
-    })
+    }
+
+    return null;
   }
 }
 
