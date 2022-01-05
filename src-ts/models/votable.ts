@@ -12,7 +12,7 @@ import votingPollWinner from '@utils/voting-poll-winner';
 import poolInformation from '@utils/pool-information';
 
 export class Votable extends Model<VotableMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly erc20TokenAddress?: string) {
     super(web3Connection, VotableJson.abi as AbiItem[], contractAddress);
   }
 
@@ -23,7 +23,7 @@ export class Votable extends Model<VotableMethods> implements Deployable {
     if (!this.contract)
       super.loadContract();
 
-    this._erc20 = new ERC20(this.web3Connection, await this.callTx(this.contract.methods.erc20()));
+    this._erc20 = new ERC20(this.web3Connection, this.erc20TokenAddress || await this.callTx(this.contract.methods.erc20()));
     await this._erc20.loadContract();
   }
 
