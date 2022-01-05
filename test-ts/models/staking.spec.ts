@@ -5,12 +5,12 @@ import {
   hasTxBlockNumber,
   increaseTime, outputDeploy,
   revertChain
-} from '../utils';
+} from '../utils/';
 import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
 import {addMinutes, differenceInSeconds} from 'date-fns'
 import {expect} from 'chai';
 
-describe.only(`StakingContract`, () => {
+describe(`StakingContract`, () => {
   let contract: StakingContract;
   let contractAddress: string;
   let stakeTokenAddress: string;

@@ -3,7 +3,7 @@ import {ERC20} from '@models/erc20';
 import {expect} from 'chai';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {describe} from 'mocha';
-import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, revertChain, shouldBeRejected,} from '../utils';
+import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, revertChain, shouldBeRejected,} from '../utils/';
 import {Web3Connection, Web3Contract} from '../../src-ts';
 
 describe(`ERC20`, () => {

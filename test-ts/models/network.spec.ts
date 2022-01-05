@@ -1,7 +1,7 @@
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Network} from '@models/network';
-import {defaultWeb3Connection, erc20Deployer, increaseTime, newWeb3Account, outputDeploy, revertChain,} from '../utils';
+import {defaultWeb3Connection, erc20Deployer, increaseTime, newWeb3Account, outputDeploy, revertChain,} from '../utils/';
 import {Web3Connection} from '@base/web3-connection';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {NetworkIssue} from '@interfaces/network-issue';

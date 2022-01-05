@@ -1,5 +1,5 @@
 import {Votable} from '../../src-ts';
-import {defaultWeb3Connection, erc20Deployer} from '../utils';
+import {defaultWeb3Connection, erc20Deployer} from '../utils/';
 import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
 import {expect} from 'chai';
 

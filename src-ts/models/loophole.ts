@@ -28,8 +28,9 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
   private _erc20!: ERC20;
   private _swap!: UniswapV3RouterBridge;
   private _ethUtils!: ETHUtils;
+  private _ownable!: Ownable;
 
-  readonly ownable = new Ownable(this);
+  get ownable() { return this._ownable; }
   get erc20() { return this._erc20; }
   get swap() { return this._swap; }
   get ethUtils() { return this._ethUtils; }
@@ -41,7 +42,8 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
     if (!this.ethUtilsAddress)
       throw new Error(Errors.MissingEthUtilsAddressPleaseProvideOne);
 
-    this._ethUtils = new ETHUtils(this.web3Connection, this.ethUtilsAddress)
+    this._ethUtils = new ETHUtils(this.web3Connection, this.ethUtilsAddress);
+    this._ownable = new Ownable(this);
 
     const lpTokenAddress = await this.lpToken() || this.lpTokenAddress;
     if (!lpTokenAddress)
@@ -53,7 +55,7 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
     if (!swapRouterAddress)
       throw new Error(Errors.MissingSwapAddressPleaseDeployUsingOne);
 
-    this._swap = new UniswapV3RouterBridge(this.web3Connection, swapRouterAddress)
+    this._swap = new UniswapV3RouterBridge(this.web3Connection, swapRouterAddress);
   }
 
   async start() {

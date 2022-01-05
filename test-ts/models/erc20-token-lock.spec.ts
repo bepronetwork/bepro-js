@@ -5,7 +5,7 @@ import {
   increaseTime,
   revertChain,
   shouldBeRejected
-} from '../utils';
+} from '../utils/';
 import {Erc20TokenLock} from '../../src-ts';
 import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
 import {expect} from 'chai';

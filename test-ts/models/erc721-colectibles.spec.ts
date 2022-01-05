@@ -1,4 +1,4 @@
-import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber, revertChain} from '../utils';
+import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber, revertChain} from '../utils/';
 import {ERC721Collectibles} from '../../src-ts';
 import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
 import {expect} from 'chai';

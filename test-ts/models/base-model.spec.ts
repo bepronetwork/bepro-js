@@ -3,7 +3,7 @@ import {Web3Connection} from '@base/web3-connection';
 import {Model} from '@base/model';
 import {expect} from 'chai';
 import {Errors} from '@interfaces/error-enum';
-import {getPrivateKeyFromFile} from '../utils';
+import {getPrivateKeyFromFile} from '../utils/';
 
 describe(`Model<any>`, () => {
 

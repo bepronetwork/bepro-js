@@ -1,6 +1,8 @@
 import Web3 from 'web3';
 
-const bn = (n: number) => Web3.utils.toBN(n);
+export function bn(n: number) { return Web3.utils.toBN(n) }
+
+export const AMOUNT_1M = 1000000;
 
 export const DECIMALS = bn(1e18);
 export const STANDARD_SALARY = bn(3600).mul(DECIMALS)

@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import {Web3Connection} from '@base/web3-connection';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {Errors} from '@interfaces/error-enum';
-import {getPrivateKeyFromFile} from '../utils';
+import {getPrivateKeyFromFile} from '../utils/';
 
 describe(`Web3Connection`, () => {
   it(`start() fails because missing web3host`, () => {
