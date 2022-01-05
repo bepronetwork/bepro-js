@@ -84,12 +84,10 @@ export async function revertChain(web3: Web3) {
 }
 
 export async function hasTxBlockNumber(promise: Promise<any>) {
-  try {
-    const tx = await promise.catch(e => { throw e });
+    const tx = await promise.catch(e => {
+      expect(e, `Should not have been rejected`).to.be.empty;
+    });
     expect(tx, `Should have blockNumber`).property('blockNumber').to.exist;
-  } catch (e) {
-    expect(e, `Should not have been rejected`).to.be.empty;
-  }
 }
 
 export function calculateAPR(apr = 1, start = 0,
@@ -99,3 +97,10 @@ export function calculateAPR(apr = 1, start = 0,
   return ((((apr / 365 / 24 / ms) * timePassed) / ms) * amount) / 100;
 }
 
+export async function getChainDate(web3Connection: Web3Connection) {
+  return new Date(+(await web3Connection.eth.getBlock(await web3Connection.Web3.eth.getBlockNumber())).timestamp * 1000)
+}
+
+export function outputDeploy(info: [string, string][] = []) {
+  console.log(`Deployed`, info.map(([name, address]) => `\n\t${name}:\t${address}`).join(``))
+}

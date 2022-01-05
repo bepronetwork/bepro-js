@@ -1,6 +1,6 @@
 import {Network, NetworkFactory, Web3Connection} from '../../src-ts';
 import {fromDecimals, toSmartContractDecimals} from '../../src-ts/utils/numbers';
-import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, revertChain} from '../utils';
+import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, revertChain, outputDeploy} from '../utils';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src-ts/interfaces/error-enum';
@@ -42,9 +42,10 @@ describe(`NetworkFactory`, () => {
       expect(receipt.contractAddress).to.not.be.empty;
       networkFactoryContractAddress = receipt.contractAddress;
     });
+
     after(() => {
-      console.log(`\n\tDeployed Factory: ${networkFactoryContractAddress}\n\tDeployed ERC20: ${settlerToken}\n`)
-    })
+      outputDeploy([[`NetworkFactory`, networkFactoryContractAddress!], [`ERC20`, settlerToken]])
+    });
   });
 
 

@@ -1,14 +1,13 @@
 import {StakingContract, StakingProduct, StakingSubscription} from '../../src-ts';
 import {
-  calculateAPR,
   defaultWeb3Connection,
-  erc20Deployer,
+  erc20Deployer, getChainDate,
   hasTxBlockNumber,
-  increaseTime,
+  increaseTime, outputDeploy,
   revertChain
 } from '../utils';
 import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
-import {addMilliseconds, addMinutes, differenceInMilliseconds, differenceInSeconds} from 'date-fns'
+import {addMinutes, differenceInSeconds} from 'date-fns'
 import {expect} from 'chai';
 
 describe.only(`StakingContract`, () => {
@@ -39,15 +38,6 @@ describe.only(`StakingContract`, () => {
   before(async () => {
     await web3Connection.start();
     await revertChain(web3Connection.Web3);
-
-    // matching js time with chain time
-    const time = +(await web3Connection.eth.getBlock(await web3Connection.Web3.eth.getBlockNumber())).timestamp * 1000;
-    const traveled = addMilliseconds(new Date(), differenceInMilliseconds(new Date(), time));
-    endDate = +addMinutes(traveled, 10);
-    startDate = +addMinutes(traveled, 2);
-    totalNeededAPR = calculateApr(totalMaxAmount, differenceInSeconds(endDate, startDate));
-    //accountAddress = web3Connection.Account.address;
-    console.log(traveled, new Date(endDate), new Date(startDate), totalNeededAPR)
   });
 
   it(`Deploys contract`, async () => {
@@ -73,6 +63,12 @@ describe.only(`StakingContract`, () => {
 
     it(`Creates a staking product`, async () => {
 
+      const time = await getChainDate(web3Connection)
+
+      endDate = +addMinutes(time, 60);
+      startDate = +addMinutes(time, 5);
+      totalNeededAPR = calculateApr(totalMaxAmount, differenceInSeconds(endDate, startDate));
+
       await hasTxBlockNumber(
         contract.createProduct(startDate, endDate, totalMaxAmount, individualMinAmount,
                                individualMaxAmount, APR, false));
@@ -88,43 +84,50 @@ describe.only(`StakingContract`, () => {
     it(`Should deposit needed to apr admin`, async () => {
       const {APR, startDate, endDate, totalMaxAmount} = product;
       const totalNeeded = await contract.getAPRAmount(APR, startDate, endDate, totalMaxAmount);
-      console.log(totalNeeded, totalNeededAPR);
-      await hasTxBlockNumber(contract.depositAPRTokens(totalNeeded));
 
+      await hasTxBlockNumber(contract.depositAPRTokens(totalNeeded));
       expect(await contract.getTotalProductsAPRAmount()).to.eq(totalNeeded);
     });
 
     it(`Subscribes to product`, async () => {
-      await hasTxBlockNumber(contract.subscribeProduct(1, 1));
+      const time = await getChainDate(web3Connection)
+      const startDifference = differenceInSeconds(startDate, time);
 
-      subscription = await contract.getSubscription(1, 1);
+      if (startDifference > 0)
+        await increaseTime(startDifference+60, web3Connection.Web3);
 
-      console.log(subscription);
-      console.log(await contract.getProduct(1));
+      await hasTxBlockNumber(contract.subscribeProduct(product._id, product.individualMinimumAmount));
+      subscription = await contract.getSubscription(0, product._id);
 
       expect(subscription.startDate).to.be.greaterThan(0);
-
     });
 
     it(`Checks held tokens`, async () => {
       expect(await contract.heldTokens())
-        .to.eq(individualMinAmount + totalNeededAPR)
+        .to.be.greaterThan(individualMinAmount + totalNeededAPR) // there's some seconds we can't account for
     });
 
     it(`Checks future locked tokens`, async () => {
       expect(await contract.futureLockedTokens())
-        .to.eq(calculateAPR(1, subscription.startDate, subscription.endDate, 1))
+        .to.eq(product.individualMinimumAmount + calculateApr(product.individualMinimumAmount, differenceInSeconds(subscription.endDate, subscription.startDate)))
     });
 
     it(`Withdraws subscription`, async () => {
-      await increaseTime(62, web3Connection.Web3);
+      const time = await getChainDate(web3Connection);
+      const difference = differenceInSeconds(subscription.endDate, time);
+      if (difference > 0)
+        await increaseTime(difference, web3Connection.Web3);
+
       await hasTxBlockNumber(contract.withdrawSubscription(product._id, subscription._id));
-      const {finalized, withdrawAmount, startDate, endDate} = await contract.getSubscription(subscription._id, product._id);
-      const aprAmount = await contract.getAPRAmount(1, startDate, endDate, 1)
+      const {finalized, withdrawAmount, amount} = await contract.getSubscription(subscription._id, product._id);
+      const aprAmount = await contract.getAPRAmount(APR, subscription.startDate, subscription.endDate, amount)
       expect(finalized).to.be.true;
-      expect(withdrawAmount).to.eq(aprAmount+1);
-      console.log(`withdrawn`, withdrawAmount);
+      expect(withdrawAmount).to.eq(aprAmount + product.individualMinimumAmount);
     });
 
+  });
+
+  after(() => {
+    outputDeploy([[`StakingContract`, contractAddress], [`ERC20`, stakeTokenAddress]])
   });
 })

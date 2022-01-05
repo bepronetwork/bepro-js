@@ -75,13 +75,10 @@ export class StakingContract extends Model<StakingContractMethods> implements De
   async subscribeProduct(_product_id: number, _amount: number) {
     await this.pausable.whenNotPaused();
 
-    const amount = toSmartContractDecimals(_amount, this.erc20.decimals) as number;
-    const isApproved = await this.erc20.isApproved(this.contractAddress, amount);
-
-    if (!isApproved)
+    if (!(await this.erc20.isApproved(this.contractAddress, _amount)))
       throw new Error(Errors.InteractionIsNotAvailableCallApprove);
 
-    return this.sendTx(this.contract.methods.subscribeProduct(_product_id, amount));
+    return this.sendTx(this.contract.methods.subscribeProduct(_product_id, toSmartContractDecimals(_amount, this.erc20.decimals) as number));
   }
 
   async createProduct(_startDate: number, _endDate: number, _totalMaxAmount: number, _individualMinimumAmount: number, _individualMaximumAmount: number, _APR: number, _lockedUntilFinalization: boolean) {
