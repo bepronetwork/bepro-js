@@ -47,42 +47,32 @@ const args = yargs(hideBin(process.argv))
 
 const SolidityTypes = {
   bool: `boolean`,
-  uint: `number`,
-  uint256: `number`,
   address: `string`,
   "string": `string`,
   event: `void`,
-  "address[]": `string[]`,
-  "uint256[]": `number[]`,
-  "uint[]": `number[]`,
-  "string[]": `string[]`,
   bytes: `string`,
+}
+
+const getSolidityType = (type = ``) => {
+  const isArray = type.search(`[]`) > -1;
+  return type.search(`int`) > -1 ? `number` : SolidityTypes[type] + (isArray && `[]` || ``);
 }
 
 const makeClass = (header = ``, content = ``, imports = []) =>
   [...imports, "", `${header} {`, content, `}`].join(`\n`);
 
 /**
- * @param {Contract~AbiOption~Input[]} inputs
- * @param {string} [joiner]
- * @param {boolean} [noType]
- * @returns {string}
- */
-const parseInputsName = (inputs, joiner = `, `, noType = false) =>
-  inputs.map((input, i) => `${input.name || `v${i+1}`}${!noType && ': '.concat(SolidityTypes[input.type]) || ''}`).join(joiner);
-
-/**
  * @param {Contract~AbiOption~Input[]} outputs
+ * @param {string} template
+ * @param {boolean} template
  * @returns {string}
  */
-const parseOutput = (outputs) => {
+const parseOutput = (outputs, template = `ContractCallMethod<%content%>`, useComponentName = false) => {
   if (!outputs?.length)
     return `ContractSendMethod`;
 
-  const template = `ContractCallMethod<%content%>`;
-
-  const _templateContent = (index, type) => `'${index}': ${SolidityTypes[type]}`
-  const _templateMapper = (o, index) => !o.components ? _templateContent(index, o.type) : o.components.map(_templateMapper).join(`; `);
+  const _templateContent = (o, index, type) => `'${useComponentName && o.name || index}': ${getSolidityType(type)}`
+  const _templateMapper = (o, index) => !o.components ? _templateContent(o, index, o.type) : o.components.map(_templateMapper).join(`; `);
 
   let content = outputs.map(_templateMapper).join(`; `);
 
@@ -92,6 +82,19 @@ const parseOutput = (outputs) => {
 
   return template.replace(`%content%`, content);
 }
+
+
+/**
+ * @param {Contract~AbiOption~Input[]} inputs
+ * @param {string} [joiner]
+ * @param {boolean} [noType]
+ * @returns {string}
+ */
+const parseInputsName = (inputs, joiner = `, `, noType = false) =>
+  inputs?.map((input, i) =>
+    input.components?.length
+      ? `params: `+parseOutput([input], `%content%`, true)
+      : `${input.name || `v${i+1}`}${!noType && ': '.concat(getSolidityType(input.type)) || ''}`)?.join(joiner);
 
 const fnHeader = (name = ``, parsedInputs = ``, parsedOutputs = ``) =>
   `${name}(${parsedInputs}) ${ parsedOutputs && ':'.concat(parsedOutputs) || ''}`;
@@ -145,11 +148,11 @@ const AbiParser = (filePath = ``) => {
 
   const abiItemConstructor = contract.abi.filter(option => !option.anonymous && option.type === "constructor");
   let constructorWithDeployer = ``;
-  if (abiItemConstructor.length) {
-    const abiInputs = parseInputsName(abiItemConstructor[0].inputs)
-    const deployOptions = `const deployOptions = {\n        data: ${contract.contractName}Json.bytecode,\n        arguments: [${parseInputsName(abiItemConstructor[0].inputs, undefined, true)}]\n    };`
+  // if (abiItemConstructor.length) {
+    const abiInputs = parseInputsName(abiItemConstructor[0]?.inputs || [])
+    const deployOptions = `const deployOptions = {\n        data: ${contract.contractName}Json.bytecode,\n        arguments: [${parseInputsName(abiItemConstructor[0]?.inputs || [], undefined, true)}]\n    };`
     constructorWithDeployer = _constructor+`  async deployJsonAbi(${abiInputs}) {\n    ${deployOptions}\n\n    return this.deploy(deployOptions, this.web3Connection.Account);\n  }\n\n`;
-  }
+  // }
 
   const _interface = makeClass(classHeader(contract.contractName), content, ["import {ContractSendMethod} from 'web3-eth-contract';", "import {ContractCallMethod} from '@methods/contract-call-method';"]);
 
@@ -163,7 +166,7 @@ const AbiParser = (filePath = ``) => {
     "import {AbiItem} from 'web3-utils';"
   ]
 
-  const _class = makeClass(classHeader(contract.contractName, `class`, ` extends Model<${contract.contractName}Methods> implements Deployable`), constructorWithDeployer+_classBody, classImports);
+  const _class = makeClass(classHeader(contract.contractName, `class`, ` extends Model<${contract.contractName}Methods> implements Deployable`), (constructorWithDeployer || _constructor)+_classBody, classImports);
 
   return {_interface, _class};
 }
