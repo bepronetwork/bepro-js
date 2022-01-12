@@ -19,7 +19,7 @@
         "prebuild": "npm run compile",
         "pretest": "npm run build && npm run compile && truffle migrate --network development",
         "prepublishOnly": "npm run build",
-        "postinstall": "( [ ! -d ./build ] && npm install . && npm run build ) || echo \"BEPRO Was already built previously\"",
+        "postinstall": "( [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"BEPRO Was already built previously\"",
         "test": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test-ts/**/*.spec.{ts,tsx}' --pretty",
         "build": "tsc && tscpaths -p tsconfig.json -s ./src-ts -o ./build",
         "docs": "typedoc",
