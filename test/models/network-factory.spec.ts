@@ -1,9 +1,9 @@
-import {Network, NetworkFactory, Web3Connection} from '../../src-ts';
-import {fromDecimals, toSmartContractDecimals} from '../../src-ts/utils/numbers';
+import {Network, NetworkFactory, Web3Connection} from '../../src';
+import {fromDecimals, toSmartContractDecimals} from '../../src/utils/numbers';
 import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, revertChain, outputDeploy} from '../utils/';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
-import {Errors} from '../../src-ts/interfaces/error-enum';
+import {Errors} from '../../src/interfaces/error-enum';
 
 describe(`NetworkFactory`, () => {
 

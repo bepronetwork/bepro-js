@@ -6,8 +6,8 @@ import {
   revertChain,
   shouldBeRejected
 } from '../utils/';
-import {Erc20TokenLock} from '../../src-ts';
-import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
+import {Erc20TokenLock} from '../../src';
+import {toSmartContractDecimals} from '../../src/utils/numbers';
 import {expect} from 'chai';
 import {addSeconds} from 'date-fns'
 

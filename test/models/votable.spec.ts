@@ -1,6 +1,6 @@
-import {Votable} from '../../src-ts';
+import {Votable} from '../../src';
 import {defaultWeb3Connection, erc20Deployer} from '../utils/';
-import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
+import {toSmartContractDecimals} from '../../src/utils/numbers';
 import {expect} from 'chai';
 
 describe(`Votable`, () => {

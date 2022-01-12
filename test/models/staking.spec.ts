@@ -1,4 +1,4 @@
-import {StakingContract, StakingProduct, StakingSubscription} from '../../src-ts';
+import {StakingContract, StakingProduct, StakingSubscription} from '../../src';
 import {
   defaultWeb3Connection,
   erc20Deployer, getChainDate,
@@ -6,7 +6,7 @@ import {
   increaseTime, outputDeploy,
   revertChain
 } from '../utils/';
-import {toSmartContractDecimals} from '../../src-ts/utils/numbers';
+import {toSmartContractDecimals} from '../../src/utils/numbers';
 import {addMinutes, differenceInSeconds} from 'date-fns'
 import {expect} from 'chai';
 
