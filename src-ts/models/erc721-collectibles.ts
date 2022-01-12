@@ -175,7 +175,7 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
     return this.sendTx(this.contract.methods.setShares(feeShare, otherShare));
   }
 
-  async supportsInterface(interfaceId: undefined) {
+  async supportsInterface(interfaceId: string) {
     return this.callTx(this.contract.methods.supportsInterface(interfaceId));
   }
 

@@ -104,3 +104,9 @@ export async function getChainDate(web3Connection: Web3Connection) {
 export function outputDeploy(info: [string, string][] = []) {
   console.log(`Deployed`, info.map(([name, address]) => `\n\t${name}:\t${address}`).join(``))
 }
+
+export function modelExtensionDeployer(web3connection: Web3Connection, _class: any, args?: any) {
+  const deployer = new _class(web3connection);
+  deployer.loadAbi();
+  return deployer.deployJsonAbi(args);
+}

@@ -36,7 +36,7 @@ export interface ERC721ColectiblesMethods {
   setPricePerPack(newPrice: number) :ContractSendMethod;
   setPurchaseTokenAddress(purchaseToken: string) :ContractSendMethod;
   setShares(feeShare: number, otherShare: number) :ContractSendMethod;
-  supportsInterface(interfaceId: undefined) :ContractCallMethod<boolean>;
+  supportsInterface(interfaceId: string) :ContractCallMethod<boolean>;
   symbol() :ContractCallMethod<string>;
   tokenByIndex(index: number) :ContractCallMethod<number>;
   tokenOfOwnerByIndex(owner: string, index: number) :ContractCallMethod<number>;

@@ -120,7 +120,7 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
     return this.sendTx(this.contract.methods.setApprovalForAll(operator, approved));
   }
 
-  async supportsInterface(interfaceId: undefined) {
+  async supportsInterface(interfaceId: string) {
     return this.callTx(this.contract.methods.supportsInterface(interfaceId));
   }
 
