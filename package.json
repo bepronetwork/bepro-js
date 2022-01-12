@@ -2,13 +2,13 @@
     "name": "bepro-js",
     "version": "2.0.0-alpha.0",
     "description": "",
-    "main": "index.js",
+    "main": "dist/src/index.js",
     "engines": {
         "node": "14.17.0"
     },
     "directories": {
         "test": "test",
-        "lib": "src-ts"
+        "lib": "src"
     },
     "repository": {
         "type": "git",
