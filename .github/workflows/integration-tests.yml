@@ -1,6 +1,9 @@
 name: integration-tests
 
 on:
+  push:
+    branches:
+      - refactor/typescript
   pull_request:
     branches:
     - master
@@ -20,7 +23,7 @@ jobs:
       - name: npm install
         run: npm install
 
-      - name: Start ganache and test solution
-        run: npm run ganache:start & npm run test
+      - name: Start ganache and test integration
+        run: npm run test
         env:
           CI: true
