@@ -50,12 +50,17 @@ const SolidityTypes = {
   address: `string`,
   "string": `string`,
   event: `void`,
-  bytes: `string`,
 }
 
 const getSolidityType = (type = ``) => {
   const isArray = type.search(`[]`) > -1;
-  return type.search(`int`) > -1 ? `number` : SolidityTypes[type] + (isArray && `[]` || ``);
+  let retype = `any`;
+
+  if (type.startsWith(`bytes`))
+    retype = `string` + (isArray && `[]` || ``);
+  else retype = type.search(`int`) > -1 ? `number` : SolidityTypes[type] + (isArray && `[]` || ``);
+
+  return retype;
 }
 
 const makeClass = (header = ``, content = ``, imports = []) =>

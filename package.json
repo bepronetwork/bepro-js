@@ -19,10 +19,10 @@
         "prebuild": "npm run compile",
         "pretest": "npm run build && truffle compile && truffle migrate --network development",
         "prepublishOnly": "npm run build",
+        "postinstall": "( [ ! -d ./build ] && npm install . && npm run build ) || echo \"BEPRO Was already built previously\"",
         "test:js": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test-ts/**/*.spec.{ts,tsx}' --pretty",
         "test:truffle": "truffle test --network development ./tests/contracts/erc20TokenLock-truffle.js",
-        "build": "npm run compile && babel ./src --out-dir lib --copy-files -d ./build",
-        "build-ts": "tsc && tscpaths -p tsconfig.json -s ./src-ts -o ./dist",
+        "build": "tsc && tscpaths -p tsconfig.json -s ./src-ts -o ./build",
         "docs": "typedoc",
         "clean:contracts": "rimraf build/contracts && ./node_modules/.bin/truffle compile",
         "ganache:start": "ganache -p 8545 -q --account_keys_path keys.json "
