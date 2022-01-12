@@ -19,7 +19,7 @@
         "prebuild": "npm run compile",
         "prepublishOnly": "npm run build",
         "postinstall": "( [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"BEPRO Was already built previously\"",
-        "test": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test-ts/**/*.spec.{ts,tsx}' --pretty",
+        "test": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test/**/*.spec.{ts,tsx}' --pretty",
         "build": "tsc",
         "postbuild": "tscpaths -p tsconfig.json -s ./src-ts -o ./dist",
         "docs": "typedoc",

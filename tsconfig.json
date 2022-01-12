@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2016",
     "module": "commonjs",
-    "baseUrl": "./src-ts/",
+    "baseUrl": "./src/",
     "resolveJsonModule": true,
     "declaration": true,
     "outDir": "./dist",
@@ -38,12 +38,12 @@
   },
   "exclude": [
     "node_modules/",
-    "test-ts"
+    "test"
   ],
   "typedocOptions": {
     "entryPoints": [
-      "./src-ts/index.ts"
+      "./src/index.ts"
     ],
-    "out": "./docs-ts"
+    "out": "./docs"
   }
 }
