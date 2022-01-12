@@ -24,7 +24,7 @@
         "postbuild": "tscpaths -p tsconfig.json -s ./src -o ./dist",
         "docs": "typedoc",
         "ganache:start": "ganache -p 8545 -q --account_keys_path keys.json ",
-        "test-ci": "npm run ganache:start & npm run test"
+        "test-ci": "npm run ganache:start >/dev/null & npm run test"
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.2",
