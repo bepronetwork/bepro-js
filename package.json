@@ -18,6 +18,7 @@
         "compile": "truffle compile",
         "prebuild": "npm run compile",
         "prepublishOnly": "npm run build",
+        "pretest": "npm run ganache:start",
         "postinstall": "( [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"BEPRO Was already built previously\"",
         "test": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test/**/*.spec.{ts,tsx}' --pretty",
         "build": "tsc",
