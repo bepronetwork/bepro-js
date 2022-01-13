@@ -36,10 +36,16 @@ const args = yargs(hideBin(process.argv))
   .alias(`f`, `file`)
   .nargs(`f`, 1)
   .describe(`f`, `File to parse`)
-  .alias(`o`, `outputInterface`)
-  .describe(`o`, `directory to output interface file into`)
-  .alias(`g`, `generateClass`)
-  .describe(`g`, `directory to output class file into`)
+  .alias(`i`, `interfaceDir`)
+  .describe(`i`, `directory to output interface file into`)
+  .alias(`c`, `classDir`)
+  .describe(`c`, `directory to output class file into`)
+  .alias(`n`, `name`)
+  .describe(`n`, `change the file name`)
+  .alias(`I`, `overwriteInterface`)
+  .describe(`I`, `allow interface file overwrite`)
+  .alias(`C`, `overwriteClass`)
+  .describe(`C`, `allow class file overwrite`)
   .demandOption([`f`,])
   .help(`h`)
   .alias(`h`, `help`)
@@ -88,6 +94,7 @@ const parseOutput = (outputs, template = `ContractCallMethod<%content%>`, useCom
   return template.replace(`%content%`, content);
 }
 
+const parseComment = (comment = ``) => [`  /**`, `   * ${comment}`, `   */\n`].join(`\n`)
 
 /**
  * @param {Contract~AbiOption~Input[]} inputs
@@ -117,9 +124,10 @@ const classHeader = (name = `Name`, type = `interface`, nameAppendix = `Methods`
 /**
  * @param {Contract~AbiOption} option
  * @param {boolean} [withBody]
+ * @param {string} [devDocMethods]
  * @return {string}
  */
-const makeFn = (option, withBody = false) => {
+const makeFn = (option, withBody = false, devDoc = ``) => {
   const parsedInputs = parseInputsName(option.inputs);
   const parsedOutputs = parseOutput(option.outputs);
 
@@ -128,7 +136,9 @@ const makeFn = (option, withBody = false) => {
 
   const body = withBody && `{\n    return this.${option.outputs.length ? 'callTx' : 'sendTx'}(this.contract.methods.${option.name}(${inputs})); \n  }\n` || '';
 
-  return `  ${withBody && 'async ' || ''}${fnHeader(option.name, parsedInputs, !withBody && parsedOutputs || ``)}${withBody && body || ';'}`
+  console.log('devdoc', devDoc)
+
+  return `${devDoc && parseComment(devDoc) || ``}${withBody && '  async ' || '  '}${fnHeader(option.name, parsedInputs, !withBody && parsedOutputs || ``)}${withBody && body || ';'}`
 }
 
 /**
@@ -144,12 +154,16 @@ const AbiParser = (filePath = ``) => {
 
   const abis = contract.abi.filter(option => !option.anonymous && option.type === "function");
 
-  const content = abis.map(option => makeFn(option)).join(`\n`);
+  const content = abis.map(option => makeFn(option, false)).join(`\n`);
 
   const _super = `super(web3Connection, ${contract.contractName}Json.abi as AbiItem[], contractAddress);`;
   const _constructor = `  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {\n    ${_super}\n  }\n\n`;
 
-  const _classBody = abis.map(option => makeFn(option, true)).join(`\n`);
+  const _classBody = abis.map(option => {
+    const devdoc = Object.entries(contract?.devdoc?.methods).find(([key, value]) => key.startsWith(option.name) && value);
+    console.log(`_class devdoc`, devdoc?.length && devdoc[1].details)
+    return makeFn(option, true, devdoc?.length && devdoc[1].details || ``)
+  }).join(`\n`);
 
   const abiItemConstructor = contract.abi.filter(option => !option.anonymous && option.type === "constructor");
   let constructorWithDeployer = ``;
@@ -182,14 +196,22 @@ if (!fs.existsSync(args.file))
 const parsed = AbiParser(args.file);
 
 
-if (args.outputInterface) {
-  const outputFile = path.resolve(args.outputInterface, paramCase(camelCase(path.basename(args.file))).replace(`-json`, `.ts`));
-  fs.writeFileSync(outputFile, parsed._interface, 'utf8')
-  console.log(`Created`, outputFile);
-} else console.log(`// Interface \n\n`, parsed._interface)
+if (args.interfaceDir) {
+  const outputFile = path.resolve(args.interfaceDir, paramCase(camelCase(path.basename(args.file))).replace(`-json`, `.ts`));
+  if (fs.existsSync(outputFile) && !args.overwriteInterface)
+    console.log(`\nFile already exists.\n${'-'.repeat(10)}\n\n`, parsed._interface);
+  else {
+    fs.writeFileSync(outputFile, parsed._interface, 'utf8')
+    console.log(`Created`, outputFile);
+  }
+} else console.log(`\nInterface \n${'-'.repeat(10)}\n\n`, parsed._interface)
 
-if (args.generateClass) {
-  const outputFile = path.resolve(args.generateClass, paramCase(path.basename(args.file)).replace(`-json`, `.ts`));
-  fs.writeFileSync(outputFile, parsed._class, 'utf8')
-  console.log(`Created`, outputFile);
-} else console.log(`// Class \n\n`, parsed._class)
+if (args.classDir) {
+  const outputFile = path.resolve(args.classDir, paramCase(path.basename(args.file)).replace(`-json`, `.ts`));
+  if (fs.existsSync(outputFile) && !args.overwriteClass)
+    console.log(`\nFile already exists.\n${'-'.repeat(10)}\n\n`, parsed._class);
+  else {
+    fs.writeFileSync(outputFile, parsed._class, 'utf8')
+    console.log(`Created`, outputFile);
+  }
+} else console.log(`\nClass \n${'-'.repeat(10)}\n\n`, parsed._class)
