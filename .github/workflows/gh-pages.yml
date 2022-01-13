@@ -1,9 +1,10 @@
-name: GitHub pages
+name: Updated documentation
 
 on:
   push:
     branches:
       - master
+      - refactor/typescript
 
 jobs:
   deploy:
@@ -12,18 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Fool GH Pages?
-        run: mkdir docs
+      - name: Build documentation from source
+        run: npm run typedoc
 
-      - name: Build
-        uses: andstor/jsdoc-action@v1
-        with:
-          source_dir: ./src
-          recurse: true
-          config_file: docs-src/jsdoc.json
-          template: better-docs
-
-      - name: Deploy
+      - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}

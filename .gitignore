@@ -5,5 +5,6 @@ package-lock.json
 xunit.xml
 build/
 docs/
+dist/
 
 xunit.xml
