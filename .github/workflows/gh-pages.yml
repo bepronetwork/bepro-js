@@ -3,15 +3,14 @@ name: Updated documentation
 on:
   push:
     branches:
-      - master
-      - refactor/typescript
+      - 2.0.0-alpha.0
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: NPM Install
+        run: npm install
 
       - name: Build documentation from source
         run: npm run docs
