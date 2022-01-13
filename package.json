@@ -33,7 +33,9 @@
         "accounting": "^0.4.1",
         "dotenv": "^8.2.0",
         "ipfs-http-client": "^50.0.0",
-        "web3": "^1.6.1"
+        "web3": "^1.6.1",
+        "web3-eth": "^1.6.1",
+        "web3-utils": "^1.6.1"
     },
     "devDependencies": {
         "@truffle/hdwallet-provider": "^2.0.0",

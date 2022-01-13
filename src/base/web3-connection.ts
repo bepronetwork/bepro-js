@@ -3,6 +3,8 @@ import Web3 from 'web3';
 import {Account, HttpProvider, IpcProvider, WebsocketProvider} from 'web3-core';
 import {HttpProviderOptions, WebsocketProviderOptions} from 'web3-core-helpers';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
+import {Utils} from 'web3-utils';
+import {Eth} from 'web3-eth';
 
 export class Web3Connection {
   protected web3!: Web3;
@@ -11,8 +13,8 @@ export class Web3Connection {
   constructor(readonly options: Web3ConnectionOptions) {}
 
   get started() { return !!this.web3; }
-  get eth() { return this.web3?.eth; }
-  get utils() { return this.web3?.utils; }
+  get eth(): Eth { return this.web3?.eth; }
+  get utils(): Utils { return this.web3?.utils; }
   get Web3(): Web3 { return this.web3; }
   get Account(): Account { return this.account; }
 
