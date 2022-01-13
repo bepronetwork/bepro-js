@@ -37,6 +37,8 @@ export * from '@interfaces/staking-subscription';
 export * from '@interfaces/voter-info';
 export * from '@interfaces/modifiers';
 export * from '@interfaces/block-number-timestamp';
+export * from '@interfaces/web3-connection-options';
+
 
 export * from '@methods/contract-call-method';
 export * from '@methods/erc20';
