@@ -12,6 +12,9 @@ jobs:
       - name: NPM Install
         run: npm install
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Build documentation from source
         run: npm run docs
 
