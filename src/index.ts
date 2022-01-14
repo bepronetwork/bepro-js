@@ -39,6 +39,9 @@ export * from '@interfaces/modifiers';
 export * from '@interfaces/block-number-timestamp';
 export * from '@interfaces/web3-connection-options';
 
+export * from '@events/x-events';
+export * from '@events/network-events';
+
 
 export * from '@methods/contract-call-method';
 export * from '@methods/erc20';
