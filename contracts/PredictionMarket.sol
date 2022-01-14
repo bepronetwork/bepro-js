@@ -795,6 +795,10 @@ contract PredictionMarket {
     Market storage market = markets[marketId];
 
     uint256 rawAmount = market.fees.poolWeight.mul(market.liquidityShares[user]).div(market.liquidity);
+
+    // No fees left to claim
+    if (market.fees.claimed[user] > rawAmount) return 0;
+
     return rawAmount.sub(market.fees.claimed[user]);
   }
 
