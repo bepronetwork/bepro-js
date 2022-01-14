@@ -13,6 +13,9 @@ import {NetworkMethods} from '@methods/network';
 import {OraclesSummary} from '@interfaces/oracles-summary';
 import {AbiItem} from 'web3-utils';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
+import * as Events from '@events/network-events';
+import {PastEventOptions} from 'web3-eth-contract';
+import {XEvents} from '@events/x-events';
 
 export class Network extends Model<NetworkMethods> implements Deployable {
   private _transactionToken!: ERC20;
@@ -255,4 +258,41 @@ export class Network extends Model<NetworkMethods> implements Deployable {
 
     return this.deploy(deployOptions, this.web3Connection.Account);
   }
+
+  async getCloseIssueEvents(filter: PastEventOptions): Promise<XEvents<Events.CloseIssueEvent>[]> {
+    return this.contract.self.getPastEvents(`CloseIssue`, filter)
+  }
+
+  async getDisputeMergeEvents(filter: PastEventOptions): Promise<XEvents<Events.DisputeMergeEvent>[]> {
+    return this.contract.self.getPastEvents(`DisputeMerge`, filter)
+  }
+
+  async getGovernorTransferredEvents(filter: PastEventOptions): Promise<XEvents<Events.GovernorTransferredEvent>[]> {
+    return this.contract.self.getPastEvents(`GovernorTransferred`, filter)
+  }
+
+  async getMergeProposalCreatedEvents(filter: PastEventOptions): Promise<XEvents<Events.MergeProposalCreatedEvent>[]> {
+    return this.contract.self.getPastEvents(`MergeProposalCreated`, filter)
+  }
+
+  async getOpenIssueEvents(filter: PastEventOptions): Promise<XEvents<Events.OpenIssueEvent>[]> {
+    return this.contract.self.getPastEvents(`OpenIssue`, filter)
+  }
+
+  async getPausedEvents(filter: PastEventOptions): Promise<XEvents<Events.PausedEvent>[]> {
+    return this.contract.self.getPastEvents(`Paused`, filter)
+  }
+
+  async getRecognizedAsFinishedEvents(filter: PastEventOptions): Promise<XEvents<Events.RecognizedAsFinishedEvent>[]> {
+    return this.contract.self.getPastEvents(`RecognizedAsFinished`, filter)
+  }
+
+  async getRedeemIssueEvents(filter: PastEventOptions): Promise<XEvents<Events.RedeemIssueEvent>[]> {
+    return this.contract.self.getPastEvents(`RedeemIssue`, filter)
+  }
+
+  async getUnpausedEvents(filter: PastEventOptions): Promise<XEvents<Events.UnpausedEvent>[]> {
+    return this.contract.self.getPastEvents(`Unpaused`, filter)
+  }
+
 }

@@ -33,6 +33,9 @@
       ],
       "@utils/*": [
         "utils/*"
+      ],
+      "@events/*": [
+        "interfaces/events/*"
       ]
     }
   },
