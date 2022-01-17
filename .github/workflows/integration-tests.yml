@@ -1,9 +1,6 @@
 name: integration-tests
 
 on:
-  push:
-    branches:
-      - refactor/typescript
   pull_request:
     branches:
     - master
