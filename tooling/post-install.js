@@ -10,7 +10,7 @@ if (fs.existsSync('build')) {
   try {
     await exec(`npm install .`);
     await exec(`npm run build`);
-    console.log(`Build bepro-js sdk.`);
+    console.log(`Built bepro-js sdk`);
   } catch (e) {
     console.log(e);
     console.log(`\nFailed to build bepro-js sdk, please issue: npm explore bepro-js -- npm run build`);

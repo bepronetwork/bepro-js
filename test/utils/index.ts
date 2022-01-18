@@ -102,6 +102,9 @@ export async function getChainDate(web3Connection: Web3Connection) {
 }
 
 export function outputDeploy(info: [string, string][] = []) {
+  if (!process.env.DEBUG_TESTS)
+    return;
+
   console.log(`Deployed`, info.map(([name, address]) => `\n\t${name}:\t${address}`).join(``))
 }
 
