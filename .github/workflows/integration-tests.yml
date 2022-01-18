@@ -1,6 +1,9 @@
 name: integration-tests
 
 on:
+  push:
+    branches:
+      - 2.0.0-alpha.0
   pull_request:
     branches:
     - master

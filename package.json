@@ -18,7 +18,7 @@
         "compile": "truffle compile",
         "prebuild": "npm run compile",
         "prepublishOnly": "npm run build",
-        "postinstall": "( [ ! -f ./built ] && echo \"\" > ./built && npm install . && npm run build ) || echo \"BEPRO Was already built previously\"",
+        "postinstall": "node tooling/post-install.js",
         "test": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test/**/*.spec.{ts,tsx}' --pretty",
         "build": "tsc",
         "postbuild": "tscpaths -p tsconfig.json -s ./src -o ./dist",
