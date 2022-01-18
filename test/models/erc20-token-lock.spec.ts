@@ -61,7 +61,7 @@ describe(`ERC20TokenLock`, () => {
     });
 
     it(`Should unlock because time-travel`, async () => {
-      await increaseTime(20, web3Connection.Web3);
+      await increaseTime(21, web3Connection.Web3);
       await hasTxBlockNumber(tokenLock.release());
       expect(await tokenLock.getLockedTokens(accountAddress), `get locked tokens`).to.eq(0);
     });
