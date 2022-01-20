@@ -12,10 +12,12 @@ async function buildSolution() {
     const {execSync} = require("child_process");
 
     const pkg = JSON.parse(fs.readFileSync(`package.json`, 'utf8'));
-    const isbepro = pkg.name === `bepro-js`
+    const isbepro = pkg.name === `bepro-js`;
+
+    console.log(`cwd`, path.resolve());
 
     const node_modules = fs.existsSync('node_modules');
-    const bepro_cwd = isbepro && path.resolve(`.`) || path.resolve(`node_modules`, `bepro-js`, `node_modules`);
+    const bepro_cwd = isbepro && path.resolve() || path.resolve(`node_modules`, `bepro-js`, `node_modules`);
     const bepro_node_modules = fs.existsSync(isbepro && `node_modules` || bepro_cwd);
 
     if (!node_modules || !isbepro && node_modules && !bepro_node_modules)
