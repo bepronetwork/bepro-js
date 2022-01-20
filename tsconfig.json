@@ -4,6 +4,7 @@
     "module": "commonjs",
     "baseUrl": "./src/",
     "resolveJsonModule": true,
+    "preserveSymlinks": true,
     "declaration": true,
     "outDir": "./dist",
     "esModuleInterop": true,
