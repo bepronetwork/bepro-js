@@ -653,7 +653,6 @@ contract PredictionMarket {
   function nextState(uint256 marketId) private {
     Market storage market = markets[marketId];
     market.state = MarketState(uint256(market.state) + 1);
-    require(marketId <= 2, "Invalid market state");
   }
 
   /// @dev Emits a outcome price event for every outcome
