@@ -16,7 +16,7 @@ async function buildSolution() {
 
     const node_modules = fs.existsSync('node_modules');
     const bepro_cwd = isbepro && path.resolve(`.`) || path.resolve(`node_modules`, `bepro-js`, `node_modules`);
-    const bepro_node_modules = fs.existsSync(isbepro && node_modules || bepro_cwd);
+    const bepro_node_modules = fs.existsSync(isbepro && `node_modules` || bepro_cwd);
 
     if (!node_modules || !isbepro && node_modules && !bepro_node_modules)
       await execSync(`npm install .`, {stdio: 'inherit', cwd: bepro_cwd});
