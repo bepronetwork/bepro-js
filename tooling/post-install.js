@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 
 if (fs.existsSync('dist')) {
   console.log(`bepro-js sdk was already built.`)
@@ -9,10 +8,7 @@ if (fs.existsSync('dist')) {
 async function buildSolution() {
   try {
     console.log(`Building bepro-js sdk`);
-    const {execSync, cwd} = require("child_process");
-
-    if (!fs.existsSync(path.resolve(cwd, `node_modules`)))
-      await execSync(`npm install .`, {stdio: 'inherit'});
+    const {execSync} = require("child_process");
 
     await execSync(`npm run build`, {stdio: 'inherit'});
 
