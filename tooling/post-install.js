@@ -10,9 +10,7 @@ async function buildSolution() {
     console.log(`Building bepro-js sdk`);
     const {execSync} = require("child_process");
 
-    if (!fs.existsSync('node_modules'))
-      await execSync(`npm install .`, {stdio: 'inherit'});
-
+    await execSync(`npm install .`, {stdio: 'inherit'});
     await execSync(`npm run build`, {stdio: 'inherit'});
 
     console.log(`Built bepro-js sdk`);
