@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: npm install
+      - name: npm install (and postinstall build)
         run: npm install
 
       - name: Start ganache and test integration
