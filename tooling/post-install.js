@@ -13,7 +13,7 @@ async function buildSolution() {
 
     const cwd = path.resolve();
 
-    if (!fs.existsSync(path.resolve(cwd, `node_modules`)))
+    if (!fs.existsSync(path.resolve(cwd, `node_modules`, `truffle`)))
       await execSync(`npm install .`, {stdio: 'inherit', cwd});
 
     await execSync(`npm run build`, {stdio: 'inherit', cwd});
