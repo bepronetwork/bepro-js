@@ -1,4 +1,4 @@
-import {TransactionReceipt} from 'web3-core';
+import {TransactionReceipt} from '@interfaces/web3-core';
 
 export interface Deployable {
   deployJsonAbi(...args: any[]): Promise<TransactionReceipt>;

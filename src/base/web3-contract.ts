@@ -1,7 +1,8 @@
 import {AbiItem} from 'web3-utils';
 import {Contract, ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 import Web3 from 'web3';
-import {Account, TransactionConfig, TransactionReceipt} from 'web3-core';
+import {Account, TransactionConfig} from 'web3-core';
+import {TransactionReceipt} from '@interfaces/web3-core';
 
 const DEFAULT_CONFIRMATIONS_NEEDED = 1;
 
@@ -60,9 +61,9 @@ export class Web3Contract<Methods = any, Events = any> {
         const limbo = newContract.deploy(deployOptions);
         const from = account?.address || (await this.web3.eth.getAccounts())[0];
 
-        function onConfirmation(number: number, receipt: TransactionReceipt) {
+        function onConfirmation(number: number, receipt: any) {
           if (DEFAULT_CONFIRMATIONS_NEEDED >= number)
-            resolve(receipt);
+            resolve(receipt as unknown as TransactionReceipt);
         }
 
         function onError(error: any) { reject(error); }
@@ -98,7 +99,7 @@ export class Web3Contract<Methods = any, Events = any> {
         const signedTx = await account.signTransaction({from, to, data, value, ...txOptions});
 
         this.web3.eth.sendSignedTransaction(signedTx.rawTransaction!)
-            .on(`receipt`, (receipt) => { resolve(receipt) })
+            .on(`receipt`, (receipt) => { resolve(receipt as unknown as TransactionReceipt) })
             .on(`error`, (err) => reject(err));
       } catch (e) {
         reject(e);

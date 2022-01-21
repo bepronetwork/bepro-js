@@ -1,7 +1,7 @@
 import * as Json from '@abi/Token.json';
 import {Web3Connection} from '@base/web3-connection';
 import {Model} from '@base/model';
-import {TransactionReceipt} from 'web3-core';
+import {TransactionReceipt} from '@interfaces/web3-core';
 import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {Deployable} from '@interfaces/deployable';
 import {ERC20Methods} from '@methods/erc20';

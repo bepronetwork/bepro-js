@@ -3,7 +3,7 @@ import {Web3Connection} from '@base/web3-connection';
 import * as NetworkAbi from '@abi/Network.json';
 import {ERC20} from '@models/erc20';
 import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
-import {TransactionReceipt} from 'web3-core';
+import {TransactionReceipt} from '@interfaces/web3-core';
 import networkIssue from '@utils/network-issue';
 import {NetworkIssue} from '@interfaces/network-issue';
 import networkMerge from '@utils/network-merge';

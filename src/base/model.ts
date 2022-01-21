@@ -2,7 +2,8 @@ import {Web3Connection} from './web3-connection';
 import {AbiItem} from 'web3-utils';
 import {Errors} from '@interfaces/error-enum';
 import Web3 from 'web3';
-import {Account, TransactionReceipt} from 'web3-core';
+import {Account,} from 'web3-core';
+import {TransactionReceipt} from '@interfaces/web3-core';
 import {Web3Contract} from './web3-contract';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {ContractSendMethod, DeployOptions} from 'web3-eth-contract';
@@ -80,7 +81,7 @@ export class Model<Methods = any> {
     return new Promise((resolve, reject) => {
 
       method.send({from, value, ...this.contract.txOptions(method, value, from)})
-            .on(`receipt`, (receipt: TransactionReceipt) => resolve(receipt))
+            .on(`receipt`, (receipt) => resolve(receipt as unknown as TransactionReceipt))
             .on(`error`, (e) => reject(e));
     });
   }

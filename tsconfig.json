@@ -4,7 +4,7 @@
     "module": "commonjs",
     "baseUrl": "./src/",
     "resolveJsonModule": true,
-    "declaration": false,
+    "declaration": true,
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -41,7 +41,8 @@
   },
   "exclude": [
     "node_modules/",
-    "test"
+    "test",
+    "dist"
   ],
   "typedocOptions": {
     "entryPoints": [
