@@ -30,6 +30,9 @@ export class Web3Connection {
     return this.eth?.net.getId();
   }
 
+  /**
+   * Request user to connect web3 plugin with our contract (and assign window.web3)
+   */
   async connect(): Promise<boolean> {
     if (typeof window === 'undefined')
       throw new Error(Errors.WindowObjectNotFound);
@@ -48,6 +51,9 @@ export class Web3Connection {
     return true;
   }
 
+  /**
+   * Start this connection (and load an account if {@link Web3ConnectionOptions.privateKey} was provided)
+   */
   start(): void {
     if (this.started)
       return;

@@ -18,12 +18,6 @@ export class Model<Methods = any> {
    */
   get contract() { return this._contract; }
 
-  /**
-   * @param {Web3Connection|Web3ConnectionOptions} web3Connection Web3Connection for this model
-   * @param abi ABI array for this contract
-   * @param [contractAddress] ABI array for this contract
-   * @throws Missing ABI Interface from arguments list or empty Abi
-   */
   constructor(web3Connection: Web3Connection | Web3ConnectionOptions,
               readonly abi: AbiItem[],
               readonly contractAddress?: string) {

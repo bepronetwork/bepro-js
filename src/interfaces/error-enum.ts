@@ -17,4 +17,5 @@ export enum Errors {
   MissingLpTokenAddressPleaseDeployUsingOne = `Missing lp token address please deploy Loophole class using one`,
   MissingSwapAddressPleaseDeployUsingOne = `Missing swap router address, please deploy using one`,
   MissingEthUtilsAddressPleaseProvideOne = `Missing eth utils address, please provide one`,
+  GasAndGasPriceMustBeProvidedIfNoAutoTxOptions = `Both gas and gasPrice must be provided if no auto txOptions`,
 }

@@ -3,22 +3,41 @@ import {Contract, ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 import Web3 from 'web3';
 import {Account, TransactionConfig} from 'web3-core';
 import {TransactionReceipt} from '@interfaces/web3-core';
+import {Errors} from '@interfaces/error-enum';
 
 const DEFAULT_CONFIRMATIONS_NEEDED = 1;
 
 export interface Web3ContractOptions {
+  /**
+   * If not provided, gas will be `Math.round(gasAmount * gasFactor)
+   */
   gas?: number;
+
+  /**
+   * If not provided, gasPrice will be queried on the network
+   */
   gasPrice?: string;
 
+  /**
+   * If not provided, gasAmount will be estimated from the network
+   */
   gasAmount?: number;
+
+  /**
+   * Used as a multiplier if no {@link Web3ContractOptions.gas} is provided
+   * @default 1
+   */
   gasFactor?: number;
 
+  /**
+   * If false, {@link Web3ContractOptions.gas} and {@link Web3ContractOptions.gasPrice} are mandatory
+   * @default true
+   */
   auto: boolean; // default: true, auto = true will calculate needed values if none is provided.
 }
 
 export class Web3Contract<Methods = any, Events = any> {
   readonly self!: Contract;
-
 
   constructor(readonly web3: Web3,
               readonly abi: AbiItem[],
@@ -32,6 +51,9 @@ export class Web3Contract<Methods = any, Events = any> {
 
   async txOptions(method: ContractSendMethod, value?: string, from?: string) {
     let {gas = 0, gasAmount = 0, gasPrice = ``, gasFactor = 1, auto = false} = this.options || {};
+
+    if (!auto && (!gas || !gasPrice))
+      throw new Error(Errors.GasAndGasPriceMustBeProvidedIfNoAutoTxOptions);
 
     if (auto) {
       if (!gasPrice)
