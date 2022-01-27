@@ -3,7 +3,7 @@ name: Updated documentation
 on:
   push:
     branches:
-      - 2.0.0-alpha.0
+      - master
 
 jobs:
   deploy:
