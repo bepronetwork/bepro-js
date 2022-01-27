@@ -11,9 +11,19 @@ import {ContractCallMethod} from '@methods/contract-call-method';
 
 export class Model<Methods = any> {
   protected _contract!: Web3Contract<Methods>;
-  get contract() { return this._contract; }
   protected web3Connection!: Web3Connection;
 
+  /**
+   * Returns the {@link Web3Contract} class representing this contract
+   */
+  get contract() { return this._contract; }
+
+  /**
+   * @param {Web3Connection|Web3ConnectionOptions} web3Connection Web3Connection for this model
+   * @param abi ABI array for this contract
+   * @param [contractAddress] ABI array for this contract
+   * @throws Missing ABI Interface from arguments list or empty Abi
+   */
   constructor(web3Connection: Web3Connection | Web3ConnectionOptions,
               readonly abi: AbiItem[],
               readonly contractAddress?: string) {
@@ -25,14 +35,33 @@ export class Model<Methods = any> {
     else this.web3Connection = new Web3Connection(web3Connection);
   }
 
+  /**
+   * Pointer to the {@link Web3Connection} assigned to this contract class
+   * @protected
+   */
   get connection(): Web3Connection { return this.web3Connection; }
+
+  /**
+   * Returns the Web3 class assigned to this connection
+   */
   get web3(): Web3 { return this.connection.Web3; }
+
+  /**
+   * Returns the Account associated with this connection
+   */
   get account(): Account { return this.connection.Account; }
 
+  /**
+   * Permissive way of initializing the contract, used primarily for deploys. Prefer to use {@link loadContract}
+   */
   loadAbi() {
     this._contract = new Web3Contract(this.web3, this.abi, this.contractAddress);
   }
 
+  /**
+   * Preferred way of initializing and loading a contract
+   * @throws Errors.MissingContractAddress
+   */
   loadContract() {
     if (!this.contractAddress)
       throw new Error(Errors.MissingContractAddress)
@@ -66,16 +95,25 @@ export class Model<Methods = any> {
     this.loadContract();
   }
 
+  /**
+   * Return a property value from the contract
+   */
   async callTx<ReturnData = any>(method: ContractCallMethod<ReturnData>, value?: any) {
     if (this.account)
       return method.call({from: this.account.address, ...await this.contract.txOptions(method, value, this.account.address)});
     return method.call();
   }
 
+  /**
+   * Interact with, or change a value of, a property on the contract
+   */
   async sendTx(method: ContractSendMethod, value?: any): Promise<TransactionReceipt> {
     return this.contract.sendSignedTx(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, this.account.address));
   }
 
+  /**
+   * Send unsigned transaction
+   */
   async sendUnsignedTx(method: ContractSendMethod, value?: any): Promise<TransactionReceipt> {
     const from = (await this.web3.eth.getAccounts())[0];
     return new Promise((resolve, reject) => {
@@ -86,6 +124,10 @@ export class Model<Methods = any> {
     });
   }
 
+  /**
+   * Deploy the loaded abi contract
+   * @protected
+   */
   protected async deploy(deployOptions: DeployOptions, account?: Account) {
     return this.contract.deploy(this.abi, deployOptions, account)
   }

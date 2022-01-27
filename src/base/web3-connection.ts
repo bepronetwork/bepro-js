@@ -5,7 +5,6 @@ import {HttpProviderOptions, WebsocketProviderOptions} from 'web3-core-helpers';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {Utils} from 'web3-utils';
 import {Eth} from 'web3-eth';
-import {MinimalWeb3Account} from '@utils/minimal-web3-account';
 
 export class Web3Connection {
   protected web3!: Web3;
@@ -42,8 +41,6 @@ export class Web3Connection {
     await (window as any).ethereum.enable();
 
     this.web3.eth.handleRevert = false;
-
-    this.account = new MinimalWeb3Account((await this.eth?.getAccounts())[0]) as unknown as Account;
 
     if (!this.options.skipWindowAssignment)
       (window as any).web3 = this.web3;
