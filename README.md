@@ -1,152 +1,67 @@
 # ![alt tag](https://uploads-ssl.webflow.com/5fc917a7914bf7aa30cae033/5ff4e84c73f45881c8b9cd85_Logo-purple-dark-background-p-500.png)
 
-![Python](https://img.shields.io/badge/python-v2.7+-blue.svg)
 ![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
 [![GitHub issues](https://img.shields.io/github/issues/bepronetwork/bepro-js.svg)](https://GitHub.com/bepronetwork/bepro-js/issues/)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-
-## Introductions
-
-Build the future of DeFi Gaming
+[![License](https://img.shields.io/badge/license-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
 ## Installation
 
-bepro-js is available as [npm package](https://www.npmjs.com/package/bepro-js).
-
-```bash
-// with npm
-$ npm i bepro-js
-```
-
-Before try to install, make sure your working directory has `Python 2` and the recommended `NVM` version setted on. To do, so:
-
-1. Setting of Python 2:
-
-```bash
-// Install it via bash terminal globally
-$ sudo apt install python2
-
-// Check the installed version.
-// Must shown Python 2.7.18rc1 on terminal to the install be OK
-$ python2 --version
-
-// Verify Python 2.7 path
-$ ls /usr/bin/python*
-
-// Set Python 2 as alternative 1
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 1
-
-// Confirm Python 2 as alternative priority 1
-$ sudo update-alternatives --config python
-
-// Confirm the procedure.
-// Must shown Python 2.7.18rc1 on terminal to the install be OK
-$ python --version
-
-// On the working directory, run the cmd below to set Python locally
-$ npm config set python python
-```
-
-2. Setting of Node:
-
-```bash
-// Install NVM recommended version for bepro-js
-$ nvm install 14.17.0
-
-// Set it on the working directory
-$ nvm alias default v14.17.0
-
-// Use the settled as default
-$ nvm use default
-```
-
-Now, your work directory is able to install and run bepro-js.
-
-## Docker support
-
-### Requirements
-
-- Docker CE - 19.03.3+
-- Docker Compose - 1.19.0+
-
-### How to install or upgrade docker and docker-compose?
-
-##### Docker:
-
-```shell script
-sudo curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
-```
-
-**Notice**:If you already have Docker installed, this script can cause trouble. If you installed the current Docker package using this script and are using it again to update Docker. Or use official installation instructions: [Mac](https://docs.docker.com/docker-for-mac/install/), [Windows](https://docs.docker.com/docker-for-windows/install/), [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/), [Other](https://docs.docker.com/install/#supported-platforms).
-
-##### Docker Compose:
-
-For linux:
-
-```shell script
-sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && sudo chmod +x /usr/local/bin/docker-compose
-```
-
-For Mac or Windows take a look on: [official guides](https://docs.docker.com/compose/install/#install-compose).
-
-### Running containers
-
-You can use docker-compose directly, or the nifty `make` that comes bundled.
-
-#### Build images
-
-```shell script
-make build
-```
-
-#### Starting containers in background:
-
-```shell script
-make up
-```
-
-#### Start npm watch:
-
-```shell script
-make watch
-```
-
-#### Run tests
-
-```shell script
-make test
-```
-
-#### Stop containers
-
-```shell script
-make down
-```
-
-#### Using docker-compose instead of make
-
-```shell script
-docker-compose up
-```
+`npm install --save github:bepronetwork/bepro-js`
 
 ## Usage
 
-[Generated Documentation](https://moshmage.github.io/bepro-js/)
+```ts
+import {Web3Connection, Web3ConnectionOptions, ERC20} from 'bepro-js';
 
-Please refer to the `test/` folder to read usage examples of the various contracts available.
+const options: Web3ConnectionOptions = { web3Host: process.env.WEB3_HOST_PROVIDER };
+const web3Connection = new Web3Connection(options);
+
+await web3Connection.start(); // start web3 connection so assignments are made
+await web3Connection.connect(); // connect web3 by asking the user to allow the connection (this is needed for the user to _interact_ with the chain)
+
+const erc20Deployer = new ERC20(web3Connection);
+await erc20Deployer.loadAbi(); // load abi contract is only needed for deploy actions
+
+const tx =
+  await erc20Deployer.deployJsonAbi(
+    'Token Name', // the name of the token
+    '$tokenSymbol', // the symbol of the token
+    1000000000000000000000000, // the total amount of the token (with 18 decimals; 1M = 1000000000000000000000000)
+    await erc20Deployer.connection.getAddress() // the owner of the total amount of the tokens (your address)
+  );
+
+console.log(tx); // { ... , contractAddress: string} 
+
+const myToken = new ERC20(web3Connection, tx.contractAddress);
+
+await myToken.start() // load contract and connection into the class representing your token
+
+await myToken.transferTokenAmount('0xYourOtherAddress', 1); // transfer 1 token from your address to other address
+
+```
+
+Please refer to the `test/` folder to read further usage examples of the various contracts available.
+
+## Generating documentation
+You can generate the documentation locally by issuing 
+```
+$ npm run docs
+```
+and then serving the `docs/` folder as a root http-server.
+
+Alternatively you can read the generated  [documentation here](https://moshmage.github.io/bepro-js/)
 
 ## Contribution
 
-Contributions are welcomed, but we ask that you read existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
+Contributions are welcomed, but we ask that you read existing code guidelines, specially the code format. 
+Please review [Contributor guidelines](https://github.com/bepronetwork/bepro-js/blob/master/CONTRIBUTING.md)
 
 ## License
 
-[ISC](https://choosealicense.com/licenses/isc/)
+[ISC](./LICENSE.txt)
 
-## Notes
-
-The usage of ETH in all methods or params means using the native currency of that blockchain, example BSC in Binance Chain would still be nominated as ETH
-
-[1]: https://github.com/bepronetwork/bepro-js/blob/master/CONTRIBUTING.md
+### Notes
+- [Docker support](./docker-readme.md)
+- [CoC](./CODE_OF_CONDUCT.md)
