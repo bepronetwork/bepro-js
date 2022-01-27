@@ -42,7 +42,7 @@ await myToken.transferTokenAmount('0xYourOtherAddress', 1); // transfer 1 token 
 
 ```
 
-Please refer to the `test/` folder to read further usage examples of the various contracts available.
+Please refer to the [`test/`](./test) folder to read further usage examples of the various contracts available.
 
 ## Generating documentation
 You can generate the documentation locally by issuing 
