@@ -133,55 +133,17 @@ docker-compose up
 
 ## Usage
 
-https://bepronetwork.github.io/bepro-js/
+[Generated Documentation](https://moshmage.github.io/bepro-js/)
 
-```javascript
-
-/* Note :  WEB3_LINK should be get from Infura/Quicknode or any other Web3 Provider - ETH, BSC, Moonbeam and others are supported */
-
-import moment from 'moment';
-import {
-    Application, DexStorage, ERC20Contract, StakingContract,
-    ERC20TokenLock, ERC721Collectibles, ERC721Standard
-} from 'bepro-js';
-
-/* 1.1 - Instantiate the App for Metamask functionality (MAINNET) */
-let app = new Application({ opt : { web3Connection : 'WEB3_LINK' } });
-
-/* 1.2 - Instantiate StakingContract Object or any other in a similar way (Staking, ERC20 etc..) */
-// - MAINNET
-let staking = new StakingContract({ contractAddress : null, /* Contract Address (optional) */
-                                    opt : { web3Connection : 'WEB3_LINK' } });
-// - TEST net e.g. Rinkeby
-let stakingTest = new StakingContract({ test : true, contractAddress : /* Contract Address (optional) */ });
-
-/* 2 - Connect the App/Contract to the Metamask Web3 Injected wallet*/
-await app.login();
-await staking.login();
-/* or instantiate with the provided web3Connection, for tests it was already done at object creation */
-await app.start();
-await staking.start();
-
-/* 4 - Assert all object data */
-await staking.__assert();
-await stakingTest.__assert();
-/* or deploy the contract*/
-await staking.deploy();
-await stakingTest.deploy();
-
-/* 5 - Access other Methods */
-await staking.availableTokens();
-await stakingTest.availableTokens();
-
-```
+Please refer to the `test/` folder to read usage examples of the various contracts available.
 
 ## Contribution
 
-Contributions are welcomed but we ask to red existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
+Contributions are welcomed, but we ask that you read existing code guidelines, specially the code format. Please review [Contributor guidelines][1]
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[ISC](https://choosealicense.com/licenses/isc/)
 
 ## Notes
 
