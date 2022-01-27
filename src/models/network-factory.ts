@@ -38,7 +38,7 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
   }
 
   async OPERATOR_AMOUNT() {
-    return +fromDecimals(await this.callTx(this.contract.methods.OPERATOR_AMOUNT(), this.erc20.decimals));
+    return +fromDecimals(await this.callTx(this.contract.methods.OPERATOR_AMOUNT()), this.erc20.decimals);
   }
 
   async isOperator(address: string) {
