@@ -9,7 +9,7 @@ const DEFAULT_CONFIRMATIONS_NEEDED = 1;
 
 export interface Web3ContractOptions {
   /**
-   * If not provided, gas will be `Math.round(gasAmount * gasFactor)
+   * If not provided, gas will be `Math.round(gasAmount * gasFactor)`
    */
   gas?: number;
 
@@ -39,11 +39,22 @@ export interface Web3ContractOptions {
 export class Web3Contract<Methods = any, Events = any> {
   readonly self!: Contract;
 
+  /**
+   * Transaction options that will be used on each transaction.
+   * While this object is readonly, is values are not and can be changed.
+   * @example
+   * `myWeb3Connection.options.gas = 10000;`
+   *
+   * @default `{auto: true}`
+   */
+  readonly options: Web3ContractOptions = {auto: true}
+
   constructor(readonly web3: Web3,
               readonly abi: AbiItem[],
               readonly address?: string,
-              readonly options: Web3ContractOptions = {auto: true}) {
+              options: Web3ContractOptions = {auto: true}) {
     this.self = new web3.eth.Contract(abi, address);
+    this.options = options;
   }
 
   get methods(): Methods { return this.self.methods; }
