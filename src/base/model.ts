@@ -93,16 +93,17 @@ export class Model<Methods = any> {
    * Return a property value from the contract
    */
   async callTx<ReturnData = any>(method: ContractCallMethod<ReturnData>, value?: any) {
-    if (this.account)
-      return method.call({from: this.account.address, ...await this.contract.txOptions(method, value, this.account.address)});
-    return method.call();
+    const from = await this.connection.getAddress() || undefined;
+    return method.call({ ... from ? {from} : {}, ...await this.contract.txOptions(method, value, from)});
   }
 
   /**
    * Interact with, or change a value of, a property on the contract
    */
   async sendTx(method: ContractSendMethod, value?: any): Promise<TransactionReceipt> {
-    return this.contract.sendSignedTx(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, this.account.address));
+    if (this.account)
+      return this.contract.sendSignedTx(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, await this.connection.getAddress()));
+    else return this.sendUnsignedTx(method, value);
   }
 
   /**
