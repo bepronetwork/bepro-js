@@ -67,7 +67,7 @@ contract NetworkFactory is ReentrancyGuard {
         uint256 amount = tokensLocked[msg.sender];
         require(amount > 0, "Needs to have tokens locked");
 
-        if (networksByAddress[msg.sender]) {
+        if (networksByAddress[msg.sender] != address(0)) {
             require(Network(networksByAddress[msg.sender]).oraclesStaked() == 0, "Network has to have 0 Settler Tokens");
             require(Network(networksByAddress[msg.sender]).totalStaked() == 0, "Network has to have 0 Transactional Tokens");
             networksByAddress[msg.sender] = address(0);
