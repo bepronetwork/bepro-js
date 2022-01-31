@@ -14,9 +14,9 @@ contract ERC20Distribution is Pausable, Ownable {
     uint256 constant public month = 30 days;
     uint256 constant public year = 365 days;
     uint256 public lastDateDistribution = 0;
-    
+
     mapping(address => DistributionStep[]) public distributions; /* Distribution object */
-    
+
     IERC20 public erc20;
 
     struct DistributionStep {
@@ -31,7 +31,7 @@ contract ERC20Distribution is Pausable, Ownable {
     function setTokenAddress(IERC20 _tokenAddress) external onlyOwner whenNotPaused  {
         erc20 = _tokenAddress;
     }
-    
+
     function safeGuardAllTokens(address _address) external onlyOwner whenPaused  { /* In case of needed urgency for the sake of contract bug */
         require(erc20.transfer(_address, erc20.balanceOf(address(this))));
     }
@@ -48,7 +48,7 @@ contract ERC20Distribution is Pausable, Ownable {
         /* Require TGE Date already been set */
         require(TGEDate != 0, "TGE date not set yet");
         /* TGE has not started */
-        require(block.timestamp > TGEDate, "TGE still hasn´t started");
+        require(block.timestamp > TGEDate, "TGE still hasn't started");
         /* Test that the call be only done once per day */
         require(block.timestamp.sub(lastDateDistribution) > 1 days, "Can only be called once a day");
         lastDateDistribution = block.timestamp;
@@ -68,10 +68,10 @@ contract ERC20Distribution is Pausable, Ownable {
                     require(erc20.transfer(tokenOwners[i], sendingAmount));
                 }
             }
-        }   
+        }
     }
 
-    function setInitialDistribution(address _address, uint256 _tokenAmount, uint256 _unlockDays) internal onlyOwner whenNotPaused {
+    function setInitialDistribution(address _address, uint256 _tokenAmount, uint256 _unlockDays) external onlyOwner whenNotPaused {
         /* Add tokenOwner to Eachable Mapping */
         bool isAddressPresent = false;
 

@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "baseUrl": "./src/",
+    "resolveJsonModule": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnreachableCode": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@interfaces/*": [
+        "interfaces/*"
+      ],
+      "@base/*": [
+        "base/*"
+      ],
+      "@models/*": [
+        "models/*"
+      ],
+      "@abi/*": [
+        "../build/contracts/*"
+      ],
+      "@methods/*": [
+        "interfaces/methods/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@events/*": [
+        "interfaces/events/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules/",
+    "test",
+    "dist"
+  ],
+  "typedocOptions": {
+    "entryPoints": [
+      "./src/index.ts"
+    ],
+    "out": "./docs"
+  }
+}

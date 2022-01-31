@@ -1,6 +1,0 @@
-{
-    "plugins": ["node_modules/babel-core",  "node_modules/babel-register"],
-    "babel": {
-      "presets": [ "es2015" ]
-    }
-  }

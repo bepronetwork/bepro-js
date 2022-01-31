@@ -1,4 +1,4 @@
-name: GitHub pages
+name: Updated documentation
 
 on:
   push:
@@ -9,21 +9,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Fool GH Pages?
-        run: mkdir docs
+      - name: NPM Install
+        run: npm install
 
-      - name: Build
-        uses: andstor/jsdoc-action@v1
-        with:
-          source_dir: ./src
-          recurse: true
-          config_file: docs-src/jsdoc.json
-          template: better-docs
+      - name: Build documentation from source
+        run: npm run docs
 
-      - name: Deploy
+      - name: Deploy documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
