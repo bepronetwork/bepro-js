@@ -60,7 +60,7 @@ yarn add bepro-js
 </details>
 
 <details>
-  <summary>Node.js 14</summary>
+  <summary>Node.js 16</summary>
 
   Install via NVM:
   ```bash
@@ -68,10 +68,10 @@ yarn add bepro-js
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 
   # Install recommended Node.js version for bepro-js
-  nvm install lts/fermium
+  nvm install lts/gallium
 
   # Set it on the working directory
-  nvm alias default lts/fermium
+  nvm alias default lts/gallium
 
   # Use the settled as default
   nvm use default

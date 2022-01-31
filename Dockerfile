@@ -1,4 +1,4 @@
-FROM node:14-buster
+FROM node:16-buster
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
