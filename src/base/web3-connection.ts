@@ -52,6 +52,15 @@ export class Web3Connection {
   }
 
   /**
+   * change the privateKey prop of {@link Web3ConnectionOptions} and start a new connection
+   */
+  switchToAccount(privateKey: string) {
+    if (this.options.privateKey !== privateKey)
+      this.options.privateKey = privateKey;
+    return this.start()
+  }
+
+  /**
    * Start this connection (and load an account if {@link Web3ConnectionOptions.privateKey} was provided)
    */
   start(): void {

@@ -63,7 +63,7 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
   async isApproved(spenderAddress = this.contractAddress!, amount: number): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       try {
-        resolve(await this.allowance(this.web3Connection.Account.address, spenderAddress) >= amount);
+        resolve(await this.allowance(await this.web3Connection.getAddress(), spenderAddress) >= amount);
       } catch (e) {
         reject(e);
       }
