@@ -1,11 +1,11 @@
 import {Network, NetworkFactory, Web3Connection} from '../../src';
 import {fromDecimals, toSmartContractDecimals} from '../../src/utils/numbers';
-import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, revertChain, outputDeploy} from '../utils/';
+import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, revertChain, outputDeploy, hasTxBlockNumber} from '../utils/';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src/interfaces/error-enum';
 
-describe(`NetworkFactory`, () => {
+describe.only(`NetworkFactory`, () => {
 
   let web3Connection: Web3Connection;
   let networkFactoryContractAddress = process.env.NETWORK_FACTORY_ADDRESS;
@@ -77,14 +77,18 @@ describe(`NetworkFactory`, () => {
       await shouldBeRejected(networkFactory.unlock(), `have tokens`);
     });
 
-    it(`Approves and locks settler`, async () => {
+    it(`Approves, locks and unlocks settler`, async () => {
       await networkFactory.approveSettlerERC20Token();
-      const tx = await networkFactory.lock(+fromDecimals(cap))
+      const tx = await networkFactory.lock(+fromDecimals(cap));
       expect(tx.blockHash, `lock action`).to.not.be.empty;
       expect(await networkFactory.getBEPROLocked(), `locked total`).to.eq(+fromDecimals(cap));
+      await hasTxBlockNumber(networkFactory.unlock())
+      expect(await networkFactory.getBEPROLocked(), `locked total`).to.eq(0);
     });
 
-    it(`Should create a new network`, async () => {
+    it(`Should lock and create a new network`, async () => {
+      await networkFactory.approveSettlerERC20Token();
+      await hasTxBlockNumber(networkFactory.lock(+fromDecimals(cap)));
       const tx = await networkFactory.createNetwork(networkToken!, networkToken!);
       expect(await networkFactory.getAmountOfNetworksForked(), `Amount of networks`).to.eq(1);
 
