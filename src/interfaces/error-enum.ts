@@ -18,4 +18,5 @@ export enum Errors {
   MissingSwapAddressPleaseDeployUsingOne = `Missing swap router address, please deploy using one`,
   MissingEthUtilsAddressPleaseProvideOne = `Missing eth utils address, please provide one`,
   GasAndGasPriceMustBeProvidedIfNoAutoTxOptions = `Both gas and gasPrice must be provided if no auto txOptions`,
+  MissingERC20UnderlyingToken = `Missing ERC20 underlying token address`,
 }

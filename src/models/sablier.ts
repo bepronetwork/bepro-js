@@ -29,7 +29,7 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   }
 
   async fee() {
-    return +fromDecimals(await this.callTx(this.contract.methods.fee()), 16);
+    return +(await this.callTx(this.contract.methods.fee()));
   }
 
   async initialize(sender: string) {
@@ -102,19 +102,19 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   }
 
   async createStream(recipient: string, deposit: number, tokenAddress: string, startTime: number, stopTime: number) {
-    return this.callTx(this.contract.methods.createStream(recipient, toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number, tokenAddress, startTime, stopTime));
+    return this.sendTx(this.contract.methods.createStream(recipient, toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number, tokenAddress, startTime, stopTime));
   }
 
   async createCompoundingStream(recipient: string, deposit: number, tokenAddress: string, startTime: number, stopTime: number, senderSharePercentage: number, recipientSharePercentage: number) {
-    return this.callTx(this.contract.methods.createCompoundingStream(recipient, toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage));
+    return this.sendTx(this.contract.methods.createCompoundingStream(recipient, toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage));
   }
 
   async withdrawFromStream(streamId: number, amount: number) {
-    return this.callTx(this.contract.methods.withdrawFromStream(streamId, toSmartContractDecimals(amount, await this.getTokenDecimalsFromStream(streamId)) as number));
+    return this.sendTx(this.contract.methods.withdrawFromStream(streamId, toSmartContractDecimals(amount, await this.getTokenDecimalsFromStream(streamId)) as number));
   }
 
   async cancelStream(streamId: number) {
-    return this.callTx(this.contract.methods.cancelStream(streamId));
+    return this.sendTx(this.contract.methods.cancelStream(streamId));
   }
 
   async getTokenDecimalsFromStream(streamId: number) {
