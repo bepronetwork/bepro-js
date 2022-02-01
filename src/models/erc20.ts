@@ -44,7 +44,7 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async transferTokenAmount(toAddress: string, amount: number) {
-    const tokenAmount = toSmartContractDecimals(amount, this.decimals, true) as number;
+    const tokenAmount = toSmartContractDecimals(amount, this.decimals) as number;
     return this.sendTx(this.contract.methods.transfer(toAddress, tokenAmount));
   }
 

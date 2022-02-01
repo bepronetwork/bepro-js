@@ -20,8 +20,8 @@
         "prepublishOnly": "npm run build",
         "postinstall": "node tooling/post-install.js",
         "test": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test/**/*.spec.{ts,tsx}' --pretty",
-        "build": "tsc",
-        "postbuild": "tscpaths -p tsconfig.json -s ./src -o ./dist",
+        "build": "tsc -p ./tsconfig.json",
+        "postbuild": "tscpaths -p ./tsconfig.json -s ./src -o ./dist",
         "docs": "typedoc",
         "ganache:start": "ganache -p 8545 -q --account_keys_path keys.json ",
         "test-ci": "npm run ganache:start >/dev/null & npm run test"

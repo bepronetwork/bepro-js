@@ -17,7 +17,7 @@ import {toSmartContractDate, toSmartContractDecimals} from '../../src/utils/numb
 import {addMinutes, subMinutes} from 'date-fns'
 import {expect} from 'chai';
 
-describe.only(`Sablier`, () => {
+describe.skip(`Sablier`, () => {
   const web3Connection = defaultWeb3Connection();
 
   let Alice: Account;
@@ -51,12 +51,12 @@ describe.only(`Sablier`, () => {
     await erc20.loadContract();
 
     const cercTx = await modelExtensionDeployer(web3Connection, CERC20, [erc20.contractAddress, INITIAL_EXCHANGE_RATE, 18]);
-    cerc20 = new CERC20(web3Connection, cercTx.contractAddress);
+    cerc20 = new CERC20(web3Connection, cercTx.contractAddress, erc20.contractAddress!);
     await cerc20.loadContract();
 
-    const addresses = [Alice, Bob, Carol, John].map(({address}) => address);
+    const addresses = [Alice, Bob, Carol].map(({address}) => address);
     for (const address of addresses)
-      await erc20.transferTokenAmount(address, Math.floor(AMOUNT_1M / addresses.length));
+      await erc20.transferTokenAmount(address, 250000);
 
     const privateKeys = [Alice, Bob, Carol, John].map(({privateKey}) => privateKey);
     for (const privateKey of privateKeys) {

@@ -31,14 +31,10 @@ export class CERC20 extends Model<CERC20Methods> implements Deployable {
     if (!this.contractAddress)
       throw new Error(Errors.MissingContractAddress);
 
-    let underlying = this.underlyingAddress;
-    if (!underlying)
-      underlying = await this.underlying();
-
-    if (!underlying)
+    if (!this.underlyingAddress)
       throw new Error(Errors.MissingERC20UnderlyingToken);
 
-    this._erc20 = new ERC20(this.web3Connection, underlying);
+    this._erc20 = new ERC20(this.web3Connection, this.underlyingAddress);
     await this._erc20.loadContract();
   }
 
