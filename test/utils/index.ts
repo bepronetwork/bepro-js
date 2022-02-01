@@ -7,6 +7,7 @@ import {resolve} from 'path';
 import {expect} from 'chai';
 import Web3 from 'web3';
 import {HttpProvider, WebsocketProvider} from 'web3-core';
+import {TransactionReceipt} from 'web3-eth';
 
 export function getPrivateKeyFromFile(index = 0) {
   return Object.values(JSON.parse(readFileSync(resolve('./keys.json'), 'utf-8')).private_keys)[index] as string;
@@ -108,7 +109,7 @@ export function outputDeploy(info: [string, string][] = []) {
   console.log(`Deployed`, info.map(([name, address]) => `\n\t${name}:\t${address}`).join(``))
 }
 
-export function modelExtensionDeployer(web3connection: Web3Connection, _class: any, args?: any) {
+export function modelExtensionDeployer(web3connection: Web3Connection, _class: any, args?: any): Promise<TransactionReceipt> {
   const deployer = new _class(web3connection);
   deployer.loadAbi();
   return deployer.deployJsonAbi(args);

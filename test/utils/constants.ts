@@ -4,6 +4,7 @@ export function bn(n: number) { return Web3.utils.toBN(n) }
 export function pow(n: number, exp: number) { return bn(n).mul(bn(10).pow(bn(exp))) }
 
 export const AMOUNT_1M = 1000000;
+export const AMOUNT_1M_18D = pow(AMOUNT_1M, 18).toString();
 
 export const DECIMALS = bn(1e18);
 export const STANDARD_SALARY = bn(3600).mul(DECIMALS)

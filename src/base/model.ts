@@ -8,6 +8,7 @@ import {Web3Contract} from './web3-contract';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 import {ContractCallMethod} from '@methods/contract-call-method';
+import {transactionHandler} from '@utils/transaction-handler';
 
 export class Model<Methods = any> {
   protected _contract!: Web3Contract<Methods>;
@@ -100,22 +101,27 @@ export class Model<Methods = any> {
   /**
    * Interact with, or change a value of, a property on the contract
    */
-  async sendTx(method: ContractSendMethod, value?: any): Promise<TransactionReceipt> {
+  async sendTx(method: ContractSendMethod, value?: any, debug = this.web3Connection?.options?.debug): Promise<TransactionReceipt> {
     if (this.account)
-      return this.contract.sendSignedTx(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, await this.connection.getAddress()));
-    else return this.sendUnsignedTx(method, value);
+      return this.contract.sendSignedTx(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, await this.connection.getAddress()), debug);
+    else return this.sendUnsignedTx(method, value, debug);
   }
 
   /**
    * Send unsigned transaction
    */
-  async sendUnsignedTx(method: ContractSendMethod, value?: any): Promise<TransactionReceipt> {
+  async sendUnsignedTx(method: ContractSendMethod, value?: any, debug?: boolean): Promise<TransactionReceipt> {
     const from = (await this.web3.eth.getAccounts())[0];
-    return new Promise((resolve, reject) => {
 
-      method.send({from, value, ...this.contract.txOptions(method, value, from)})
-            .on(`receipt`, (receipt) => resolve(receipt as unknown as TransactionReceipt))
-            .on(`error`, (e) => reject(e));
+    return new Promise(async (resolve, reject) => {
+      try {
+        const options = await this.contract.txOptions(method, value, from);
+        await transactionHandler(method.send({from, value, ...options}), resolve, reject, debug)
+      } catch (e) {
+        if (debug)
+          console.error(e);
+        reject(e);
+      }
     });
   }
 
