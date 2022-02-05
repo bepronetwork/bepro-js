@@ -3,8 +3,6 @@ node_modules
 .env
 .circleci/
 .github/
-_book/
 docs/
 build/
 .idea
-

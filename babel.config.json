@@ -1,0 +1,25 @@
+{
+    "presets": [
+        "@babel/preset-env"
+    ],
+    "plugins": [
+        [
+            "@babel/plugin-transform-runtime",
+            {
+                "corejs": 3
+            }
+        ],
+        "transform-remove-console",
+        "@babel/plugin-proposal-json-strings",
+        [
+            "@babel/plugin-proposal-decorators",
+            {
+                "legacy": true
+            }
+        ],
+        "@babel/plugin-proposal-function-sent",
+        "@babel/plugin-proposal-throw-expressions"
+    ],
+    "sourceMaps": true,
+    "retainLines": true
+}
