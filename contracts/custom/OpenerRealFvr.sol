@@ -16,18 +16,13 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     mapping(address => mapping(uint256 => bool)) public registeredIDs;
     mapping(address => uint256[]) public registeredIDsArray;
     mapping(uint256 => bool) public alreadyMinted;
-    
     mapping(uint256 => Pack) public packs;
-    mapping(uint256 => MarketplaceDistribution) private marketplaceDistributions;
+    uint256 public packIncrementId = 0;
+    uint256 public lastNFTID = 0;
 
-    uint256 public packIncrementId = 1;
-    uint256 public lastNFTID = 1;
-
-    event PackCreated(uint256 packId, string indexed serie, string indexed packType, string indexed drop);
-    event PackBought(address indexed by, uint256 indexed packId);
+    event PackCreated(uint256 packId, uint256  nftsAmount, string indexed serie, string indexed packType, string indexed drop);
     event PackOpened(address indexed by, uint256 indexed packId);
     event PackDelete(uint256 indexed packId);
-    event NftMinted(uint256 indexed nftId);
 
     uint256 public _realFvrTokenPriceUSD = 0;
 
@@ -37,25 +32,20 @@ contract OpenerRealFvr is  Ownable, ERC721 {
     struct Pack {
         uint256 packId;
         uint256 nftAmount;
+        uint256 packNumber;
         uint256 initialNFTId;
         uint256 saleStart;
         uint256[] saleDistributionAmounts;
         address[] saleDistributionAddresses;
-        // Marketplace
         // Catalog info
         uint256 price; // in usd (1 = $0.000001)
         string serie;
         string drop;
         string packType;
-        bool opened;
         //external info
         address buyer;
     }
 
-    struct MarketplaceDistribution {
-        uint256[] marketplaceDistributionAmounts;
-        address[] marketplaceDistributionAddresses;
-    }
   
     constructor (string memory name, string memory symbol, ERC20 _purchaseToken) public ERC721(name, symbol) {}
 
@@ -72,6 +62,7 @@ contract OpenerRealFvr is  Ownable, ERC721 {
             );
         }
     }
+
 
     function setTokenURI(uint256 tokenId, string memory uri) public onlyOwner {
         _setTokenURI(tokenId, uri);
@@ -90,30 +81,27 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         return registeredIDsArray[_address];
     }
 
-    function getPackbyId(uint256 _packId) public returns (uint256,  uint256, uint256, string memory, string memory, string memory, address, 
-        address[] memory, uint256[] memory, bool)  {
+    function getPackbyId(uint256 _packId) public onlyOwner returns (uint256, uint256, uint256, uint256, string memory, string memory, string memory, address, 
+        address[] memory, uint256[] memory)  {
         Pack memory pack = packs[_packId];
         return (
-            pack.packId, pack.initialNFTId, pack.price, pack.serie, pack.drop, pack.packType, pack.buyer,
-            pack.saleDistributionAddresses, pack.saleDistributionAmounts, pack.opened);
-    }
-
-    function getMarketplaceDistributionForERC721(uint256 _tokenId) public view returns(uint256[] memory, address[] memory) {
-        return (marketplaceDistributions[_tokenId].marketplaceDistributionAmounts, marketplaceDistributions[_tokenId].marketplaceDistributionAddresses);
+            pack.packId, pack.packNumber, pack.initialNFTId, pack.price, pack.serie, pack.drop, pack.packType, pack.buyer,
+            pack.saleDistributionAddresses, pack.saleDistributionAmounts);
     }
 
     function getPackPriceInFVR(uint256 packId) public returns (uint256) {
-        return packs[packId].price.mul(_realFvrTokenPriceUSD).div(10**3);
+        return packs[packId].price.mul(10**_purchaseToken.decimals()).div(_realFvrTokenPriceUSD);
     }
 
     function buyPack(uint256 packId) public {
         require(!_closed, "Opener is locked");
-        require(packs[packId].buyer == address(0), "Pack was already bought");
+        require(packs[packId].buyer != address(0), "Pack was already bought");
         require(packs[packId].price != 0, "Pack has to exist");
+        require(packs[packId].price >= _realFvrTokenPriceUSD, "Price in realFvr has to be higher than unit price of the pack");
 
         uint256 price = getPackPriceInFVR(packId);
 
-        require(_purchaseToken.allowance(msg.sender, address(this)) >= price, "First you have to allow the use of the tokens by the Opener, use allow function");
+        require(_purchaseToken.allowance(msg.sender, address(this)) >= price, "Not enough money per pack");
 
         address from = msg.sender;
 
@@ -128,36 +116,13 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
         packs[packId].buyer = from;
 
-        emit PackBought(from, packId);
+        emit PackOpened(from, packId);
+
     }
 
-    function buyPacks(uint256[] memory packIds) public {
-        for(uint i = 0; i < packIds.length; i++){
-            buyPack(packIds[i]);
-        } 
-    }
-
-    function openPack(uint256 packId) public {
-        require(!_closed, "Opener is locked");
-        require(!packs[packId].opened, "Opened Already");
-        require(packs[packId].buyer != address(0), "Pack was not bought");
-        require(packs[packId].buyer == msg.sender, "You were not the pack buyer");
-
-        packs[packId].opened = true;
-        
-        emit PackOpened(msg.sender, packId);
-    }
-
-    function openPacks(uint256[] memory packIds) public {
-        for(uint i = 0; i < packIds.length; i++){
-            openPack(packIds[i]);
-        } 
-    }
-
-    function createPack(uint256 nftAmount, uint256 price /* 1 = ($1) */, 
+    function createPack(uint256 packNumber, uint256 nftAmount, uint256 price /* 1 = ($0.000001) */, 
         string memory serie, string memory packType, string memory drop, uint256 saleStart,
-        address[] memory saleDistributionAddresses,  uint256[] memory saleDistributionAmounts, /* [1;98;1]*/
-        address[] memory marketplaceDistributionAddresses,  uint256[] memory marketplaceDistributionAmounts /* [1;98;1]*/
+        address[] memory saleDistributionAddresses,  uint256[] memory saleDistributionAmounts /* [1;98;1]*/
     ) public onlyOwner {
 
         require(saleDistributionAmounts.length == saleDistributionAddresses.length, "saleDistribution Lenghts are not the same");
@@ -167,11 +132,9 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         }
         require(totalFees == 100, "Sum of all amounts has to equal 100");
 
-
-        require(marketplaceDistributionAddresses.length == marketplaceDistributionAmounts.length, "marketplaceDistribution Lenghts are not the same");
-
-        Pack memory pack;
+        Pack memory pack = packs[packIncrementId];
         pack.packId = packIncrementId;
+        pack.packNumber = packNumber;
         pack.nftAmount = nftAmount;
         pack.saleStart = saleStart;
         pack.initialNFTId = lastNFTID;
@@ -181,16 +144,8 @@ contract OpenerRealFvr is  Ownable, ERC721 {
         pack.saleDistributionAddresses = saleDistributionAddresses;
         pack.saleDistributionAmounts = saleDistributionAmounts;
         pack.packType = packType;
-        packs[packIncrementId] = pack;
 
-        
-        for(uint j = 1; j <= nftAmount; j++){
-            // Marketplace Distributions
-            MarketplaceDistribution memory marketplaceDistribution = MarketplaceDistribution(marketplaceDistributionAmounts, marketplaceDistributionAddresses);
-            marketplaceDistributions[lastNFTID+j] = marketplaceDistribution;
-        }
-
-        emit PackCreated(packIncrementId, serie, packType, drop);
+        emit PackCreated(packIncrementId, nftAmount, serie, packType, drop);
         lastNFTID = lastNFTID + nftAmount;
         packIncrementId = packIncrementId+1;
     }
@@ -206,7 +161,8 @@ contract OpenerRealFvr is  Ownable, ERC721 {
             registeredIDs[receivingAddress][packs[packId].initialNFTId+i] = true;
             registeredIDsArray[receivingAddress].push(i);
         }
-        emit PackBought(receivingAddress, packId);
+
+        emit PackOpened(receivingAddress, packId);
     }
 
     function editPackInfo(uint256 _packId, uint256 _saleStart, string memory serie, string memory packType, string memory drop, uint256 price) public onlyOwner {
@@ -230,16 +186,14 @@ contract OpenerRealFvr is  Ownable, ERC721 {
 
         alreadyMinted[tokenIdToMint] = true;
         _safeMint(msg.sender, tokenIdToMint);
-        emit NftMinted(tokenIdToMint);
     }
 
     function setPurchaseTokenAddress(ERC20 purchaseToken) public onlyOwner {
         _purchaseToken = purchaseToken;
     }
 
-    function setTokenPriceInUSD(uint256 newPrice /* 1*10e18 -> 1 FVR = $1; 1*10e17 -> 0.1 FVR = $1  */) public onlyOwner {
-        require(newPrice != 0, "newPrice has to higher than 0");
-        _realFvrTokenPriceUSD = newPrice;
+    function setTokenPriceInUSD(uint256 newPrice /* 1 = $0.000001 */) public onlyOwner {
+        _realFvrTokenPriceUSD = newPrice; // 1/10**18 Real Fvr ( 0.00(16)1 FVR) = 1000000 ($1)
     }
 
     function lock() public onlyOwner {

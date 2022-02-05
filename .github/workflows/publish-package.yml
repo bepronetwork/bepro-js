@@ -1,4 +1,4 @@
-name: Publish package
+name: Publish Package
 
 on:
   release:
@@ -8,24 +8,17 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup environment
-        if: ${{ !env.ACT }}
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
         with:
-          cache: 'yarn'
-          node-version: '16'
+          node-version: 8
 
-      - name: Install dependencies
-        run: yarn install
+      - name: build
+        run: npm run build
 
-      - name: Build
-        run: yarn build
-
-      - name: Publish
-        uses: JS-DevTools/npm-publish@v1
+      - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
+
