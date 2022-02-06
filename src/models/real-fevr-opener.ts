@@ -210,30 +210,8 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
     return this.sendTx(this.contract.methods.openPacks(packIds));
   }
 
-  async createPack(
-    nftAmount: number,
-    price: number,
-    serie: string,
-    packType: string,
-    drop: string,
-    saleStart: number,
-    saleDistributionAddresses: string[],
-    saleDistributionAmounts: number[],
-    marketplaceDistributionAddresses: string[],
-    marketplaceDistributionAmounts: number[],
-  ) {
-    return this.sendTx(this.contract.methods.createPack(
-      nftAmount,
-      toSmartContractDecimals(price, 3) as number,
-      serie,
-      packType,
-      drop,
-      toSmartContractDate(saleStart),
-      saleDistributionAddresses,
-      saleDistributionAmounts,
-      marketplaceDistributionAddresses,
-      marketplaceDistributionAmounts,
-    ));
+  async createPack(nftAmount: number, price: number, serie: string, packType: string, drop: string, saleStart: number, saleDistributionAddresses: string[], saleDistributionAmounts: number[], marketplaceDistributionAddresses: string[], marketplaceDistributionAmounts: number[]) {
+    return this.sendTx(this.contract.methods.createPack(nftAmount, toSmartContractDecimals(price, 3) as number, serie, packType, drop, toSmartContractDate(saleStart), saleDistributionAddresses, saleDistributionAmounts, marketplaceDistributionAddresses, marketplaceDistributionAmounts));
   }
 
   async offerPack(packId: number, receivingAddress: string) {

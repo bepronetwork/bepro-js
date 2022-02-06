@@ -11,12 +11,7 @@ import {RealFevrOpener} from '@models/real-fevr-opener';
 import {toSmartContractDecimals} from '@utils/numbers';
 
 export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> implements Deployable {
-  constructor(
-    web3Connection: Web3Connection|Web3ConnectionOptions,
-    contractAddress?: string,
-    readonly collectiblesAddress?: string,
-    readonly tokenAddress?: string,
-  ) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly collectiblesAddress?: string, readonly tokenAddress?: string) {
     super(web3Connection, RealFevrMarketplaceJson.abi as AbiItem[], contractAddress);
   }
 
@@ -68,8 +63,8 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
   // resolved via the chain's native token.
   async deployJsonAbi(collectiblesAddress: string, tokenAddress: string) {
     const deployOptions = {
-        data: RealFevrMarketplaceJson.bytecode,
-        arguments: [tokenAddress, collectiblesAddress]
+      data: RealFevrMarketplaceJson.bytecode,
+      arguments: [tokenAddress, collectiblesAddress]
     };
 
     return this.deploy(deployOptions, this.web3Connection.Account);
