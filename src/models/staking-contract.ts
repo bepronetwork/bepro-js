@@ -6,6 +6,7 @@ import StakingContractJson from '@abi/StakingContract.json';
 import {StakingContractMethods} from '@methods/staking-contract';
 import {AbiItem} from 'web3-utils';
 import {ERC20} from '@models/erc20';
+import {ERC721Collectibles} from '@models/erc721-collectibles';
 import {fromDecimals, toSmartContractDate, toSmartContractDecimals} from '@utils/numbers';
 import stakingProduct from '@utils/staking-product';
 import {IsOwnable, IsPausable} from '@interfaces/modifiers';
@@ -15,17 +16,24 @@ import stakeSubscription from '@utils/stake-subscription';
 import {Errors} from '@interfaces/error-enum';
 
 export class StakingContract extends Model<StakingContractMethods> implements Deployable, IsOwnable, IsPausable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly stakeTokenAddress?: string) {
+  constructor(
+    web3Connection: Web3Connection|Web3ConnectionOptions,
+    contractAddress?: string,
+    readonly stakeTokenAddress?: string,
+    readonly collectiblesAddress?: string,
+  ) {
     super(web3Connection, StakingContractJson.abi as AbiItem[], contractAddress);
   }
 
   private _pausable!: Pausable;
   private _ownable!: Ownable;
   private _erc20!: ERC20;
+  private _erc721!: ERC721Collectibles;
 
   get pausable() { return this._pausable }
   get ownable() { return this._ownable }
   get erc20() { return this._erc20; }
+  get erc721() { return this._erc721; }
 
   async loadContract() {
     if (!this.contract)
@@ -34,8 +42,15 @@ export class StakingContract extends Model<StakingContractMethods> implements De
     this._ownable = new Ownable(this);
     this._pausable = new Pausable(this);
 
-    this._erc20 = new ERC20(this.web3Connection, this.stakeTokenAddress || await this.callTx(this.contract.methods.erc20()));
+    const tokenAddress = this.stakeTokenAddress || await this.callTx(this.contract.methods.erc20());
+    this._erc20 = new ERC20(this.web3Connection, tokenAddress);
     await this._erc20.loadContract();
+
+    const collectiblesAddress = this.collectiblesAddress || await this.callTx(this.contract.methods.erc721());
+    if (collectiblesAddress) {
+      this._erc721 = new ERC721Collectibles(this.web3Connection, collectiblesAddress, tokenAddress);
+      await this._erc721.loadContract();
+    }
   }
 
   async start() {
@@ -43,10 +58,10 @@ export class StakingContract extends Model<StakingContractMethods> implements De
     await this.loadContract();
   }
 
-  async deployJsonAbi(_tokenAddress: string) {
+  async deployJsonAbi(stakeTokenAddress: string, collectiblesAddress: string = '0x0000000000000000000000000000000000000000') {
     const deployOptions = {
         data: StakingContractJson.bytecode,
-        arguments: [_tokenAddress]
+        arguments: [stakeTokenAddress, collectiblesAddress]
     };
 
     return this.deploy(deployOptions, this.web3Connection.Account);

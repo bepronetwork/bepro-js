@@ -1,6 +1,5 @@
-export interface RealFvrPack {
+export interface RealFevrPack {
   packId: number;
-  packNumber: number;
   initialNFTID: number;
   price: number;
   serie: string;
@@ -8,5 +7,6 @@ export interface RealFvrPack {
   packType: string;
   buyer: string;
   saleDistributionAddresses: string[];
-  saleDistributionAmounts: number[]
+  saleDistributionAmounts: number[];
+  opened: boolean
 }

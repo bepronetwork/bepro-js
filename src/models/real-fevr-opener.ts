@@ -2,17 +2,16 @@ import {Model} from '@base/model';
 import {Web3Connection} from '@base/web3-connection';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {Deployable} from '@interfaces/deployable';
-import OpenerRealFvrJson from '@abi/OpenerRealFvr.json';
-import {OpenerRealFvrMethods} from '@methods/opener-real-fvr';
+import RealFevrOpenerJson from '@abi/RealFevrOpener.json';
+import {RealFevrOpenerMethods} from '@methods/real-fevr-opener';
 import {AbiItem} from 'web3-utils';
 import {ERC20} from '@models/erc20';
-import {Errors} from '@interfaces/error-enum';
-import {toSmartContractDate} from '@utils/numbers';
-import realFvrPack from '@utils/real-fvr-pack';
+import {fromDecimals, toSmartContractDate, toSmartContractDecimals} from '@utils/numbers';
+import realFevrPack from '@utils/real-fevr-pack';
 
-export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deployable {
+export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly purchaseTokenAddress?: string) {
-    super(web3Connection, OpenerRealFvrJson.abi as AbiItem[], contractAddress);
+    super(web3Connection, RealFevrOpenerJson.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;
@@ -23,11 +22,10 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
       await super.loadContract();
 
     const purchaseToken = await this._purchaseToken() || this.purchaseTokenAddress;
-    if (!purchaseToken)
-      throw new Error(Errors.MissingERC20AddressOnContractPleaseSetPurchaseToken);
-
-    this._erc20 = new ERC20(this.web3Connection, purchaseToken);
-    await this._erc20.loadContract();
+    if (purchaseToken && purchaseToken !== '0x0000000000000000000000000000000000000000') {
+      this._erc20 = new ERC20(this.web3Connection, purchaseToken);
+      await this._erc20.loadContract();
+    }
   }
 
   async start() {
@@ -37,7 +35,7 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
 
   async deployJsonAbi(name: string, symbol: string, _purchaseToken: string) {
     const deployOptions = {
-        data: OpenerRealFvrJson.bytecode,
+        data: RealFevrOpenerJson.bytecode,
         arguments: [name, symbol, _purchaseToken]
     };
 
@@ -168,8 +166,28 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
     return this.callTx(this.contract.methods.getRegisteredIDs(_address));
   }
 
+  async getMarketplaceDistributionForERC721(tokenId: number) {
+    const res = await this.callTx(this.contract.methods.getMarketplaceDistributionForERC721(tokenId));
+
+    return {
+      distributionAmounts: res[0].map(function(a: string) { return parseInt(a, 10); }),
+      distributionAddresses: res[1],
+    };
+  }
+
+  async getPurchaseToken() {
+    return this.callTx(this.contract.methods._purchaseToken());
+  }
+
+  async getTokenWorthof1USD() {
+    return fromDecimals(
+      await this.callTx(this.contract.methods._realFvrTokenPriceUSD()),
+      this.erc20 ? this.erc20.decimals : 18,
+    );
+  }
+
   async getPackbyId(_packId: number) {
-    return realFvrPack(await this.callTx(this.contract.methods.getPackbyId(_packId)), 6);
+    return realFevrPack(await this.callTx(this.contract.methods.getPackbyId(_packId)), 3);
   }
 
   async getPackPriceInFVR(packId: number) {
@@ -180,8 +198,42 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
     return this.sendTx(this.contract.methods.buyPack(packId));
   }
 
-  async createPack(packNumber: number, nftAmount: number, price: number, serie: string, packType: string, drop: string, saleStart: number, saleDistributionAddresses: string[], saleDistributionAmounts: number[]) {
-    return this.sendTx(this.contract.methods.createPack(packNumber, nftAmount, price, serie, packType, drop, toSmartContractDate(saleStart), saleDistributionAddresses, saleDistributionAmounts));
+  async buyPacks(packIds: number[]) {
+    return this.sendTx(this.contract.methods.buyPacks(packIds));
+  }
+
+  async openPack(packId: number) {
+    return this.sendTx(this.contract.methods.openPack(packId));
+  }
+
+  async openPacks(packIds: number[]) {
+    return this.sendTx(this.contract.methods.openPacks(packIds));
+  }
+
+  async createPack(
+    nftAmount: number,
+    price: number,
+    serie: string,
+    packType: string,
+    drop: string,
+    saleStart: number,
+    saleDistributionAddresses: string[],
+    saleDistributionAmounts: number[],
+    marketplaceDistributionAddresses: string[],
+    marketplaceDistributionAmounts: number[],
+  ) {
+    return this.sendTx(this.contract.methods.createPack(
+      nftAmount,
+      toSmartContractDecimals(price, 3) as number,
+      serie,
+      packType,
+      drop,
+      toSmartContractDate(saleStart),
+      saleDistributionAddresses,
+      saleDistributionAmounts,
+      marketplaceDistributionAddresses,
+      marketplaceDistributionAmounts,
+    ));
   }
 
   async offerPack(packId: number, receivingAddress: string) {
@@ -189,7 +241,7 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
   }
 
   async editPackInfo(_packId: number, _saleStart: number, serie: string, packType: string, drop: string, price: number) {
-    return this.sendTx(this.contract.methods.editPackInfo(_packId, toSmartContractDate(_saleStart), serie, packType, drop, price));
+    return this.sendTx(this.contract.methods.editPackInfo(_packId, toSmartContractDate(_saleStart), serie, packType, drop, toSmartContractDecimals(price, 3) as number));
   }
 
   async deletePackById(packId: number) {

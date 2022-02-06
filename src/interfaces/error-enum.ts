@@ -14,6 +14,8 @@ export enum Errors {
   InteractionIsNotAvailableCallApprove = `Interaction not available, call 'approve' first`,
   NoLockedAmountOrNotReleaseDate = `User has no locked amount or release date has not been reached`,
   MissingERC20AddressOnContractPleaseSetPurchaseToken = `Missing ERC20 address on contract, please call setPurchaseTokenAddress`,
+  MissingERC20AddressOnContract = `Missing ERC20 address on contract`,
+  MissingERC721AddressOnContract = `Missing ERC721 address on contract`,
   MissingLpTokenAddressPleaseDeployUsingOne = `Missing lp token address please deploy Loophole class using one`,
   MissingSwapAddressPleaseDeployUsingOne = `Missing swap router address, please deploy using one`,
   MissingEthUtilsAddressPleaseProvideOne = `Missing eth utils address, please provide one`,
