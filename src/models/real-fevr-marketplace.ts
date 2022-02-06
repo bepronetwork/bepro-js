@@ -63,7 +63,10 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
     await this.loadContract();
   }
 
-  async deployJsonAbi(collectiblesAddress: string, tokenAddress: string = '0x0000000000000000000000000000000000000000') {
+  // The marketplace can be deployed on a native-transactions mode; simply assign tokenAddress to
+  // the null wallet '0x0000000000000000000000000000000000000000', and all transactions will be
+  // resolved via the chain's native token.
+  async deployJsonAbi(collectiblesAddress: string, tokenAddress: string) {
     const deployOptions = {
         data: RealFevrMarketplaceJson.bytecode,
         arguments: [tokenAddress, collectiblesAddress]

@@ -10,6 +10,8 @@ import {fromDecimals, toSmartContractDate, toSmartContractDecimals} from '@utils
 import realFevrMarketplaceDistributions from '@utils/real-fevr-marketplace-distributions';
 import realFevrPack from '@utils/real-fevr-pack';
 
+export const nativeZeroAddress: string = '0x0000000000000000000000000000000000000000';
+
 export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly purchaseTokenAddress?: string) {
     super(web3Connection, RealFevrOpenerJson.abi as AbiItem[], contractAddress);
@@ -26,7 +28,7 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
       await super.loadContract();
 
     const purchaseToken = await this._purchaseToken() || this.purchaseTokenAddress;
-    if (purchaseToken && purchaseToken !== '0x0000000000000000000000000000000000000000') {
+    if (purchaseToken && purchaseToken !== nativeZeroAddress) {
       this._erc20 = new ERC20(this.web3Connection, purchaseToken);
       await this._erc20.loadContract();
 
