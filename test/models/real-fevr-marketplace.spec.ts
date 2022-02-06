@@ -1,4 +1,4 @@
-import {defaultWeb3Connection, erc20Deployer, revertChain} from '../utils/';
+import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber, revertChain} from '../utils/';
 import {expect} from 'chai';
 import {RealFevrOpener} from '@models/real-fevr-opener';
 import {RealFevrMarketplace} from '@models/real-fevr-marketplace';
@@ -20,23 +20,33 @@ describe('Marketplace RealFevr', async () => {
     accountAddress = web3Connection.Account.address;
   });
 
-  it(`Deploys the contract`, async () => {
-    const erc20 = await erc20Deployer(`Settler`, `$settler`, purchaseTokenCap, web3Connection);
-    tokenAddress = erc20.contractAddress!;
+  describe('Contracts', () => {
+    it(`Deploys the token contract`, async () => {
+      const erc20 = await erc20Deployer(`Settler`, `$settler`, purchaseTokenCap, web3Connection);
 
-    const openerDeployer = new RealFevrOpener(web3Connection);
-    openerDeployer.loadAbi();
-    const openerTx = await openerDeployer.deployJsonAbi(`Collectible`, `$stamp`, tokenAddress);
+      expect(erc20.contractAddress).to.not.be.empty;
+      tokenAddress = erc20.contractAddress!;
+    });
 
-    expect(openerTx.blockNumber).to.exist;
-    openerAddress = openerTx.contractAddress!;
+    it(`Deploys the opener contract`, async () => {
+      const openerDeployer = new RealFevrOpener(web3Connection);
+      openerDeployer.loadAbi();
+      const openerTx = await openerDeployer.deployJsonAbi(`Collectible`, `$stamp`, tokenAddress);
 
-    const marketplaceDeployer = new RealFevrMarketplace(web3Connection);
-    marketplaceDeployer.loadAbi();
-    const marketplaceTx = await marketplaceDeployer.deployJsonAbi(openerAddress, tokenAddress);
+      expect(openerTx.blockNumber).to.exist;
+      expect(openerTx.contractAddress).to.not.be.empty;
+      openerAddress = openerTx.contractAddress!;
+    });
 
-    expect(marketplaceTx.blockNumber).to.exist;
-    contractAddress = marketplaceTx.contractAddress;
+    it(`Deploys the marketplace contract`, async () => {
+      const marketplaceDeployer = new RealFevrMarketplace(web3Connection);
+      marketplaceDeployer.loadAbi();
+      const marketplaceTx = await marketplaceDeployer.deployJsonAbi(openerAddress, tokenAddress);
+
+      expect(marketplaceTx.blockNumber).to.exist;
+      expect(marketplaceTx.contractAddress).to.not.be.empty;
+      contractAddress = marketplaceTx.contractAddress;
+    });
   });
 
   describe('Methods', () => {
@@ -46,33 +56,27 @@ describe('Marketplace RealFevr', async () => {
     });
 
     it('should create pack of NFTs', async () => {
-      const res = await marketplaceContract.opener.createPack(1, 1, '', 'foo', 'bar', 1, [ '0x0000000000000000000000000000000000000000' ], [ 100 ], [], []);
-      expect(res).to.not.equal(false);
+      await hasTxBlockNumber(marketplaceContract.opener.createPack(1, 1, '', 'foo', 'bar', 1, [ '0x0000000000000000000000000000000000000000' ], [ 100 ], [], []));
     });
 
     it('should offer pack to owner', async () => {
-      const res = await marketplaceContract.opener.offerPack(1, accountAddress);
-      expect(res).to.not.equal(false);
+      await hasTxBlockNumber(marketplaceContract.opener.offerPack(1, accountAddress));
     });
 
     it('should open pack', async () => {
-      const res = await marketplaceContract.opener.openPack(1);
-      expect(res).to.not.equal(false);
+      await hasTxBlockNumber(marketplaceContract.opener.openPack(1));
     });
 
     it('should mint NFT', async () => {
-      const res = await marketplaceContract.opener.mint(1);
-      expect(res).to.not.equal(false);
+      await hasTxBlockNumber(marketplaceContract.opener.mint(1));
     });
 
     it('should approve NFT', async () => {
-      const res = await marketplaceContract.opener.approve(contractAddress, 1);
-      expect(res).to.not.equal(false);
+      await hasTxBlockNumber(marketplaceContract.opener.approve(contractAddress, 1));
     });
 
     it('should put NFT up for sale', async () => {
-      const res = await marketplaceContract.putERC721OnSale(1, 1000);
-      expect(res).to.not.equal(false);
+      await hasTxBlockNumber(marketplaceContract.putERC721OnSale(1, 1000));
     });
   });
 });
