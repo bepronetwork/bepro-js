@@ -7,6 +7,7 @@ import {RealFevrOpenerMethods} from '@methods/real-fevr-opener';
 import {AbiItem} from 'web3-utils';
 import {ERC20} from '@models/erc20';
 import {fromDecimals, toSmartContractDate, toSmartContractDecimals} from '@utils/numbers';
+import realFevrMarketplaceDistributions from '@utils/real-fevr-marketplace-distributions';
 import realFevrPack from '@utils/real-fevr-pack';
 
 export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Deployable {
@@ -167,12 +168,7 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
   }
 
   async getMarketplaceDistributionForERC721(tokenId: number) {
-    const res = await this.callTx(this.contract.methods.getMarketplaceDistributionForERC721(tokenId));
-
-    return {
-      distributionAmounts: res[0].map(function(a: string) { return parseInt(a, 10); }),
-      distributionAddresses: res[1],
-    };
+    return realFevrMarketplaceDistributions(await this.callTx(this.contract.methods.getMarketplaceDistributionForERC721(tokenId)));
   }
 
   async getPurchaseToken() {
