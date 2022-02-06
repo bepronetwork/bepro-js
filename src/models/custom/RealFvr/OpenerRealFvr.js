@@ -236,6 +236,17 @@ class OpenerRealFvr extends IContract {
   );
 
   /**
+   * @function
+   * @description Approve All Use
+   * @param {Object} params
+   * @param {Address} params.from Address to approve from
+   * @param {Address} params.to Address to approve to
+   */
+  isApprovedForAll = ({ from, to }) => this.getContract()
+    .methods.isApprovedForAll(from, to)
+    .call();
+
+  /**
    * Set Purchase Token
    * @function
    * @param {Object} params Parameters
