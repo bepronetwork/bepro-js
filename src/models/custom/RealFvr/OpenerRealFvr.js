@@ -212,6 +212,30 @@ class OpenerRealFvr extends IContract {
   );
 
   /**
+   * @function
+   * @description Approve All Use
+   * @param {Object} params
+   * @param {Address} params.to Address to approve to
+   * @param {number} params.tokenId  Token ID
+   */
+  approve = ({ to, tokenId }, options) => this.__sendTx(
+    this.getContract().methods.approve(to, tokenId),
+    options,
+  );
+
+  /**
+   * @function
+   * @description Approve All Use
+   * @param {Object} params
+   * @param {Address} params.to Address to approve to
+   * @param {Bool} params.approve If to approve or disapprove
+   */
+  setApprovalForAll = ({ to, approve = true }, options) => this.__sendTx(
+    this.getContract().methods.setApprovalForAll(to, approve),
+    options,
+  );
+
+  /**
    * Set Purchase Token
    * @function
    * @param {Object} params Parameters

@@ -2,7 +2,7 @@ import { marketplaceRealFvr } from '../../../interfaces';
 import Numbers from '../../../utils/Numbers';
 import IContract from '../../IContract';
 import ERC20Contract from '../../ERC20/ERC20Contract';
-import ERC721Contract from '../../ERC721/ERC721Contract';
+import OpenerRealFevr from './OpenerRealFvr';
 
 /**
  * MarketplaceRealFvr Object
@@ -44,14 +44,15 @@ class MarketplaceRealFvr extends IContract {
     }
 
     // Set Token Address Contract for easy access
-    this.params.ERC721Contract = new ERC721Contract({
-      contractAddress: this.params.tokenAddress,
+    this.params.OpenerRealFevr = new OpenerRealFevr({
+      contractAddress: this.params.erc721Address,
+      tokenAddress: this.params.tokenAddress,
       web3Connection: this.web3Connection,
     });
 
     try {
       // Assert Token Contract
-      await this.params.ERC721Contract.__assert();
+      await this.params.OpenerRealFevr.__assert();
     }
     catch (err) {
       throw new Error(`Problem on ERC721 Assert, confirm ERC721 'tokenAddress'${err}`);
@@ -189,7 +190,7 @@ class MarketplaceRealFvr extends IContract {
      * @param {Bool} params.approve If to Approve
      * @returns {TransactionObject} Success the Tx Object if operation was successful
    */
-  approveERC721use = ({ to, approve = true }) => this.getERC721Contract().setApprovalForAll({ to, approve });
+  approveERC721use = ({ to, approve = true }) => this.getOpenerRealFevr().setApprovalForAll({ to, approve });
 
   /**
      * @function
@@ -217,7 +218,7 @@ class MarketplaceRealFvr extends IContract {
 
   getERC20Contract = () => this.params.ERC20Contract;
 
-  getERC721Contract = () => this.params.ERC721Contract;
+  getOpenerRealFevr = () => this.params.OpenerRealFevr;
 }
 
 export default MarketplaceRealFvr;

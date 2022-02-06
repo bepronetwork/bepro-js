@@ -3,7 +3,6 @@ export { default as ERC20Distribution } from './ERC20/ERC20Distribution';
 export { default as ERC20TokenLock } from './ERC20/ERC20TokenLock';
 
 export { default as ERC721Collectibles } from './ERC721/ERC721Collectibles';
-export { default as ERC721Contract } from './ERC721/ERC721Contract';
 export { default as ERC721Standard } from './ERC721/ERC721Standard';
 
 export { default as Network } from './BEPRO/Network';

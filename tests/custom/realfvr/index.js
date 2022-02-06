@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { mochaAsync } from '../../utils';
 import Numbers from '../../../src/utils/Numbers';
-import { ERC20Contract, ERC721Contract, MarketplaceRealFvr } from '../../../build';
+import { ERC20Contract, OpenerRealFvr, MarketplaceRealFvr } from '../../../build';
 
 let contractAddress;
 let deployed_tokenAddress;
@@ -13,7 +13,7 @@ const testConfig = {
 
 context('Marketplace RealFvr', async () => {
   let erc20Contract;
-  let erc721Contract;
+  let openerContract;
   let marketplaceContract;
   let userAddress;
 
@@ -42,18 +42,21 @@ context('Marketplace RealFvr', async () => {
   );
 
   it(
-    'should deploy a ERC721 contract',
+    'should deploy a Opener contract',
     mochaAsync(async () => {
       /* Create Contract */
-      erc721Contract = new ERC721Contract(testConfig);
+      openerContract = new OpenerRealFvr({
+        ...testConfig,
+        tokenAddress: deployed_tokenAddress,
+      });
       /* Deploy */
-      const res = await erc721Contract.deploy({
+      const res = await openerContract.deploy({
         name: 'test',
         symbol: 'B.E.P.R.O',
-        erc20Purchase: deployed_tokenAddress, // tokenAddress
+        tokenAddress: deployed_tokenAddress, // tokenAddress
       });
-      await erc721Contract.__assert();
-      contractAddress = erc721Contract.getAddress();
+      await openerContract.__assert();
+      contractAddress = openerContract.getAddress();
       expect(res).to.not.equal(false);
       expect(contractAddress).to.equal(res.contractAddress);
     }),
@@ -67,7 +70,7 @@ context('Marketplace RealFvr', async () => {
       /* Deploy */
       const res = await marketplaceContract.deploy({
         erc20TokenAddress: erc20Contract.getAddress(),
-        erc721TokenAddress: erc721Contract.getAddress(),
+        erc721TokenAddress: openerContract.getAddress(),
       });
       await marketplaceContract.__assert();
       contractAddress = marketplaceContract.getAddress();
@@ -77,10 +80,47 @@ context('Marketplace RealFvr', async () => {
   );
 
   it(
-    'should mint, approve and add to sale NFT',
+    'should create pack of NFTs',
     mochaAsync(async () => {
-      /* Mint */
-      const res = await erc721Contract.mint({
+      const res = await openerContract.createPack({
+        nftAmount: 1,
+        price: 1,
+        serie: '',
+        packType: 'foo',
+        drop: 'bar',
+        saleStart: 1,
+        saleDistributionAddresses: [ '0x0000000000000000000000000000000000000000' ],
+        saleDistributionAmounts: [ 100 ],
+        marketplaceDistributionAddresses: [],
+        marketplaceDistributionAmounts: [],
+      });
+      expect(res).to.not.equal(false);
+    }),
+  );
+
+  it(
+    'should offer pack to owner',
+    mochaAsync(async () => {
+      const res = await openerContract.offerPack({
+        packId: 1,
+        receivingAddress: userAddress,
+      });
+      expect(res).to.not.equal(false);
+    }),
+  );
+
+  it(
+    'should open pack',
+    mochaAsync(async () => {
+      const res = await openerContract.openPack({ packId: 1 });
+      expect(res).to.not.equal(false);
+    }),
+  );
+
+  it(
+    'should mint NFT',
+    mochaAsync(async () => {
+      const res = await openerContract.mint({
         tokenId: 1,
         to: userAddress,
       });
@@ -89,10 +129,9 @@ context('Marketplace RealFvr', async () => {
   );
 
   it(
-    'should approve  NFT',
+    'should approve NFT',
     mochaAsync(async () => {
-      /* Approve */
-      const res = await erc721Contract.approve({
+      const res = await openerContract.approve({
         tokenId: 1,
         to: marketplaceContract.getAddress(),
       });
