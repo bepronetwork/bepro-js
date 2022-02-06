@@ -10,12 +10,7 @@ export class Web3Connection {
   protected web3!: Web3;
   protected account!: Account;
 
-  constructor(readonly options: Web3ConnectionOptions) {
-    // If a provider is supplied, we assume all connection logic is on its side.
-    if (options?.provider) {
-      this.start();
-    }
-  }
+  constructor(readonly options: Web3ConnectionOptions) {}
 
   get started() { return !!this.web3; }
   get eth(): Eth { return this.web3?.eth; }
@@ -71,9 +66,7 @@ export class Web3Connection {
     const web3Link = web3Host.toLowerCase();
     let provider: HttpProvider|IpcProvider|WebsocketProvider;
 
-    if (this.options.provider)
-      provider = this.options.provider;
-    else if (web3Link.includes(`http`))
+    if (web3Link.includes(`http`))
       provider = new Web3.providers.HttpProvider(web3Link, web3ProviderOptions as HttpProviderOptions);
     else if (web3Link.includes(`ws`))
       provider = new Web3.providers.WebsocketProvider(web3Link, web3ProviderOptions as WebsocketProviderOptions);
