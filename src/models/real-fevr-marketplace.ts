@@ -23,6 +23,9 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
   private _isETHTransaction!: boolean;
   isETHTransaction() { return this._isETHTransaction; }
 
+  private _decimals: number = 18;
+  get decimals(): number { return this._decimals; }
+
   private _erc20!: ERC20;
   get erc20() { return this._erc20; }
 
@@ -47,6 +50,8 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
       // Set Token Address Contract for easy access
       this._erc20 = new ERC20(this.web3Connection, tokenAddress);
       await this._erc20.loadContract();
+
+      this._decimals = this._erc20.decimals;
     }
 
     this._opener = new RealFevrOpener(this.web3Connection, collectiblesAddress);
@@ -68,14 +73,8 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
   }
 
   async putERC721OnSale(tokenId: number, price: number) {
-    const valueWithDecimals = toSmartContractDecimals(
-      price,
-      await this.isETHTransaction() ? 18 : this.erc20.decimals,
-    );
-
-    return this.sendTx(
-      this.contract.methods.putERC721OnSale(tokenId, valueWithDecimals as number),
-    );
+    const valueWithDecimals = toSmartContractDecimals(price, this.decimals);
+    return this.sendTx(this.contract.methods.putERC721OnSale(tokenId, valueWithDecimals as number));
   }
 
   async removeERC721FromSale(tokenId: number) {
@@ -83,15 +82,8 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
   }
 
   async buyERC721(tokenId: number, value: number = 0) {
-    const valueWithDecimals = toSmartContractDecimals(
-      value,
-      await this.isETHTransaction() ? 18 : this.erc20.decimals,
-    );
-
-    return this.sendTx(
-      this.contract.methods.buyERC721(tokenId),
-      valueWithDecimals,
-    );
+    const valueWithDecimals = toSmartContractDecimals(value, this.decimals);
+    return this.sendTx(this.contract.methods.buyERC721(tokenId), valueWithDecimals);
   }
 
   async changeERC20(erc20TokenAddress: string) {

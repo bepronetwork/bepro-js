@@ -15,6 +15,9 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
     super(web3Connection, RealFevrOpenerJson.abi as AbiItem[], contractAddress);
   }
 
+  private _decimals: number = 18;
+  get decimals(): number { return this._decimals; }
+
   private _erc20!: ERC20;
   get erc20() { return this._erc20; }
 
@@ -26,6 +29,8 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
     if (purchaseToken && purchaseToken !== '0x0000000000000000000000000000000000000000') {
       this._erc20 = new ERC20(this.web3Connection, purchaseToken);
       await this._erc20.loadContract();
+
+      this._decimals = this._erc20.decimals;
     }
   }
 
@@ -176,10 +181,7 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
   }
 
   async getTokenWorthof1USD() {
-    return fromDecimals(
-      await this.callTx(this.contract.methods._realFvrTokenPriceUSD()),
-      this.erc20 ? this.erc20.decimals : 18,
-    );
+    return fromDecimals(await this.callTx(this.contract.methods._realFvrTokenPriceUSD()), this.decimals);
   }
 
   async getPackbyId(_packId: number) {
