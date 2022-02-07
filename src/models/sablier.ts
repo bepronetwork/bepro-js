@@ -29,7 +29,7 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   }
 
   async fee() {
-    return +(await this.callTx(this.contract.methods.fee()));
+    return +fromDecimals(await this.callTx(this.contract.methods.fee()));
   }
 
   async initialize(sender: string) {

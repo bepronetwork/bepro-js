@@ -92,15 +92,15 @@ describe.skip(`Sablier`, () => {
 
     it(`Updates fee`, async () => {
       await hasTxBlockNumber(sablier.updateFee(+STANDARD_SABLIER_FEE))
-      expect(await sablier.fee()).to.eq(+STANDARD_SABLIER_FEE);
+      expect(await sablier.fee()).to.eq(+STANDARD_SABLIER_FEE/100);
     });
 
     it(`Creates a compounding stream`, async () => {
       startTime = subMinutes(startTime, 1);
-      const endTime = addMinutes(startTime, 10);
+      // const endTime = addMinutes(startTime, 10);
       const stream = await sablier.createCompoundingStream(Bob.address, SALARY, erc20ContractAddress,
-                                                           toSmartContractDate(startTime),
-                                                           toSmartContractDate(endTime),
+                                                           toSmartContractDate(new Date()),
+                                                           toSmartContractDate(addMinutes(startTime, 10)),
                                                            STANDARD_SENDER_SHARE_PERCENTAGE,
                                                            STANDARD_RECIPIENT_SHARE_PERCENTAGE);
       const events = await sablier.contract.self.getPastEvents(`CreateStream`, {fromBlock: stream.blockNumber});

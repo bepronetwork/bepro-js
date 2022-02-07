@@ -109,8 +109,8 @@ export function outputDeploy(info: [string, string][] = []) {
   console.log(`Deployed`, info.map(([name, address]) => `\n\t${name}:\t${address}`).join(``))
 }
 
-export function modelExtensionDeployer(web3connection: Web3Connection, _class: any, args?: any): Promise<TransactionReceipt> {
+export function modelExtensionDeployer(web3connection: Web3Connection, _class: any, args?: any[]): Promise<TransactionReceipt> {
   const deployer = new _class(web3connection);
   deployer.loadAbi();
-  return deployer.deployJsonAbi(args);
+  return deployer.deployJsonAbi(...(args || []));
 }
