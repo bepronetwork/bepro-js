@@ -180,8 +180,11 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
     return this.sendTx(this.contract.methods.buyPack(packId));
   }
 
-  async createPack(packNumber: number, nftAmount: number, price: number, serie: string, packType: string, drop: string, saleStart: number, saleDistributionAddresses: string[], saleDistributionAmounts: number[]) {
-    return this.sendTx(this.contract.methods.createPack(packNumber, nftAmount, price, serie, packType, drop, toSmartContractDate(saleStart), saleDistributionAddresses, saleDistributionAmounts));
+  async createPack(packNumber: number, nftAmount: number, price: number, serie: string, packType: string, drop: string,
+                   saleStart: number, saleDistributionAddresses: string[], saleDistributionAmounts: number[]) {
+    return this.sendTx(this.contract.methods.createPack(packNumber, nftAmount, price, serie,
+                                                        packType, drop, toSmartContractDate(saleStart),
+                                                        saleDistributionAddresses, saleDistributionAmounts));
   }
 
   async offerPack(packId: number, receivingAddress: string) {
@@ -189,7 +192,9 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
   }
 
   async editPackInfo(_packId: number, _saleStart: number, serie: string, packType: string, drop: string, price: number) {
-    return this.sendTx(this.contract.methods.editPackInfo(_packId, toSmartContractDate(_saleStart), serie, packType, drop, price));
+    return this.sendTx(this.contract.methods.editPackInfo(_packId,
+                                                          toSmartContractDate(_saleStart),
+                                                          serie, packType, drop, price));
   }
 
   async deletePackById(packId: number) {

@@ -17,7 +17,9 @@ export class CERC20 extends Model<CERC20Methods> implements Deployable {
   private _erc20!: ERC20;
   get erc20(): ERC20 { return this._erc20; }
 
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly underlyingAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
+              contractAddress?: string,
+              readonly underlyingAddress?: string) {
     super(web3Connection, CERC20MockJson.abi as AbiItem[], contractAddress);
   }
 
@@ -60,7 +62,8 @@ export class CERC20 extends Model<CERC20Methods> implements Deployable {
    * Approve the passed address to spend the specified amount of tokens on behalf of msg.sender. Beware that changing an allowance with this method brings the risk that someone may use both the old and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards: https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
    */
   async approve(address: string, amount: number): Promise<TransactionReceipt> {
-    return this.sendTx(this.contract.methods.approve(address, toSmartContractDecimals(amount, this.erc20.decimals) as number));
+    return this.sendTx(this.contract.methods.approve(address,
+                                                     toSmartContractDecimals(amount, this.erc20.decimals) as number));
   }
 
   /**

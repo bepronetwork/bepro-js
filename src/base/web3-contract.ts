@@ -129,7 +129,12 @@ export class Web3Contract<Methods = any, Events = any> {
   /**
    * Sends a signed transaction with the provided account
    */
-  async sendSignedTx(account: Account, data: string, value = ``, txOptions: Partial<TransactionConfig>, debug?: boolean): Promise<TransactionReceipt> {
+  sendSignedTx(account: Account,
+                     data: string,
+                     value = ``,
+                     txOptions: Partial<TransactionConfig>,
+                     debug?: boolean): Promise<TransactionReceipt> {
+    /* eslint-disable no-async-promise-executor */
     return new Promise(async (resolve, reject) => {
       try {
 
@@ -144,5 +149,6 @@ export class Web3Contract<Methods = any, Events = any> {
         reject(e);
       }
     })
+    /* eslint-enable no-async-promise-executor */
   }
 }

@@ -222,7 +222,10 @@ export class Network extends Model<NetworkMethods> implements Deployable {
   }
 
   async proposeIssueMerge(id: number, prAddresses: string[], prAmounts: number[]) {
-    const amounts = prAmounts.map((amount) => toSmartContractDecimals(amount, this.transactionToken.decimals, true) as number)
+    const amounts = prAmounts.map((amount) =>
+                                    toSmartContractDecimals(amount,
+                                                            this.transactionToken.decimals, true) as number);
+
     return this.sendTx(this.contract.methods.proposeIssueMerge(id, prAddresses, amounts))
   }
 

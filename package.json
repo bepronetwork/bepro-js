@@ -25,8 +25,9 @@
         "docs": "typedoc",
         "ganache:start": "ganache -p 8545 -q --account_keys_path keys.json ",
         "test-ci": "npm run ganache:start >/dev/null & npm run test",
-        "lint": "eslint --ignore-path .eslintignore --ext .ts ./src --quiet",
-        "lint-fix": "eslint --ignore-path .eslintignore --ext .ts ./src --quiet --fix"
+        "eslint": "eslint --ignore-path .eslintignore --ext .ts ./src",
+        "lint": "npm run eslint -- --quiet",
+        "lint-fix": "npm run eslint -- --quiet --fix"
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.2",

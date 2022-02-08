@@ -12,7 +12,9 @@ import votingPollWinner from '@utils/voting-poll-winner';
 import poolInformation from '@utils/pool-information';
 
 export class Votable extends Model<VotableMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly erc20TokenAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
+              contractAddress?: string,
+              readonly erc20TokenAddress?: string) {
     super(web3Connection, VotableJson.abi as AbiItem[], contractAddress);
   }
 
@@ -23,7 +25,8 @@ export class Votable extends Model<VotableMethods> implements Deployable {
     if (!this.contract)
       super.loadContract();
 
-    this._erc20 = new ERC20(this.web3Connection, this.erc20TokenAddress || await this.callTx(this.contract.methods.erc20()));
+    const contractAddress = this.erc20TokenAddress || await this.callTx(this.contract.methods.erc20());
+    this._erc20 = new ERC20(this.web3Connection, contractAddress);
     await this._erc20.loadContract();
   }
 
@@ -74,7 +77,8 @@ export class Votable extends Model<VotableMethods> implements Deployable {
   }
 
   async getPollInfoForVoter(_pollID: number, _voter: string) {
-    return voterInfo(await this.callTx(this.contract.methods.getPollInfoForVoter(_pollID, _voter)), this.erc20.decimals);
+    return voterInfo(await this.callTx(this.contract
+                                           .methods.getPollInfoForVoter(_pollID, _voter)), this.erc20.decimals);
   }
 
   async userHasVoted(_pollID: number, _user: string) {
@@ -86,11 +90,14 @@ export class Votable extends Model<VotableMethods> implements Deployable {
   }
 
   async stakeVotingTokens(_numTokens: number) {
-    return this.sendTx(this.contract.methods.stakeVotingTokens(toSmartContractDecimals(_numTokens, this.erc20.decimals) as number));
+    return this.sendTx(this.contract
+                           .methods
+                           .stakeVotingTokens(toSmartContractDecimals(_numTokens, this.erc20.decimals) as number));
   }
 
   async withdrawTokens(_numTokens: number) {
-    return this.sendTx(this.contract.methods.withdrawTokens(toSmartContractDecimals(_numTokens, this.erc20.decimals) as number));
+    return this.sendTx(this.contract
+                           .methods.withdrawTokens(toSmartContractDecimals(_numTokens, this.erc20.decimals) as number));
   }
 
   async getLockedAmount(_voter: string) {

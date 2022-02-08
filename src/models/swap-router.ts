@@ -7,14 +7,14 @@ import {SwapRouterMethods} from '@methods/swap-router';
 import {AbiItem} from 'web3-utils';
 
 export class SwapRouter extends Model<SwapRouterMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
+  constructor(web3Connection: Web3Connection | Web3ConnectionOptions, contractAddress?: string) {
     super(web3Connection, ISwapRouterJson.abi as AbiItem[], contractAddress);
   }
 
   async deployJsonAbi() {
     const deployOptions = {
-        data: ISwapRouterJson.bytecode,
-        arguments: []
+      data: ISwapRouterJson.bytecode,
+      arguments: []
     };
 
     return this.deploy(deployOptions, this.web3Connection.Account);
@@ -24,19 +24,19 @@ export class SwapRouter extends Model<SwapRouterMethods> implements Deployable {
     return this.sendTx(this.contract.methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, data));
   }
 
-  async exactInputSingle(params: {'tokenIn': string; 'tokenOut': string; 'fee': number; 'recipient': string; 'deadline': number; 'amountIn': number; 'amountOutMinimum': number; 'sqrtPriceLimitX96': number}) {
+  async exactInputSingle(params: { 'tokenIn': string; 'tokenOut': string; 'fee': number; 'recipient': string; 'deadline': number; 'amountIn': number; 'amountOutMinimum': number; 'sqrtPriceLimitX96': number }) {
     return this.callTx(this.contract.methods.exactInputSingle(params));
   }
 
-  async exactInput(params: {'path': string; 'recipient': string; 'deadline': number; 'amountIn': number; 'amountOutMinimum': number}) {
+  async exactInput(params: { 'path': string; 'recipient': string; 'deadline': number; 'amountIn': number; 'amountOutMinimum': number }) {
     return this.callTx(this.contract.methods.exactInput(params));
   }
 
-  async exactOutputSingle(params: {'tokenIn': string; 'tokenOut': string; 'fee': number; 'recipient': string; 'deadline': number; 'amountOut': number; 'amountInMaximum': number; 'sqrtPriceLimitX96': number}) {
+  async exactOutputSingle(params: { 'tokenIn': string; 'tokenOut': string; 'fee': number; 'recipient': string; 'deadline': number; 'amountOut': number; 'amountInMaximum': number; 'sqrtPriceLimitX96': number }) {
     return this.callTx(this.contract.methods.exactOutputSingle(params));
   }
 
-  async exactOutput(params: {'path': string; 'recipient': string; 'deadline': number; 'amountOut': number; 'amountInMaximum': number}) {
+  async exactOutput(params: { 'path': string; 'recipient': string; 'deadline': number; 'amountOut': number; 'amountInMaximum': number }) {
     return this.callTx(this.contract.methods.exactOutput(params));
   }
 

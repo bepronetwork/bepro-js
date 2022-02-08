@@ -13,14 +13,15 @@ export interface Web3ConnectionOptions {
 
   /**
    * Pass options to provider
+   * @note you can provide a node server if you're using IPC
    */
-  web3ProviderOptions?: HttpProviderOptions | WebsocketProviderOptions; // you can provide a node server if you're using IPC
+  web3ProviderOptions?: HttpProviderOptions | WebsocketProviderOptions;
 
   /**
    * Skip the assignment of `window.web3 = Web3`
    * @default false
    */
-  skipWindowAssignment?: boolean; // default: false; Skip window.web3 = web3
+  skipWindowAssignment?: boolean;
 
   /**
    * output sendTx debug messages to console (via console.log)
