@@ -123,12 +123,12 @@ describe.skip(`Sablier`, () => {
       // streamId = events[0].returnValues['streamId'];
     });
 
-    it(`Gets stream`, async () => {
+    it.skip(`Gets stream`, async () => {
       const stream = await sablier.getStream(streamId);
       expect(stream.tokenAddress).to.be(erc20ContractAddress);
     });
 
-    it(`Takes earnings`, async () => {
+    it.skip(`Takes earnings`, async () => {
       await hasTxBlockNumber(sablier.withdrawFromStream(streamId, 5));
       const balance = await cerc20.balanceOf(await web3Connection.getBalance());
       const earnings = await sablier.getEarnings(cerc20.contractAddress!);
