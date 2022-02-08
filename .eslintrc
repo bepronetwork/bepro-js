@@ -2,19 +2,6 @@
   "parser": "@typescript-eslint/parser",
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "indent": ["error", 2,
-      {
-        "FunctionDeclaration": {
-          "parameters": "first"
-        },
-        "FunctionExpression": {
-          "parameters": "first"
-        },
-        "ArrayExpression": "first",
-        "ObjectExpression": "first",
-        "ignoreComments": true,
-        "ImportDeclaration": "first"
-      }],
     "no-prototype-builtins": 0,
     "no-return-await": 2,
     "camelcase": 0,
