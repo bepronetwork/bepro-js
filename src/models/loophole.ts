@@ -35,6 +35,7 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
   get swap() { return this._swap; }
   get ethUtils() { return this._ethUtils; }
 
+  /* eslint-disable complexity */
   async loadContract() {
     if (!this.contract)
       super.loadContract();
@@ -57,21 +58,27 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
 
     this._swap = new UniswapV3RouterBridge(this.web3Connection, swapRouterAddress);
   }
+  /* eslint-enable complexity */
 
   async start() {
     await super.start();
     await this.loadContract();
   }
 
-  async deployJsonAbi(_swapRouter: string, _lpToken: string, _lpTokensPerBlock: number, _startBlock: number, _exitPenalty: number, _exitPenaltyLP: number) {
+  async deployJsonAbi(_swapRouter: string,
+                      _lpToken: string,
+                      _lpTokensPerBlock: number,
+                      _startBlock: number,
+                      _exitPenalty: number,
+                      _exitPenaltyLP: number) {
 
     const erc20 = new ERC20(this.web3Connection, _lpToken);
     await erc20.loadContract();
     const lpTokensPerBlock = toSmartContractDecimals(_lpTokensPerBlock, erc20.decimals) as number;
 
     const deployOptions = {
-        data: LoopholeJson.bytecode,
-        arguments: [_swapRouter, _lpToken, lpTokensPerBlock, _startBlock, _exitPenalty, _exitPenaltyLP]
+      data: LoopholeJson.bytecode,
+      arguments: [_swapRouter, _lpToken, lpTokensPerBlock, _startBlock, _exitPenalty, _exitPenaltyLP]
     };
 
     return this.deploy(deployOptions, this.web3Connection.Account);
@@ -209,7 +216,7 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
   }
 
   async getEntryStakeAdjusted(pid: number, user: string) {
-    return await this.callTx(this.contract.methods.getEntryStakeAdjusted(pid, user));
+    return this.callTx(this.contract.methods.getEntryStakeAdjusted(pid, user));
   }
 
 }

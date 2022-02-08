@@ -9,7 +9,9 @@ import {ERC20} from '@models/erc20';
 import {fromDecimals, toSmartContractDecimals,} from '@utils/numbers';
 
 export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly _purchaseToken?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
+              contractAddress?: string,
+              readonly _purchaseToken?: string) {
     super(web3Connection, ERC721ColectiblesJson.abi as AbiItem[], contractAddress);
   }
 
@@ -20,7 +22,8 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
     if (!this.contract)
       super.loadContract();
 
-    this._erc20 = new ERC20(this.web3Connection, this._purchaseToken || await this.callTx(this.contract.methods._purchaseToken()));
+    const contractAddress = this._purchaseToken || await this.callTx(this.contract.methods._purchaseToken());
+    this._erc20 = new ERC20(this.web3Connection, contractAddress);
     await this._erc20.loadContract();
   }
 
@@ -29,7 +32,13 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
     await this.loadContract();
   }
 
-  async deployJsonAbi(name: string, symbol: string, limitedAmount: number, _purchaseToken: string, baseFeeAddress: string, feeAddress: string, otherAddress: string) {
+  async deployJsonAbi(name: string,
+                      symbol: string,
+                      limitedAmount: number,
+                      _purchaseToken: string,
+                      baseFeeAddress: string,
+                      feeAddress: string,
+                      otherAddress: string) {
     const deployOptions = {
         data: ERC721ColectiblesJson.bytecode,
         arguments: [name, symbol, limitedAmount, _purchaseToken, baseFeeAddress, feeAddress, otherAddress]
@@ -163,7 +172,8 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
   }
 
   async setPricePerPack(newPrice: number) {
-    return this.sendTx(this.contract.methods.setPricePerPack(toSmartContractDecimals(newPrice, this.erc20.decimals, true) as number));
+    newPrice = toSmartContractDecimals(newPrice, this.erc20.decimals, true) as number;
+    return this.sendTx(this.contract.methods.setPricePerPack(newPrice));
     // return this.sendTx(this.contract.methods.setPricePerPack(newPrice));
   }
 

@@ -11,7 +11,9 @@ import {toSmartContractDate} from '@utils/numbers';
 import realFvrPack from '@utils/real-fvr-pack';
 
 export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly purchaseTokenAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
+              contractAddress?: string,
+              readonly purchaseTokenAddress?: string) {
     super(web3Connection, OpenerRealFvrJson.abi as AbiItem[], contractAddress);
   }
 
@@ -182,19 +184,33 @@ export class OpenerRealFvr extends Model<OpenerRealFvrMethods> implements Deploy
 
   async createPack(packNumber: number, nftAmount: number, price: number, serie: string, packType: string, drop: string,
                    saleStart: number, saleDistributionAddresses: string[], saleDistributionAmounts: number[]) {
-    return this.sendTx(this.contract.methods.createPack(packNumber, nftAmount, price, serie,
-                                                        packType, drop, toSmartContractDate(saleStart),
-                                                        saleDistributionAddresses, saleDistributionAmounts));
+    return this.sendTx(this.contract.methods.createPack(packNumber,
+                                                        nftAmount,
+                                                        price,
+                                                        serie,
+                                                        packType,
+                                                        drop,
+                                                        toSmartContractDate(saleStart),
+                                                        saleDistributionAddresses,
+                                                        saleDistributionAmounts));
   }
 
   async offerPack(packId: number, receivingAddress: string) {
     return this.sendTx(this.contract.methods.offerPack(packId, receivingAddress));
   }
 
-  async editPackInfo(_packId: number, _saleStart: number, serie: string, packType: string, drop: string, price: number) {
+  async editPackInfo(_packId: number,
+                     _saleStart: number,
+                     serie: string,
+                     packType: string,
+                     drop: string,
+                     price: number) {
     return this.sendTx(this.contract.methods.editPackInfo(_packId,
                                                           toSmartContractDate(_saleStart),
-                                                          serie, packType, drop, price));
+                                                          serie,
+                                                          packType,
+                                                          drop,
+                                                          price));
   }
 
   async deletePackById(packId: number) {

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 export function noExponents(n: string, explicitNum?: boolean) {
   // thanks to https://stackoverflow.com/a/43926485/587811
 
@@ -45,6 +46,7 @@ export function noExponents(n: string, explicitNum?: boolean) {
     return leader * multiplier;
   }
 }
+/* eslint-enable complexity */
 
 export function toSmartContractDecimals(value: string|number, decimals = 18, explicit = false) {
   return noExponents((Number(value) * 10 ** decimals).toFixed(), explicit)

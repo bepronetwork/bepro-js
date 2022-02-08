@@ -28,11 +28,11 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async name(): Promise<string> {
-    return await this.callTx(this.contract.methods.name());
+    return this.callTx(this.contract.methods.name());
   }
 
   async symbol(): Promise<string> {
-    return await this.callTx(this.contract.methods.symbol());
+    return this.callTx(this.contract.methods.symbol());
   }
 
   async totalSupply(): Promise<number> {
@@ -49,11 +49,13 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async transferFrom(owner: string, receiver: string, amount: number) {
-    return this.sendTx(this.contract.methods.transferFrom(owner, receiver, toSmartContractDecimals(amount, this.decimals) as number));
+    amount = toSmartContractDecimals(amount, this.decimals) as number;
+    return this.sendTx(this.contract.methods.transferFrom(owner, receiver, amount));
   }
 
   async increaseAllowance(address: string, amount: number) {
-    return this.sendTx(this.contract.methods.increaseAllowance(address, toSmartContractDecimals(amount, this.decimals) as number));
+    amount = toSmartContractDecimals(amount, this.decimals) as number;
+    return this.sendTx(this.contract.methods.increaseAllowance(address, amount));
   }
 
   async allowance(owner: string, spender: string) {
@@ -61,21 +63,19 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async isApproved(spenderAddress = this.contractAddress!, amount: number): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        resolve(await this.allowance(await this.web3Connection.getAddress(), spenderAddress) >= amount);
-      } catch (e) {
-        reject(e);
-      }
-    })
-
+    return await this.allowance(await this.web3Connection.getAddress(), spenderAddress) >= amount;
   }
 
   async approve(address: string, amount: number): Promise<TransactionReceipt> {
-    return this.sendTx(this.contract.methods.approve(address, toSmartContractDecimals(amount, this.decimals) as number));
+    return this.sendTx(this.contract
+                           .methods
+                           .approve(address, toSmartContractDecimals(amount, this.decimals) as number));
   }
 
-  async deployJsonAbi(name: string, symbol: string, cap: number, distributionAddress: string): Promise<TransactionReceipt> {
+  async deployJsonAbi(name: string,
+                      symbol: string,
+                      cap: number,
+                      distributionAddress: string): Promise<TransactionReceipt> {
     const deployOptions = {
       data: Json.bytecode,
       arguments: [name, symbol, cap, distributionAddress]

@@ -111,7 +111,13 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
     return this.sendTx(this.contract.methods.createStream(recipient, deposit, tokenAddress, startTime, stopTime));
   }
 
-  async createCompoundingStream(recipient: string, deposit: number, tokenAddress: string, startTime: number, stopTime: number, senderSharePercentage: number, recipientSharePercentage: number) {
+  async createCompoundingStream(recipient: string,
+                                deposit: number,
+                                tokenAddress: string,
+                                startTime: number,
+                                stopTime: number,
+                                senderSharePercentage: number,
+                                recipientSharePercentage: number) {
     deposit = toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number;
     return this.sendTx(this.contract
                            .methods
