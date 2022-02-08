@@ -19,7 +19,7 @@ export class Web3Connection {
   get Account(): Account { return this.account; }
 
   async getAddress(): Promise<string> {
-    return this.account ? this.account.address : (await this.eth?.getAccounts())[0];
+    return this.account ? this.account.address : (await this.eth?.getAccounts() || [""])[0];
   }
 
   async getBalance(): Promise<string> {
@@ -52,10 +52,20 @@ export class Web3Connection {
   }
 
   /**
+   * change the privateKey prop of {@link Web3ConnectionOptions} and start a new connection
+   */
+  switchToAccount(privateKey: string) {
+    if (this.options.privateKey !== privateKey)
+      this.options.privateKey = privateKey;
+    return this.start(true)
+  }
+
+  /* eslint-disable complexity */
+  /**
    * Start this connection (and load an account if {@link Web3ConnectionOptions.privateKey} was provided)
    */
-  start(): void {
-    if (this.started)
+  start(restart = false): void {
+    if (this.started && !restart)
       return;
 
     const {web3Host = ``, web3ProviderOptions = undefined} = this.options;
@@ -83,5 +93,5 @@ export class Web3Connection {
     if (this.options.privateKey)
       this.account = this.web3.eth.accounts.privateKeyToAccount(this.options.privateKey);
   }
-
+  /* eslint-enable complexity */
 }

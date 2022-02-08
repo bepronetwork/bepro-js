@@ -1,18 +1,19 @@
+/* eslint-disable complexity */
 export function noExponents(n: string, explicitNum?: boolean) {
   // thanks to https://stackoverflow.com/a/43926485/587811
 
-  let data, leader, mag, multiplier, num, sign, str, z;
+  let leader, mag, multiplier, num, z;
   if (explicitNum == null) {
     explicitNum = true;
   }
 
-  data = n.split(/[eE]/); // http://stackoverflow.com/a/18719988/1877527
+  const data = n.split(/[eE]/); // http://stackoverflow.com/a/18719988/1877527
   if (data.length === 1) {
     return data[0];
   }
   z = "";
-  sign = n.slice(0, 1) === "-" ? "-" : "";
-  str = data[0].replace(".", "");
+  const sign = n.slice(0, 1) === "-" ? "-" : "";
+  const str = data[0].replace(".", "");
   mag = Number(data[1]) + 1;
   if (mag <= 0) {
     z = sign + "0.";
@@ -20,7 +21,7 @@ export function noExponents(n: string, explicitNum?: boolean) {
       z += "0";
       ++mag;
     }
-    num = z + str.replace(/^\-/, "");
+    num = z + str.replace(/^-/, "");
     if (explicitNum) {
       return parseFloat(num);
     } else {
@@ -45,6 +46,7 @@ export function noExponents(n: string, explicitNum?: boolean) {
     return leader * multiplier;
   }
 }
+/* eslint-enable complexity */
 
 export function toSmartContractDecimals(value: string|number, decimals = 18, explicit = false) {
   return noExponents((Number(value) * 10 ** decimals).toFixed(), explicit)

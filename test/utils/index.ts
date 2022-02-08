@@ -7,6 +7,7 @@ import {resolve} from 'path';
 import {expect} from 'chai';
 import Web3 from 'web3';
 import {HttpProvider, WebsocketProvider} from 'web3-core';
+import {TransactionReceipt} from 'web3-eth';
 
 export function getPrivateKeyFromFile(index = 0) {
   return Object.values(JSON.parse(readFileSync(resolve('./keys.json'), 'utf-8')).private_keys)[index] as string;
@@ -52,6 +53,10 @@ export async function shouldBeRejected(promise: Promise<any>, withErrorMessage?:
 
 const payload = (method: string, params: any[] = []) => ({jsonrpc: `2.0`, method, params, id: 0});
 
+/**
+ * @param {number} time seconds to increase
+ * @param {Web3} web3 web3
+ */
 export async function increaseTime(time: number, web3: Web3) {
 
   const timeAdvance = payload(`evm_increaseTime`, [time]);
@@ -83,11 +88,11 @@ export async function revertChain(web3: Web3) {
   })
 }
 
-export async function hasTxBlockNumber(promise: Promise<any>) {
+export async function hasTxBlockNumber(promise: Promise<any>, message = `Should have blockNumber`) {
     const tx = await promise.catch(e => {
       expect(e, `Should not have been rejected`).to.be.empty;
     });
-    expect(tx, `Should have blockNumber`).property('blockNumber').to.exist;
+    expect(tx, message).property('blockNumber').to.exist;
 }
 
 export function calculateAPR(apr = 1, start = 0,
@@ -108,8 +113,8 @@ export function outputDeploy(info: [string, string][] = []) {
   console.log(`Deployed`, info.map(([name, address]) => `\n\t${name}:\t${address}`).join(``))
 }
 
-export function modelExtensionDeployer(web3connection: Web3Connection, _class: any, args?: any) {
+export function modelExtensionDeployer(web3connection: Web3Connection, _class: any, args?: any[]): Promise<TransactionReceipt> {
   const deployer = new _class(web3connection);
   deployer.loadAbi();
-  return deployer.deployJsonAbi(args);
+  return deployer.deployJsonAbi(...(args || []));
 }

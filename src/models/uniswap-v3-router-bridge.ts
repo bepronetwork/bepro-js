@@ -24,12 +24,22 @@ export class UniswapV3RouterBridge extends Model<UniswapV3RouterBridgeMethods> i
     return this.callTx(this.contract.methods.swapRouter());
   }
 
-  async swapExactInputSingleEx(tokenIn: string, tokenOut: string, poolFee: undefined, amountIn: number, amountOutMinimum: number) {
-    return this.callTx(this.contract.methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum));
+  async swapExactInputSingleEx(tokenIn: string,
+                               tokenOut: string,
+                               poolFee: undefined,
+                               amountIn: number,
+                               amountOutMinimum: number) {
+    return this.callTx(this.contract
+                           .methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum));
   }
 
-  async swapExactOutputSingleEx(tokenIn: string, tokenOut: string, poolFee: undefined, amountOut: number, amountInMaximum: number) {
-    return this.callTx(this.contract.methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum));
+  async swapExactOutputSingleEx(tokenIn: string,
+                                tokenOut: string,
+                                poolFee: undefined,
+                                amountOut: number,
+                                amountInMaximum: number) {
+    return this.callTx(this.contract
+                           .methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum));
   }
 
 }

@@ -1,3 +1,4 @@
+export * from '@models/cerc20';
 export * from '@models/erc20';
 export * from '@models/erc20-token-lock';
 export * from '@models/erc721-collectibles';
@@ -42,7 +43,6 @@ export * from '@interfaces/web3-connection-options';
 export * from '@events/x-events';
 export * from '@events/network-events';
 
-
 export * from '@methods/contract-call-method';
 export * from '@methods/erc20';
 export * from '@methods/erc20-token-lock';
@@ -60,3 +60,20 @@ export * from '@methods/sablier';
 export * from '@methods/staking-contract';
 export * from '@methods/votable';
 export * from '@methods/uniswap-v3-router-bridge';
+
+export * from '@utils/block-number-timestamp';
+export * from '@utils/locked-tokens-info';
+export * from '@utils/loophole-user-info';
+export * from '@utils/loophole-pool-info';
+export * from '@utils/loophole-pool-update';
+export * from '@utils/network-issue';
+export * from '@utils/numbers';
+export * from '@utils/pool-information';
+export * from '@utils/real-fvr-pack';
+export * from '@utils/sablier-compounding-stream';
+export * from '@utils/sablier-interest';
+export * from '@utils/sablier-stream';
+export * from '@utils/stake-subscription';
+export * from '@utils/transaction-handler';
+export * from '@utils/voter-info';
+export * from '@utils/voting-poll-winner';

@@ -12,15 +12,14 @@ interface Params {
   '6': number
 }
 
-export default function lhPoolInfo({
-                                     0: address,
+export default function lhPoolInfo({0: address,
                                      1: allocPoint,
                                      2: lastRewardBlock,
                                      3: totalPool,
                                      4: entryStakeTotal,
                                      5: totalDistributedPenalty,
-                                     6: accLPtokensPerShare
-                                   }: Params, decimals = 18, multiplier = 1): LoopholePoolInfo {
+                                     6: accLPtokensPerShare}: Params,
+                                   decimals = 18, multiplier = 1): LoopholePoolInfo {
   return {
     address,
     allocPoint,

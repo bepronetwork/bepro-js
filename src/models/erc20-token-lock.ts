@@ -56,12 +56,14 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
 
   async setMaxAmountToLock(amount: number) {
     await this.ownable.onlyOwner();
-    return this.sendTx(this.contract.methods.setMaxAmountToLock(toSmartContractDecimals(amount, this.erc20.decimals) as number))
+    return this.sendTx(this.contract.methods
+                           .setMaxAmountToLock(toSmartContractDecimals(amount, this.erc20.decimals) as number))
   }
 
   async setMinAmountToLock(amount: number) {
     await this.ownable.onlyOwner();
-    return this.sendTx(this.contract.methods.setMinAmountToLock(toSmartContractDecimals(amount, this.erc20.decimals) as number))
+    return this.sendTx(this.contract.methods
+                           .setMinAmountToLock(toSmartContractDecimals(amount, this.erc20.decimals) as number))
   }
 
   async approveERC20Transfer() {

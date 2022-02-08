@@ -15,7 +15,9 @@ import stakeSubscription from '@utils/stake-subscription';
 import {Errors} from '@interfaces/error-enum';
 
 export class StakingContract extends Model<StakingContractMethods> implements Deployable, IsOwnable, IsPausable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly stakeTokenAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
+              contractAddress?: string,
+              readonly stakeTokenAddress?: string) {
     super(web3Connection, StakingContractJson.abi as AbiItem[], contractAddress);
   }
 
@@ -34,7 +36,9 @@ export class StakingContract extends Model<StakingContractMethods> implements De
     this._ownable = new Ownable(this);
     this._pausable = new Pausable(this);
 
-    this._erc20 = new ERC20(this.web3Connection, this.stakeTokenAddress || await this.callTx(this.contract.methods.erc20()));
+    const contractAddress = this.stakeTokenAddress || await this.callTx(this.contract.methods.erc20());
+
+    this._erc20 = new ERC20(this.web3Connection, contractAddress);
     await this._erc20.loadContract();
   }
 
@@ -78,29 +82,40 @@ export class StakingContract extends Model<StakingContractMethods> implements De
     if (!(await this.erc20.isApproved(this.contractAddress, _amount)))
       throw new Error(Errors.InteractionIsNotAvailableCallApprove);
 
-    return this.sendTx(this.contract.methods.subscribeProduct(_product_id, toSmartContractDecimals(_amount, this.erc20.decimals) as number));
+    return this.sendTx(this.contract
+                           .methods
+                           .subscribeProduct(_product_id,
+                                             toSmartContractDecimals(_amount, this.erc20.decimals) as number));
   }
 
-  async createProduct(_startDate: number, _endDate: number, _totalMaxAmount: number, _individualMinimumAmount: number, _individualMaximumAmount: number, _APR: number, _lockedUntilFinalization: boolean) {
-    return this.sendTx(
-      this.contract.methods.createProduct(
-        toSmartContractDate(_startDate),
-        toSmartContractDate(_endDate),
-        toSmartContractDecimals(_totalMaxAmount, this.erc20.decimals) as number,
-        toSmartContractDecimals(_individualMinimumAmount, this.erc20.decimals) as number,
-        toSmartContractDecimals(_individualMaximumAmount, this.erc20.decimals) as number,
-        _APR, _lockedUntilFinalization));
+  async createProduct(_startDate: number,
+                      _endDate: number,
+                      _totalMaxAmount: number,
+                      _individualMinimumAmount: number,
+                      _individualMaximumAmount: number,
+                      _APR: number,
+                      _lockedUntilFinalization: boolean) {
+    _totalMaxAmount = toSmartContractDecimals(_totalMaxAmount, this.erc20.decimals) as number;
+    _individualMinimumAmount = toSmartContractDecimals(_individualMinimumAmount, this.erc20.decimals) as number;
+    _individualMaximumAmount = toSmartContractDecimals(_individualMaximumAmount, this.erc20.decimals) as number;
+    return this.sendTx(this.contract
+                           .methods
+                           .createProduct(toSmartContractDate(_startDate),
+                                          toSmartContractDate(_endDate),
+                                          _totalMaxAmount,
+                                          _individualMinimumAmount,
+                                          _individualMaximumAmount,
+                                          _APR,
+                                          _lockedUntilFinalization));
   }
 
   async getAPRAmount(_APR: number, _startDate: number, _endDate: number, _amount: number) {
-    return +fromDecimals(
-      await this.callTx(
-        this.contract.methods.getAPRAmount(
-          _APR,
-          toSmartContractDate(_startDate),
-          toSmartContractDate(_endDate),
-          toSmartContractDecimals(_amount, this.erc20.decimals) as number)
-      ), this.erc20.decimals);
+    _startDate = toSmartContractDate(_startDate);
+    _endDate = toSmartContractDate(_endDate);
+    _amount = toSmartContractDecimals(_amount, this.erc20.decimals) as number;
+    return +fromDecimals(await this.callTx(this.contract
+                                               .methods
+                                               .getAPRAmount(_APR, _startDate, _endDate, _amount)), this.erc20.decimals)
   }
 
   async getProductIds() {
@@ -121,7 +136,8 @@ export class StakingContract extends Model<StakingContractMethods> implements De
   }
 
   async getProduct(_product_id: number) {
-    return stakingProduct(await this.callTx(this.contract.methods.getProduct(_product_id)), this.erc20.decimals, _product_id);
+    return stakingProduct(await this.callTx(this.contract
+                                                .methods.getProduct(_product_id)), this.erc20.decimals, _product_id);
   }
 
   async approveERC20Transfer() {

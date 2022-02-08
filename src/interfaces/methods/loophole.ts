@@ -1,6 +1,6 @@
 import {ContractSendMethod} from 'web3-eth-contract';
 import {ContractCallMethod} from '@methods/contract-call-method';
-
+/* eslint-disable */
 export interface LoopholeMethods {
   LPtokensPerShareMultiplier() :ContractCallMethod<number>;
   exitPenalty() :ContractCallMethod<number>;
@@ -29,7 +29,7 @@ export interface LoopholeMethods {
   getPoolReward(pid: number) :ContractCallMethod<number>;
   getBlockTimestamp() :ContractCallMethod<number>;
   getBlockNumber() :ContractCallMethod<number>;
-  getPool(pid: number) :ContractCallMethod<{'0': string; '1': number; '2': number; '3': number; '4': number; '5': number; '6': number}>;
+  getPool(pid: number):ContractCallMethod<{'0': string; '1': number; '2': number; '3': number; '4': number; '5': number; '6': number}>;
   getPoolInfo(pid: number) :ContractCallMethod<{'0': string; '1': number; '2': number; '3': number; '4': number; '5': number; '6': number}>;
   poolsCount() :ContractCallMethod<number>;
   getUserInfo(pid: number, user: string) :ContractCallMethod<{'0': number; '1': number; '2': number; '3': number}>;
@@ -37,3 +37,4 @@ export interface LoopholeMethods {
   getTotalUnstakeUser(pid: number, user: string) :ContractCallMethod<number>;
   getEntryStakeAdjusted(pid: number, user: string) :ContractCallMethod<number>;
 }
+/* eslint-enable */

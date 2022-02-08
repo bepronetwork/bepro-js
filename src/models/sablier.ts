@@ -29,7 +29,7 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   }
 
   async fee() {
-    return +fromDecimals(await this.callTx(this.contract.methods.fee()), 16);
+    return +fromDecimals(await this.callTx(this.contract.methods.fee()));
   }
 
   async initialize(sender: string) {
@@ -70,7 +70,8 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
 
   async takeEarnings(tokenAddress: string, amount: number) {
     const decimals = await this.callTx(this.contract.methods.getTokenDecimals(tokenAddress))
-    return this.sendTx(this.contract.methods.takeEarnings(tokenAddress, toSmartContractDecimals(amount, decimals) as number));
+    return this.sendTx(this.contract.methods.takeEarnings(tokenAddress,
+                                                          toSmartContractDecimals(amount, decimals) as number));
   }
 
   async getStream(streamId: number) {
@@ -82,7 +83,8 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   }
 
   async balanceOf(streamId: number, who: string) {
-    return +fromDecimals(await this.callTx(this.contract.methods.balanceOf(streamId, who)), await this.getTokenDecimalsFromStream(streamId));
+    return +fromDecimals(await this.callTx(this.contract.methods.balanceOf(streamId, who)),
+                         await this.getTokenDecimalsFromStream(streamId));
   }
 
   async isCompoundingStream(streamId: number) {
@@ -90,31 +92,51 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   }
 
   async getCompoundingStream(streamId: number) {
-    return sablierCompoundingStream(await this.callTx(this.contract.methods.getCompoundingStream(streamId)), await this.getTokenDecimalsFromStream(streamId));
+    return sablierCompoundingStream(await this.callTx(this.contract.methods.getCompoundingStream(streamId)),
+                                    await this.getTokenDecimalsFromStream(streamId));
   }
 
   async interestOf(streamId: number, amount: number) {
-    return sablierInterest(await this.callTx(this.contract.methods.interestOf(streamId, amount)), await this.getTokenDecimalsFromStream(streamId));
+    return sablierInterest(await this.callTx(this.contract.methods.interestOf(streamId, amount)),
+                           await this.getTokenDecimalsFromStream(streamId));
   }
 
   async getEarnings(tokenAddress: string) {
-    return +fromDecimals(await this.callTx(this.contract.methods.getEarnings(tokenAddress)), await this.getTokenDecimals(tokenAddress));
+    return +fromDecimals(await this.callTx(this.contract.methods.getEarnings(tokenAddress)),
+                         await this.getTokenDecimals(tokenAddress));
   }
 
   async createStream(recipient: string, deposit: number, tokenAddress: string, startTime: number, stopTime: number) {
-    return this.callTx(this.contract.methods.createStream(recipient, toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number, tokenAddress, startTime, stopTime));
+    deposit = toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number;
+    return this.sendTx(this.contract.methods.createStream(recipient, deposit, tokenAddress, startTime, stopTime));
   }
 
-  async createCompoundingStream(recipient: string, deposit: number, tokenAddress: string, startTime: number, stopTime: number, senderSharePercentage: number, recipientSharePercentage: number) {
-    return this.callTx(this.contract.methods.createCompoundingStream(recipient, toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage));
+  async createCompoundingStream(recipient: string,
+                                deposit: number,
+                                tokenAddress: string,
+                                startTime: number,
+                                stopTime: number,
+                                senderSharePercentage: number,
+                                recipientSharePercentage: number) {
+    deposit = toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number;
+    return this.sendTx(this.contract
+                           .methods
+                           .createCompoundingStream(recipient,
+                                                    deposit,
+                                                    tokenAddress,
+                                                    startTime,
+                                                    stopTime,
+                                                    senderSharePercentage,
+                                                    recipientSharePercentage));
   }
 
   async withdrawFromStream(streamId: number, amount: number) {
-    return this.callTx(this.contract.methods.withdrawFromStream(streamId, toSmartContractDecimals(amount, await this.getTokenDecimalsFromStream(streamId)) as number));
+    amount = toSmartContractDecimals(amount, await this.getTokenDecimalsFromStream(streamId)) as number;
+    return this.sendTx(this.contract.methods.withdrawFromStream(streamId, amount));
   }
 
   async cancelStream(streamId: number) {
-    return this.callTx(this.contract.methods.cancelStream(streamId));
+    return this.sendTx(this.contract.methods.cancelStream(streamId));
   }
 
   async getTokenDecimalsFromStream(streamId: number) {

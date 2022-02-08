@@ -7,11 +7,9 @@ interface Params {
   '3': number;
 }
 
-export default function lhUserInfo({
-                                     0: entryStake,
+export default function lhUserInfo({0: entryStake,
                                      1: unstake,
                                      2: entryStakeAdjusted,
-                                     3: payRewardMark
-                                   }: Params): LoopholeUserInfo {
+                                     3: payRewardMark}: Params): LoopholeUserInfo {
   return ({entryStake, unstake, entryStakeAdjusted, payRewardMark})
 }

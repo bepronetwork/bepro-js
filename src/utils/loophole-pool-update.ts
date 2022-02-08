@@ -8,11 +8,10 @@ interface Params {
   '2': number
 }
 
-export default function lhPoolUpdate({
-                                       0: blockNumber,
+export default function lhPoolUpdate({0: blockNumber,
                                        1: lpTokensReward,
-                                       2: accLPtokensPerShare
-                                     }: Params, decimals = 18, multiplier = 1): LoopholePoolUpdate {
+                                       2: accLPtokensPerShare}: Params,
+                                     decimals = 18, multiplier = 1): LoopholePoolUpdate {
   return {
     blockNumber,
     lpTokensReward: +fromDecimals(lpTokensReward, decimals),
