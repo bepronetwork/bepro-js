@@ -1,5 +1,7 @@
 export interface CloseIssueEvent { returnValues: {'id': number; 'mergeID': number} }
-export interface DisputeMergeEvent { returnValues: {'id': number; 'mergeID': number; 'oracles': number; 'disputer': string} }
+export interface DisputeMergeEvent {
+  returnValues: {'id': number; 'mergeID': number; 'oracles': number; 'disputer': string}
+}
 export interface GovernorTransferredEvent { returnValues: {'previousGovernor': string; 'newGovernor': string} }
 export interface MergeProposalCreatedEvent { returnValues: {'id': number; 'mergeID': number; 'creator': string} }
 export interface OpenIssueEvent { returnValues: {'id': number; 'opener': string; 'amount': number} }

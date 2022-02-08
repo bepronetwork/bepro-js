@@ -2,3 +2,5 @@
 **/build/*
 **/docs/*
 **/coverage/*
+**/test/*
+**/tooling/*

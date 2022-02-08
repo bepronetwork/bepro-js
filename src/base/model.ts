@@ -61,11 +61,7 @@ export class Model<Methods = any> {
     if (!this.contractAddress)
       throw new Error(Errors.MissingContractAddress)
 
-    try {
-      this.loadAbi();
-    } catch (e) {
-      throw e;
-    }
+    this.loadAbi();
   }
 
   /**
@@ -101,12 +97,22 @@ export class Model<Methods = any> {
   /**
    * Interact with, or change a value of, a property on the contract
    */
-  async sendTx(method: ContractSendMethod, value?: any, debug = this.web3Connection?.options?.debug): Promise<TransactionReceipt> {
+  async sendTx(method: ContractSendMethod,
+               value?: any,
+               debug = this.web3Connection?.options?.debug): Promise<TransactionReceipt> {
     if (this.account)
-      return this.contract.sendSignedTx(this.account, method.encodeABI(), value, await this.contract.txOptions(method, value, await this.connection.getAddress()), debug);
+      return this.contract.sendSignedTx(this.account,
+                                        method.encodeABI(),
+                                        value,
+                                        await this.contract.txOptions(method,
+                                                                      value,
+                                                                      await this.connection.getAddress()),
+                                        debug);
+
     else return this.sendUnsignedTx(method, value, debug);
   }
 
+  /* eslint-disable no-async-promise-executor */
   /**
    * Send unsigned transaction
    */
@@ -124,6 +130,7 @@ export class Model<Methods = any> {
       }
     });
   }
+  /* eslint-enable no-async-promise-executor */
 
   /**
    * Deploy the loaded abi contract

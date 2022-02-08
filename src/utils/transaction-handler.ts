@@ -3,7 +3,10 @@ import {Contract} from 'web3-eth-contract';
 
 type ResolveReject = (value?: any | unknown) => void;
 
-export async function transactionHandler(transaction: PromiEvent<TransactionReceipt|Contract>, resolve: ResolveReject, reject: ResolveReject, debug?: boolean) {
+export async function transactionHandler(transaction: PromiEvent<TransactionReceipt | Contract>,
+                                         resolve: ResolveReject,
+                                         reject: ResolveReject,
+                                         debug?: boolean) {
   transaction
     .on(`receipt`, (receipt) => {
       if (debug)

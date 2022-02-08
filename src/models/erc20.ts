@@ -8,7 +8,7 @@ import {ERC20Methods} from '@methods/erc20';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 
 export class ERC20 extends Model<ERC20Methods> implements Deployable {
-  private _decimals: number = 0;
+  private _decimals = 0;
   get decimals(): number { return this._decimals; }
 
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {

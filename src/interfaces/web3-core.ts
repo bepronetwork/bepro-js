@@ -32,4 +32,4 @@ export interface TransactionReceipt {
   byzantium: boolean,
   type: number;
   status?: number
-};
+}

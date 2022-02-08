@@ -53,6 +53,10 @@ export async function shouldBeRejected(promise: Promise<any>, withErrorMessage?:
 
 const payload = (method: string, params: any[] = []) => ({jsonrpc: `2.0`, method, params, id: 0});
 
+/**
+ * @param {number} time seconds to increase
+ * @param {Web3} web3 web3
+ */
 export async function increaseTime(time: number, web3: Web3) {
 
   const timeAdvance = payload(`evm_increaseTime`, [time]);

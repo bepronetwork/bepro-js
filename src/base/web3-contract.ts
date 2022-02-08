@@ -61,8 +61,10 @@ export class Web3Contract<Methods = any, Events = any> {
   get methods(): Methods { return this.self.methods; }
   get events(): Events { return this.self.events; }
 
+  /* eslint-disable complexity */
   async txOptions(method: ContractSendMethod, value?: string, from?: string) {
-    let {gas = 0, gasAmount = 0, gasPrice = ``, gasFactor = 1, auto = false} = this.options || {};
+    let {gas = 0, gasAmount = 0, gasPrice = ``,} = this.options || {};
+    const {gasFactor = 1, auto = false} = this.options || {};
 
     if (!auto && (!gas || !gasPrice))
       throw new Error(Errors.GasAndGasPriceMustBeProvidedIfNoAutoTxOptions);
@@ -83,6 +85,7 @@ export class Web3Contract<Methods = any, Events = any> {
       ... gasPrice ? {gasPrice} : {},
     };
   }
+  /* eslint-enable complexity */
 
   /**
    * Deploys the new AbiItem and returns its transaction receipt
@@ -95,12 +98,14 @@ export class Web3Contract<Methods = any, Events = any> {
         const limbo = newContract.deploy(deployOptions);
         const from = account?.address || (await this.web3.eth.getAccounts())[0];
 
+        /* eslint-disable no-inner-declarations */
         function onConfirmation(number: number, receipt: any) {
           if (DEFAULT_CONFIRMATIONS_NEEDED >= number)
             resolve(receipt as unknown as TransactionReceipt);
         }
 
         function onError(error: any) { reject(error); }
+        /* eslint-enable no-inner-declarations */
 
         if (account) {
           const data = limbo.encodeABI();
