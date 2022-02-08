@@ -10,6 +10,8 @@ import {XEvents} from '@events/x-events';
 import {AbiItem} from 'web3-utils';
 import {ERC20} from '@models/erc20';
 import {Errors} from '@interfaces/error-enum';
+import {TransactionReceipt} from '@interfaces/web3-core';
+import {toSmartContractDecimals} from '@utils/numbers';
 
 export class CERC20 extends Model<CERC20Methods> implements Deployable {
   private _erc20!: ERC20;
@@ -57,8 +59,8 @@ export class CERC20 extends Model<CERC20Methods> implements Deployable {
   /**
    * Approve the passed address to spend the specified amount of tokens on behalf of msg.sender. Beware that changing an allowance with this method brings the risk that someone may use both the old and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards: https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
    */
-  async approve(spender: string, value: number) {
-    return this.callTx(this.contract.methods.approve(spender, value));
+  async approve(address: string, amount: number): Promise<TransactionReceipt> {
+    return this.sendTx(this.contract.methods.approve(address, toSmartContractDecimals(amount, this.erc20.decimals) as number));
   }
 
   /**

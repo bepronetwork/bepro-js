@@ -84,11 +84,11 @@ export async function revertChain(web3: Web3) {
   })
 }
 
-export async function hasTxBlockNumber(promise: Promise<any>) {
+export async function hasTxBlockNumber(promise: Promise<any>, message = `Should have blockNumber`) {
     const tx = await promise.catch(e => {
       expect(e, `Should not have been rejected`).to.be.empty;
     });
-    expect(tx, `Should have blockNumber`).property('blockNumber').to.exist;
+    expect(tx, message).property('blockNumber').to.exist;
 }
 
 export function calculateAPR(apr = 1, start = 0,

@@ -57,14 +57,14 @@ export class Web3Connection {
   switchToAccount(privateKey: string) {
     if (this.options.privateKey !== privateKey)
       this.options.privateKey = privateKey;
-    return this.start()
+    return this.start(true)
   }
 
   /**
    * Start this connection (and load an account if {@link Web3ConnectionOptions.privateKey} was provided)
    */
-  start(): void {
-    if (this.started)
+  start(restart = false): void {
+    if (this.started && !restart)
       return;
 
     const {web3Host = ``, web3ProviderOptions = undefined} = this.options;

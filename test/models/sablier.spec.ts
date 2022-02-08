@@ -3,7 +3,7 @@ import {
   erc20Deployer, getChainDate,
   getPrivateKeyFromFile,
   hasTxBlockNumber,
-  modelExtensionDeployer,
+  modelExtensionDeployer, revertChain,
 } from '../utils';
 import {Account} from 'web3-core';
 import {CERC20, ERC20, ETHUtils, Sablier} from '../../src';
@@ -11,10 +11,10 @@ import {
   AMOUNT_1M,
   INITIAL_EXCHANGE_RATE,
   SALARY, STANDARD_RECIPIENT_SHARE_PERCENTAGE,
-  STANDARD_SABLIER_FEE, STANDARD_SENDER_SHARE_PERCENTAGE,
+  STANDARD_SABLIER_FEE, STANDARD_SENDER_SHARE_PERCENTAGE, START_TIME_DELTA, START_TIME_OFFSET,
 } from '../utils/constants';
 import {toSmartContractDate, toSmartContractDecimals} from '../../src/utils/numbers';
-import {addMinutes, subMinutes} from 'date-fns'
+import {addSeconds} from 'date-fns'
 import {expect} from 'chai';
 
 describe.skip(`Sablier`, () => {
@@ -22,8 +22,9 @@ describe.skip(`Sablier`, () => {
 
   let Alice: Account;
   let Bob: Account;
-  let Carol: Account;
-  let John: Account;
+  let Admin: Account;
+  // let Carol: Account;
+  // let John: Account;
   // let ActiveUser: Account;
 
   let ethUtils: ETHUtils;
@@ -33,14 +34,16 @@ describe.skip(`Sablier`, () => {
 
   let contractAddress: string;
   let erc20ContractAddress: string;
-  // let cerc20ContractAddress: string;
+  let cerc20ContractAddress: string;
 
   before(async () => {
     await web3Connection.start();
-    Alice = await web3Connection.Web3.eth.accounts.create(`Alice`);
-    Bob = await web3Connection.Web3.eth.accounts.create(`Bob`);
-    Carol = await web3Connection.Web3.eth.accounts.create(`Carol`);
-    John = await web3Connection.Web3.eth.accounts.create(`John`);
+    await revertChain(web3Connection.Web3);
+    Alice = await web3Connection.Web3.eth.accounts.privateKeyToAccount(getPrivateKeyFromFile(1));
+    Bob = await web3Connection.Web3.eth.accounts.privateKeyToAccount(getPrivateKeyFromFile(2));
+    Admin = await web3Connection.Web3.eth.accounts.privateKeyToAccount(getPrivateKeyFromFile());
+    // Carol = await web3Connection.Web3.eth.accounts.create(`Carol`);
+    // John = await web3Connection.Web3.eth.accounts.create(`John`);
 
     const ethUtilsTx = await modelExtensionDeployer(web3Connection, ETHUtils);
     ethUtils = new ETHUtils(web3Connection, ethUtilsTx.contractAddress);
@@ -54,24 +57,25 @@ describe.skip(`Sablier`, () => {
     cerc20 = new CERC20(web3Connection, cercTx.contractAddress, erc20.contractAddress!);
     await cerc20.loadContract();
 
-    const addresses = [Alice, Bob, Carol].map(({address}) => address);
-    for (const address of addresses)
-      await erc20.transferTokenAmount(address, 250000);
+    // const addresses = [Alice, Bob,].map(({address}) => address);
+    // for (const address of addresses)
+    //   await erc20.transferTokenAmount(address, 25000);
 
-    const privateKeys = [Alice, Bob, Carol, John].map(({privateKey}) => privateKey);
-    for (const privateKey of privateKeys) {
-      await web3Connection.switchToAccount(privateKey);
-      await erc20.approve(cerc20.contractAddress!, AMOUNT_1M);
-    }
+    // const privateKeys = [Alice, Bob, Carol, John].map(({privateKey}) => privateKey);
+    // for (const privateKey of privateKeys) {
+    //   // await web3Connection.switchToAccount(privateKey);
+    //   // await cerc20.approve(contractAddress, AMOUNT_1M);
+    // }
 
-    await web3Connection.switchToAccount(getPrivateKeyFromFile()); // go back to the original account that created contracts
+    await web3Connection.switchToAccount(Admin.privateKey); // go back to the original account that created contracts
     await erc20.transferTokenAmount(Alice.address, SALARY);
+    await erc20.transferTokenAmount(Bob.address, SALARY);
 
     await erc20.approve(cerc20.contractAddress!, AMOUNT_1M);
     await cerc20.supplyUnderlying(SALARY);
 
     erc20ContractAddress = erc20.contractAddress!;
-    // cerc20ContractAddress = erc20.contractAddress;
+    cerc20ContractAddress = erc20.contractAddress!;
   });
 
   it(`Should deploy sablier`, async () => {
@@ -91,22 +95,32 @@ describe.skip(`Sablier`, () => {
     });
 
     it(`Updates fee`, async () => {
-      await hasTxBlockNumber(sablier.updateFee(+STANDARD_SABLIER_FEE))
+      await hasTxBlockNumber(sablier.updateFee(+STANDARD_SABLIER_FEE));
       expect(await sablier.fee()).to.eq(+STANDARD_SABLIER_FEE/100);
     });
 
     it(`Creates a compounding stream`, async () => {
-      startTime = subMinutes(startTime, 1);
-      // const endTime = addMinutes(startTime, 10);
-      const stream = await sablier.createCompoundingStream(Bob.address, SALARY, erc20ContractAddress,
-                                                           toSmartContractDate(new Date()),
-                                                           toSmartContractDate(addMinutes(startTime, 10)),
+
+      await hasTxBlockNumber(erc20.approve(contractAddress, AMOUNT_1M), `Admin should have approved Sablier contract`);
+
+      await web3Connection.switchToAccount(Bob.privateKey);
+      await hasTxBlockNumber(erc20.approve(contractAddress, AMOUNT_1M), `Bob should have approved Sablier contract`);
+
+      await web3Connection.switchToAccount(Admin.privateKey);
+
+      startTime = addSeconds(startTime, START_TIME_OFFSET);
+      const endTime = addSeconds(startTime, START_TIME_DELTA);
+
+      const stream = await sablier.createCompoundingStream(Bob.address, SALARY, cerc20ContractAddress,
+                                                           toSmartContractDate(Math.round(+startTime)),
+                                                           toSmartContractDate(Math.round(+endTime)),
                                                            STANDARD_SENDER_SHARE_PERCENTAGE,
                                                            STANDARD_RECIPIENT_SHARE_PERCENTAGE);
-      const events = await sablier.contract.self.getPastEvents(`CreateStream`, {fromBlock: stream.blockNumber});
-
-      expect(events[0].returnValues['streamId']).to.not.be.empty;
-      streamId = events[0].returnValues['streamId'];
+      console.log(stream);
+      // const events = await sablier.contract.self.getPastEvents(`CreateStream`, {fromBlock: stream.blockNumber});
+      //
+      // expect(events[0].returnValues['streamId']).to.not.be.empty;
+      // streamId = events[0].returnValues['streamId'];
     });
 
     it(`Gets stream`, async () => {
