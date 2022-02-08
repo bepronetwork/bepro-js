@@ -110,10 +110,12 @@ export class StakingContract extends Model<StakingContractMethods> implements De
   }
 
   async getAPRAmount(_APR: number, _startDate: number, _endDate: number, _amount: number) {
-    return +fromDecimals(await this.callTx(this.contract.methods.getAPRAmount(_APR,
-          toSmartContractDate(_startDate),
-          toSmartContractDate(_endDate),
-          toSmartContractDecimals(_amount, this.erc20.decimals) as number)), this.erc20.decimals);
+    _startDate = toSmartContractDate(_startDate);
+    _endDate = toSmartContractDate(_endDate);
+    _amount = toSmartContractDecimals(_amount, this.erc20.decimals) as number;
+    return +fromDecimals(await this.callTx(this.contract
+                                               .methods
+                                               .getAPRAmount(_APR, _startDate, _endDate, _amount), this.erc20.decimals))
   }
 
   async getProductIds() {

@@ -2,6 +2,17 @@
   "parser": "@typescript-eslint/parser",
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "rules": {
+
+    "indent-legacy": ["error", 2, {
+      "FunctionDeclaration": {
+        "parameters": "first"
+      },
+      "ObjectExpression": "first",
+      "ArrayExpression": "first",
+      "CallExpression": {
+        "arguments": "first"
+      }
+    }],
     "no-prototype-builtins": 0,
     "no-return-await": 2,
     "camelcase": 0,

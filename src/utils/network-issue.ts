@@ -10,7 +10,7 @@ type Params = {
 export default function networkIssue({'0': _id, '1': cid, '2': creationDate, '3': tokensStaked, '4': issueGenerator,
                                        '5': mergeProposalsAmount, '6': finalized,
                                        '7': canceled, '8': recognizedAsFinished}: Params,
-                             decimals = 18): NetworkIssue {
+                                     decimals = 18): NetworkIssue {
   return {
     _id, cid, issueGenerator, finalized, canceled, recognizedAsFinished,
     creationDate: creationDate * 1000,
