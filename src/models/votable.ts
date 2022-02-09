@@ -6,7 +6,7 @@ import VotableJson from '@abi/Votable.json';
 import {VotableMethods} from '@methods/votable';
 import {AbiItem} from 'web3-utils';
 import {ERC20} from '@models/erc20';
-import {fromDecimals, toSmartContractDate, toSmartContractDecimals} from '@utils/numbers';
+import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
 import voterInfo from '@utils/voter-info';
 import votingPollWinner from '@utils/voting-poll-winner';
 import poolInformation from '@utils/pool-information';
@@ -52,8 +52,14 @@ export class Votable extends Model<VotableMethods> implements Deployable {
     return this.callTx(this.contract.methods.polls(v1));
   }
 
+  /**
+   *
+   * @param {string} _description description of the poll
+   * @param {number} _voteLength length of the voting in seconds
+   * @param {number[]} options available options
+   */
   async createPoll(_description: string, _voteLength: number, options: number[]) {
-    return this.callTx(this.contract.methods.createPoll(_description, toSmartContractDate(_voteLength), options));
+    return this.sendTx(this.contract.methods.createPoll(_description, _voteLength, options));
   }
 
   async endPoll(_pollID: number) {
