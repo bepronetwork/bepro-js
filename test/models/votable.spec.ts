@@ -3,7 +3,7 @@ import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber, increaseTime} fr
 import {toSmartContractDecimals} from '../../src/';
 import {expect} from 'chai';
 
-describe.only(`Votable`, () => {
+describe(`Votable`, () => {
   let accountAddress: string;
   let contractAddress: string;
   let tokenContractAddress: string;
