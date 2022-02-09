@@ -1,0 +1,9 @@
+{
+  "paths": {
+    "base": "@base",
+    "interfaces": "@interfaces",
+    "abi": "@abi",
+    "methods": "@methods",
+    "events": "@events"
+  }
+}

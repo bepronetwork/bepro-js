@@ -51,6 +51,8 @@ const args = yargs(hideBin(process.argv))
   .describe(`e`, `directory to output events to`)
   .alias(`E`, `overwriteEvent`)
   .describe(`E`, `allow event interface file overwrite (events will be spawned on same folder as interface)`)
+  .alias(`j`, `json`)
+  .describe(`j`, `json configuration file`)
   .demandOption([`f`,])
   .help(`h`)
   .alias(`h`, `help`)
@@ -59,7 +61,14 @@ const args = yargs(hideBin(process.argv))
 if (!fs.existsSync(args.file))
   return console.log(`File ${args.file} not found`);
 
-const parsed = AbiParser(args.file);
+if (!args.json)
+  args.json = path.resolve(`./abi-parser-config.json`);
+
+if (!fs.existsSync(args.json))
+  return console.log(`Configuration file ${args.json} not found`)
+
+
+const parsed = AbiParser(args.file, JSON.parse(fs.readFileSync(args.json, 'utf8')));
 
 
 if (args.interfaceDir) {
