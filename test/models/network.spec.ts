@@ -7,7 +7,7 @@ import {toSmartContractDecimals} from '@utils/numbers';
 import {NetworkIssue} from '@interfaces/network-issue';
 import {OraclesSummary} from '@interfaces/oracles-summary';
 
-describe.only(`Network`, () => {
+describe(`Network`, () => {
   let network: Network;
   let web3Connection: Web3Connection;
   let networkContractAddress!: string;
