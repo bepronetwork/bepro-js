@@ -35,7 +35,7 @@
         "@uniswap/v3-periphery": "^1.1.1",
         "accounting": "^0.4.1",
         "dotenv": "^8.2.0",
-        "ipfs-http-client": "^50.0.0",
+        "ipfs-http-client": "^50.1.2",
         "web3": "^1.6.1",
         "web3-eth": "^1.6.1",
         "web3-utils": "^1.6.1"

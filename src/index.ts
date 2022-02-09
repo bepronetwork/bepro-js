@@ -22,8 +22,10 @@ export * from '@base/pausable';
 export * from '@base/stakeable';
 export * from '@base/web3-connection';
 export * from '@base/web3-contract';
+export * from '@base/ipfs-wrapper';
 
 export * from '@interfaces/deployable';
+export * from '@interfaces/ipfs-options';
 export * from '@interfaces/loophole-pool-info';
 export * from '@interfaces/loophole-pool-update';
 export * from '@interfaces/loophole-user-info';
