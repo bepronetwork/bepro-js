@@ -4,6 +4,7 @@ const yargs = require(`yargs`);
 const hideBin = require(`yargs/helpers`).hideBin;
 const {camelCase, paramCase,} = require('change-case')
 const AbiParser = require('./abi-parser/index');
+const defaultConfig = require('./abi-parser/default-config');
 
 /**
  * @typedef {Object} Contract~AbiOption~Input
@@ -61,16 +62,13 @@ const args = yargs(hideBin(process.argv))
 if (!fs.existsSync(args.file))
   return console.log(`File ${args.file} not found`);
 
-if (!args.json)
-  args.json = path.resolve(`./abi-parser-config.json`);
-
-if (!fs.existsSync(args.json))
+if (args.json && !fs.existsSync(args.json))
   return console.log(`Configuration file ${args.json} not found`)
 
 /**
  * @type {{output:{interfaceDir: string; classDir: string; eventsDir: string}, overwrite: {interface: boolean; class: boolean; events: boolean}}}
  */
-const options = JSON.parse(fs.readFileSync(args.json, 'utf8'));
+const options = args.json ? JSON.parse(fs.readFileSync(args.json, 'utf8')) : defaultConfig;
 
 if (!args.interfaceDir)
   args.interfaceDir = options?.output?.interfaceDir;

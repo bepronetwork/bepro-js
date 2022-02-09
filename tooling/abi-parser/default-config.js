@@ -1,4 +1,4 @@
-{
+module.exports = {
   "paths": {
     "base": "@base",
     "interfaces": "@interfaces",
