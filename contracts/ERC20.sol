@@ -13,8 +13,8 @@ contract CappedToken is ERC20, Ownable{
 
     address public distributionContract;
 
-    constructor(       
-        string memory _name, 
+    constructor(
+        string memory _name,
         string memory _symbol,
         uint256 _cap, address _distributionContract) public ERC20(_name, _symbol) {
         _mint(_distributionContract, _cap);
@@ -25,10 +25,9 @@ contract CappedToken is ERC20, Ownable{
 contract Token is CappedToken {
 
     constructor(
-        string memory _name, 
+        string memory _name,
         string memory _symbol,
-        uint256 _cap, 
-        address _distributionContract
-        ) public CappedToken(_name, _symbol, _cap, _distributionContract) {
+        uint256 _cap,
+        address _distributionContract) public CappedToken(_name, _symbol, _cap, _distributionContract) {
     }
 }
