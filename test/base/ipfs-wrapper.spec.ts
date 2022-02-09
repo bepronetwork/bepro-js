@@ -2,7 +2,7 @@ import {IPFSOptions, IPFSWrapper} from '../../src';
 import {expect} from 'chai';
 import {CID} from 'ipfs-http-client';
 
-describe.only(`IPFS Wrapper`, () => {
+describe(`IPFS Wrapper`, () => {
   const options: IPFSOptions = { host: 'ipfs.infura.io', port: 5001, protocol: "https"};
 
   it(`starts a new wrapper and connects`, () => {
