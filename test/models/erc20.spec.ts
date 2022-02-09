@@ -10,7 +10,7 @@ describe(`ERC20`, () => {
   let erc20: ERC20;
   let erc20ContractAddress: string;
 
-  const capAmount = process.env.ERC20_CAP || '10';
+  const capAmount = '1000';
   const cap = toSmartContractDecimals(capAmount, 18) as number;
   const name = `BEPRO`;
   const symbol = `$BEPRO`;
