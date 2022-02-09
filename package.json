@@ -27,7 +27,8 @@
         "test-ci": "npm run ganache:start >/dev/null & npm run test",
         "eslint": "eslint --ignore-path .eslintignore --ext .ts ./src",
         "lint": "npm run eslint -- --quiet",
-        "lint-fix": "npm run eslint -- --quiet --fix"
+        "lint-fix": "npm run eslint -- --quiet --fix",
+        "abi-parser": "node tooling/abi-parser.js"
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.2",

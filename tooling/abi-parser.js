@@ -2,7 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const yargs = require(`yargs`);
 const hideBin = require(`yargs/helpers`).hideBin;
-const {camelCase, paramCase, capitalCase} = require('change-case')
+const {camelCase, paramCase,} = require('change-case')
+const AbiParser = require('./abi-parser/index');
+const defaultConfig = require('./abi-parser/default-config');
 
 /**
  * @typedef {Object} Contract~AbiOption~Input
@@ -50,180 +52,46 @@ const args = yargs(hideBin(process.argv))
   .describe(`e`, `directory to output events to`)
   .alias(`E`, `overwriteEvent`)
   .describe(`E`, `allow event interface file overwrite (events will be spawned on same folder as interface)`)
+  .alias(`j`, `json`)
+  .describe(`j`, `json configuration file`)
   .demandOption([`f`,])
   .help(`h`)
   .alias(`h`, `help`)
   .argv;
 
-const SolidityTypes = {
-  bool: `boolean`,
-  address: `string`,
-  "string": `string`,
-  event: `void`,
-}
-
-const getSolidityType = (type = ``) => {
-  const isArray = type.search(`[]`) > -1;
-  let retype = `any`;
-
-  if (type.startsWith(`bytes`))
-    retype = `string` + (isArray && `[]` || ``);
-  else retype = type.search(`int`) > -1 ? `number` : SolidityTypes[type] + (isArray && `[]` || ``);
-
-  return retype;
-}
-
-const makeClass = (header = ``, content = ``, imports = []) =>
-  [...imports, "", `${header} {`, content, `}`].join(`\n`);
-
-/**
- * @param {Contract~AbiOption~Input[]} outputs
- * @param {string} template
- * @param {boolean} template
- * @returns {string}
- */
-const parseOutput = (outputs, template = `ContractCallMethod<%content%>`, useComponentName = false) => {
-  if (!outputs?.length)
-    return `ContractSendMethod`;
-
-  const _templateContent = (o, index, type) => `'${useComponentName && o.name || index}': ${getSolidityType(type)}`
-  const _templateMapper = (o, index) => !o.components ? _templateContent(o, index, o.type) : o.components.map(_templateMapper).join(`; `);
-
-  let content = outputs.map(_templateMapper).join(`; `);
-
-  if (outputs.length === 1 && (!outputs[0].components && !useComponentName))
-    content = content.replace(`'0': `, ``).replace(`;`, ``);
-  else content = `{${content}}`;
-
-  return template.replace(`%content%`, content);
-}
-
-const parseComment = (comment = ``) => [`  /**`, `   * ${comment}`, `   */\n`].join(`\n`)
-
-/**
- * @param {Contract~AbiOption~Input[]} inputs
- * @param {string} [joiner]
- * @param {boolean} [noType]
- * @returns {string}
- */
-const parseInputsName = (inputs, joiner = `, `, noType = false) =>
-  inputs?.map((input, i) =>
-    input.components?.length
-      ? `params: `+parseOutput([input], `%content%`, true)
-      : `${input.name || `v${i+1}`}${!noType && ': '.concat(getSolidityType(input.type)) || ''}`)?.join(joiner);
-
-const fnHeader = (name = ``, parsedInputs = ``, parsedOutputs = ``) =>
-  `${name}(${parsedInputs}) ${ parsedOutputs && ':'.concat(parsedOutputs) || ''}`;
-
-/**
- *
- * @param {string} name
- * @param {string} type
- * @param {string} nameAppendix
- * @returns
- */
-const classHeader = (name = `Name`, type = `interface`, nameAppendix = `Methods`) =>
-  `export ${type} ${name}${nameAppendix}`
-
-
-/**
- * @param {Contract~AbiOption} option
- * @param {boolean} [withBody]
- * @param {string} [devDocMethods]
- * @return {string}
- */
-const makeEvent = (option, withBody = false) => {
-
-  if (!withBody)
-    return `export interface ${option.name}Event ${parseOutput(option.inputs, `{ returnValues: %content% }`, true)}`
-
-  return [
-    `  async get${option.name}Events(filter: PastEventOptions): Promise<XEvents<Events.${option.name}Event>[]> {`,
-    `    return this.contract.self.getPastEvents(\`${option.name}\`, filter)`,
-    `  }\n`
-  ].join(`\n`)
-}
-
-
-/**
- * @param {Contract~AbiOption} option
- * @param {boolean} [withBody]
- * @param {string} [devDocMethods]
- * @return {string}
- */
-const makeFn = (option, withBody = false, devDoc = ``) => {
-  const parsedInputs = parseInputsName(option.inputs);
-  const parsedOutputs = parseOutput(option.outputs);
-
-  const inputs = withBody && option.inputs.map(({name, type}, i) =>
-    `${name || 'v'.concat(String(+i+1))}`).join(`, `) || '';
-
-  const body = withBody && `{\n    return this.${option.outputs.length ? 'callTx' : 'sendTx'}(this.contract.methods.${option.name}(${inputs})); \n  }\n` || '';
-
-  return `${devDoc && parseComment(devDoc) || ``}${withBody && '  async ' || '  '}${fnHeader(option.name, parsedInputs, !withBody && parsedOutputs || ``)}${withBody && body || ';'}`
-}
-
-/**
- * @param {string} filePath
- * @returns {{_interface: string, _class: string, _events: string}}
- */
-const AbiParser = (filePath = ``) => {
-
-  /**
-   * @type {Contract}
-   */
-  const contract = JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf-8'));
-
-  const abis = contract.abi.filter(option => !option.anonymous && option.type === "function");
-  const events = contract.abi.filter(option => !option.anonymous && option.type === "event");
-
-  const content = abis.map(option => makeFn(option, false)).join(`\n`);
-
-  const _super = `super(web3Connection, ${contract.contractName}Json.abi as AbiItem[], contractAddress);`;
-  const _constructor = `  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {\n    ${_super}\n  }\n\n`;
-
-  const _classBody = abis.map(option => {
-    const devdoc = Object.entries(contract?.devdoc?.methods).find(([key, value]) => key.startsWith(option.name) && value);
-    return makeFn(option, true, devdoc?.length && (devdoc[1].notice || devdoc[1].details) || ``)
-  }).concat(events.map(o => makeEvent(o, true))).join(`\n`);
-
-  const abiItemConstructor = contract.abi.filter(option => !option.anonymous && option.type === "constructor");
-  let constructorWithDeployer = ``;
-  // if (abiItemConstructor.length) {
-    const abiInputs = parseInputsName(abiItemConstructor[0]?.inputs || [])
-    const deployOptions = `const deployOptions = {\n        data: ${contract.contractName}Json.bytecode,\n        arguments: [${parseInputsName(abiItemConstructor[0]?.inputs || [], undefined, true)}]\n    };`
-    constructorWithDeployer = _constructor+`  async deployJsonAbi(${abiInputs}) {\n    ${deployOptions}\n\n    return this.deploy(deployOptions, this.web3Connection.Account);\n  }\n\n`;
-  // }
-
-  const _interface = makeClass(classHeader(contract.contractName), content, ["import {ContractSendMethod} from 'web3-eth-contract';", "import {ContractCallMethod} from '@methods/contract-call-method';"]);
-
-  const classImports = [
-    "import {Model} from '@base/model';",
-    "import {Web3Connection} from '@base/web3-connection';",
-    "import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';",
-    "import {Deployable} from '@interfaces/deployable';",
-    `import ${contract.contractName}Json from '@abi/${contract.contractName}.json';`,
-    `import {${contract.contractName}Methods} from '@methods/${paramCase(contract.contractName)}';`,
-    ... !events.length ? [] : [
-      `import * as Events from '@events/${paramCase(contract.contractName.concat(`Events`))}';`,
-      `import {PastEventOptions} from 'web3-eth-contract';`,
-      `import {XEvents} from '@events/x-events';`
-    ],
-    "import {AbiItem} from 'web3-utils';",
-  ]
-
-  const _events = [`import {EventData, PastEventOptions} from 'web3-eth-contract';`, ...events.map((o) => makeEvent(o))].join(`\n`)
-
-  const _class = makeClass(classHeader(contract.contractName, `class`, ` extends Model<${contract.contractName}Methods> implements Deployable`), (constructorWithDeployer || _constructor)+_classBody, classImports);
-
-  return {_interface, _class, _events};
-}
-
 if (!fs.existsSync(args.file))
   return console.log(`File ${args.file} not found`);
 
-const parsed = AbiParser(args.file);
+if (args.json && !fs.existsSync(args.json))
+  return console.log(`Configuration file ${args.json} not found`)
 
+/**
+ * @type {{output:{interfaceDir: string; classDir: string; eventsDir: string}, overwrite: {interface: boolean; class: boolean; events: boolean}}}
+ */
+const options = {
+  ... defaultConfig,
+  ... args.json ? JSON.parse(fs.readFileSync(args.json, 'utf8')) : {},
+};
+
+if (!args.interfaceDir)
+  args.interfaceDir = options?.output?.interfaceDir;
+
+if (!args.classDir)
+  args.classDir = options?.output?.classDir;
+
+if (!args.eventsDir)
+  args.eventsDir = options?.output?.eventsDir;
+
+if (args.overwriteInterface === undefined)
+  args.overwriteInterface = options?.overwrite?.interface;
+
+if (args.overwriteClass === undefined)
+  args.overwriteClass = options?.overwrite?.class;
+
+if (args.overwriteInterface === undefined)
+  args.overwriteEvents = options?.overwrite?.events;
+
+const parsed = AbiParser(args.file, options);
 
 if (args.interfaceDir) {
   const outputFile = path.resolve(args.interfaceDir, paramCase(camelCase(path.basename(args.file))).replace(`-json`, `.ts`));

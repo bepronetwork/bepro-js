@@ -10,9 +10,9 @@ import {OraclesSummary} from '@interfaces/oracles-summary';
 describe(`Network`, () => {
   let network: Network;
   let web3Connection: Web3Connection;
-  let networkContractAddress = process.env.NETWORK_ADDRESS;
-  let settlerToken = process.env.NETWORK_SETTLER_TOKEN;
-  let transactionToken = process.env.NETWORK_TRANSACTION_TOKEN;
+  let networkContractAddress!: string;
+  let settlerToken!: string;
+  let transactionToken!: string;
 
   let accountAddress = ``
   const cap = toSmartContractDecimals(10000000) as number;
@@ -191,7 +191,7 @@ describe(`Network`, () => {
         });
 
         it(`Opens issue`, async () => {
-          const openIssue = await network.openIssue(cid, 1);
+          const openIssue = await network.openIssue(cid, 10000)
           expect(openIssue.blockHash, `open issue hash`).to.not.be.empty;
 
           issue = await network.getIssueByCID(cid);
