@@ -197,7 +197,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    amount = toSmartContractDecimals(amount, this.transactionToken.decimals, true) as number;
+    amount = toSmartContractDecimals(amount, this.transactionToken.decimals) as number;
     return this.sendTx(this.contract.methods.delegateOracles(amount, delegateTo))
   }
 
@@ -205,12 +205,12 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    amount = toSmartContractDecimals(amount, this.settlerToken.decimals, true) as number;
+    amount = toSmartContractDecimals(amount, this.settlerToken.decimals) as number;
     return this.sendTx(this.contract.methods.openIssue(cid, amount))
   }
 
   async updateIssue(id: number, amount: number) {
-    amount = toSmartContractDecimals(amount, this.settlerToken.decimals, true) as number;
+    amount = toSmartContractDecimals(amount, this.settlerToken.decimals) as number;
     return this.sendTx(this.contract.methods.updateIssue(id, amount))
   }
 
@@ -232,7 +232,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
 
   async proposeIssueMerge(id: number, prAddresses: string[], prAmounts: number[]) {
     const mapToSmartContract = (amount: number) =>
-      toSmartContractDecimals(amount, this.transactionToken.decimals, true) as number
+      toSmartContractDecimals(amount, this.transactionToken.decimals) as number
 
     const amounts = prAmounts.map(mapToSmartContract);
 

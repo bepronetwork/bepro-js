@@ -7,7 +7,7 @@ import {toSmartContractDecimals} from '@utils/numbers';
 import {NetworkIssue} from '@interfaces/network-issue';
 import {OraclesSummary} from '@interfaces/oracles-summary';
 
-describe(`Network`, () => {
+describe.only(`Network`, () => {
   let network: Network;
   let web3Connection: Web3Connection;
   let networkContractAddress!: string;
@@ -191,7 +191,7 @@ describe(`Network`, () => {
         });
 
         it(`Opens issue`, async () => {
-          const openIssue = await network.openIssue(cid, 1);
+          const openIssue = await network.openIssue(cid, 10000)
           expect(openIssue.blockHash, `open issue hash`).to.not.be.empty;
 
           issue = await network.getIssueByCID(cid);
