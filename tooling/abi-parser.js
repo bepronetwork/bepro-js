@@ -67,9 +67,30 @@ if (!args.json)
 if (!fs.existsSync(args.json))
   return console.log(`Configuration file ${args.json} not found`)
 
+/**
+ * @type {{output:{interfaceDir: string; classDir: string; eventsDir: string}, overwrite: {interface: boolean; class: boolean; events: boolean}}}
+ */
+const options = JSON.parse(fs.readFileSync(args.json, 'utf8'));
 
-const parsed = AbiParser(args.file, JSON.parse(fs.readFileSync(args.json, 'utf8')));
+if (!args.interfaceDir)
+  args.interfaceDir = options?.output?.interfaceDir;
 
+if (!args.classDir)
+  args.classDir = options?.output?.classDir;
+
+if (!args.eventsDir)
+  args.eventsDir = options?.output?.eventsDir;
+
+if (args.overwriteInterface === undefined)
+  args.overwriteInterface = options?.overwrite?.interface;
+
+if (args.overwriteClass === undefined)
+  args.overwriteClass = options?.overwrite?.class;
+
+if (args.overwriteInterface === undefined)
+  args.overwriteEvents = options?.overwrite?.events;
+
+const parsed = AbiParser(args.file, options);
 
 if (args.interfaceDir) {
   const outputFile = path.resolve(args.interfaceDir, paramCase(camelCase(path.basename(args.file))).replace(`-json`, `.ts`));
