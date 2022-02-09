@@ -10,6 +10,7 @@ import ERC721Standard from './models/ERC721/ERC721Standard';
 import Network from './models/BEPRO/Network';
 import NetworkFactory from './models/BEPRO/NetworkFactory';
 import { VotingContract } from './models';
+import Sablier from './models/Sablier/Sablier';
 import ETHUtils from './utils/ETHUtils';
 import UniswapV3Pool from './models/Uniswap/UniswapV3Pool';
 import UniswapV3Factory from './models/Uniswap/UniswapV3Factory';
@@ -33,6 +34,7 @@ export {
   ERC20TokenLock,
   ERC721Collectibles,
   ERC721Standard,
+  Sablier,
   ETHUtils,
   UniswapV3Pool,
   UniswapV3Factory,

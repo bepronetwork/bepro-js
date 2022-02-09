@@ -8,37 +8,36 @@ const devConstants = require('./constants');
 
 const { STANDARD_TIME_OFFSET, STANDARD_TIME_DELTA } = devConstants;
 
+// import Numbers from '../../utils/Numbers';
+
 function contextForStreamDidStartButNotEnd(functions) {
-// const contextForStreamDidStartButNotEnd = (functions) => {
-  const now = new BigNumber(dayjs().unix());
+  let now;// = new BigNumber(dayjs().unix());
 
   describe('when the stream did start but not end', () => {
-    // console.log('---mochaContexts.bp2');
     beforeEach('contextForStreamDidStartButNotEnd.beforeEach', async () => {
-      // console.log('---mochaContexts.bp3');      // console.log('---mochaContexts.now', now.toString());
+      now = BigNumber(_this.now);
       await traveler.advanceBlockAndSetTime(
         now
           .plus(STANDARD_TIME_OFFSET)
           .plus(5)
           .toNumber(),
-      ); // console.log('---mochaContexts.bp4');
+      );
     });
 
     functions();
-    // console.log('---mochaContexts.bp5');
 
-    afterEach('contextForStreamDidStartButNotEnd.afterEach', async () => { // console.log('---mochaContexts.bp6');
-      await traveler.advanceBlockAndSetTime(now.toNumber()); // console.log('---mochaContexts.bp7');
+    afterEach('contextForStreamDidStartButNotEnd.afterEach', async () => {
+      await traveler.advanceBlockAndSetTime(now.toNumber());
     });
-    // console.log('---mochaContexts.bp8');
   });
 }
 
 function contextForStreamDidEnd(functions) {
-  const now = new BigNumber(dayjs().unix());
+  let now;// = new BigNumber(dayjs().unix());
 
   describe('when the stream did end', () => {
-    beforeEach(async () => {
+    beforeEach('contextForStreamDidEnd.beforeEach', async () => {
+      now = BigNumber(_this.now);
       await traveler.advanceBlockAndSetTime(
         now
           .plus(STANDARD_TIME_OFFSET)
@@ -50,7 +49,7 @@ function contextForStreamDidEnd(functions) {
 
     functions();
 
-    afterEach(async () => {
+    afterEach('contextForStreamDidEnd.afterEach', async () => {
       await traveler.advanceBlockAndSetTime(now.toNumber());
     });
   });

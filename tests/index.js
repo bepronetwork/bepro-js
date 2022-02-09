@@ -8,5 +8,6 @@ context("Unit Tests", async () => {
   require('./dexStorage');
   require("./erc20TokenLock");
   require("./stakingContract");
+  require("./sablier/sablier");
   require("./custom/loophole/loophole");
 });
