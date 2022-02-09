@@ -2,17 +2,17 @@ import {Model} from '@base/model';
 import {Web3Connection} from '@base/web3-connection';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {Deployable} from '@interfaces/deployable';
-import ERC721ColectiblesJson from '@abi/ERC721Colectibles.json';
-import {ERC721ColectiblesMethods} from '@methods/erc721-colectibles';
+import ERC721CollectiblesJson from '@abi/ERC721Collectibles.json';
+import {ERC721CollectiblesMethods} from '@methods/erc721-collectibles';
 import {AbiItem} from 'web3-utils';
 import {ERC20} from '@models/erc20';
 import {fromDecimals, toSmartContractDecimals,} from '@utils/numbers';
 
-export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implements Deployable {
+export class ERC721Collectibles extends Model<ERC721CollectiblesMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
               contractAddress?: string,
               readonly _purchaseToken?: string) {
-    super(web3Connection, ERC721ColectiblesJson.abi as AbiItem[], contractAddress);
+    super(web3Connection, ERC721CollectiblesJson.abi as AbiItem[], contractAddress);
   }
 
   private _erc20!: ERC20;
@@ -40,7 +40,7 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
                       feeAddress: string,
                       otherAddress: string) {
     const deployOptions = {
-        data: ERC721ColectiblesJson.bytecode,
+        data: ERC721CollectiblesJson.bytecode,
         arguments: [name, symbol, limitedAmount, _purchaseToken, baseFeeAddress, feeAddress, otherAddress]
     };
 
@@ -121,6 +121,10 @@ export class ERC721Collectibles extends Model<ERC721ColectiblesMethods> implemen
 
   async baseURI() {
     return this.callTx(this.contract.methods.baseURI());
+  }
+
+  async approve(to: string, tokenId: number) {
+    return this.sendTx(this.contract.methods.approve(to, tokenId));
   }
 
   async getApproved(tokenId: number) {
