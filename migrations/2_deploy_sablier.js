@@ -1,17 +1,17 @@
-/* global artifacts, web3 */
-const BigNumber = require("bignumber.js");
+/* global web3 */
+const BigNumber = require('bignumber.js');
 
-const ERC20Mock = artifacts.require("./ERC20Mock.sol");
-//const CTokenManager = artifacts.require("./CTokenManager.sol");
-const Sablier = artifacts.require("./Sablier.sol");
+const ERC20Mock = artifacts.require('./ERC20Mock.sol');
+// const CTokenManager = artifacts.require("./CTokenManager.sol");
+const Sablier = artifacts.require('./Sablier.sol');
 
 module.exports = async (deployer, network, accounts) => {
-  //await deployer.deploy(CTokenManager);
-  
+  // await deployer.deploy(CTokenManager);
+
   await deployer.deploy(Sablier);
   const sablier = await Sablier.deployed();
 
-  if (network !== "development") {
+  if (network !== 'development') {
     return;
   }
 
@@ -25,7 +25,7 @@ module.exports = async (deployer, network, accounts) => {
   const recipient = accounts[1];
   const deposit = allowance;
   const tokenAddress = erc20.address;
-  const { timestamp } = await web3.eth.getBlock("latest");
+  const { timestamp } = await web3.eth.getBlock('latest');
   const startTime = new BigNumber(timestamp).plus(300);
   const stopTime = startTime.plus(3600);
 

@@ -166,9 +166,9 @@ contract ERC721Standard is ERC721, Ownable {
     }
 }
 
-// ERC721Colectibles made for a Cryptokitties/Polkamon like structure, where an hash is given by the owner based on a purchase of a package
+// ERC721Collectibles made for a Cryptokitties/Polkamon like structure, where an hash is given by the owner based on a purchase of a package
 // Can be limited or unlimited
-contract ERC721Colectibles is Opener, ERC721 {
+contract ERC721Collectibles is Opener, ERC721 {
 
     constructor (
         string memory name, string memory symbol,
@@ -176,7 +176,7 @@ contract ERC721Colectibles is Opener, ERC721 {
         ERC20 _purchaseToken,
         address baseFeeAddress,
         address feeAddress,
-        address otherAddress) public ERC721(name, symbol) 
+        address otherAddress) public ERC721(name, symbol)
         Opener(_purchaseToken, baseFeeAddress, feeAddress, otherAddress, limitedAmount)
     {
     }
@@ -195,7 +195,7 @@ contract ERC721Colectibles is Opener, ERC721 {
 
     function mint(uint256 tokenIdToMint) public {
         require(
-            tokenIdToMint <= _currentTokenId, 
+            tokenIdToMint <= _currentTokenId,
             "Token Id not registered"
         );
 

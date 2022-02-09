@@ -6,5 +6,6 @@ xunit.xml
 build/
 docs/
 dist/
-
-xunit.xml
+.DS_Store
+.eslintcache
+keys.json

@@ -3,6 +3,7 @@ import {ContractCallMethod} from '@methods/contract-call-method';
 
 export interface StakingContractMethods {
   erc20() :ContractCallMethod<string>;
+  erc721() :ContractCallMethod<string>;
   mySubscriptions(v1: string, v2: number) :ContractCallMethod<number>;
   owner() :ContractCallMethod<string>;
   paused() :ContractCallMethod<boolean>;
