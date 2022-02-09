@@ -68,7 +68,10 @@ if (args.json && !fs.existsSync(args.json))
 /**
  * @type {{output:{interfaceDir: string; classDir: string; eventsDir: string}, overwrite: {interface: boolean; class: boolean; events: boolean}}}
  */
-const options = args.json ? JSON.parse(fs.readFileSync(args.json, 'utf8')) : defaultConfig;
+const options = {
+  ... defaultConfig,
+  ... args.json ? JSON.parse(fs.readFileSync(args.json, 'utf8')) : {},
+};
 
 if (!args.interfaceDir)
   args.interfaceDir = options?.output?.interfaceDir;
