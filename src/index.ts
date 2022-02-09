@@ -72,7 +72,7 @@ export * from '@utils/loophole-pool-update';
 export * from '@utils/network-issue';
 export * from '@utils/numbers';
 export * from '@utils/pool-information';
-export * from '@utils/real-fvr-pack';
+export * from '@utils/real-fevr-pack';
 export * from '@utils/sablier-compounding-stream';
 export * from '@utils/sablier-interest';
 export * from '@utils/sablier-stream';

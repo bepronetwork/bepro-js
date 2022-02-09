@@ -14,6 +14,7 @@ import {Ownable} from '@base/ownable';
 import {Pausable} from '@base/pausable';
 import stakeSubscription from '@utils/stake-subscription';
 import {Errors} from '@interfaces/error-enum';
+import {nativeZeroAddress} from '@utils/constants';
 
 export class StakingContract extends Model<StakingContractMethods> implements Deployable, IsOwnable, IsPausable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
@@ -33,6 +34,7 @@ export class StakingContract extends Model<StakingContractMethods> implements De
   get erc20() { return this._erc20; }
   get erc721() { return this._erc721; }
 
+  /* eslint-disable complexity */
   async loadContract() {
     if (!this.contract)
       super.loadContract();
@@ -40,9 +42,9 @@ export class StakingContract extends Model<StakingContractMethods> implements De
     this._ownable = new Ownable(this);
     this._pausable = new Pausable(this);
 
-    const contractAddress = this.stakeTokenAddress || await this.callTx(this.contract.methods.erc20());
+    const tokenAddress = this.stakeTokenAddress || await this.callTx(this.contract.methods.erc20());
 
-    this._erc20 = new ERC20(this.web3Connection, contractAddress);
+    this._erc20 = new ERC20(this.web3Connection, tokenAddress);
     await this._erc20.loadContract();
 
     const collectiblesAddress = this.collectiblesAddress || await this.callTx(this.contract.methods.erc721());
@@ -51,13 +53,15 @@ export class StakingContract extends Model<StakingContractMethods> implements De
       await this._erc721.loadContract();
     }
   }
+  /* eslint-enable complexity */
+
 
   async start() {
     await super.start();
     await this.loadContract();
   }
 
-  async deployJsonAbi(stakeTokenAddress: string, collectiblesAddress: string = '0x0000000000000000000000000000000000000000') {
+  async deployJsonAbi(stakeTokenAddress: string, collectiblesAddress = nativeZeroAddress) {
     const deployOptions = {
         data: StakingContractJson.bytecode,
         arguments: [stakeTokenAddress, collectiblesAddress]

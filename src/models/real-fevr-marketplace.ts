@@ -9,16 +9,20 @@ import {Errors} from '@interfaces/error-enum';
 import {ERC20} from '@models/erc20';
 import {RealFevrOpener} from '@models/real-fevr-opener';
 import {toSmartContractDecimals} from '@utils/numbers';
+import {nativeZeroAddress} from '@utils/constants';
 
 export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string, readonly collectiblesAddress?: string, readonly tokenAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
+              contractAddress?: string,
+              readonly collectiblesAddress?: string,
+              readonly tokenAddress?: string) {
     super(web3Connection, RealFevrMarketplaceJson.abi as AbiItem[], contractAddress);
   }
 
   private _isETHTransaction!: boolean;
-  isETHTransaction() { return this._isETHTransaction; }
+  get isETHTransaction() { return this._isETHTransaction; }
 
-  private _decimals: number = 18;
+  private _decimals = 18;
   get decimals(): number { return this._decimals; }
 
   private _erc20!: ERC20;
@@ -27,6 +31,7 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
   private _opener!: RealFevrOpener;
   get opener() { return this._opener; }
 
+  /* eslint-disable complexity */
   async loadContract() {
     if (!this.contract)
       await super.loadContract();
@@ -39,9 +44,9 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
     if (!collectiblesAddress)
       throw new Error(Errors.MissingERC721AddressOnContract);
 
-    this._isETHTransaction = tokenAddress === '0x0000000000000000000000000000000000000000';
+    this._isETHTransaction = tokenAddress === nativeZeroAddress;
 
-    if (!this.isETHTransaction()) {
+    if (!this._isETHTransaction) {
       // Set Token Address Contract for easy access
       this._erc20 = new ERC20(this.web3Connection, tokenAddress);
       await this._erc20.loadContract();
@@ -52,15 +57,18 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
     this._opener = new RealFevrOpener(this.web3Connection, collectiblesAddress);
     await this._opener.loadContract();
   }
+  /* eslint-enable complexity */
 
   async start() {
     await super.start();
     await this.loadContract();
   }
 
-  // The marketplace can be deployed on a native-transactions mode; simply assign tokenAddress to
-  // the null wallet '0x0000000000000000000000000000000000000000', and all transactions will be
-  // resolved via the chain's native token.
+  /**
+   * The marketplace can be deployed on a native-transactions mode; simply assign tokenAddress to
+   * the null wallet '0x0000000000000000000000000000000000000000', and all transactions will be
+   * resolved via the chain's native token.
+   */
   async deployJsonAbi(collectiblesAddress: string, tokenAddress: string) {
     const deployOptions = {
       data: RealFevrMarketplaceJson.bytecode,
@@ -79,7 +87,7 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
     return this.sendTx(this.contract.methods.removeERC721FromSale(tokenId));
   }
 
-  async buyERC721(tokenId: number, value: number = 0) {
+  async buyERC721(tokenId: number, value = 0) {
     const valueWithDecimals = toSmartContractDecimals(value, this.decimals);
     return this.sendTx(this.contract.methods.buyERC721(tokenId), valueWithDecimals);
   }
@@ -112,7 +120,7 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
     return parseInt(await this.callTx(this.contract.methods.saleIncrementId()) as unknown as string, 10) - 1;
   }
 
-  async approveERC721use(operator: string, approved: boolean = true) {
+  async approveERC721use(operator: string, approved = true) {
     return this.opener.setApprovalForAll(operator, approved);
   }
 }

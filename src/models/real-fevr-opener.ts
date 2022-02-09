@@ -9,8 +9,8 @@ import {ERC20} from '@models/erc20';
 import {fromDecimals, toSmartContractDate, toSmartContractDecimals} from '@utils/numbers';
 import realFevrMarketplaceDistributions from '@utils/real-fevr-marketplace-distributions';
 import realFevrPack from '@utils/real-fevr-pack';
-
-export const nativeZeroAddress: string = '0x0000000000000000000000000000000000000000';
+import {nativeZeroAddress} from '@utils/constants';
+import {Errors} from '@interfaces/error-enum';
 
 export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions,
@@ -19,17 +19,21 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
     super(web3Connection, RealFevrOpenerJson.abi as AbiItem[], contractAddress);
   }
 
-  private _decimals: number = 18;
+  private _decimals = 18;
   get decimals(): number { return this._decimals; }
 
   private _erc20!: ERC20;
   get erc20() { return this._erc20; }
 
+  /* eslint-disable complexity */
   async loadContract() {
     if (!this.contract)
       await super.loadContract();
 
     const purchaseToken = await this._purchaseToken() || this.purchaseTokenAddress;
+    if (!purchaseToken)
+      throw new Error(Errors.MissingERC20AddressOnContractPleaseSetPurchaseToken);
+
     if (purchaseToken && purchaseToken !== nativeZeroAddress) {
       this._erc20 = new ERC20(this.web3Connection, purchaseToken);
       await this._erc20.loadContract();
@@ -37,6 +41,7 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
       this._decimals = this._erc20.decimals;
     }
   }
+  /* eslint-enable complexity */
 
   async start() {
     await super.start();
@@ -177,7 +182,9 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
   }
 
   async getMarketplaceDistributionForERC721(tokenId: number) {
-    return realFevrMarketplaceDistributions(await this.callTx(this.contract.methods.getMarketplaceDistributionForERC721(tokenId)));
+    return realFevrMarketplaceDistributions(await this.callTx(this.contract
+                                                                  .methods
+                                                                  .getMarketplaceDistributionForERC721(tokenId)));
   }
 
   async getPurchaseToken() {
@@ -212,17 +219,25 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
     return this.sendTx(this.contract.methods.openPacks(packIds));
   }
 
-  async createPack( nftAmount: number, price: number, serie: string, packType: string, drop: string,
-                   saleStart: number, saleDistributionAddresses: string[], saleDistributionAmounts: number[], marketplaceDistributionAddresses: string[], marketplaceDistributionAmounts: number[]) {
-    return this.sendTx(this.contract.methods.createPack(
-                                                        nftAmount,
-                                                        toSmartContractDecimals(price,
-                                                       3) as number, serie,
+  async createPack(nftAmount: number,
+                   price: number, serie: string,
+                   packType: string,
+                   drop: string,
+                   saleStart: number,
+                   saleDistributionAddresses: string[],
+                   saleDistributionAmounts: number[],
+                   marketplaceDistributionAddresses: string[],
+                   marketplaceDistributionAmounts: number[]) {
+    return this.sendTx(this.contract.methods.createPack(nftAmount,
+                                                        toSmartContractDecimals(price, 3) as number,
+                                                        serie,
                                                         packType,
                                                         drop,
                                                         toSmartContractDate(saleStart),
                                                         saleDistributionAddresses,
-                                                        saleDistributionAmounts, marketplaceDistributionAddresses, marketplaceDistributionAmounts));
+                                                        saleDistributionAmounts,
+                                                        marketplaceDistributionAddresses,
+                                                        marketplaceDistributionAmounts));
   }
 
   async offerPack(packId: number, receivingAddress: string) {
