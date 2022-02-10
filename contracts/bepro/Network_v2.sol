@@ -1,6 +1,7 @@
 pragma solidity ^0.8.0;
 
 import "../ERC20.sol";
+import "../math/SafeMath.sol";
 
 contract Network_v2 {
     constructor(address _settlerToken, address _transactionToken, address _governor) public {
@@ -11,6 +12,8 @@ contract Network_v2 {
 
     Token public settlerToken;
     Token public transactionToken;
+
+    address public _governor;
 
     uint256 public totalStaked = 0;
     uint256 public oraclesStaked = 0;
@@ -24,6 +27,15 @@ contract Network_v2 {
     uint256 public redeemTime = 1 days;
 
     uint256 public councilAmount = 25000000*10**18; // 25M * 10 to the power of 18 (decimals)
+
+    struct Oracle {
+        uint256 oraclesDelegatedByOthers;
+        uint256 tokensLocked;
+
+        mapping(address => uint256) oraclesDelegated;
+    }
+
+    mapping(address => Oracle) oracles;
 
     struct PullRequest {
         string originRepo;
@@ -83,4 +95,39 @@ contract Network_v2 {
     event BountyPullRequestClosed(uint256 indexed bountyId, uint256 pullRequestId);
     event BountyProposalCreated(uint256 indexed bountyId, uint256 proposalId);
     event BountyProposalDisputed(uint256 indexed bountyId, uint256 proposalId);
+
+    /// @dev Lock given amount into the oracle mapping
+    function lock(uint256 tokenAmount) external payable {
+        require(tokenAmount > 0, "Token amount has to be higher than 0");
+        require(settlerToken.transferFrom(msg.sender, address(this), tokenAmount));
+
+        Oracle storage oracle = oracles[msg.sender];
+
+        if (oracle.tokensLocked != 0) {
+            oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].add(tokenAmount);
+            oracle.tokensLocked = oracle.tokensLocked.add(tokenAmount);
+        } else {
+            oracle.oraclesDelegated[msg.sender] = tokenAmount;
+            oracle.tokensLocked = tokenAmount;
+        }
+
+        oraclesStaked = oraclesStaked.add(tokenAmount);
+    }
+
+    function unlock(uint256 tokenAmount, address from) {
+        Oracle storage oracle = oracles[msg.sender];
+
+        require(oracle.tokensLocked >= tokenAmount, "tokenAmount is higher than the amount of locked tokens");
+        require(oracle.oraclesDelegated[from] >= tokenAmount, "tokenAmount is higher than the amount of delegated tokens to from address");
+
+        oracle.tokensLocked = oracle.tokensLocked.sub(tokenAmount);
+        oracle.oraclesDelegated[from] = oracle.oraclesDelegated[from].sub(tokenAmount);
+
+        if (msg.sender != from) {
+            oracles[from].oraclesDelegatedByOthers = oracles[from].oraclesDelegatedByOthers.sub(tokenAmount);
+        }
+
+        oraclesStaked = oraclesStaked.sub(tokenAmount);
+        require(settlerToken.transfer(msg.sender, tokenAmount), "settlerToken failed to be transferred");
+    }
 }
