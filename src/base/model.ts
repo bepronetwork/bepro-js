@@ -9,6 +9,7 @@ import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
 import {ContractSendMethod, DeployOptions} from 'web3-eth-contract';
 import {ContractCallMethod} from '@methods/contract-call-method';
 import {transactionHandler} from '@utils/transaction-handler';
+import {noop} from '@utils/noop';
 
 export class Model<Methods = any> {
   protected _contract!: Web3Contract<Methods>;
@@ -122,8 +123,7 @@ export class Model<Methods = any> {
     return new Promise(async (resolve, reject) => {
       try {
         const options = await this.contract.txOptions(method, value, from);
-        const config = {from, value, data: method.encodeABI(), ...options}
-        await transactionHandler(this.web3.eth.sendTransaction(config), resolve, reject, debug);
+        await transactionHandler(method.send({from, value, ...options}, noop), resolve, reject, debug)
       } catch (e) {
         if (debug)
           console.error(e);
