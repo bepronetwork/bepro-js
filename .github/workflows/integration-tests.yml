@@ -25,6 +25,9 @@ jobs:
       - name: npm install (and postinstall build)
         run: npm install
 
+      - name: Lint solution
+        run: npm run eslint
+
       - name: Start ganache and test integration
         run: npm run test-ci
         env:

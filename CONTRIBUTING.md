@@ -6,11 +6,10 @@ tags: []
 
 # Contributor's Guide
 
-----
-
- Welcome; we appreciate you and would like to thank you for contributing to our project. This document aims to facilitate the process and share with you some structure that hopefully will remove any roadblock.
+Welcome; we appreciate you and would like to thank you for contributing to our project. This document aims to facilitate the process and share with you some structure that hopefully will remove any roadblock.
 
 ## Issues
+
 ---
 ### Guidelines:
 
@@ -31,11 +30,40 @@ tags: []
 1. Each PR shall include the [**Ethereum Address**][1] for the bounty payment.
 2. The PR shall include a clear description of the proposed solution
 3. If there is any additional information or link, it shall be included in the description.
-4. The PR shall be cleaned up with [Prettier][2]
+4. The PR shall be cleaned up with [eslint][2]
 5. (Optional) The contributor has the option to include the Twitter handle.
-
 ---
+
+## Contributing
+
+### 1 Clone your fork:
+```
+$ git clone git@github.com:YOUR-USERNAME/YOUR-FORKED-REPO.git
+```
+
+### Add remote from original repository in your forked repository:
+```
+$ cd into/cloned/fork-repo
+$ git remote add upstream git://github.com/ORIGINAL-DEV-USERNAME/REPO-YOU-FORKED-FROM.git
+$ git fetch upstream
+```
+
+### Updating your fork from original repo to keep up with their changes:
+```
+$ git checkout master
+$ git pull --rebase upstream master
+$ git checkout your-branch
+$ git pull --rebase master
+```
+
+### Add commits and push
+```
+$ git add .
+$ git commit -m "MESSAGE"
+$ git push origin master
+```
+
 If you have any comment or ideas in terms of making this process better, please let us know or submit a PR.
 
-[1]: [https://prettier.io/]
+[1]: [https://eslint.org/]
 [2]: [https://coinmarketcap.com/currencies/bepro-network/]
