@@ -48,7 +48,7 @@ contract ERC20Distribution is Pausable, Ownable {
         /* Require TGE Date already been set */
         require(TGEDate != 0, "TGE date not set yet");
         /* TGE has not started */
-        require(block.timestamp > TGEDate, "TGE still hasn´t started");
+        require(block.timestamp > TGEDate, "TGE still hasn't started");
         /* Test that the call be only done once per day */
         require(block.timestamp.sub(lastDateDistribution) > 1 days, "Can only be called once a day");
         lastDateDistribution = block.timestamp;

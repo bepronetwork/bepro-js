@@ -75,12 +75,51 @@ class ERC20Contract extends IContract {
     this.getDecimals(),
   );
 
+  balanceOf = async (address) => {
+    const b1 = await this.getContract().methods.balanceOf(address).call();
+    const ret1 = Numbers.fromDecimalsToBN(
+      b1,
+      this.getDecimals(),
+    );
+    return ret1;
+  };
+
+  /**
+   * Convert given tokens amount as tokens with decimals for smart contract.
+   * @function
+   * @param {number} amount Tokens amount to convert
+   * @returns {Promise<number>} tokensAmount
+   */
+  toTokens = (amount) => {
+    const tokensAmount = Numbers.fromBNToDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    console.log('ERC20Contract.toTokens:', tokensAmount);
+    return tokensAmount;
+  };
+
+  /**
+   * Convert given tokens amount integer to float number with decimals for UI.
+   * @function
+   * @param {number} amount Tokens amount to convert
+   * @returns {Promise<number>} tokensAmount
+   */
+  fromDecimalsToBN = (amount) => {
+    const tokensAmount = Numbers.fromDecimalsToBN(
+      amount,
+      this.getDecimals(),
+    );
+    // console.log('ERC20Contract.fromDecimals:', tokensAmount);
+    return tokensAmount;
+  };
+
   /**
    * Get Total Supply of Token
    * @function
    * @returns {Promise<number>} Total supply
    */
-  totalSupply = async () => Numbers.fromDecimals(
+  totalSupply = async () => Numbers.fromDecimalsToBN(
     await this.getContract().methods.totalSupply().call(),
     this.getDecimals(),
   );
@@ -132,6 +171,28 @@ class ERC20Contract extends IContract {
   };
 
   /**
+   * Check allowance for given spender address
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.address Sender Address
+   * @param {Address} params.spenderAddress Spender Address
+   * @returns {Promise<number>} allowance amount
+   */
+  allowance = async ({ address, spenderAddress }) => {
+    try {
+      const approvedAmount = Numbers.fromDecimalsToBN(
+        await this.getContract()
+          .methods.allowance(address, spenderAddress)
+          .call(),
+        this.getDecimals(),
+      );
+      return approvedAmount;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  /**
    * Approve tokens to be used by another address/contract
    * @function
    * @param {Object} params Parameters
@@ -142,7 +203,7 @@ class ERC20Contract extends IContract {
    */
   approve = async ({ address, amount, callback }) => {
     try {
-      const amountWithDecimals = Numbers.toSmartContractDecimals(
+      const amountWithDecimals = Numbers.fromBNToDecimals(
         amount,
         this.getDecimals(),
       );
