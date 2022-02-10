@@ -6,7 +6,7 @@ const parseComment = require('./parse-comment')
 /**
  * @param {Contract~AbiOption} option
  * @param {boolean} [withBody]
- * @param {string} [devDocMethods]
+ * @param {string} [devDoc]
  * @return {string}
  */
 const makeFn = (option, withBody = false, devDoc = ``) => {
