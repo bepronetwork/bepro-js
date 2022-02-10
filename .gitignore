@@ -10,3 +10,4 @@ dist/
 .eslintcache
 keys.json
 .editorconfig
+migrations/
