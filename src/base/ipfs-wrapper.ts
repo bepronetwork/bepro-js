@@ -33,6 +33,7 @@ export class IPFSWrapper {
     return this._IPFS.add(data, options);
   }
 
+  /* eslint-disable complexity */
   async get(cid: IPFSPath, options?: GetOptions) {
 
     for await (const node of this._IPFS.get(cid, options))
@@ -49,5 +50,6 @@ export class IPFSWrapper {
 
       } else return node;
   }
+  /* eslint-enable complexity */
 
 }

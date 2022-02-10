@@ -5,6 +5,12 @@ import {Deployable} from '@interfaces/deployable';
 import ISwapRouterJson from '@abi/ISwapRouter.json';
 import {SwapRouterMethods} from '@methods/swap-router';
 import {AbiItem} from 'web3-utils';
+import {
+  ExactInputParams,
+  ExactInputSingleParams,
+  ExactOutputParams,
+  ExactOutputSingleParams
+} from '@interfaces/swap-router';
 
 export class SwapRouter extends Model<SwapRouterMethods> implements Deployable {
   constructor(web3Connection: Web3Connection | Web3ConnectionOptions, contractAddress?: string) {
@@ -24,19 +30,19 @@ export class SwapRouter extends Model<SwapRouterMethods> implements Deployable {
     return this.sendTx(this.contract.methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, data));
   }
 
-  async exactInputSingle(params: { 'tokenIn': string; 'tokenOut': string; 'fee': number; 'recipient': string; 'deadline': number; 'amountIn': number; 'amountOutMinimum': number; 'sqrtPriceLimitX96': number }) {
-    return this.callTx(this.contract.methods.exactInputSingle(params));
+  async exactInputSingle(params: ExactInputSingleParams) {
+    return this.sendTx(this.contract.methods.exactInputSingle(params));
   }
 
-  async exactInput(params: { 'path': string; 'recipient': string; 'deadline': number; 'amountIn': number; 'amountOutMinimum': number }) {
-    return this.callTx(this.contract.methods.exactInput(params));
+  async exactInput(params: ExactInputParams) {
+    return this.sendTx(this.contract.methods.exactInput(params));
   }
 
-  async exactOutputSingle(params: { 'tokenIn': string; 'tokenOut': string; 'fee': number; 'recipient': string; 'deadline': number; 'amountOut': number; 'amountInMaximum': number; 'sqrtPriceLimitX96': number }) {
-    return this.callTx(this.contract.methods.exactOutputSingle(params));
+  async exactOutputSingle(params: ExactOutputSingleParams) {
+    return this.sendTx(this.contract.methods.exactOutputSingle(params));
   }
 
-  async exactOutput(params: { 'path': string; 'recipient': string; 'deadline': number; 'amountOut': number; 'amountInMaximum': number }) {
+  async exactOutput(params: ExactOutputParams) {
     return this.callTx(this.contract.methods.exactOutput(params));
   }
 
