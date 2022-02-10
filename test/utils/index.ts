@@ -17,7 +17,7 @@ export function defaultWeb3Connection() {
   const options: Web3ConnectionOptions = {
     web3Host: process.env.WEB3_HOST_PROVIDER || 'HTTP://127.0.0.1:8545',
     privateKey: process.env.WALLET_PRIVATE_KEY || getPrivateKeyFromFile(),
-    skipWindowAssignment: true,
+    skipWindowAssignment: true
   }
 
   return new Web3Connection(options);
@@ -90,7 +90,7 @@ export async function revertChain(web3: Web3) {
 
 export async function hasTxBlockNumber(promise: Promise<any>, message = `Should have blockNumber`) {
     const tx = await promise.catch(e => {
-      expect(e, `Should not have been rejected`).to.be.empty;
+      expect(e, `Should not have been rejected` || message).to.be.empty;
     });
     expect(tx, message).property('blockNumber').to.exist;
 }

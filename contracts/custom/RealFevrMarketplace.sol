@@ -5,16 +5,16 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../ERC721Marketplace.sol";
 
 
-interface RealFevrOpener is IERC721 {
+interface RealFevrOpener721 is IERC721 {
     function getMarketplaceDistributionForERC721(uint256 tokenId) external returns(uint256[] memory, address[] memory);
 }
 
 contract RealFevrMarketplace is ERC721Marketplace {
 
-    RealFevrOpener public erc721Address;
+    RealFevrOpener721 public erc721Address;
 
     constructor(ERC20 _erc20Address,
-        RealFevrOpener _erc721Address)
+        RealFevrOpener721 _erc721Address)
     public ERC721Marketplace(_erc20Address, _erc721Address) {
         erc721Address = _erc721Address;
     }
