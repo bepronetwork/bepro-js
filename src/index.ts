@@ -39,6 +39,7 @@ export * from '@interfaces/sablier-interest';
 export * from '@interfaces/sablier-stream';
 export * from '@interfaces/staking-product';
 export * from '@interfaces/staking-subscription';
+export * from '@interfaces/swap-router';
 export * from '@interfaces/voter-info';
 export * from '@interfaces/modifiers';
 export * from '@interfaces/block-number-timestamp';
