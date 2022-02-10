@@ -122,7 +122,8 @@ export class Model<Methods = any> {
     return new Promise(async (resolve, reject) => {
       try {
         const options = await this.contract.txOptions(method, value, from);
-        await transactionHandler(method.send({from, value, ...options}), resolve, reject, debug)
+        const config = {from, value, data: method.encodeABI(), ...options}
+        await transactionHandler(this.web3.eth.sendTransaction(config), resolve, reject, debug);
       } catch (e) {
         if (debug)
           console.error(e);
