@@ -12,6 +12,7 @@ import {GetOptions} from 'ipfs-core-types/src/root';
  * const {cid} await wrapper.IPFS.add("hello world");
  * const echo = await wrapper.IPFS.get(cid);
  * assert(echo === "hello world")
+ * ```
  */
 export class IPFSWrapper {
 
