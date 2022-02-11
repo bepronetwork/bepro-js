@@ -57,7 +57,8 @@ contract OpenerRealFvr is  Ownable, ERC721 {
             //transfer of stake share
             _purchaseToken.transferFrom(
                 from,
-                pack.saleDistributionAddresses[i]
+                pack.saleDistributionAddresses[i],
+                (pack.saleDistributionAmounts[i] * amount) / 100
             );
         }
     }
