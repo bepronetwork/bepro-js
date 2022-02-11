@@ -57,8 +57,8 @@ contract NetworkFactory is ReentrancyGuard {
         networksArray.push(network);
         networks[networksAmount] = address(network);
         networksByAddress[msg.sender] = address(network);
-        emit CreatedNetwork(networksAmount, msg.sender);
         networksAmount = networksAmount.add(1);
+        emit CreatedNetwork(networksAmount, msg.sender);
     }
 
     /// @notice user unlocks his BEPRO tokens
