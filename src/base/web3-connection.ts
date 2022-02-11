@@ -40,8 +40,8 @@ export class Web3Connection {
     if (!(window as any).ethereum)
       throw new Error(Errors.NoEthereumObjectFoundOnWindow);
 
-    this.web3 = new Web3((window as any).web3.eth.currentProvider)
-    await (window as any).ethereum.enable();
+    await (window as any).ethereum.request({method: 'eth_requestAccounts'})
+    this.web3 = new Web3((window as any).ethereum)
 
     this.web3.eth.handleRevert = false;
 
