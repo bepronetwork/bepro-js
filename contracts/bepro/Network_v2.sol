@@ -20,7 +20,7 @@ contract Network_v2 {
     uint256 public totalStaked = 0;
     uint256 public oraclesStaked = 0;
 
-    uint256 public closedIdsCount = 0;
+    uint256 public closedBounties = 0;
 
     uint256 public mergeCreatorFeeShare = 3;
     uint256 public percentageNeededForDispute = 3;
@@ -181,6 +181,17 @@ contract Network_v2 {
         return block.timestamp < bounties[id].creationDate.add(draftTime);
     }
 
+    /// @dev returns true if NOW is less than proposal create time plus disputable time
+    function isProposalInDraft(uint256 bountyId, uint256 proposalId) public view returns (bool) {
+        return block.timestamp < bounties[bountyId].proposals[proposalId].creationDate.add(disputableTime);
+    }
+
+    /// @dev returns true if disputes on proposal is higher than the percentage of the total oracles staked
+    function isProposalDisputed(uint256 bountyId, uint256 proposalId) public view returns (bool) {
+        return bounties[bountyId].proposals[proposalId].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100);
+    }
+
+    /// @dev get total amount of oracles of an address
     function getOraclesOf(address _address) public view returns (uint256) {
         Oracle memory oracle = oracles[_address];
         return oracle.oraclesDelegatedByOthers.add(oracle.oraclesDelegated[_address]);
@@ -291,5 +302,36 @@ contract Network_v2 {
         bounty.proposals.push(proposal);
 
         emit BountyProposalCreated(id, prId, proposal.id);
+    }
+
+    /// @dev close bounty with the selected proposal id
+    function closeBounty(uint256 id, uint256 proposalId) external payable {
+        require(bounties.length <= id, "Bounty does not exist");
+        require(bounties[id].proposals.length <= proposalId, "Proposal does not exist");
+
+        Bounty storage bounty = bounties[id];
+        require(!bounty.closed, "Bounty is already closed");
+        require(!bounty.canceled, "Bounty was canceled");
+        require(!isBountyInDraft(id), "Bounty is still in draft");
+
+        Proposal storage proposal = bounty.proposals[proposalId];
+        require(!isProposalInDraft, "Proposal is still in draft");
+        require(!isProposalDisputed, "Proposal is disputed, cant accept");
+
+        bounty.closed = true;
+
+        uint256 fee = bounty.tokenAmount * mergeCreatorFeeShare / 100;
+        require(transactionToken.transfer(msg.sender, fee), "Failed to transfer fee to merge creator");
+
+        for (uint i = 0; i < proposal.details.length; i++) {
+            ProposalDetail memory detail = proposal.details[i];
+            require(transactionToken.transfer(detail.recipient, bounty.tokenAmount * (detail.percentage - fee) / 100), "Failed to transfer distribute to participant");
+        }
+
+        closedBounties = closedBounties.add(1);
+        totalStaked = totalStaked.sub(bounty.tokenAmount);
+
+        emit BountyDistributed(id, proposalId);
+
     }
 }
