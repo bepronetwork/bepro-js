@@ -289,13 +289,11 @@ context("NetworkFactory Contract", async () => {
       const networkAddress2 = await networkFactory.getNetworkByAddress(userAddress);
       networkAddress1.should.be.equal(networkAddress2);
 
-      // should emit event CreatedNetwork(uint256 indexed id, address indexed opener, uint256 indexed amount);
+      // should emit event CreatedNetwork(uint256 indexed id, address indexed opener);
       const networkId = BigNumber(tx.events.CreatedNetwork.returnValues.id);
       const opener = tx.events.CreatedNetwork.returnValues.opener;
-      const amount = BigNumber(tx.events.CreatedNetwork.returnValues.amount);
       networkId.should.be.bignumber.equal(0);
       opener.should.be.equal(userAddress);
-      amount.should.be.bignumber.equal(Numbers.fromBNToDecimals(TOKENS_AMOUNT_1M, 18));
     })
   );
 
