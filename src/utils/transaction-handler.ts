@@ -19,5 +19,11 @@ export async function transactionHandler(transaction: PromiEvent<TransactionRece
         console.error(err);
 
       reject(err)
+    })
+    .catch(err => {
+      if (debug)
+        console.error(err);
+
+      reject(err)
     });
 }

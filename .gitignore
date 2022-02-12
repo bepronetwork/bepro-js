@@ -11,3 +11,4 @@ dist/
 keys.json
 .editorconfig
 migrations/
+example/

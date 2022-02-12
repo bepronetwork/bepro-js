@@ -5,12 +5,13 @@ import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src/interfaces/error-enum';
 
-describe(`NetworkFactory`, () => {
+describe.only(`NetworkFactory`, () => {
 
   let web3Connection: Web3Connection;
-  let networkFactoryContractAddress = process.env.NETWORK_FACTORY_ADDRESS;
+  let networkFactoryContractAddress!: string;
   let settlerToken: string;
   let networkToken: string;
+  let accountAddress: string;
 
   const cap = toSmartContractDecimals(1000000) as number;
 
@@ -18,6 +19,7 @@ describe(`NetworkFactory`, () => {
     web3Connection = defaultWeb3Connection();
     await web3Connection.start();
     await revertChain(web3Connection.Web3);
+    accountAddress = web3Connection.Account.address;
   })
 
 
@@ -41,6 +43,7 @@ describe(`NetworkFactory`, () => {
       const receipt = await deployer.deployJsonAbi(settlerToken!);
       expect(receipt.contractAddress).to.not.be.empty;
       networkFactoryContractAddress = receipt.contractAddress;
+      console.log(networkFactoryContractAddress)
     });
 
     after(() => {
@@ -93,7 +96,7 @@ describe(`NetworkFactory`, () => {
       expect(await networkFactory.getAmountOfNetworksForked(), `Amount of networks`).to.eq(1);
 
       const event = await networkFactory.contract.self.getPastEvents(`CreatedNetwork`, {filter: {transactionHash: tx.transactionHash}})
-      expect(event[0].returnValues[1], `Event opener`).to.be.eq(web3Connection.Account.address);
+      expect(event[0].returnValues['opener'], `Event opener`).to.be.eq(accountAddress);
     });
 
     it(`Throws because one network per user`, async () => {
@@ -104,8 +107,13 @@ describe(`NetworkFactory`, () => {
       let network!: Network;
 
       before(async () => {
-        network = new Network(web3Connection, await networkFactory.getNetworkByAddress(web3Connection.Account.address));
+        network = new Network(web3Connection, await networkFactory.getNetworkByAddress(accountAddress));
         await network.loadContract();
+      })
+
+      it(`Asserts governor === accountAddress`, async () => {
+        await hasTxBlockNumber(network.sendTx(network.contract.methods.claimGovernor()))
+        expect(await network.callTx(network.contract.methods._governor())).to.be.eq(accountAddress);
       })
 
       it(`Locks tokens and throws because can't unlock`, async () => {
@@ -122,14 +130,23 @@ describe(`NetworkFactory`, () => {
         await network.redeemIssue(1);
       });
 
+      it(`Change redeem time`, async () => {
+        await hasTxBlockNumber(network.changeRedeemTime(60), `Should have changed redeem time`);
+        expect(await network.redeemTime()).to.be.eq(60);
+      });
+
+      it(`Changes disputable time`, async () => {
+        await hasTxBlockNumber(network.changeDisputableTime(120));
+      })
+
       it(`Should unlock because issue was redeemed`, async () => {
-        expect((await networkFactory.unlock())?.blockHash).to.exist;
+        await hasTxBlockNumber(networkFactory.unlock(), `should have unlocked`);
       });
 
       it(`Creates a new network because we have already unlocked`, async () => {
         await networkFactory.approveSettlerERC20Token();
         await networkFactory.lock(+fromDecimals(cap))
-        expect((await networkFactory.createNetwork(settlerToken!, settlerToken!))?.blockHash).to.exist;
+        await hasTxBlockNumber(networkFactory.createNetwork(settlerToken!, settlerToken!), `Should have created network`)
       })
     })
   })
