@@ -100,6 +100,27 @@ contract Network_v2 {
     event BountyProposalCreated(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
     event BountyProposalDisputed(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
 
+    /// @dev returns true if NOW is less than bounty create time plus draft time
+    function isBountyInDraft(uint256 id) public view returns (bool) {
+        return block.timestamp < bounties[id].creationDate.add(draftTime);
+    }
+
+    /// @dev returns true if NOW is less than proposal create time plus disputable time
+    function isProposalInDraft(uint256 bountyId, uint256 proposalId) public view returns (bool) {
+        return block.timestamp < bounties[bountyId].proposals[proposalId].creationDate.add(disputableTime);
+    }
+
+    /// @dev returns true if disputes on proposal is higher than the percentage of the total oracles staked
+    function isProposalDisputed(uint256 bountyId, uint256 proposalId) public view returns (bool) {
+        return bounties[bountyId].proposals[proposalId].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100);
+    }
+
+    /// @dev get total amount of oracles of an address
+    function getOraclesOf(address _address) public view returns (uint256) {
+        Oracle memory oracle = oracles[_address];
+        return oracle.oraclesDelegatedByOthers.add(oracle.oraclesDelegated[_address]);
+    }
+
     /// @dev Lock given amount into the oracle mapping
     function lock(uint256 tokenAmount) external payable {
         require(tokenAmount > 0, "Token amount has to be higher than 0");
@@ -174,27 +195,6 @@ contract Network_v2 {
         require(transactionToken.transferFrom(msg.sender, address(this), tokenAmount), "Failed to transfer");
 
         emit BountyCreated(bounty.id, msg.sender, tokenAmount);
-    }
-
-    /// @dev returns true if NOW is less than bounty create time plus draft time
-    function isBountyInDraft(uint256 id) public view returns (bool) {
-        return block.timestamp < bounties[id].creationDate.add(draftTime);
-    }
-
-    /// @dev returns true if NOW is less than proposal create time plus disputable time
-    function isProposalInDraft(uint256 bountyId, uint256 proposalId) public view returns (bool) {
-        return block.timestamp < bounties[bountyId].proposals[proposalId].creationDate.add(disputableTime);
-    }
-
-    /// @dev returns true if disputes on proposal is higher than the percentage of the total oracles staked
-    function isProposalDisputed(uint256 bountyId, uint256 proposalId) public view returns (bool) {
-        return bounties[bountyId].proposals[proposalId].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100);
-    }
-
-    /// @dev get total amount of oracles of an address
-    function getOraclesOf(address _address) public view returns (uint256) {
-        Oracle memory oracle = oracles[_address];
-        return oracle.oraclesDelegatedByOthers.add(oracle.oraclesDelegated[_address]);
     }
 
     /// @dev cancel a bounty
