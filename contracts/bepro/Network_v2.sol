@@ -46,6 +46,7 @@ contract Network_v2 {
         string userRepo;
         string userBranch;
         bool ready;
+        bool canceled;
         uint256 cid; // pr id on git
         uint256 id;
     }
@@ -174,7 +175,7 @@ contract Network_v2 {
     }
 
     /// @dev create a bounty
-    function openBounty(uint256 tokenAmount, string cid, string title, string repoPath, string branch) external payable {
+    function openBounty(uint256 tokenAmount, string memory cid, string memory title, string memory repoPath, string memory branch) external payable {
         Bounty memory bounty;
         bounty.cid = cid;
         bounty.title = title;
@@ -242,7 +243,7 @@ contract Network_v2 {
     }
 
     /// @dev create pull request for bounty id
-    function createPullRequest(uint256 forBountyId, string originRepo, string originBranch, string originCID, string userRepo, string userBranch, uint256 cid) external payable {
+    function createPullRequest(uint256 forBountyId, string memory originRepo, string memory originBranch, string memory originCID, string memory userRepo, string memory userBranch, uint256 cid) external payable {
         require(bounties.length <= forBountyId, "Bounty does not exist");
 
         Bounty storage bounty = bounties[forBountyId];
@@ -263,6 +264,13 @@ contract Network_v2 {
         bounty.pullRequests.push(pullRequest);
 
         emit BountyPullRequestCreated(forBountyId, pullRequest.id);
+    }
+
+    function closePullRequest(uint256 ofBounty, uint256 prId) external payable {
+        require(bounties.length <= ofBounty, "Bounty does not exist");
+        require(bounties[ofBounty].pullRequests.length <= prId, "Pull request does not exist");
+        require(bounties[ofBounty].pullRequests[prId].canceled);
+
     }
 
     /// @dev mark a PR ready for review
