@@ -1,6 +1,7 @@
-pragma solidity >=0.6.0;
+pragma solidity >=0.6.0 <=8.0.0;
 
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../ERC20.sol";
 import "../math/SafePercentMath.sol";
 import "../utils/Governed.sol";
@@ -8,16 +9,16 @@ import "../utils/Governed.sol";
 contract Network_v2 is Governed, ReentrancyGuard {
     using SafeMath for uint256;
 
-    constructor(address _settlerToken, address _transactionToken, address _governor) public {
+    constructor(address _settlerToken, address _transactionToken, address _governor, IERC721 _nftToken) public {
         settlerToken = Token(_settlerToken);
         transactionToken = Token(_transactionToken);
+        nftToken = IERC721(_nftToken);
         _governor = _governor;
     }
 
     Token public settlerToken;
     Token public transactionToken;
-
-    address public _governor;
+    IERC721 public nftToken;
 
     uint256 public totalStaked = 0;
     uint256 public oraclesStaked = 0;
@@ -31,7 +32,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
     uint256 public draftTime = 1 days;
 
     uint256 public councilAmount = 25000000*10**18; // 25M * 10 to the power of 18 (decimals)
-    uint256 public minimumCouncilAmount = 25000*10**18; // 25K * 10 to the power of 18 (decimals)
 
     struct Oracle {
         uint256 oraclesDelegatedByOthers;
@@ -70,6 +70,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
         ProposalDetail[] details;
     }
 
+    struct Benefactor {
+        address benefactor;
+        uint256 amount;
+    }
+
     struct Bounty {
         uint256 id;
 
@@ -89,6 +94,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         PullRequest[] pullRequests;
         Proposal[] proposals;
+        Benefactor[] benefactors;
     }
 
     Bounty[] bounties;
@@ -105,9 +111,25 @@ contract Network_v2 is Governed, ReentrancyGuard {
     event BountyProposalCreated(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
     event BountyProposalDisputed(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
 
+    function getBountiesOfAddress(address _address) public view returns (uint256[]) {
+        return bountiesOfAddress[_address];
+    }
+
     function getBounty(uint256 id) public view returns (Bounty memory bounty) {
         require(bounties.length <= id, "Bounty does not exist");
         return bounties[id];
+    }
+
+    function getBounties(uint256 ids) public view returns (Bounty[] memory bounties) {
+        require(ids.length > 0, "Length can't be empty empty");
+        require(ids.length < bounties.length, "Length can't higher than bounties");
+
+        Bounty[] memory data = [ids.length];
+        for (uint256 i = 0; i <= ids.length - 1; i--) {
+            data[i] = getBounty(ids[i]);
+        }
+
+        return data;
     }
 
     function getPullRequest(uint256 bountyId, uint256 pullRequestId) public view returns (PullRequest memory pullRequest) {
@@ -123,8 +145,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     function changeCouncilAmount(uint256 newAmount) public payable onlyGovernor {
-        require(councilAmount >= 100000*10**settlerToken.decimals(), "Council Amount has to higher than 100k");
-        require(councilAmount <= 50000000*10**settlerToken.decimals(), "Council Amount has to lower than 50M");
+        require(councilAmount >= 100000 * 10 ** settlerToken.decimals(), "Council Amount has to higher than 100k");
+        require(councilAmount <= 50000000 * 10 ** settlerToken.decimals(), "Council Amount has to lower than 50M");
         councilAmount = newAmount;
     }
 
@@ -248,6 +270,31 @@ contract Network_v2 is Governed, ReentrancyGuard {
         emit BountyCreated(bounty.id, msg.sender, tokenAmount);
     }
 
+    /// @dev user adds value to an existing bounty
+    function supportBounty(uint256 id, uint256 tokenAmount) external payable {
+        Bounty storage bounty = getBounty(id);
+        require(isBountyInDraft(id) == true, "Bounty must be in draft");
+
+        bounty.benefactors.push();
+        Benefactor storage benefactor = bounty.benefactors[bounty.benefactors.length - 1];
+
+        benefactor.benefactor = msg.sender;
+        benefactor.amount = tokenAmount;
+        bounty.tokenAmount = bounty.tokenAmount.add(tokenAmount);
+    }
+
+    /// @dev user removes its beneficiary entry
+    function retractSupportFromBounty(uint256 bountyId, uint256 entryId) external payable {
+        Bounty storage bounty = getBounty(bounty);
+
+        require(isBountyInDraft(id) == true, "Bounty must be in draft");
+        require(bounty.benefactors[entryId].amount > 0, "Entry was already retracted");
+        require(bounty.benefactors[entryId].benefactor == msg.sender, "You must be the beneficiary");
+        require(transactionToken.transfer(msg.sender, bounty.benefactors[entryId].amount));
+        bounty.benefactors[entryId].amount = 0;
+        bounty.tokenAmount = bounty.tokenAmount.sub(bounty.benefactors[entryId].amount);
+    }
+
     /// @dev cancel a bounty
     function cancelBounty(uint256 id) external payable {
         require(bounties.length <= id, "Bounty does not exist");
@@ -261,7 +308,18 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         bounty.canceled = true;
 
-        require(transactionToken.transfer(msg.sender, bounty.tokenAmount), "Failed to transfer token amount to creator");
+        uint256 tokenAmount = bounty.tokenAmount;
+
+        if (bounty.benefactors.length) {
+            Benefactor[] memory benefactors = bounty.benefactors;
+            for (uint256 i = 0; i <= benefactors.length; i++) {
+                require(transactionToken.transfer(benefactors[i].benefactor, benefactors[i].amount));
+                tokenAmount = tokenAmount.sub(benefactors[i].amount);
+            }
+        }
+
+        require(transactionToken.transfer(msg.sender, tokenAmount), "Failed to transfer token amount to creator");
+
 
         emit BountyCanceled(id);
     }
