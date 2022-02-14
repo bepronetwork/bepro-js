@@ -128,10 +128,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
         councilAmount = newAmount;
     }
 
-    function changeRedeemTime(uint256 _redeemTime) public payable onlyGovernor {
-        require(_redeemTime <= 20 days, "Time has to be lower than 20 days");
-        require(_redeemTime >= 1 minutes, "Time has to be higher than 1 minutes");
-        redeemTime = _redeemTime;
+    function changeDraftTime(uint256 _draftTime) public payable onlyGovernor {
+        require(_draftTime <= 20 days, "Time has to be lower than 20 days");
+        require(_draftTime >= 1 minutes, "Time has to be higher than 1 minutes");
+        draftTime = _draftTime;
     }
 
     function changeDisputableTime(uint256 _disputableTime) public payable onlyGovernor {
