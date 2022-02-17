@@ -36,6 +36,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     uint256 public disputableTime = 3 days;
     uint256 public draftTime = 1 days;
+    uint256 public unlockPeriod = 183 days; // 6 months after closedDate
 
     uint256 public councilAmount = 25000000*10**18; // 25M * 10 to the power of 18 (decimals)
 
@@ -79,6 +80,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     struct Benefactor {
         address benefactor;
         uint256 amount;
+        uint256 creationDate;
     }
 
     struct Bounty {
@@ -91,6 +93,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         address rewardToken;
         uint256 rewardAmount;
         uint256 fundingAmount;
+        uint256 settlerTokenRatio;
 
         bool closed;
         bool canceled;
@@ -100,6 +103,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
         string repoPath;
         string branch;
         string cid;
+
+        uint256 closedDate;
 
         PullRequest[] pullRequests;
         Proposal[] proposals;
@@ -212,6 +217,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
         return bounties[bountyId].proposals[proposalId].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100);
     }
 
+    function isAfterUnlockPeriod(uint256 date) {
+        return date.add(unlockPeriod) > block.timestamp;
+    }
+
     /// @dev get total amount of oracles of an address
     function getOraclesOf(address _address) public view returns (uint256) {
         Oracle storage oracle = oracles[_address];
@@ -297,7 +306,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev create a bounty
-    function openBounty(uint256 tokenAmount, address transactional, address rewardToken, uint256 rewardAmount, uint256 fundingAmount, string memory cid, string memory title, string memory repoPath, string memory branch) external payable {
+    function openBounty(uint256 tokenAmount, address transactional, address rewardToken, uint256 rewardAmount, uint256 settlerTokenRatio, uint256 fundingAmount, string memory cid, string memory title, string memory repoPath, string memory branch) external payable {
         bounties.push();
         Bounty storage bounty = bounties[bounties.length - 1];
         bounty.cid = cid;
@@ -324,6 +333,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
             bounty.rewardToken = rewardToken;
             bounty.fundingAmount = fundingAmount;
             bounty.tokenAmount = 0;
+            bounty.settlerTokenRatio = settlerTokenRatio;
         } else {
             bounty.tokenAmount = tokenAmount;
             ERC20 erc20 = ERC20(transactional);
@@ -436,7 +446,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
         bounty.funded = bounty.fundingAmount == bounty.tokenAmount;
 
         ERC20 erc20 = ERC20(bounty.transactional);
+        uint256 settlerAmount = fundingAmount * calculatePercentPerTenK(bounty.settlerTokenRatio);
         require(erc20.transferFrom(msg.sender, address(this), fundingAmount), "Failed to transfer funding");
+        require(settlerToken.transferFrom(msg.sender, address(this), settlerAmount), "Failed to transfer settler funding");
     }
 
     function retractFunds(uint256 id, uint256[] fundingIds) external payable {
@@ -451,6 +463,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
             require(x.benefactor == msg.sender, "Some of the chosen funding Ids were not yours");
             require(x.amount > 0, "Some of the chosen funding Ids were already retracted");
             require(erc20.transfer(msg.sender, x.amount), "Failed to retract funding");
+            uint256 settlerAmount = fundingAmount * calculatePercentPerTenK(bounty.settlerTokenRatio);
+            require(settlerToken.transfer(msg.sender, x.amount), "Failed to retract settler funding");
 
             bounty.tokenAmount = bounty.tokenAmount.sub(x.amount);
             x.amount = 0;
@@ -563,6 +577,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(isProposalDisputed(id, proposalId) == false, "Proposal is disputed, cant accept");
 
         bounty.closed = true;
+        bounty.closedDate = block.timestamp;
 
         uint256 mergerFee = bounty.tokenAmount.mul(calculatePercentPerTenK(mergeCreatorFeeShare));
 
@@ -587,5 +602,22 @@ contract Network_v2 is Governed, ReentrancyGuard {
         closedBounties = closedBounties.add(1);
 
         emit BountyDistributed(id, proposalId);
+    }
+
+    /// @dev unlocks ALL settlerTokens back to the benefactors
+    function unlockFundingSettler(uint256 id) {
+        require(bounties.length <= id, "Bounty does not exist");
+        require(isBountyInDraft(id) == false, "Bounty cant be in draft");
+        require(isBountyFundingRequest(id) == true, "Bounty is not a funding request");
+        Bounty storage bounty = getBounty(id);
+
+        require(bounty.closed == true, "Bounty has to have been closed");
+        require(isAfterUnlockPeriod(bounty.closedDate) == true, "Unlock period hasn't passed");
+
+        for (uint256 i = 0; i < bounty.funding.length; i++) {
+            Benefactor storage x = bounty.funding[i];
+            require(settlerToken.transfer(x.benefactor, x.amount), "Failed to unlock settler funds");
+            x.amount = 0;
+        }
     }
 }
