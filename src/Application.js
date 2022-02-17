@@ -15,10 +15,17 @@ const networksEnum = Object.freeze({
 });
 
 class Application {
-  constructor({web3Provider, web3PrivateKey, web3EventsProvider}) {
+  constructor({
+    web3Provider,
+    web3PrivateKey,
+    web3EventsProvider,
+    gasPrice
+  }) {
     this.web3Provider = web3Provider;
-    // evm logs http source
+    // evm logs http source (optional)
     this.web3EventsProvider = web3EventsProvider;
+    // fixed gas price for txs (optional)
+    this.gasPrice = gasPrice;
 
     // IMPORTANT: this parameter should only be used for testing purposes
     if (web3PrivateKey) {
@@ -92,7 +99,8 @@ class Application {
         web3: this.web3,
         contractAddress,
         acc : this.account,
-        web3EventsProvider: this.web3EventsProvider
+        web3EventsProvider: this.web3EventsProvider,
+        gasPrice: this.gasPrice
       });
     } catch(err) {
       throw err;
@@ -110,7 +118,8 @@ class Application {
         web3: this.web3,
         contractAddress,
         acc : this.account,
-        web3EventsProvider: this.web3EventsProvider
+        web3EventsProvider: this.web3EventsProvider,
+        gasPrice: this.gasPrice
       });
     } catch(err) {
       throw err;
@@ -128,7 +137,8 @@ class Application {
         web3: this.web3,
         contractAddress: contractAddress,
         acc : this.account,
-        web3EventsProvider: this.web3EventsProvider
+        web3EventsProvider: this.web3EventsProvider,
+        gasPrice: this.gasPrice
       });
     } catch(err) {
       throw err;

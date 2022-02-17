@@ -17,7 +17,8 @@ class IContract {
     contractAddress = null /* If not deployed */,
     abi,
     acc,
-    web3EventsProvider
+    web3EventsProvider,
+    gasPrice
   }) {
     try {
       if(!abi){
@@ -38,6 +39,7 @@ class IContract {
         abi,
         contractAddress,
         web3EventsProvider,
+        gasPrice,
         contract: new Contract(web3, abi, contractAddress)
       };
     } catch (err) {
@@ -61,6 +63,7 @@ class IContract {
     return f.send({
       from: acc,
       value: value,
+      gasPrice: this.params.gasPrice
     })
     .on("confirmation", (confirmationNumber, receipt) => {
       callback(confirmationNumber)
