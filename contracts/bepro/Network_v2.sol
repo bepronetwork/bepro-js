@@ -430,6 +430,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         bounty.tokenAmount = newTokenAmount;
     }
 
+    /// @dev enable users to fund a bounty
     function fundBounty(uint256 id, uint256 fundingAmount) external payable {
         require(bounties.length <= id, "Bounty does not exist");
         require(isBountyFundingRequest(id) == true, "Bounty is not a funding request");
@@ -449,8 +450,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 settlerAmount = fundingAmount * calculatePercentPerTenK(bounty.settlerTokenRatio);
         require(erc20.transferFrom(msg.sender, address(this), fundingAmount), "Failed to transfer funding");
         require(settlerToken.transferFrom(msg.sender, address(this), settlerAmount), "Failed to transfer settler funding");
+
+        totalSettlerLocked = totalSettlerLocked.add(settlerAmount);
     }
 
+    /// @dev enable users to retract their funding
     function retractFunds(uint256 id, uint256[] fundingIds) external payable {
         require(bounties.length <= id, "Bounty does not exist");
         require(isBountyInDraft(id) == true, "Bounty is not in draft");
@@ -465,7 +469,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
             require(erc20.transfer(msg.sender, x.amount), "Failed to retract funding");
             uint256 settlerAmount = fundingAmount * calculatePercentPerTenK(bounty.settlerTokenRatio);
             require(settlerToken.transfer(msg.sender, x.amount), "Failed to retract settler funding");
-
+            totalSettlerLocked = totalSettlerLocked.sub(settlerAmount);
             bounty.tokenAmount = bounty.tokenAmount.sub(x.amount);
             x.amount = 0;
         }
@@ -612,11 +616,12 @@ contract Network_v2 is Governed, ReentrancyGuard {
         Bounty storage bounty = getBounty(id);
 
         require(bounty.closed == true, "Bounty has to have been closed");
-        require(isAfterUnlockPeriod(bounty.closedDate) == true, "Unlock period hasn't passed");
+        require(isAfterUnlockPeriod(bounty.closedDate) == true, "Unlock period has yet to be reached");
 
         for (uint256 i = 0; i < bounty.funding.length; i++) {
             Benefactor storage x = bounty.funding[i];
             require(settlerToken.transfer(x.benefactor, x.amount), "Failed to unlock settler funds");
+            totalSettlerLocked = totalSettlerLocked.sub(x.amount);
             x.amount = 0;
         }
     }
