@@ -355,7 +355,18 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev create a bounty
-    function openBounty(uint256 tokenAmount, address transactional, address rewardToken, uint256 rewardAmount, uint256 settlerTokenRatio, uint256 fundingAmount, string memory cid, string memory title, string memory repoPath, string memory branch) external payable {
+    function openBounty(
+        uint256 tokenAmount,
+        address transactional,
+        address rewardToken,
+        uint256 rewardAmount,
+        uint256 settlerTokenRatio,
+        uint256 fundingAmount,
+        string memory cid,
+        string memory title,
+        string memory repoPath,
+        string memory branch
+    ) external payable {
         bounties.push();
         Bounty storage bounty = bounties[bounties.length - 1];
         bounty.cid = cid;
@@ -396,7 +407,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev user adds value to an existing bounty
-    function supportBounty(uint256 id, uint256 tokenAmount) external bountyExists(id) isBountyOwner(id) isInDraft(id) isNotFundingRequest(id) payable {
+    function supportBounty(
+        uint256 id,
+        uint256 tokenAmount
+    ) external bountyExists(id) isBountyOwner(id) isInDraft(id) isNotFundingRequest(id) payable {
         Bounty storage bounty = getBounty(id);
 
         bounty.benefactors.push(Benefactor(msg.sender, tokenAmount, transactional));
@@ -408,7 +422,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev user removes its beneficiary entry
-    function retractSupportFromBounty(uint256 bountyId, uint256 entryId) external bountyExists(id) isInDraft(bountyId) isNotFundingRequest(bountyId) payable {
+    function retractSupportFromBounty(
+        uint256 bountyId,
+        uint256 entryId
+    ) external bountyExists(id) isInDraft(bountyId) isNotFundingRequest(bountyId) payable {
         Bounty storage bounty = getBounty(bounty);
         ERC20 erc20 = ERC20(bounty.transactional);
 
@@ -421,7 +438,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev cancel a bounty
-    function cancelBounty(uint256 id) external bountyExists(id) isBountyOwner(id) isInDraft(id) isNotCanceled(id) isNotFundingRequest(id) payable {
+    function cancelBounty(
+        uint256 id
+    ) external bountyExists(id) isBountyOwner(id) isInDraft(id) isNotCanceled(id) isNotFundingRequest(id) payable {
 
         Bounty storage bounty = getBounty(id);
         ERC20 memory erc20 = ERC20(bounty.transactional);
@@ -446,7 +465,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev cancel funding
-    function cancelFundRequest(uint256 id) external bountyExists(id) isBountyOwner(id) isInDraft(id) isNotCanceled(id) isFundingRequest(id) payable {
+    function cancelFundRequest(
+        uint256 id
+    ) external bountyExists(id) isBountyOwner(id) isInDraft(id) isNotCanceled(id) isFundingRequest(id) payable {
 
         Bounty storage bounty = bounties[id];
         ERC20 memory erc20 = ERC20(bounty.transactional);
@@ -469,7 +490,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev update the value of a bounty with a new amount
-    function updateBountyAmount(uint256 id, uint256 newTokenAmount) external bountyExists(id) isBountyOwner(id) isInDraft(id) isNotFundingRequest(id) payable {
+    function updateBountyAmount(
+        uint256 id,
+        uint256 newTokenAmount
+    ) external bountyExists(id) isBountyOwner(id) isInDraft(id) isNotFundingRequest(id) payable {
 
         Bounty storage bounty = bounties[id];
         ERC20 memory erc20 = ERC20(bounty.transactional);
@@ -490,7 +514,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev enable users to fund a bounty
-    function fundBounty(uint256 id, uint256 fundingAmount) external bountyExists(id) isFundingRequest(id) isInDraft(id) payable {
+    function fundBounty(
+        uint256 id,
+        uint256 fundingAmount
+    ) external bountyExists(id) isFundingRequest(id) isInDraft(id) payable {
 
         Bounty storage bounty = getBounty(id);
         require(bounty.funded == false, "Bounty was already funded");
@@ -511,7 +538,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev enable users to retract their funding
-    function retractFunds(uint256 id, uint256[] fundingIds) external bountyExists(id) isInDraft(id) payable {
+    function retractFunds(
+        uint256 id,
+        uint256[] fundingIds
+    ) external bountyExists(id) isInDraft(id) payable {
 
         Bounty storage bounty = getBounty(id);
         ERC20 erc20 = ERC20(bounty.transactional);
@@ -562,7 +592,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
         emit BountyPullRequestCreated(forBountyId, pullRequest.id);
     }
 
-    function cancelPullRequest(uint256 ofBounty, uint256 prId) external bountyExists(id) isOpen(ofBounty) isNotCanceled(ofBounty) payable {
+    function cancelPullRequest(
+        uint256 ofBounty,
+        uint256 prId
+    ) external bountyExists(id) isOpen(ofBounty) isNotCanceled(ofBounty) payable {
 
         require(bounties[ofBounty].pullRequests.length <= prId, "Pull request does not exist");
         require(bounties[ofBounty].pullRequests[prId].canceled != false, "Pull request was already canceled");
@@ -579,7 +612,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev mark a PR ready for review
-    function markPullRequestReadyForReview(uint256 bountyId, uint256 pullRequestId) external bountyExists(bountyId) isNotInDraft(bountyId) isNotCanceled(bountyId) isOpen(bountyId) payable {
+    function markPullRequestReadyForReview(
+        uint256 bountyId,
+        uint256 pullRequestId
+    ) external bountyExists(bountyId) isNotInDraft(bountyId) isNotCanceled(bountyId) isOpen(bountyId) payable {
 
         require(bounties[bountyId].pullRequests.length <= pullRequestId, "Pull request does not exist");
         require(bounties[bountyId].pullRequests[pullRequestId].ready == false, "Pull request already marked as ready");
@@ -590,7 +626,12 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev create a proposal with a pull request for a bounty
-    function createBountyProposal(uint256 id, uint256 prId, address[] calldata recipients, uint256[] calldata percentages) external bountyExists(id) isNotInDraft(id) isOpen(id) isNotCanceled(id) isCouncilMember() payable {
+    function createBountyProposal(
+        uint256 id,
+        uint256 prId,
+        address[] calldata recipients,
+        uint256[] calldata percentages
+    ) external bountyExists(id) isNotInDraft(id) isOpen(id) isNotCanceled(id) isCouncilMember() payable {
         require(getBounty(id).pullRequests.length <= prId, "Pull request does not exist");
 
         Bounty storage bounty = getBounty(id);
@@ -620,7 +661,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev close bounty with the selected proposal id
-    function closeBounty(uint256 id, uint256 proposalId) external bountyExists(id) isOpen(id) isNotCanceled(id) isNotInDraft(id) payable {
+    function closeBounty(
+        uint256 id,
+        uint256 proposalId
+    ) external bountyExists(id) isOpen(id) isNotCanceled(id) isNotInDraft(id) payable {
         require(bounties[id].proposals.length <= proposalId, "Proposal does not exist");
 
         Bounty storage bounty = bounties[id];
@@ -659,7 +703,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     /// @dev unlocks ALL settlerTokens back to the benefactors
-    function unlockFundingSettler(uint256 id) external bountyExists(id) isNotInDraft(id) isClosed(id) isNotCanceled(id) isFundingRequest(id) payable {
+    function unlockFundingSettler(
+        uint256 id
+    ) external bountyExists(id) isNotInDraft(id) isClosed(id) isNotCanceled(id) isFundingRequest(id) payable {
         Bounty storage bounty = getBounty(id);
 
         require(bounty.closed == true, "Bounty has to have been closed");
