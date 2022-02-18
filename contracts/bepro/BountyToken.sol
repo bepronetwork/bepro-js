@@ -13,12 +13,12 @@ contract BountyToken is Governed, ERC721 {
 
     function awardBounty(address to, string memory uri, uint256 bountyId, uint percentage) public payable onlyGovernor {
         uint256 memory id = tokenIds.length;
-        _safeMint(to, id);
+        require(_safeMint(to, id), "Failed to mind bounty token to address");
         _setTokenURI(id, uri);
         tokenIds.push(BountyToken(bountyId, percentage));
     }
 
-    function getBounty(uint256 id) public view returns (BountyToken) {
+    function getBountyToken(uint256 id) public view returns (BountyToken) {
         require(tokenIds.length <= id, "Bounty token does not exist");
         return tokenIds[id];
     }

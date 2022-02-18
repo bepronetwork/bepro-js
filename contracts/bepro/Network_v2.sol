@@ -398,6 +398,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
             }
         }
 
+        // todo funding logic
+
         require(erc20.transfer(bounty.creator, tokenAmount), "Failed to transfer token amount to creator");
 
         emit BountyCanceled(id);
