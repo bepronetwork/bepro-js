@@ -10,24 +10,53 @@ contract PredictionMarketAchievement {
   RealitioERC20 public realitioERC20;
   PredictionMarket public predictionMarket;
 
-  // First Prediction
+  // Buy
   // Claim through market[x].outcome[y].shares.holders[msg.sender] > 0
 
-  // First Market Created
-  // TODO
+  // AddLiquidity
+  // Claim through market[x].liquidityShares[msg.sender] > 0
 
-  // First Claim Winnings
+  // CreateMarket
+  // RealitioERC20 question arbitrator == msg.sender
+
+  // ClaimWinnings
   // Claim through market[x].outcome[y].shares.holders[msg.sender] > 0 && y == market.resolution.outcomeId
 
-  // First POLK Bond
+  // Bond
   // Use RealitioERC20 historyHashes logic value and ensure addrs.includes(msg.sender)
 
-  // Most Volume (Week #X of Year Y)
+  // Achievements List
+  // TODO
 
-  constructor(
-    RealitioERC20 _realitioERC20,
-    PredictionMarket _predictionMarket
-  ) public {
+  uint256 achievementIndex = 0;
+  mapping(uint256 => Achievement) public achievements;
+
+  enum Action {
+    Buy,
+    AddLiquidity,
+    Bond,
+    ClaimWinnings,
+    CreateMarket
+  }
+
+  struct Achievement {
+    Action action;
+    uint256 occurrences;
+    mapping(address => bool) claims;
+  }
+
+  struct ActionClaim {
+    uint256 count;
+    mapping(uint256 => bool) markets;
+  }
+
+  struct Claim {
+    mapping(uint256 => ActionClaim) actionClaims;
+  }
+
+  mapping(address => Claim) claims;
+
+  constructor(RealitioERC20 _realitioERC20, PredictionMarket _predictionMarket) public {
     require(address(_predictionMarket) != address(0), "__predictionMarket address is 0");
     require(address(_realitioERC20) != address(0), "_realitioERC20 address is 0");
 
@@ -35,5 +64,154 @@ contract PredictionMarketAchievement {
     realitioERC20 = _realitioERC20;
   }
 
-  // TODO claim ERC721
+  function createAchievement(Action action, uint256 occurrences) public returns (uint256) {
+    require(occurrences > 0, "occurrences has to be greater than 0");
+    uint256 achievementId = achievementIndex;
+    Achievement storage achievement = achievements[achievementId];
+
+    achievement.action = action;
+    achievement.occurrences = occurrences;
+    // emit LogNewAchievement(achievementId, msg.sender, content);
+    achievementIndex = achievementId + 1;
+    return achievementId;
+  }
+
+  function hasUserPlacedPrediction(address user, uint256 marketId) public {
+    uint256[2] memory outcomeShares;
+    (, outcomeShares[0], outcomeShares[1]) = predictionMarket.getUserMarketShares(marketId, user);
+
+    require(outcomeShares[0] > 0 || outcomeShares[1] > 0, "user does not hold outcome shares");
+  }
+
+  function hasUserAddedLiquidity(address user, uint256 marketId) public {
+    uint256 liquidityShares;
+    (liquidityShares, , ) = predictionMarket.getUserMarketShares(marketId, user);
+
+    require(liquidityShares > 0, "user does not hold liquidity shares");
+  }
+
+  function hasUserPlacedBond(
+    address user,
+    uint256 marketId,
+    bytes32[] memory history_hashes,
+    address[] memory addrs,
+    uint256[] memory bonds,
+    bytes32[] memory answers
+  ) public {
+    bytes32 last_history_hash;
+    bytes32 questionId;
+    (, questionId, ) = predictionMarket.getMarketAltData(marketId);
+    (, , , , , , , , last_history_hash, ) = realitioERC20.questions(questionId);
+    bool bonded;
+
+    uint256 i;
+    for (i = 0; i < history_hashes.length; i++) {
+      require(
+        last_history_hash == keccak256(abi.encodePacked(history_hashes[i], answers[i], bonds[i], addrs[i], false))
+      );
+
+      if (addrs[i] == user) bonded = true;
+
+      last_history_hash = history_hashes[i];
+    }
+
+    require(bonded == true, "user has not placed a bond in market");
+  }
+
+  function hasUserClaimedWinnings(address user, uint256 marketId) public {
+    uint256[2] memory outcomeShares;
+    (, outcomeShares[0], outcomeShares[1]) = predictionMarket.getUserMarketShares(marketId, user);
+    int256 resolvedOutcomeId = predictionMarket.getMarketResolvedOutcome(marketId);
+
+    require(resolvedOutcomeId >= 0, "market is still not resolved");
+    require(outcomeShares[uint256(resolvedOutcomeId)] > 0, "user does not hold winning outcome shares");
+  }
+
+  function hasUserCreatedMarket(address user, uint256 marketId) public {
+    require(user != address(0), "user address is 0x0");
+
+    bytes32 questionId;
+    address arbitrator;
+    (, questionId, ) = predictionMarket.getMarketAltData(marketId);
+    (, arbitrator, , , , , , , , ) = realitioERC20.questions(questionId);
+
+    require(user == arbitrator, "user did not create market");
+  }
+
+  // function getClaim(address _address) private returns (Claim memory) {
+  //   return claims[_address];
+  // }
+
+  function claimAchievement(uint256 achievementId, uint256[] memory marketIds) public {
+    Achievement storage achievement = achievements[achievementId];
+    ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
+
+    require(achievement.action != Action.Bond, "Method not used for bond placement achievements");
+    require(
+      marketIds.length + actionClaim.count == achievement.occurrences,
+      "Markets count and occurrences don't match"
+    );
+
+    for (uint256 i = 0; i < marketIds.length; i++) {
+      uint256 marketId = marketIds[i];
+      require(actionClaim.markets[marketId] == false, "Achievement already checked for market");
+
+      actionClaim.markets[marketId] = true;
+
+      if (achievement.action == Action.Buy) {
+        hasUserPlacedPrediction(msg.sender, marketId);
+      } else if (achievement.action == Action.AddLiquidity) {
+        hasUserAddedLiquidity(msg.sender, marketId);
+      } else if (achievement.action == Action.ClaimWinnings) {
+        hasUserClaimedWinnings(msg.sender, marketId);
+      } else if (achievement.action == Action.CreateMarket) {
+        hasUserCreatedMarket(msg.sender, marketId);
+      } else {
+        revert("Invalid achievement action");
+      }
+    }
+  }
+
+  function claimAchievement(
+    uint256 achievementId,
+    uint256[] memory marketIds,
+    uint256[] memory lengths,
+    bytes32[] memory history_hashes,
+    address[] memory addrs,
+    uint256[] memory bonds,
+    bytes32[] memory answers
+  ) public {
+    Achievement storage achievement = achievements[achievementId];
+    ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
+
+    require(achievement.action == Action.Bond, "Method only used for bond placement achievements");
+    require(
+      marketIds.length + actionClaim.count == achievement.occurrences,
+      "Markets count and occurrences don't match"
+    );
+
+    uint256 qi;
+
+    for (uint256 i = 0; i < marketIds.length; i++) {
+      uint256 marketId = marketIds[i];
+      require(actionClaim.markets[marketId] == false, "Achievement already checked for market");
+
+      actionClaim.markets[marketId] = true;
+
+      uint256 ln = lengths[i];
+      bytes32[] memory hh = new bytes32[](ln);
+      address[] memory ad = new address[](ln);
+      uint256[] memory bo = new uint256[](ln);
+      bytes32[] memory an = new bytes32[](ln);
+      uint256 j;
+      for (j = 0; j < ln; j++) {
+          hh[j] = history_hashes[qi];
+          ad[j] = addrs[qi];
+          bo[j] = bonds[qi];
+          an[j] = answers[qi];
+          qi++;
+      }
+      hasUserPlacedBond(msg.sender, marketId, hh, ad, bo, an);
+    }
+  }
 }
