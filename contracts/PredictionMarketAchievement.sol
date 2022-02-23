@@ -4,8 +4,16 @@ pragma experimental ABIEncoderV2;
 import "./RealitioERC20.sol";
 import "./PredictionMarket.sol";
 
+// openzeppelin imports
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
 /// @title Prediction Market Achievements Contract
-contract PredictionMarketAchievement {
+contract PredictionMarketAchievement is ERC721 {
+  using Counters for Counters.Counter;
+  Counters.Counter private _tokenIds;
+
   /// @dev protocol is immutable and has no ownership
   RealitioERC20 public realitioERC20;
   PredictionMarket public predictionMarket;
@@ -27,9 +35,6 @@ contract PredictionMarketAchievement {
 
   // Achievements List
   // TODO
-
-  uint256 achievementIndex = 0;
-  mapping(uint256 => Achievement) public achievements;
 
   enum Action {
     Buy,
@@ -54,14 +59,29 @@ contract PredictionMarketAchievement {
     mapping(uint256 => ActionClaim) actionClaims;
   }
 
-  mapping(address => Claim) claims;
+  uint256 achievementIndex = 0;
+  mapping(uint256 => Achievement) public achievements;
 
-  constructor(RealitioERC20 _realitioERC20, PredictionMarket _predictionMarket) public {
-    require(address(_predictionMarket) != address(0), "__predictionMarket address is 0");
+  mapping(address => Claim) claims;
+  mapping(uint256 => Achievement) public tokens;
+
+  constructor() public ERC721("PredictionMarketAchievement", "PMA") {}
+
+  function setContracts(RealitioERC20 _realitioERC20, PredictionMarket _predictionMarket) public {
+    require(address(predictionMarket) == address(0), "predictionMarket can only be initialized once");
+    require(address(realitioERC20) == address(0), "realitioERC20 can only be initialized once");
+
+    require(address(_predictionMarket) != address(0), "_predictionMarket address is 0");
     require(address(_realitioERC20) != address(0), "_realitioERC20 address is 0");
 
     predictionMarket = _predictionMarket;
     realitioERC20 = _realitioERC20;
+  }
+
+  function setBaseURI(string memory baseURI) public {
+    require(bytes(baseURI).length == 0, "baseURI can only be initialized once");
+
+    _setBaseURI(baseURI);
   }
 
   function createAchievement(Action action, uint256 occurrences) public returns (uint256) {
@@ -76,14 +96,14 @@ contract PredictionMarketAchievement {
     return achievementId;
   }
 
-  function hasUserPlacedPrediction(address user, uint256 marketId) public {
+  function hasUserPlacedPrediction(address user, uint256 marketId) public view {
     uint256[2] memory outcomeShares;
     (, outcomeShares[0], outcomeShares[1]) = predictionMarket.getUserMarketShares(marketId, user);
 
     require(outcomeShares[0] > 0 || outcomeShares[1] > 0, "user does not hold outcome shares");
   }
 
-  function hasUserAddedLiquidity(address user, uint256 marketId) public {
+  function hasUserAddedLiquidity(address user, uint256 marketId) public view {
     uint256 liquidityShares;
     (liquidityShares, , ) = predictionMarket.getUserMarketShares(marketId, user);
 
@@ -97,7 +117,7 @@ contract PredictionMarketAchievement {
     address[] memory addrs,
     uint256[] memory bonds,
     bytes32[] memory answers
-  ) public {
+  ) public view {
     bytes32 last_history_hash;
     bytes32 questionId;
     (, questionId, ) = predictionMarket.getMarketAltData(marketId);
@@ -118,7 +138,7 @@ contract PredictionMarketAchievement {
     require(bonded == true, "user has not placed a bond in market");
   }
 
-  function hasUserClaimedWinnings(address user, uint256 marketId) public {
+  function hasUserClaimedWinnings(address user, uint256 marketId) public view {
     uint256[2] memory outcomeShares;
     (, outcomeShares[0], outcomeShares[1]) = predictionMarket.getUserMarketShares(marketId, user);
     int256 resolvedOutcomeId = predictionMarket.getMarketResolvedOutcome(marketId);
@@ -127,7 +147,7 @@ contract PredictionMarketAchievement {
     require(outcomeShares[uint256(resolvedOutcomeId)] > 0, "user does not hold winning outcome shares");
   }
 
-  function hasUserCreatedMarket(address user, uint256 marketId) public {
+  function hasUserCreatedMarket(address user, uint256 marketId) public view {
     require(user != address(0), "user address is 0x0");
 
     bytes32 questionId;
@@ -138,11 +158,7 @@ contract PredictionMarketAchievement {
     require(user == arbitrator, "user did not create market");
   }
 
-  // function getClaim(address _address) private returns (Claim memory) {
-  //   return claims[_address];
-  // }
-
-  function claimAchievement(uint256 achievementId, uint256[] memory marketIds) public {
+  function claimAchievement(uint256 achievementId, uint256[] memory marketIds) public returns (uint256) {
     Achievement storage achievement = achievements[achievementId];
     ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
 
@@ -170,6 +186,8 @@ contract PredictionMarketAchievement {
         revert("Invalid achievement action");
       }
     }
+
+    mintAchievement(msg.sender, achievement);
   }
 
   function claimAchievement(
@@ -205,13 +223,25 @@ contract PredictionMarketAchievement {
       bytes32[] memory an = new bytes32[](ln);
       uint256 j;
       for (j = 0; j < ln; j++) {
-          hh[j] = history_hashes[qi];
-          ad[j] = addrs[qi];
-          bo[j] = bonds[qi];
-          an[j] = answers[qi];
-          qi++;
+        hh[j] = history_hashes[qi];
+        ad[j] = addrs[qi];
+        bo[j] = bonds[qi];
+        an[j] = answers[qi];
+        qi++;
       }
       hasUserPlacedBond(msg.sender, marketId, hh, ad, bo, an);
     }
+
+    mintAchievement(msg.sender, achievement);
+  }
+
+  function mintAchievement(address user, Achievement memory achievement) private returns (uint256) {
+    _tokenIds.increment();
+
+    uint256 tokenId = _tokenIds.current();
+    _mint(user, tokenId);
+    tokens[tokenId] = achievement;
+
+    return tokenId;
   }
 }
