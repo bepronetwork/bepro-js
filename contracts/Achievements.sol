@@ -78,10 +78,10 @@ contract Achievements is ERC721 {
     realitioERC20 = _realitioERC20;
   }
 
-  function setBaseURI(string memory baseURI) public {
-    require(bytes(baseURI).length == 0, "baseURI can only be initialized once");
+  function setBaseURI(string memory _baseURI) public {
+    require(bytes(baseURI()).length == 0, "baseURI can only be initialized once");
 
-    _setBaseURI(baseURI);
+    _setBaseURI(_baseURI);
   }
 
   function createAchievement(Action action, uint256 occurrences) public returns (uint256) {
@@ -96,18 +96,22 @@ contract Achievements is ERC721 {
     return achievementId;
   }
 
-  function hasUserPlacedPrediction(address user, uint256 marketId) public view {
+  function hasUserPlacedPrediction(address user, uint256 marketId) public view returns (bool) {
     uint256[2] memory outcomeShares;
     (, outcomeShares[0], outcomeShares[1]) = predictionMarket.getUserMarketShares(marketId, user);
 
     require(outcomeShares[0] > 0 || outcomeShares[1] > 0, "user does not hold outcome shares");
+
+    return true;
   }
 
-  function hasUserAddedLiquidity(address user, uint256 marketId) public view {
+  function hasUserAddedLiquidity(address user, uint256 marketId) public view returns (bool) {
     uint256 liquidityShares;
     (liquidityShares, , ) = predictionMarket.getUserMarketShares(marketId, user);
 
     require(liquidityShares > 0, "user does not hold liquidity shares");
+
+    return true;
   }
 
   function hasUserPlacedBond(
@@ -117,7 +121,7 @@ contract Achievements is ERC721 {
     address[] memory addrs,
     uint256[] memory bonds,
     bytes32[] memory answers
-  ) public view {
+  ) public view returns (bool) {
     bytes32 last_history_hash;
     bytes32 questionId;
     (, questionId, ) = predictionMarket.getMarketAltData(marketId);
@@ -136,18 +140,22 @@ contract Achievements is ERC721 {
     }
 
     require(bonded == true, "user has not placed a bond in market");
+
+    return true;
   }
 
-  function hasUserClaimedWinnings(address user, uint256 marketId) public view {
+  function hasUserClaimedWinnings(address user, uint256 marketId) public view returns (bool) {
     uint256[2] memory outcomeShares;
     (, outcomeShares[0], outcomeShares[1]) = predictionMarket.getUserMarketShares(marketId, user);
     int256 resolvedOutcomeId = predictionMarket.getMarketResolvedOutcome(marketId);
 
     require(resolvedOutcomeId >= 0, "market is still not resolved");
     require(outcomeShares[uint256(resolvedOutcomeId)] > 0, "user does not hold winning outcome shares");
+
+    return true;
   }
 
-  function hasUserCreatedMarket(address user, uint256 marketId) public view {
+  function hasUserCreatedMarket(address user, uint256 marketId) public view returns (bool) {
     require(user != address(0), "user address is 0x0");
 
     bytes32 questionId;
@@ -156,6 +164,8 @@ contract Achievements is ERC721 {
     (, arbitrator, , , , , , , , ) = realitioERC20.questions(questionId);
 
     require(user == arbitrator, "user did not create market");
+
+    return true;
   }
 
   function claimAchievement(uint256 achievementId, uint256[] memory marketIds) public returns (uint256) {
