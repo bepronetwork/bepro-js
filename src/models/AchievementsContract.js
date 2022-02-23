@@ -1,4 +1,4 @@
-const predictionAchievement = require("../interfaces").predictionAchievement;
+const achievements = require("../interfaces").achievements;
 
 const Numbers = require( "../utils/Numbers");
 const IContract = require( './IContract');
@@ -15,7 +15,7 @@ const realitioLib = require('@reality.eth/reality-eth-lib/formatters/question');
  * @param {Address} contractAddress
  */
 
-class PredictionMarketAchievementContract extends IContract {
+class AchievementsContract extends IContract {
 	constructor(params) {
     // a predictionMarketContractAddress is required
     if (!params.predictionMarketContractAddress) {
@@ -27,8 +27,8 @@ class PredictionMarketAchievementContract extends IContract {
       throw 'realitioERC20ContractAddress param is required'
     }
 
-		super({abi: predictionAchievement, ...params});
-		this.contractName = 'predictionMarketAchievement';
+		super({abi: achievements, ...params});
+		this.contractName = 'achievements';
 
     // initializing predictionMarket contract
     const predictionMarketParams = { ...params, contractAddress: params.predictionMarketContractAddress };
@@ -65,4 +65,4 @@ class PredictionMarketAchievementContract extends IContract {
   }
 }
 
-module.exports = PredictionMarketAchievementContract;
+module.exports = AchievementsContract;
