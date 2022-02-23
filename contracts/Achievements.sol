@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /// @title Prediction Market Achievements Contract
-contract PredictionMarketAchievement is ERC721 {
+contract Achievements is ERC721 {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
@@ -65,7 +65,7 @@ contract PredictionMarketAchievement is ERC721 {
   mapping(address => Claim) claims;
   mapping(uint256 => Achievement) public tokens;
 
-  constructor() public ERC721("PredictionMarketAchievement", "PMA") {}
+  constructor() public ERC721("Achievements", "PMA") {}
 
   function setContracts(RealitioERC20 _realitioERC20, PredictionMarket _predictionMarket) public {
     require(address(predictionMarket) == address(0), "predictionMarket can only be initialized once");
