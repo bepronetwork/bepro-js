@@ -18,24 +18,11 @@ contract Achievements is ERC721 {
   RealitioERC20 public realitioERC20;
   PredictionMarket public predictionMarket;
 
-  // Buy
-  // Claim through market[x].outcome[y].shares.holders[msg.sender] > 0
-
-  // AddLiquidity
-  // Claim through market[x].liquidityShares[msg.sender] > 0
-
-  // CreateMarket
-  // RealitioERC20 question arbitrator == msg.sender
-
-  // ClaimWinnings
-  // Claim through market[x].outcome[y].shares.holders[msg.sender] > 0 && y == market.resolution.outcomeId
-
-  // Bond
-  // Use RealitioERC20 historyHashes logic value and ensure addrs.includes(msg.sender)
-
-  // Achievements List
-  // TODO
-
+  // Buy: Claim through market[x].outcome[y].shares.holders[msg.sender] > 0
+  // AddLiquidity: Claim through market[x].liquidityShares[msg.sender] > 0
+  // CreateMarket: RealitioERC20 question arbitrator == msg.sender
+  // ClaimWinnings: Claim through market[x].outcome[y].shares.holders[msg.sender] > 0 && y == market.resolution.outcomeId
+  // Bond: Use RealitioERC20 historyHashes logic value and ensure addrs.includes(msg.sender)
   enum Action {
     Buy,
     AddLiquidity,
@@ -59,7 +46,7 @@ contract Achievements is ERC721 {
     mapping(uint256 => ActionClaim) actionClaims;
   }
 
-  uint256 achievementIndex = 0;
+  uint256 public achievementIndex = 0;
   mapping(uint256 => Achievement) public achievements;
 
   mapping(address => Claim) claims;
@@ -67,7 +54,7 @@ contract Achievements is ERC721 {
 
   constructor() public ERC721("Achievements", "PMA") {}
 
-  function setContracts(RealitioERC20 _realitioERC20, PredictionMarket _predictionMarket) public {
+  function setContracts(PredictionMarket _predictionMarket, RealitioERC20 _realitioERC20) public {
     require(address(predictionMarket) == address(0), "predictionMarket can only be initialized once");
     require(address(realitioERC20) == address(0), "realitioERC20 can only be initialized once");
 
@@ -173,6 +160,7 @@ contract Achievements is ERC721 {
     ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
 
     require(achievement.action != Action.Bond, "Method not used for bond placement achievements");
+    require(marketIds.length > 0, "No actions provided");
     require(
       marketIds.length + actionClaim.count == achievement.occurrences,
       "Markets count and occurrences don't match"
@@ -213,6 +201,7 @@ contract Achievements is ERC721 {
     ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
 
     require(achievement.action == Action.Bond, "Method only used for bond placement achievements");
+    require(marketIds.length > 0, "No actions provided");
     require(
       marketIds.length + actionClaim.count == achievement.occurrences,
       "Markets count and occurrences don't match"
