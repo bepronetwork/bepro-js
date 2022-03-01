@@ -17,7 +17,7 @@ module.exports = {
       websockets: true
     },
     moonriver: {
-      provider: new HDWalletProvider(mnemonic, "https://rpc.moonriver.moonbeam.network"),
+      provider: new HDWalletProvider(mnemonic, "https://rpc.api.moonriver.moonbeam.network/"),
       network_id: 1285
     },
     moonbeam: {
