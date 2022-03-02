@@ -10,6 +10,7 @@ function buildSolution() {
     const isSelf = !fs.existsSync(path.resolve(`node_modules`, `bepro-js`));
     const localPath = !isSelf && [`node_modules`, `bepro-js`] || [];
 
+    const buildCommand = (!isSelf && `npm explore bepro-js -- ` || ``) + `npm run build`;
     const isBuilding = fs.existsSync(path.resolve(... localPath, `building.tmp`));
     const wasBuilt = fs.existsSync(path.resolve(... localPath, DIST_PATH));
     const hasDependencies = fs.existsSync(path.resolve(... localPath, `node_modules`, `truffle`));
@@ -38,8 +39,8 @@ function buildSolution() {
       console.timeEnd(`Install dependencies`)
     }
 
-    childProcess.execSync(`npm run build`, execOptions);
-    console.log(`Built bepro-js sdk`);
+    childProcess.execSync(buildCommand);
+
     console.timeEnd(`Building`);
 
     fs.rmSync(path.resolve(...localPath, `building.tmp`), {force: true,})
