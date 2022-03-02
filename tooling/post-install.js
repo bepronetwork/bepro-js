@@ -40,18 +40,18 @@ try {
 
   if (!hasDependencies) {
     console.log(`Missing dependencies`);
-    console.time(`Install dependencies`);
-    childProcess.execSync(`npm install .`, execOptions);
-    console.timeEnd(`Install dependencies`);
+    console.time(`Installed dependencies`);
+    childProcess.execSync(`npm --production=false install  .`, execOptions);
+    console.timeEnd(`Installed dependencies`);
   }
 
   console.log(`Building solution`);
-  console.time(`Building`);
+  console.time(`Built`);
 
   childProcess.execSync(`npm run build`, execOptions);
   fs.rmSync(path.resolve(`building.tmp`), {force: true,});
 
-  console.timeEnd(`Building`);
+  console.timeEnd(`Built`);
 
 
   return 0;
