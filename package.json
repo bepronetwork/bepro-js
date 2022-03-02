@@ -35,7 +35,9 @@
         "ipfs-http-client": "^50.1.2",
         "web3": "^1.6.1",
         "web3-eth": "^1.6.1",
-        "web3-utils": "^1.6.1",
+        "web3-utils": "^1.6.1"
+    },
+    "devDependencies": {
         "@truffle/hdwallet-provider": "^2.0.0",
         "@types/chai": "^4.3.0",
         "@types/mocha": "^9.0.0",

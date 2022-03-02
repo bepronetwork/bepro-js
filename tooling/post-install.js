@@ -33,16 +33,17 @@ function buildSolution() {
     console.time(`Building`);
 
     if (!hasDependencies) {
+      console.log(`Missing dependencies`);
       console.time(`Install dependencies`);
       childProcess.execSync(explore(`npm install .`), execOptions);
       console.timeEnd(`Install dependencies`);
     }
 
     childProcess.execSync(explore(`npm run build`, execOptions));
+    fs.rmSync(path.resolve(...localPath, `building.tmp`), {force: true,})
 
     console.timeEnd(`Building`);
 
-    fs.rmSync(path.resolve(...localPath, `building.tmp`), {force: true,})
 
     return 0;
   } catch (e) {
