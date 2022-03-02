@@ -9,8 +9,8 @@ function buildSolution() {
     const {execSync} = require("child_process");
     const cwd = path.resolve();
 
-    const wasBuilt = fs.statSync(path.resolve(DIST_PATH))?.isDirectory();
-    const hasDependencies = fs.statSync(path.resolve(`node_modules`, `truffle`))?.isDirectory();
+    const wasBuilt = fs.existsSync(path.resolve(DIST_PATH));
+    const hasDependencies = fs.existsSync(path.resolve(`node_modules`, `truffle`));
 
     if (wasBuilt) {
       console.log(`bepro-js sdk was already built.`)
