@@ -8,11 +8,12 @@ const DIST_PATH = `dist`;
 try {
 
   console.log(`BEPRO post-install check`);
+  const p = (paths = []) => path.join(path.resolve(), ...paths);
 
-  const isSelf = !fs.existsSync(path.resolve(`node_modules`, `bepro-js`));
+  const isSelf = !fs.existsSync(p([`node_modules`, `bepro-js`]));
 
   const explore = (command = ``) => `npm explore bepro-js -- ${command}`;
-  const _exists = (file = []) => fs.existsSync(path.resolve(`node_modules`, `bepro-js`, ...file))
+  const _exists = (file = []) => fs.existsSync(p([`node_modules`, `bepro-js`, ...file]))
 
   const isBuilding = _exists([`building.tmp`]);
   const wasBuilt = _exists([DIST_PATH]);
@@ -37,7 +38,7 @@ try {
   if (isBuilding)
     return 0;
   else if (!isBuilding)
-    fs.writeFileSync(path.resolve(`node_modules`, `bepro-js`, `building.tmp`), `${+new Date()}`, `utf-8`);
+    fs.writeFileSync(p([`node_modules`, `bepro-js`, `building.tmp`]), `${+new Date()}`, `utf-8`);
 
   if (!hasDependencies) {
     console.log(`Missing dependencies`);
@@ -50,7 +51,7 @@ try {
   console.log(`Building solution`);
 
   childProcess.execSync(explore(`npm run build`, execOptions));
-  fs.rmSync(path.resolve(`node_modules`, `bepro-js`, `building.tmp`), {force: true,});
+  fs.rmSync(p([`node_modules`, `bepro-js`, `building.tmp`]), {force: true,});
 
   console.timeEnd(`Building`);
 
