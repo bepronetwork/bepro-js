@@ -28,6 +28,9 @@ jobs:
       - name: Lint solution
         run: npm run lint
 
+      - name: Build solution
+        run: npm run build
+
       - name: Start ganache and test integration
         run: npm run test-ci
         env:

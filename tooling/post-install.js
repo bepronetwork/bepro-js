@@ -4,53 +4,61 @@ const childProcess = require("child_process");
 
 const DIST_PATH = `dist`;
 
-function buildSolution() {
-  try {
 
-    const isSelf = !fs.existsSync(path.resolve(`node_modules`, `bepro-js`));
-    const localPath = !isSelf && [`node_modules`, `bepro-js`] || [];
+try {
 
-    const explore = (command = ``) => (!isSelf && `npm explore bepro-js -- ` || ``) + command;
-    const isBuilding = fs.existsSync(path.resolve(... localPath, `building.tmp`));
-    const wasBuilt = fs.existsSync(path.resolve(... localPath, DIST_PATH));
-    const hasDependencies = fs.existsSync(path.resolve(... localPath, `node_modules`, `truffle`));
+  console.log(`BEPRO post-install check`);
 
-    const execOptions = {
-      stdio: 'inherit',
-    }
+  const isSelf = !fs.existsSync(path.resolve(`node_modules`, `bepro-js`));
 
-    if (wasBuilt) {
-      console.log(`bepro-js sdk was already built.`)
-      return 0;
-    }
+  const explore = (command = ``) => `npm explore bepro-js -- ${command}`;
+  const _exists = (file = []) => fs.existsSync(path.resolve(`node_modules`, `bepro-js`, ...file))
 
-    if (isBuilding)
-      return 0;
-    else if (!isBuilding)
-      fs.writeFileSync(path.resolve(...localPath, `building.tmp`), `${+new Date()}`, `utf-8`);
+  const isBuilding = _exists([`building.tmp`]);
+  const wasBuilt = _exists([DIST_PATH]);
+  const hasDependencies = _exists([`node_modules`, `truffle`]);
 
-    console.log(`Building bepro-js sdk`);
-    console.time(`Building`);
+  console.table({isSelf, isBuilding, wasBuilt, hasDependencies, cwd: path.resolve()});
 
-    if (!hasDependencies) {
-      console.log(`Missing dependencies`);
-      console.time(`Install dependencies`);
-      childProcess.execSync(explore(`npm install -D`), execOptions);
-      console.timeEnd(`Install dependencies`);
-    }
-
-    childProcess.execSync(explore(`npm run build`, execOptions));
-    fs.rmSync(path.resolve(...localPath, `building.tmp`), {force: true,})
-
-    console.timeEnd(`Building`);
-
-
+  if (isSelf) {
+    console.log(`Post install not needed.`);
     return 0;
-  } catch (e) {
-    console.log(e);
-    console.log(`\nFailed to build bepro-js sdk, please issue: npm explore bepro-js -- npm run build`);
-    return 1;
   }
+
+  const execOptions = {
+    stdio: 'inherit',
+  }
+
+  if (wasBuilt) {
+    console.log(`bepro-js sdk was already built.`)
+    return 0;
+  }
+
+  if (isBuilding)
+    return 0;
+  else if (!isBuilding)
+    fs.writeFileSync(path.resolve(`node_modules`, `bepro-js`, `building.tmp`), `${+new Date()}`, `utf-8`);
+
+  if (!hasDependencies) {
+    console.log(`Missing dependencies`);
+    console.time(`Install dependencies`);
+    childProcess.execSync(explore(`npm install .`), execOptions);
+    console.timeEnd(`Install dependencies`);
+  }
+
+  console.time(`Building`);
+  console.log(`Building solution`);
+
+  childProcess.execSync(explore(`npm run build`, execOptions));
+  fs.rmSync(path.resolve(`node_modules`, `bepro-js`, `building.tmp`), {force: true,});
+
+  console.timeEnd(`Building`);
+
+
+  return 0;
+} catch (e) {
+  console.log(e);
+  console.log(`\nFailed to build bepro-js sdk, please issue: npm explore bepro-js -- npm run build`);
+  return 1;
 }
 
-buildSolution();
