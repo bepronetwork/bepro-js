@@ -13,6 +13,11 @@ function buildSolution() {
     const wasBuilt = fs.existsSync(path.resolve(... localPath, DIST_PATH));
     const hasDependencies = fs.existsSync(path.resolve(... localPath, `node_modules`, `truffle`));
 
+    const execOptions = {
+      stdio: 'inherit',
+      cwd: path.resolve(...localPath)
+    }
+
     if (wasBuilt) {
       console.log(`bepro-js sdk was already built.`)
       return 0;
@@ -23,11 +28,11 @@ function buildSolution() {
 
     if (!hasDependencies) {
       console.time(`Install dependencies`)
-      childProcess.spawnSync(`npm install .`, {cwd: path.resolve(...localPath)});
+      childProcess.spawnSync(`npm install .`, execOptions);
       console.timeEnd(`Install dependencies`)
     }
 
-    childProcess.spawnSync(`npm run build`, {cwd: path.resolve(...localPath)});
+    childProcess.spawnSync(`npm run build`, execOptions);
     console.log(`Built bepro-js sdk`);
     console.timeEnd(`Building`);
 
