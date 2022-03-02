@@ -34,7 +34,7 @@ function buildSolution() {
 
     if (!hasDependencies) {
       console.time(`Install dependencies`);
-      childProcess.execSync(explore(`npm install`), execOptions);
+      childProcess.execSync(explore(`npm install .`), execOptions);
       console.timeEnd(`Install dependencies`);
     }
 
