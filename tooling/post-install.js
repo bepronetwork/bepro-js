@@ -10,7 +10,7 @@ try {
   console.log(`BEPRO post-install check`);
   const p = (paths = []) => path.join(path.resolve(), ...paths);
 
-  const isSelf = !fs.existsSync(p([`node_modules`, `bepro-js`]));
+  const isSelf = !path.resolve().includes(`node_modules`);
 
   const explore = (command = ``) => `npm explore bepro-js -- ${command}`;
   const _exists = (file = []) => fs.existsSync(p([`node_modules`, `bepro-js`, ...file]))
