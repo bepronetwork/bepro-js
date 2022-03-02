@@ -27,7 +27,7 @@ function buildSolution() {
       console.timeEnd(`Install dependencies`)
     }
 
-    childProcess.execSync(`npm run build`);
+    childProcess.execSync(`npm run build`, {cwd: path.resolve(...localPath)});
     console.log(`Built bepro-js sdk`);
     console.timeEnd(`Building`);
 
