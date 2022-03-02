@@ -7,8 +7,11 @@ const DIST_PATH = `dist`;
 function buildSolution() {
   try {
 
-    const wasBuilt = fs.existsSync(path.resolve(DIST_PATH));
-    const hasDependencies = fs.existsSync(path.resolve(`node_modules`, `truffle`));
+    const isSelf = !fs.existsSync(path.resolve(`node_modules`, `bepro-js`));
+    const localPath = !isSelf && [`node_modules`, `bepro-js`] || [];
+
+    const wasBuilt = fs.existsSync(path.resolve(... localPath, DIST_PATH));
+    const hasDependencies = fs.existsSync(path.resolve(... localPath, `node_modules`, `truffle`));
 
     if (wasBuilt) {
       console.log(`bepro-js sdk was already built.`)
@@ -20,7 +23,7 @@ function buildSolution() {
 
     if (!hasDependencies) {
       console.time(`Install dependencies`)
-      childProcess.execSync(`npm install .`);
+      childProcess.execSync(`npm install .`, {cwd: path.resolve(...localPath)});
       console.timeEnd(`Install dependencies`)
     }
 
