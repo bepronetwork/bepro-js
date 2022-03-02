@@ -23,11 +23,11 @@ function buildSolution() {
 
     if (!hasDependencies) {
       console.time(`Install dependencies`)
-      childProcess.execSync(`npm install .`, {cwd: path.resolve(...localPath)});
+      childProcess.spawnSync(`npm install .`, {cwd: path.resolve(...localPath)});
       console.timeEnd(`Install dependencies`)
     }
 
-    childProcess.execSync(`npm run build`, {cwd: path.resolve(...localPath)});
+    childProcess.spawnSync(`npm run build`, {cwd: path.resolve(...localPath)});
     console.log(`Built bepro-js sdk`);
     console.timeEnd(`Building`);
 
