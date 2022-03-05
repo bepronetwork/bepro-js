@@ -50,7 +50,7 @@ contract Achievements is ERC721 {
   mapping(uint256 => Achievement) public achievements;
 
   mapping(address => Claim) claims;
-  mapping(uint256 => Achievement) public tokens;
+  mapping(uint256 => uint256) public tokens; // tokenId => achievementId
 
   constructor() public ERC721("Achievements", "PMA") {}
 
@@ -185,7 +185,7 @@ contract Achievements is ERC721 {
       }
     }
 
-    mintAchievement(msg.sender, achievement);
+    mintAchievement(msg.sender, achievementId);
   }
 
   function claimAchievement(
@@ -231,16 +231,20 @@ contract Achievements is ERC721 {
       hasUserPlacedBond(msg.sender, marketId, hh, ad, bo, an);
     }
 
-    mintAchievement(msg.sender, achievement);
+    mintAchievement(msg.sender, achievementId);
   }
 
-  function mintAchievement(address user, Achievement memory achievement) private returns (uint256) {
+  function mintAchievement(address user, uint256 achievementId) private returns (uint256) {
     _tokenIds.increment();
 
     uint256 tokenId = _tokenIds.current();
     _mint(user, tokenId);
-    tokens[tokenId] = achievement;
+    tokens[tokenId] = achievementId;
 
     return tokenId;
+  }
+
+  function tokenIndex() public view returns (uint256) {
+    return _tokenIds.current();
   }
 }
