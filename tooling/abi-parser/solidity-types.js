@@ -3,15 +3,17 @@ const SolidityTypes = {
   address: `string`,
   "string": `string`,
   event: `void`,
+  tuple: ``, // since we break down any typed tuple we can replace it for empty string
+  "tuple[]": `` // since we break down any typed tuple we can replace it for empty string
 }
 
 const getSolidityType = (type = ``) => {
-  const isArray = type.search(`[]`) > -1;
+  const isArray = type.indexOf(`[]`) > -1;
   let retype = `any`;
 
   if (type.startsWith(`bytes`))
     retype = `string` + (isArray && `[]` || ``);
-  else retype = type.search(`int`) > -1 ? `number` : SolidityTypes[type] + (isArray && `[]` || ``);
+  else retype = type.indexOf(`int`) > -1 ? `number` : (SolidityTypes[type] || "") + (isArray && `[]` || ``);
 
   return retype;
 }

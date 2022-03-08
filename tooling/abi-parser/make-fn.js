@@ -11,7 +11,7 @@ const parseComment = require('./parse-comment')
  */
 const makeFn = (option, withBody = false, devDoc = ``) => {
   const parsedInputs = parseInputsName(option.inputs);
-  const parsedOutputs = parseOutput(option.outputs);
+  const parsedOutputs = parseOutput(option.outputs, undefined, true);
 
   const inputs = withBody && option.inputs.map(({name, type}, i) =>
     `${name || 'v'.concat(String(+i+1))}`).join(`, `) || '';
