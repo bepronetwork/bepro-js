@@ -18,10 +18,14 @@ export default class TestUniswapV3Callee extends IContract {
    * @param {uint256} amount0In
    * @param {address} recipient
    * @param {uint160} sqrtPriceLimitX96
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96));
+  async swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96),
+      options,
+    );
   }
 
 
@@ -30,10 +34,14 @@ export default class TestUniswapV3Callee extends IContract {
    * @param {uint256} amount1Out
    * @param {address} recipient
    * @param {uint160} sqrtPriceLimitX96
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96));
+  async swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96),
+      options,
+    );
   }
 
 
@@ -42,10 +50,14 @@ export default class TestUniswapV3Callee extends IContract {
    * @param {uint256} amount1In
    * @param {address} recipient
    * @param {uint160} sqrtPriceLimitX96
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96));
+  async swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96),
+      options,
+    );
   }
 
 
@@ -54,10 +66,14 @@ export default class TestUniswapV3Callee extends IContract {
    * @param {uint256} amount0Out
    * @param {address} recipient
    * @param {uint160} sqrtPriceLimitX96
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96));
+  async swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96),
+      options,
+    );
   }
 
 
@@ -65,10 +81,14 @@ export default class TestUniswapV3Callee extends IContract {
    * @param {address} pool
    * @param {uint160} sqrtPriceX96
    * @param {address} recipient
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient));
+  async swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient),
+      options,
+    );
   }
 
 
@@ -76,10 +96,14 @@ export default class TestUniswapV3Callee extends IContract {
    * @param {address} pool
    * @param {uint160} sqrtPriceX96
    * @param {address} recipient
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient));
+  async swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient),
+      options,
+    );
   }
 
 
@@ -100,10 +124,14 @@ export default class TestUniswapV3Callee extends IContract {
    * @param {int24} tickLower
    * @param {int24} tickUpper
    * @param {uint128} amount
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async mint(pool, recipient, tickLower, tickUpper, amount) {
-    return await this.__sendTx(this.getWeb3Contract().methods.mint(pool, recipient, tickLower, tickUpper, amount));
+  async mint(pool, recipient, tickLower, tickUpper, amount, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.mint(pool, recipient, tickLower, tickUpper, amount),
+      options,
+    );
   }
 
 
@@ -125,10 +153,14 @@ export default class TestUniswapV3Callee extends IContract {
    * @param {uint256} amount1
    * @param {uint256} pay0
    * @param {uint256} pay1
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async flash(pool, recipient, amount0, amount1, pay0, pay1) {
-    return await this.__sendTx(this.getWeb3Contract().methods.flash(pool, recipient, amount0, amount1, pay0, pay1));
+  async flash(pool, recipient, amount0, amount1, pay0, pay1, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.flash(pool, recipient, amount0, amount1, pay0, pay1),
+      options,
+    );
   }
 
 

@@ -13,6 +13,17 @@ import Web3Connection from '../Web3Connection';
  */
 
 /**
+ * @typedef {Object} IContract~TxOptions
+ * @property {boolean} call
+ * @property [function():void] callback
+ * @property {string} from
+ * @property {number} gasFactor gas factor/multiplier
+ * @property {number} gasLimit gas limit/amount
+ * @property {number} gasPrice gas price
+ * @property {*} value
+ */
+
+/**
  * Contract Object Interface
  * @class IContract
  * @param {IContract~Options} options
@@ -21,6 +32,7 @@ class IContract {
   constructor({
     web3Connection = null, // Web3Connection if exists, otherwise create one from the rest of params
     contractAddress = null, // If not deployed
+    gasFactor = 1, // multiplier for gas estimations, may avoid out-of-gas
     abi,
     tokenAddress,
     ...params
@@ -38,6 +50,7 @@ class IContract {
         abi,
         contractAddress,
         tokenAddress,
+        gasFactor,
       };
 
       if (this.web3Connection.test) this._loadDataFromWeb3Connection();
@@ -58,15 +71,11 @@ class IContract {
    * @throws {Error} if no {@link IContract.getAddress}, Please add a Contract Address
    */
   __init__ = async () => {
-    try {
-      if (!this.getAddress()) {
-        throw new Error('Please add a Contract Address');
-      }
-
-      await this.__assert();
-    } catch (err) {
-      throw err;
+    if (!this.getAddress()) {
+      throw new Error('Please add a Contract Address');
     }
+
+    await this.__assert();
   };
 
   /**
@@ -79,22 +88,22 @@ class IContract {
   /**
    * @function
    * @params [Object] params
-   * @params {*} params.f
-   * @params {*} params.acc
+   * @params {*} params.method
+   * @params {*} params.from Send tx from this address
    * @params {*} params.value
+   * @params {*} params.gas
+   * @params {*} params.gasPrice
    * @params {function():void} params.callback
    * @return {Promise<*>}
    */
   __metamaskCall = async ({
-    f, acc, value, callback = () => {},
+    method, from, value, gas, gasPrice, callback = () => {},
   }) => new Promise(async (resolve, reject) => {
-    let customGasPriceObj = {};
-    if (this._customGasPrice) customGasPriceObj = { gasPrice: this._customGasPrice };
-    f.send({
-      from: acc,
+    method.send({
+      from,
       value,
-      gas: 5913388,
-      customGasPriceObj, // ...this._customGasPrice && { gasPrice: this._customGasPrice } || {},
+      gas: gas || 5913388,
+      gasPrice: gasPrice || this._customGasPrice,
     })
       .on('confirmation', (confirmationNumber, receipt) => {
         callback(confirmationNumber);
@@ -109,58 +118,64 @@ class IContract {
 
   /**
    * @function
-   * @params {*} f
-   * @params {boolean} call
-   * @params {*} value
-   * @params [function():void] callback
+   * @params {*} method
+   * @params {IContract~TxOptions} options
    * @return {Promise<*>}
    */
-  __sendTx = async (f, call = false, value, callback = () => {}) => {
-    try {
-      let res;
-      if (!this.acc && !call) {
-        const account = await this.web3Connection.getAddress();
-        res = await this.__metamaskCall({
-          f,
-          acc: account,
-          value,
-          callback,
-        });
-      } else if (this.acc && !call) {
-        const data = f.encodeABI();
-        res = await this.params.contract
-          .send(this.acc.getAccount(), data, value)
-          .catch((err) => {
-            throw err;
-          });
-      } else if (this.acc && call) {
-        res = await f.call({ from: this.acc.getAddress() }).catch((err) => {
+  __sendTx = async (method, options) => {
+    const { call, value } = options || {};
+    if (!this.acc && !call) {
+      const {
+        from, callback, gasFactor, gasLimit, gasPrice,
+      } = options || {};
+      const txFrom = from || await this.web3Connection.getAddress();
+      const txGasPrice = gasPrice || await this.web3Connection.web3.eth.getGasPrice();
+      const txGasLimit = gasLimit || await method.estimateGas({ from: txFrom, value });
+      const txGasFactor = gasFactor || this.params.gasFactor || 1;
+
+      return this.__metamaskCall({
+        method,
+        from: txFrom,
+        value,
+        // value: value || 0, //tested, no solution
+        gas: Math.round(txGasLimit * txGasFactor),
+        gasPrice: txGasPrice,
+        callback,
+      });
+    } if (this.acc && !call) {
+      const data = method.encodeABI();
+      return this.params.contract
+        .send(this.acc.getAccount(), data, value)
+        .catch((err) => {
           throw err;
         });
-      } else {
-        res = await f.call().catch((err) => {
-          throw err;
-        });
-      }
-      return res;
-    } catch (err) {
-      throw err;
+    } if (this.acc && call) {
+      return method.call({ from: this.acc.getAddress() }).catch((err) => {
+        throw err;
+      });
     }
+
+    // method call from default address
+    return method.call().catch((err) => {
+      throw err;
+    });
   };
 
   /**
    * Deploy current contract
    * @function
    * @param {*} params
-   * @param {function()} callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  __deploy = async (params, callback) => await this.params.contract.deploy(
-    this.acc,
+  __deploy = (params, options) => this.params.contract.deploy(
     this.params.contract.getABI(),
     this.params.contract.getJSON().bytecode,
-    params,
-    callback,
+    {
+      account: this.acc,
+      args: params,
+      ...options,
+    },
   );
 
   /**
@@ -169,28 +184,27 @@ class IContract {
    * @void
    * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
    */
-  __assert = async () => {
+  __assert = () => {
     if (!this.getAddress()) {
       throw new Error(
         'Contract is not deployed, first deploy it and provide a contract address',
       );
     }
-    /* Use ABI */
+    // Use ABI
     this.params.contract.use(this.params.abi, this.getAddress());
   };
 
   /**
    * Deploy {@link IContract.params.contract} and call {@link IContract.__assert}
    * @function
-   * @param {Object} params
-   * @param {function():void} callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({ callback }) => {
+  deploy = async (options) => {
     const params = [];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
-    /* Call to Backend API */
+    // Call to Backend API
     await this.__assert();
     return res;
   };
@@ -209,9 +223,10 @@ class IContract {
    * @param {Address} params.address
    * @return {Promise<*|undefined>}
    */
-  async setNewOwner({ address }) {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.transferOwnership(address),
+  setNewOwner({ address }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.transferOwnership(address),
+      options,
     );
   }
 
@@ -219,25 +234,26 @@ class IContract {
    * Get Owner of {@link IContract.params.contract}
    * @returns {Promise<string>}
    */
-  async owner() {
-    return await this.params.contract.getContract().methods.owner().call();
+  owner() {
+    return this.getWeb3Contract().methods.owner().call();
   }
 
   /**
    * Get the paused state of {@link IContract.params.contract}
    * @returns {Promise<boolean>}
    */
-  async isPaused() {
-    return await this.params.contract.getContract().methods.paused().call();
+  isPaused() {
+    return this.getWeb3Contract().methods.paused().call();
   }
 
   /**
    * (Admins only) Pauses the Contract
    * @return {Promise<*|undefined>}
    */
-  async pauseContract() {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.pause(),
+  pauseContract(options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.pause(),
+      options,
     );
   }
 
@@ -245,9 +261,10 @@ class IContract {
    * (Admins only) Unpause Contract
    * @return {Promise<*|undefined>}
    */
-  async unpauseContract() {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.unpause(),
+  unpauseContract(options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.unpause(),
+      options,
     );
   }
 
@@ -257,11 +274,13 @@ class IContract {
    * @param {Address} params.tokenAddress
    * @param {Address} params.toAddress
    */
-  async removeOtherERC20Tokens({ tokenAddress, toAddress }) {
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.removeOtherERC20Tokens(tokenAddress, toAddress),
+  removeOtherERC20Tokens({ tokenAddress, toAddress }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.removeOtherERC20Tokens(
+        tokenAddress,
+        toAddress,
+      ),
+      options,
     );
   }
 
@@ -271,9 +290,10 @@ class IContract {
    * @param {Address} params.toAddress
    * @return {Promise<*|undefined>}
    */
-  async safeGuardAllTokens({ toAddress }) {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.safeGuardAllTokens(toAddress),
+  safeGuardAllTokens({ toAddress }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.safeGuardAllTokens(toAddress),
+      options,
     );
   }
 
@@ -283,11 +303,10 @@ class IContract {
    * @param {Address} params.newTokenAddress
    * @return {Promise<*|undefined>}
    */
-  async changeTokenAddress({ newTokenAddress }) {
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.changeTokenAddress(newTokenAddress),
+  changeTokenAddress({ newTokenAddress }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.changeTokenAddress(newTokenAddress),
+      options,
     );
   }
 
@@ -300,7 +319,8 @@ class IContract {
   }
 
   /**
-   * Get the Ether balance for the current {@link IContract#getAddress} using `fromWei` util of {@link IContract#web3}
+   * Get the Ether balance for the current {@link IContract#getAddress}
+   * using `fromWei` util of {@link IContract#web3}
    * @returns {Promise<string>}
    */
   async getBalance() {
@@ -367,8 +387,11 @@ class IContract {
    * @function
    * @description Start the Web3Connection
    */
-  async start() {
-    this.web3Connection.start();
+  start() {
+    if (!this.web3Connection.web3) {
+      // console.log('---IContract.start...');
+      this.web3Connection.start();
+    }
     this._loadDataFromWeb3Connection();
   }
 
@@ -388,8 +411,8 @@ class IContract {
    * @description Get ETH Network
    * @return {Promise<string>} Network Name (Ex : Kovan)
    */
-  async getETHNetwork() {
-    return await this.web3Connection.getETHNetwork();
+  getETHNetwork() {
+    return this.web3Connection.getETHNetwork();
   }
 
   /**
@@ -398,16 +421,16 @@ class IContract {
    * @function
    * @return {Promise<string>} Account/Wallet in use
    */
-  async getUserCurrentAccount() {
-    return await this.web3Connection.getCurrentAccount();
+  getUserCurrentAccount() {
+    return this.web3Connection.getCurrentAccount();
   }
 
   /**
    * Get contract current user/sender address
    * @return {Promise<string>|string}
    */
-  async getUserAddress() {
-    return await this.web3Connection.getAddress();
+  getUserAddress() {
+    return this.web3Connection.getAddress();
   }
 
   /**
@@ -415,8 +438,8 @@ class IContract {
    * @description Get user ETH Balance of Address connected via login()
    * @return {Promise<string>} User ETH Balance
    */
-  async getUserETHBalance() {
-    return await this.web3Connection.getETHBalance();
+  getUserETHBalance() {
+    return this.web3Connection.getETHBalance();
   }
 
   /**
@@ -424,15 +447,15 @@ class IContract {
    * @description Get user wallets/signers from current provider
    * @return {Promise<Array>}
    */
-  async getSigners() {
-    return await this.web3Connection.getSigners();
+  getSigners() {
+    return this.web3Connection.getSigners();
   }
 
   /**
    * @function
    * @description Switch current user account to a new one
    * @param {Address} newAccount New user wallet/account address in use
-   * @return {Promise<void>}
+   * @return {Object} this object
    */
   switchWallet(newAccount) {
     this.web3Connection.switchWallet(newAccount);

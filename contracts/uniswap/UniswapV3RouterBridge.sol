@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 //pragma solidity >=0.6.0 <0.8.0;
 pragma solidity =0.7.6;
 pragma abicoder v2;
@@ -125,9 +126,11 @@ abstract contract UniswapV3RouterBridge is Context {
         amountIn = swapRouter.exactOutputSingle(params);
 
         // For exact output swaps, the amountInMaximum may not have all been spent.
-        // If the actual amount spent (amountIn) is less than the specified maximum amount, we must refund the msg.sender and approve the swapRouter to spend 0.
+        // If the actual amount spent (amountIn) is less than the specified maximum amount,
+        // we must refund the msg.sender and approve the swapRouter to spend 0.
         if (amountIn < amountInMaximum) {
             TransferHelper.safeApprove(tokenIn, address(swapRouter), 0);
+            // only send tokens if sender is external, if sender is current contract it already has the remaining tokens
             if (differentFromTo)
                 TransferHelper.safeTransfer(tokenIn, _msgSender(), amountInMaximum - amountIn);
         }

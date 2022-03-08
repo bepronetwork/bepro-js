@@ -9,7 +9,7 @@ import NetworkFactory from './BEPRO/NetworkFactory';
 import VotingContract from './Voting/VotingContract';
 import OpenerRealFvr from './custom/RealFvr/OpenerRealFvr';
 import MarketplaceRealFvr from './custom/RealFvr/MarketplaceRealFvr';
-// import ProtocolMiningReward from './ProtocolMining/ProtocolMiningReward';
+import ProtocolMiningReward from './ProtocolMining/ProtocolMiningReward';
 
 export {
   ERC20Contract,
@@ -23,5 +23,5 @@ export {
   Network,
   VotingContract,
   OpenerRealFvr,
-  // ProtocolMiningReward,
+  ProtocolMiningReward,
 };

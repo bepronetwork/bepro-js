@@ -42,7 +42,7 @@ const NFTDescriptor = artifacts.require("NFTDescriptor");
 //uniswap-v3-periphery/contracts/interfaces/external/IWETH9.sol
 //const IWETH9 = artifacts.require("@uniswap/v3-periphery/artifacts/contracts/interfaces/external/IWETH9.sol/IWETH9.json");
 //const ERC20Mock = artifacts.require("./ERC20Mock.sol");
-const Token = artifacts.require("./Token");
+const Token = artifacts.require("./ERC20Token");
 
 const addressDir = './';
 

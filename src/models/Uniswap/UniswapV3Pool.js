@@ -22,10 +22,14 @@ export default class UniswapV3Pool extends IContract {
    * @param {int24} tickLower
    * @param {int24} tickUpper
    * @param {uint128} amount
+   * @param {IContract~TxOptions} options
    * @returns {Promise<UniswapV3Pool~burn>}
    */
-  async burn(tickLower, tickUpper, amount) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.burn(tickLower, tickUpper, amount));
+  async burn(tickLower, tickUpper, amount, options) {
+    const res = await this.__sendTx(
+      this.getWeb3Contract().methods.burn(tickLower, tickUpper, amount),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -44,10 +48,14 @@ export default class UniswapV3Pool extends IContract {
    * @param {int24} tickUpper
    * @param {uint128} amount0Requested
    * @param {uint128} amount1Requested
+   * @param {IContract~TxOptions} options
    * @returns {Promise<UniswapV3Pool~collect>}
    */
-  async collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested));
+  async collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested, options) {
+    const res = await this.__sendTx(
+      this.getWeb3Contract().methods.collect(recipient, tickLower, tickUpper, amount0Requested, amount1Requested),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -64,10 +72,14 @@ export default class UniswapV3Pool extends IContract {
    * @param {address} recipient
    * @param {uint128} amount0Requested
    * @param {uint128} amount1Requested
+   * @param {IContract~TxOptions} options
    * @returns {Promise<UniswapV3Pool~collectProtocol>}
    */
-  async collectProtocol(recipient, amount0Requested, amount1Requested) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.collectProtocol(recipient, amount0Requested, amount1Requested));
+  async collectProtocol(recipient, amount0Requested, amount1Requested, options) {
+    const res = await this.__sendTx(
+      this.getWeb3Contract().methods.collectProtocol(recipient, amount0Requested, amount1Requested),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -112,28 +124,40 @@ export default class UniswapV3Pool extends IContract {
    * @param {uint256} amount0
    * @param {uint256} amount1
    * @param {bytes} data
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async flash(recipient, amount0, amount1, data) {
-    return await this.__sendTx(this.getWeb3Contract().methods.flash(recipient, amount0, amount1, data));
+  async flash(recipient, amount0, amount1, data, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.flash(recipient, amount0, amount1, data),
+      options,
+    );
   }
 
 
   /**
    * @param {uint16} observationCardinalityNext
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async increaseObservationCardinalityNext(observationCardinalityNext) {
-    return await this.__sendTx(this.getWeb3Contract().methods.increaseObservationCardinalityNext(observationCardinalityNext));
+  async increaseObservationCardinalityNext(observationCardinalityNext, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.increaseObservationCardinalityNext(observationCardinalityNext),
+      options,
+    );
   }
 
 
   /**
    * @param {uint160} sqrtPriceX96
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async initialize(sqrtPriceX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.initialize(sqrtPriceX96));
+  async initialize(sqrtPriceX96, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.initialize(sqrtPriceX96),
+      options,
+    );
   }
 
 
@@ -164,10 +188,14 @@ export default class UniswapV3Pool extends IContract {
    * @param {int24} tickUpper
    * @param {uint128} amount
    * @param {bytes} data
+   * @param {IContract~TxOptions} options
    * @returns {Promise<UniswapV3Pool~mint>}
    */
-  async mint(recipient, tickLower, tickUpper, amount, data) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.mint(recipient, tickLower, tickUpper, amount, data));
+  async mint(recipient, tickLower, tickUpper, amount, data, options) {
+    const res = await this.__sendTx(
+      this.getWeb3Contract().methods.mint(recipient, tickLower, tickUpper, amount, data),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],
@@ -242,10 +270,14 @@ export default class UniswapV3Pool extends IContract {
   /**
    * @param {uint8} feeProtocol0
    * @param {uint8} feeProtocol1
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async setFeeProtocol(feeProtocol0, feeProtocol1) {
-    return await this.__sendTx(this.getWeb3Contract().methods.setFeeProtocol(feeProtocol0, feeProtocol1));
+  async setFeeProtocol(feeProtocol0, feeProtocol1, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.setFeeProtocol(feeProtocol0, feeProtocol1),
+      options,
+    );
   }
 
 
@@ -285,10 +317,14 @@ export default class UniswapV3Pool extends IContract {
   /**
    * @param {int24} tickLower
    * @param {int24} tickUpper
+   * @param {IContract~TxOptions} options
    * @returns {Promise<UniswapV3Pool~snapshotCumulativesInside>}
    */
-  async snapshotCumulativesInside(tickLower, tickUpper) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.snapshotCumulativesInside(tickLower, tickUpper));
+  async snapshotCumulativesInside(tickLower, tickUpper, options) {
+    const res = await this.__sendTx(
+      this.getWeb3Contract().methods.snapshotCumulativesInside(tickLower, tickUpper),
+      options,
+    );
     return {
       tickCumulativeInside: res[0],
       secondsPerLiquidityInsideX128: res[1],
@@ -308,10 +344,14 @@ export default class UniswapV3Pool extends IContract {
    * @param {int256} amountSpecified
    * @param {uint160} sqrtPriceLimitX96
    * @param {bytes} data
+   * @param {IContract~TxOptions} options
    * @returns {Promise<UniswapV3Pool~swap>}
    */
-  async swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data) {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data));
+  async swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data, options) {
+    const res = await this.__sendTx(
+      this.getWeb3Contract().methods.swap(recipient, zeroForOne, amountSpecified, sqrtPriceLimitX96, data),
+      options,
+    );
     return {
       amount0: res[0],
       amount1: res[1],

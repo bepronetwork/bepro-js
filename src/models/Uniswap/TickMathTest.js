@@ -78,13 +78,13 @@ export default class TickMathTest extends IContract {
    * Deploy the TickMathTest Contract
    * @function
    * @param {Object} params Parameters
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({ callback } = {}) => {
+  deploy = async (options) => {
     const params = [];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

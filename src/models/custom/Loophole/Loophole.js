@@ -145,10 +145,14 @@ export default class Loophole extends IContract {
    * @dev ADD | NEW TOKEN POOL
    * @param {address} token Token address as IERC20
    * @param {uint256} allocPoint Pool allocation point/share distributed to this pool from mining rewards
+   * @param {IContract~TxOptions} options
    * @returns {Promise<uint256>} pid added token pool index
    */
-  async add(token, allocPoint) {
-    return await this.__sendTx(this.getWeb3Contract().methods.add(token, allocPoint));
+  add(token, allocPoint, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.add(token, allocPoint),
+      options,
+    );
   }
 
 
@@ -158,10 +162,14 @@ export default class Loophole extends IContract {
    * @param {uint256} Pool id
    * @param {uint256} allocPoint Set allocation point/share for pool id
    * @param {bool} withUpdate Update all pools and distribute mining reward for all
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async set(pid, allocPoint, withUpdate) {
-    return await this.__sendTx(this.getWeb3Contract().methods.set(pid, allocPoint, withUpdate));
+  set(pid, allocPoint, withUpdate, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.set(pid, allocPoint, withUpdate),
+      options,
+    );
   }
 
 
@@ -169,11 +177,15 @@ export default class Loophole extends IContract {
    * Stake tokens on given pool id
    * @param {uint256} pid Pool id
    * @param {uint256} amount The token amount user wants to stake to the pool.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async stake(pid, amount) {
+  async stake(pid, amount, options) {
     const amount2 = await this.fromBNToDecimals(amount, pid);
-    return await this.__sendTx(this.getWeb3Contract().methods.stake(pid, amount2));
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.stake(pid, amount2),
+      options,
+    );
   }
 
 
@@ -182,23 +194,31 @@ export default class Loophole extends IContract {
    * @param {uint256} pid Pool id
    * @param {uint256} amount The token amount user wants to exit/unstake from the pool.
    * @param {uint256} amountOutMinimum The min LP token amount expected to be received from exchange,
+   * @param {IContract~TxOptions} options
    * needed from outside for security reasons, using zero value in production is discouraged.
    * @returns {Promise<uint256>} net tokens amount sent to user address
    */
-  async exit(pid, amount, amountOutMinimum) {
+  async exit(pid, amount, amountOutMinimum, options) {
     const amount2 = await this.fromBNToDecimals(amount, pid);
-    return await this.__sendTx(this.getWeb3Contract().methods.exit(pid, amount2, amountOutMinimum));
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.exit(pid, amount2, amountOutMinimum),
+      options,
+    );
   }
 
 
   /**
    * User exit staking amount from LOOP pool, require LOOP pool only
    * @param {uint256} amount The token amount user wants to exit/unstake from the pool.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<uint256>} net tokens amount sent to user address
    */
-  async exitLP(amount) {
+  async exitLP(amount, options) {
     const amount2 = Numbers.fromBNToDecimals(amount, this.LPTokenContract().getDecimals());
-    return await this.__sendTx(this.getWeb3Contract().methods.exit(amount2));
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.exit(amount2),
+      options,
+    );
   }
 
 
@@ -218,10 +238,14 @@ export default class Loophole extends IContract {
   /**
    * User collects his share of LP tokens reward
    * @param {uint256} pid Pool id
+   * @param {IContract~TxOptions} options
    * @returns {Promise<uint256>} LP reward tokens amount sent to user address
    */
-  async collectRewards(pid) {
-    return await this.__sendTx(this.getWeb3Contract().methods.collectRewards(pid));
+  async collectRewards(pid, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.collectRewards(pid),
+      options,
+    );
   }
 
   // TODO: fix this fn, it always returns zero
@@ -237,11 +261,14 @@ export default class Loophole extends IContract {
 
 
   /**
-   * @param {uint256} pid
+   * @param {IContract~TxOptions} options
    * @returns {Promise<uint256[]>}
    */
-  /* async collectRewardsAll() {
-    const res = await this.__sendTx(this.getWeb3Contract().methods.collectRewardsAll());
+  /* async collectRewardsAll(options) {
+    const res = await this.__sendTx(
+      this.getWeb3Contract().methods.collectRewardsAll(),
+      options,
+    );
     return res;
   } */
 
@@ -298,10 +325,14 @@ export default class Loophole extends IContract {
   /**
    * Update all pools for mining rewards
    * @dev UPDATE | (ALL) REWARD VARIABLES | BEWARE: HIGH GAS POTENTIAL
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async massUpdatePools() {
-    return await this.__sendTx(this.getWeb3Contract().methods.massUpdatePools());
+  async massUpdatePools(options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.massUpdatePools(),
+      options,
+    );
   }
 
 
@@ -309,10 +340,14 @@ export default class Loophole extends IContract {
    * Update pool to trigger LP tokens reward since last reward mining block
    * @dev UPDATE | (ONE POOL) REWARD VARIABLES
    * @param {uint256} pid Pool id
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async updatePool(pid) {
-    return await this.__sendTx(this.getWeb3Contract().methods.updatePool(pid));
+  async updatePool(pid, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.updatePool(pid),
+      options,
+    );
   }
 
   /**
@@ -609,13 +644,16 @@ export default class Loophole extends IContract {
    * @param {uint256} startBlock
    * @param {uint256} exitPenalty
    * @param {uint256} exitPenaltyLP
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} No Token Address Provided
    */
-  deploy = async ({
-    swapRouter, lpToken, lpTokensPerBlock, startBlock, exitPenalty, exitPenaltyLP, callback,
-  } = {}) => {
+  deploy = async (
+    {
+      swapRouter, lpToken, lpTokensPerBlock, startBlock, exitPenalty, exitPenaltyLP,
+    },
+    options,
+  ) => {
     // if (!this.LPTokenContract()) {
     //  throw new Error('No LPTokenContract Address Provided');
     // }
@@ -627,7 +665,7 @@ export default class Loophole extends IContract {
     const lpTokensPerBlock1 = Numbers.fromBNToDecimals(lpTokensPerBlock, lpTokenDecimals);
     const params = [swapRouter, lpToken, lpTokensPerBlock1, startBlock, exitPenalty, exitPenaltyLP];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

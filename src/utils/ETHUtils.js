@@ -20,8 +20,8 @@ export default class ETHUtils extends IContract {
    * @param {address} tokenAddress
    * @returns {Promise<string>}
    */
-  async name(tokenAddress) {
-    return await this.getWeb3Contract().methods.name(tokenAddress).call();
+  name(tokenAddress) {
+    return this.getWeb3Contract().methods.name(tokenAddress).call();
   }
 
 
@@ -30,8 +30,8 @@ export default class ETHUtils extends IContract {
    * @param {address} tokenAddress
    * @returns {Promise<string>}
    */
-  async symbol(tokenAddress) {
-    return await this.getWeb3Contract().methods.symbol(tokenAddress).call();
+  symbol(tokenAddress) {
+    return this.getWeb3Contract().methods.symbol(tokenAddress).call();
   }
 
 
@@ -74,5 +74,15 @@ export default class ETHUtils extends IContract {
       BigNumber(blockNumber),
       BigNumber(blockTimestamp),
     ];
+  }
+
+
+  /**
+   * Get function selector from function signature
+   * NOTE: function selector is first 4 bytes of keccak256 for bytes of string of a function signature
+   * @returns {Promise<bytes4>}
+   */
+  async getFunctionSelector(funcSig) {
+    return await this.getWeb3Contract().methods.getFunctionSelector(funcSig).call();
   }
 }

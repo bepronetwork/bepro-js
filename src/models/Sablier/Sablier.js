@@ -19,28 +19,40 @@ export default class Sablier extends IContract {
    * Add pauser role to given address.
    * @param {Object} params
    * @param {address} params.account Address to assign pauser role to.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async addPauser({ account }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.addPauser(account));
+  async addPauser({ account }, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.addPauser(account),
+      options,
+    );
   }
 
 
   /**
    * Pause contract.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async pause() {
-    return await this.__sendTx(this.getWeb3Contract().methods.pause());
+  async pause(options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.pause(),
+      options,
+    );
   }
 
 
   /**
    * Unpause/resume contract.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async unpause() {
-    return await this.__sendTx(this.getWeb3Contract().methods.unpause());
+  async unpause(options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.unpause(),
+      options,
+    );
   }
 
 
@@ -80,10 +92,14 @@ export default class Sablier extends IContract {
    *  Throws if the caller is not the owner of the contract.
    * @param {Object} params
    * @param {uint256} params.feePercentage The new fee as a percentage, for example 75 means 75%.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async updateFee({ feePercentage }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.updateFee(feePercentage));
+  async updateFee({ feePercentage }, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.updateFee(feePercentage),
+      options,
+    );
   }
 
 
@@ -93,15 +109,19 @@ export default class Sablier extends IContract {
    * @param {Object} params
    * @param {address} params.tokenAddress The address of the token to withdraw earnings for.
    * @param {uint256} params.amount The amount of tokens to withdraw.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async takeEarnings({ tokenAddress, amount }) {
+  async takeEarnings({ tokenAddress, amount }, options) {
     const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(
       amount,
       decimals,
     );
-    return await this.__sendTx(this.getWeb3Contract().methods.takeEarnings(tokenAddress, amountWithDecimals));
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.takeEarnings(tokenAddress, amountWithDecimals),
+      options,
+    );
   }
 
 
@@ -289,14 +309,20 @@ export default class Sablier extends IContract {
    * @param {address} params.tokenAddress The ERC20 token to use as streaming currency.
    * @param {uint256} params.startTime The unix timestamp for when the stream starts.
    * @param {uint256} params.stopTime The unix timestamp for when the stream stops.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<uint256>} The uint256 id of the newly created stream.
    */
   async createStream({
     recipient, deposit, tokenAddress, startTime, stopTime,
-  }) {
+  }, options) {
     const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
     const depositWithDecimals = Numbers.fromBNToDecimals(deposit, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.createStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime));
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.createStream(
+        recipient, depositWithDecimals, tokenAddress, startTime, stopTime,
+      ),
+      options,
+    );
   }
 
 
@@ -315,16 +341,21 @@ export default class Sablier extends IContract {
    * @param {uint256} params.stopTime The unix timestamp for when the stream stops.
    * @param {uint256} params.senderSharePercentage The sender's share of the interest, as a percentage.
    * @param {uint256} params.recipientSharePercentage The recipient's share of the interest, as a percentage.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<uint256>} The uint256 id of the newly created compounding stream.
    */
   async createCompoundingStream({
     recipient, deposit, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage,
-  }) {
+  }, options) {
     const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
     const depositWithDecimals = Numbers.fromBNToDecimals(deposit, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.createCompoundingStream(
-      recipient, depositWithDecimals, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage,
-    ));
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.createCompoundingStream(
+        recipient, depositWithDecimals, tokenAddress, startTime, stopTime,
+        senderSharePercentage, recipientSharePercentage,
+      ),
+      options,
+    );
   }
 
 
@@ -337,12 +368,16 @@ export default class Sablier extends IContract {
    * @param {Object} params
    * @param {uint256} params.streamId The id of the stream to withdraw tokens from.
    * @param {uint256} params.amount The amount of tokens to withdraw.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<bool>} True if success, otherwise false.
    */
-  async withdrawFromStream({ streamId, amount }) {
+  async withdrawFromStream({ streamId, amount }, options) {
     const decimals = await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(amount, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.withdrawFromStream(streamId, amountWithDecimals));
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.withdrawFromStream(streamId, amountWithDecimals),
+      options,
+    );
   }
 
 
@@ -353,10 +388,14 @@ export default class Sablier extends IContract {
    *  Throws if there is a token transfer failure.
    * @param {Object} params
    * @param {uint256} params.streamId The id of the stream to cancel.
+   * @param {IContract~TxOptions} options
    * @returns {Promise<bool>} True if success, otherwise false.
    */
-  async cancelStream({ streamId }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.cancelStream(streamId));
+  async cancelStream({ streamId }, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.cancelStream(streamId),
+      options,
+    );
   }
 
   /**
@@ -388,13 +427,13 @@ export default class Sablier extends IContract {
    * Deploy the Sablier Contract
    * @function
    * @param {Object} params
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({ callback } = {}) => {
+  deploy = async (options) => {
     const params = [];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

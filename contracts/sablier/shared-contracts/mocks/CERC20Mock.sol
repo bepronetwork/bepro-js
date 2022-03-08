@@ -1,7 +1,8 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0;
 
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "../ERC20Base.sol";
 import "../compound/EIP20Interface.sol";
 
 /**
@@ -10,7 +11,7 @@ import "../compound/EIP20Interface.sol";
  * @dev See https://compound.finance/developers
  * based on Sablier's CERC20 Mock
  */
-contract CERC20Mock is ERC20Base {
+contract CERC20Mock is ERC20 {
     using SafeMath for uint256;
 
     /**
@@ -34,21 +35,19 @@ contract CERC20Mock is ERC20Base {
     address public underlying;
 
     /**
-     * @notice EIP-20 token decimals for this token
-     */
-    uint256 public decimals;
-
-    /**
      * @notice Construct a new money market
      * @param underlying_ The address of the underlying asset
      * @param initialExchangeRate_ The initial exchange rate, scaled by 1e18
      * @param decimals_ ERC-20 decimal precision of this token
      */
-    constructor(address underlying_, uint256 initialExchangeRate_, uint256 decimals_) public {
+    constructor(address underlying_, uint256 initialExchangeRate_, uint8 decimals_)
+        public
+        ERC20("CERC20Mock", "cerc20mock")
+    {
         initialBlockNumber = block.number;
         underlying = underlying_;
         initialExchangeRate = initialExchangeRate_;
-        decimals = decimals_;
+        _setupDecimals(decimals_);
         EIP20Interface(underlying).totalSupply(); // Sanity check the underlying
     }
 	

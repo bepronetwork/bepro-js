@@ -29,14 +29,6 @@ class ERC20Contract extends IContract {
   };
 
   /**
-   *
-   * @return {*}
-   */
-  getContract() {
-    return this.params.contract.getContract();
-  }
-
-  /**
    * Get Token Address
    * @returns {Address} address
    */
@@ -50,19 +42,62 @@ class ERC20Contract extends IContract {
    * @param {Object} params Parameters
    * @param {Address} params.toAddress To Address
    * @param {Integer} params.tokenAmount Amount of Tokens
+   * @param {IContract~TxOptions} options
    * @returns {Promise<Transaction>} Transaction
    */
-  transferTokenAmount = async ({ toAddress, tokenAmount }) => {
-    const amountWithDecimals = Numbers.toSmartContractDecimals(
+  async transferTokenAmount({ toAddress, tokenAmount }, options) {
+    // const amountWithDecimals = Numbers.toSmartContractDecimals(
+    const amountWithDecimals = Numbers.fromBNToDecimals(
       tokenAmount,
       this.getDecimals(),
     );
     return await this.__sendTx(
-      this.params.contract
-        .getContract()
-        .methods.transfer(toAddress, amountWithDecimals),
+      this.getWeb3Contract().methods.transfer(toAddress, amountWithDecimals),
+      options,
     );
-  };
+  }
+
+  /**
+   * Transfer Tokens
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.to To Address
+   * @param {Integer} params.amount Amount of Tokens
+   * @param {IContract~TxOptions} options
+   * @returns {Promise<Transaction>} Transaction
+   */
+  async transfer({ to, amount }, options) {
+    const amountWithDecimals = Numbers.fromBNToDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.transfer(to, amountWithDecimals),
+      options,
+    );
+  }
+
+  /**
+   * Transfer Tokens from one address to another.
+   * NOTE: Prior transfer approval is needed first for the sender/caller.
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.from From Address
+   * @param {Address} params.to To Address
+   * @param {Integer} params.amount Amount of Tokens
+   * @param {IContract~TxOptions} options
+   * @returns {Promise<Transaction>} Transaction
+   */
+  async transferFrom({ from, to, amount }, options) {
+    const amountWithDecimals = Numbers.fromBNToDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.transferFrom(from, to, amountWithDecimals),
+      options,
+    );
+  }
 
   /**
    * Get Amount of Tokens User Holds
@@ -70,19 +105,21 @@ class ERC20Contract extends IContract {
    * @param {Address} address User Address
    * @returns {Promise<Transaction>} Transaction
    */
-  getTokenAmount = async address => Numbers.fromDecimals(
-    await this.getContract().methods.balanceOf(address).call(),
-    this.getDecimals(),
-  );
+  async getTokenAmount(address) {
+    return Numbers.fromDecimals(
+      await this.getWeb3Contract().methods.balanceOf(address).call(),
+      this.getDecimals(),
+    );
+  }
 
-  balanceOf = async (address) => {
-    const b1 = await this.getContract().methods.balanceOf(address).call();
+  async balanceOf(address) {
+    const b1 = await this.getWeb3Contract().methods.balanceOf(address).call();
     const ret1 = Numbers.fromDecimalsToBN(
       b1,
       this.getDecimals(),
     );
     return ret1;
-  };
+  }
 
   /**
    * Convert given tokens amount as tokens with decimals for smart contract.
@@ -90,14 +127,14 @@ class ERC20Contract extends IContract {
    * @param {number} amount Tokens amount to convert
    * @returns {Promise<number>} tokensAmount
    */
-  toTokens = (amount) => {
+  toTokens(amount) {
     const tokensAmount = Numbers.fromBNToDecimals(
       amount,
       this.getDecimals(),
     );
     console.log('ERC20Contract.toTokens:', tokensAmount);
     return tokensAmount;
-  };
+  }
 
   /**
    * Convert given tokens amount integer to float number with decimals for UI.
@@ -105,24 +142,26 @@ class ERC20Contract extends IContract {
    * @param {number} amount Tokens amount to convert
    * @returns {Promise<number>} tokensAmount
    */
-  fromDecimalsToBN = (amount) => {
+  fromDecimalsToBN(amount) {
     const tokensAmount = Numbers.fromDecimalsToBN(
       amount,
       this.getDecimals(),
     );
     // console.log('ERC20Contract.fromDecimals:', tokensAmount);
     return tokensAmount;
-  };
+  }
 
   /**
    * Get Total Supply of Token
    * @function
    * @returns {Promise<number>} Total supply
    */
-  totalSupply = async () => Numbers.fromDecimalsToBN(
-    await this.getContract().methods.totalSupply().call(),
-    this.getDecimals(),
-  );
+  async totalSupply() {
+    return Numbers.fromDecimalsToBN(
+      await this.getWeb3Contract().methods.totalSupply().call(),
+      this.getDecimals(),
+    );
+  }
 
   /**
    *
@@ -145,7 +184,9 @@ class ERC20Contract extends IContract {
    *
    * @return {Promise<number>}
    */
-  getDecimalsAsync = async () => await this.getContract().methods.decimals().call();
+  async getDecimalsAsync() {
+    return await this.getWeb3Contract().methods.decimals().call();
+  }
 
   /**
    * Verify if Spender is Approved to use tokens
@@ -156,19 +197,17 @@ class ERC20Contract extends IContract {
    * @param {Address} params.spenderAddress Spender Address
    * @returns {Promise<boolean>} isApproved
    */
-  isApproved = async ({ address, amount, spenderAddress }) => {
-    try {
-      const approvedAmount = Numbers.fromDecimals(
-        await this.getContract()
-          .methods.allowance(address, spenderAddress)
-          .call(),
-        this.getDecimals(),
-      );
-      return approvedAmount >= amount;
-    } catch (err) {
-      throw err;
-    }
-  };
+  async isApproved({ address, amount, spenderAddress }) {
+    const approvedAmount = Numbers.fromDecimals(
+      await this.getWeb3Contract().methods.allowance(address, spenderAddress).call(),
+      this.getDecimals(),
+    );
+    const amountWithDecimal = Numbers.fromDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    return approvedAmount >= amountWithDecimal;
+  }
 
   /**
    * Check allowance for given spender address
@@ -178,19 +217,13 @@ class ERC20Contract extends IContract {
    * @param {Address} params.spenderAddress Spender Address
    * @returns {Promise<number>} allowance amount
    */
-  allowance = async ({ address, spenderAddress }) => {
-    try {
-      const approvedAmount = Numbers.fromDecimalsToBN(
-        await this.getContract()
-          .methods.allowance(address, spenderAddress)
-          .call(),
-        this.getDecimals(),
-      );
-      return approvedAmount;
-    } catch (err) {
-      throw err;
-    }
-  };
+  async allowance({ address, spenderAddress }) {
+    const approvedAmount = Numbers.fromDecimalsToBN(
+      await this.getWeb3Contract().methods.allowance(address, spenderAddress).call(),
+      this.getDecimals(),
+    );
+    return approvedAmount;
+  }
 
   /**
    * Approve tokens to be used by another address/contract
@@ -199,27 +232,19 @@ class ERC20Contract extends IContract {
    * @param {Address} params.address Spender Address/Contract
    * @param {number} params.amount Amount of Tokens
    * @param {function():void} params.callback callback for the Tx
+   * @param {IContract~TxOptions} options
    * @returns {Promise<Transaction>} Transaction
    */
-  approve = async ({ address, amount, callback }) => {
-    try {
-      const amountWithDecimals = Numbers.fromBNToDecimals(
-        amount,
-        this.getDecimals(),
-      );
-      const res = await this.__sendTx(
-        this.params.contract
-          .getContract()
-          .methods.approve(address, amountWithDecimals),
-        null,
-        null,
-        callback,
-      );
-      return res;
-    } catch (err) {
-      throw err;
-    }
-  };
+  async approve({ address, amount, callback }, options) {
+    const amountWithDecimals = Numbers.fromBNToDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.approve(address, amountWithDecimals),
+      { callback, ...options },
+    );
+  }
 
   /**
    * Deploy ERC20 Token
@@ -229,11 +254,15 @@ class ERC20Contract extends IContract {
    * @param {string} params.symbol Symbol of token
    * @param {number} params.cap Max supply of Token (ex : 100M)
    * @param {Address} params.distributionAddress Where tokens should be sent to initially
+   * @param {IContract~TxOptions} options
    * @returns {Promise<Transaction>} Transaction
    */
-  deploy = async ({
-    name, symbol, cap, distributionAddress, callback,
-  }) => {
+  deploy = async (
+    {
+      name, symbol, cap, distributionAddress,
+    },
+    options,
+  ) => {
     if (!distributionAddress) {
       throw new Error('Please provide an Distribution address for distro');
     }
@@ -250,7 +279,7 @@ class ERC20Contract extends IContract {
       throw new Error('Please provide a cap');
     }
     const params = [name, symbol, cap, distributionAddress];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

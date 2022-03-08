@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0;
 
 import "@openzeppelin/contracts/GSN/Context.sol";
@@ -45,18 +46,30 @@ contract PausableWithoutRenounce is Initializable, Context, PauserRoleWithoutRen
 
     /**
      * @dev Modifier to make a function callable only when the contract is not paused.
+     * NOTE: Optimized by calling an internal function as modifiers are 'inlined'
+     * and code is copy-pasted in target functions using them.
      */
     modifier whenNotPaused() {
-        require(!_paused, "Pausable: paused");
+        _whenNotPaused();
         _;
     }
 
     /**
      * @dev Modifier to make a function callable only when the contract is paused.
+     * NOTE: Optimized by calling an internal function as modifiers are 'inlined'
+     * and code is copy-pasted in target functions using them.
      */
     modifier whenPaused() {
-        require(_paused, "Pausable: not paused");
+        _whenPaused();
         _;
+    }
+
+    function _whenNotPaused() internal view {
+        require(!_paused, "Pausable: paused");
+    }
+
+    function _whenPaused() internal view {
+        require(_paused, "Pausable: not paused");
     }
 
     /**

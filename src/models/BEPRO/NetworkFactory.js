@@ -11,7 +11,8 @@ const BigNumber = require('bignumber.js');
  * @typedef {Object} NetworkFactory~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
- * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
+ * @property {Web3Connection} [web3Connection=Web3Connection]
+ * created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
  */
 
@@ -180,15 +181,16 @@ class NetworkFactory extends IContract {
   /**
    * Approve ERC20 Allowance
    * @function
+   * @param {IContract~TxOptions} options
    * @return {Promise<number>}
    */
-  approveSettlerERC20Token = async () => {
+  async approveSettlerERC20Token(options) {
     const totalMaxAmount = await this.getSettlerTokenContract().totalSupply();
     return await this.getSettlerTokenContract().approve({
       address: this.getAddress(),
       amount: totalMaxAmount,
-    });
-  };
+    }, options);
+  }
 
 
   /**
@@ -199,38 +201,49 @@ class NetworkFactory extends IContract {
    * @param {Address} params.address
    * @return {Promise<number>}
    */
-  isApprovedSettlerToken = async ({ amount, address }) => await this.getSettlerTokenContract().isApproved({
-    address,
-    amount,
-    spenderAddress: this.getAddress(),
-  });
+  async isApprovedSettlerToken({ amount, address }) {
+    return await this.getSettlerTokenContract().isApproved({
+      address,
+      amount,
+      spenderAddress: this.getAddress(),
+    });
+  }
 
   /**
    * lock tokens for operator use
    * @param {Object} params
    * @params params.tokenAmount {number}
+   * @param {IContract~TxOptions} options
    * @throws {Error} Tokens Amount has to be higher than 0
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  async lock({ tokenAmount }) {
+  lock({ tokenAmount }, options) {
     if (tokenAmount <= 0) {
       throw new Error('Token Amount has to be higher than 0');
     }
 
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
+    return this.__sendTx(
+      this.getWeb3Contract().methods.lock(
+        Numbers.toSmartContractDecimals(
+          tokenAmount,
+          this.getSettlerTokenContract().getDecimals(),
+        ),
+      ),
+      options,
     );
   }
 
   /**
    * Unlock Tokens for oracles
+   * @param {IContract~TxOptions} options
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-  async unlock() {
-    return await this.__sendTx(
+  unlock(options) {
+    return this.__sendTx(
       this.getWeb3Contract().methods.unlock(),
+      options,
     );
   }
 
@@ -239,12 +252,14 @@ class NetworkFactory extends IContract {
    * @param {Object} params
    * @param {Address} params.settlerToken
    * @param {Address} params.transactionalToken
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-  async createNetwork({ settlerToken, transactionalToken }) {
-    return await this.__sendTx(
+  createNetwork({ settlerToken, transactionalToken }, options) {
+    return this.__sendTx(
       this.getWeb3Contract()
         .methods.createNetwork(settlerToken, transactionalToken),
+      options,
     );
   }
 
@@ -253,14 +268,12 @@ class NetworkFactory extends IContract {
    * @function
    * @param {Object} params
    * @param {string} params.beproAddress
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({
-    beproAddress, callback,
-  }) => {
+  deploy = async ({ beproAddress }, options) => {
     const params = [beproAddress];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

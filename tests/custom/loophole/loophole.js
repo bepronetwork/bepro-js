@@ -173,11 +173,13 @@ const loadSigners = async (contract) => { //contract is IContract
 
 // forward blockchain with x number of blocks, for testing purposes
 const forwardBlocks = async (nblocks) => {
-	let blocksTx = [];
+	/*let blocksTx = [];
 	for (let i=0; i < nblocks; ++i) {
 		blocksTx.push(traveler.advanceBlock());
 	}
-	return Promise.all(blocksTx);
+	return Promise.all(blocksTx);*/
+	//return Promise.all([ ...new Array(nblocks) ].map(() => traveler.advanceBlock()));
+	return Promise.all((new Array(nblocks)).map(() => traveler.advanceBlock()));
 }
 
 // deploy Loophole contract

@@ -42,20 +42,16 @@ export default class TestUniswapV3RouterBridge extends IContract {
    * @param {uint24} poolFee
    * @param {uint256} amountIn
    * @param {uint256} amountOutMinimum
+   * @param {IContract~TxOptions} options
    * @returns {Promise<uint256>} amountOut
    */
-  async swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
+  async swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum, options) {
     return await this.__sendTx(
       this.getWeb3Contract().methods.swapExactInputSingleEx(
         tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum,
       ),
+      options,
     );
-  }
-
-  async swapExactInputSingleExCall(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
-    return await this.getWeb3Contract().methods.swapExactInputSingleEx(
-      tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum,
-    ).call();
   }
 
 
@@ -65,20 +61,16 @@ export default class TestUniswapV3RouterBridge extends IContract {
    * @param {uint24} poolFee
    * @param {uint256} amountOut
    * @param {uint256} amountInMaximum
+   * @param {IContract~TxOptions} options
    * @returns {Promise<uint256>} amountIn
    */
-  async swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
+  async swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum, options) {
     return await this.__sendTx(
       this.getWeb3Contract().methods.swapExactOutputSingleEx(
         tokenIn, tokenOut, poolFee, amountOut, amountInMaximum,
       ),
+      options,
     );
-  }
-
-  async swapExactOutputSingleExCall(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
-    return await this.getWeb3Contract().methods.swapExactOutputSingleEx(
-      tokenIn, tokenOut, poolFee, amountOut, amountInMaximum,
-    ).call();
   }
 
 
@@ -86,16 +78,14 @@ export default class TestUniswapV3RouterBridge extends IContract {
    * Deploy the TestUniswapV3RouterBridge Contract
    * @function
    * @param {Object} params Parameters
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} No Token Address Provided
    */
-  deploy = async ({
-    callback,
-  } = {}) => {
+  deploy = async (options) => {
     const params = [this.params.swapRouterAddress];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

@@ -20,6 +20,9 @@ import TestUniswapV3RouterBridge from './models/Uniswap/TestUniswapV3RouterBridg
 import TickMathTest from './models/Uniswap/TickMathTest';
 import SwapRouter from './models/Uniswap/SwapRouter';
 import Loophole from './models/custom/Loophole/Loophole';
+import MarketplaceRealFvr from './models/custom/RealFvr/MarketplaceRealFvr';
+import OpenerRealFvr from './models/custom/RealFvr/OpenerRealFvr';
+import ProtocolMiningReward from './models/ProtocolMining/ProtocolMiningReward';
 
 export {
   Application,
@@ -44,4 +47,7 @@ export {
   TickMathTest,
   SwapRouter,
   Loophole,
+  MarketplaceRealFvr,
+  OpenerRealFvr,
+  ProtocolMiningReward,
 };

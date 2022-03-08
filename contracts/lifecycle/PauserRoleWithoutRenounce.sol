@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0;
 
 import "@openzeppelin/contracts/GSN/Context.sol";
@@ -26,9 +27,18 @@ contract PauserRoleWithoutRenounce is Initializable, Context {
         }
     }
 
+    /**
+     * @dev Throws if called by any account other than the pauser.
+     * NOTE: Optimized by calling an internal function as modifiers are 'inlined'
+     * and code is copy-pasted in target functions using them.
+     */
     modifier onlyPauser() {
-        require(isPauser(_msgSender()), "PauserRole: caller does not have the Pauser role");
+        _onlyPauser();
         _;
+    }
+
+    function _onlyPauser() internal view {
+        require(isPauser(_msgSender()), "PauserRole: caller does not have the Pauser role");
     }
 
     function isPauser(address account) public view returns (bool) {

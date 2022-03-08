@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0 <0.8.0;
 //pragma solidity =0.7.6;
 pragma abicoder v2; //needed to return struct
@@ -16,7 +17,7 @@ import "../../utils/Ownable.sol";
 import "../../uniswap/UniswapV3RouterBridge.sol";
 
 /// @title LoopHole Finance smart contract
-contract Loophole is ILoophole, IERC20events, Ownable, Context, UniswapV3RouterBridge {
+contract Loophole is ILoophole, IERC20Events, Ownable, Context, UniswapV3RouterBridge {
     using SafeMath for uint256;
     
     //NOTE: if we need specific event we need them in the smart contract

@@ -125,6 +125,10 @@ const passes = async (asyncFn, message) => {
   }
 };
 
+const passesFn = async (fn, message) => {
+  passes(fn(), message);
+};
+
 const fails = async (asyncFn, errorType, reason, message) => {
   try {
     await asyncFn;
@@ -142,6 +146,8 @@ const fails = async (asyncFn, errorType, reason, message) => {
   const assertionMessage = createAssertionMessage(message, 'Did not fail');
   throw new AssertionError(assertionMessage);
 };
+
+const failsFn = async (asyncFn, errorType, reason, message) => fails(asyncFn(), errorType, reason, message);
 
 
 const ErrorType = {
@@ -167,11 +173,16 @@ module.exports = {
   passes: async (asyncFn, message) => (
     passes(asyncFn, message)
   ),
+  passesFn,
   fails: async (asyncFn, errorType, reason, message) => (
     fails(asyncFn, errorType, reason, message)
   ),
+  failsFn,
   reverts: async (asyncFn, reason, message) => (
     fails(asyncFn, ErrorType.REVERT, reason, message)
+  ),
+  revertsFn: async (asyncFn, reason, message) => (
+    failsFn(asyncFn, ErrorType.REVERT, reason, message)
   ),
   ErrorType,
 };

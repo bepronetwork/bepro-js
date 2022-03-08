@@ -10,7 +10,8 @@ import ERC20Contract from '../ERC20/ERC20Contract';
  * @typedef {Object} Network~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
- * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
+ * @property {Web3Connection} [web3Connection=Web3Connection]
+ * created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
  */
 
@@ -44,7 +45,7 @@ class Network extends IContract {
 
     const transactionalAddress = await this.getTransactionTokenAddress();
     const settlerAddresss = await this.getSettlerTokenAddress();
-    console.log('here');
+    // console.log('here');
 
     // Set Token Address Contract for easy access
     this.params.transactionalToken = new ERC20Contract({
@@ -237,8 +238,8 @@ class Network extends IContract {
    * Get Transaction Token Address
    * @returns {Promise<address>}
    */
-  async getTransactionTokenAddress() {
-    return await this.getWeb3Contract()
+  getTransactionTokenAddress() {
+    return this.getWeb3Contract()
       .methods.transactionToken()
       .call();
   }
@@ -258,8 +259,8 @@ class Network extends IContract {
    * Get Settler Token Address
    * @returns {Promise<address>}
    */
-  async getSettlerTokenAddress() {
-    return await this.getWeb3Contract()
+  getSettlerTokenAddress() {
+    return this.getWeb3Contract()
       .methods.settlerToken()
       .call();
   }
@@ -285,12 +286,20 @@ class Network extends IContract {
 
   /**
    * Change amount needed for Council
-   * @param {number} value
+   * @param {Object} params
+   * @param {number} params.value
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-  async changeCouncilAmount(value) {
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.changeCOUNCIL_AMOUNT(Numbers.toSmartContractDecimals(value, this.getSettlerTokenContract().getDecimals())),
+  changeCouncilAmount({ value }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.changeCOUNCIL_AMOUNT(
+        Numbers.toSmartContractDecimals(
+          value,
+          this.getSettlerTokenContract().getDecimals(),
+        ),
+      ),
+      options,
     );
   }
 
@@ -300,8 +309,8 @@ class Network extends IContract {
    * @param {number} params.issueId
    * @returns {Promise<boolean>}
    */
-  async isIssueInDraft({ issueId }) {
-    return await this.getWeb3Contract()
+  isIssueInDraft({ issueId }) {
+    return this.getWeb3Contract()
       .methods.isIssueInDraft(issueId)
       .call();
   }
@@ -314,8 +323,8 @@ class Network extends IContract {
    * @param {number} params.mergeId
    * @returns {Promise<boolean>}
    */
-  async isMergeDisputed({ issueId, mergeId }) {
-    return await this.getWeb3Contract()
+  isMergeDisputed({ issueId, mergeId }) {
+    return this.getWeb3Contract()
       .methods.isMergeDisputed(issueId, mergeId)
       .call();
   }
@@ -363,10 +372,7 @@ class Network extends IContract {
    * @returns {Promise<TokensNetwork~Issue>}
    */
   async getIssueByCID({ issueCID }) {
-    const r = await this.__sendTx(
-      this.getWeb3Contract().methods.getIssueByCID(issueCID),
-      true,
-    );
+    const r = await this.getWeb3Contract().methods.getIssueByCID(issueCID).call();
 
     return {
       _id: Numbers.fromHex(r[0]),
@@ -388,10 +394,7 @@ class Network extends IContract {
    * @returns {Promise<TokensNetwork~Issue>}
    */
   async getIssueById({ issueId }) {
-    const r = await this.__sendTx(
-      this.getWeb3Contract().methods.getIssueById(issueId),
-      true,
-    );
+    const r = await this.getWeb3Contract().methods.getIssueById(issueId).call();
 
     return {
       _id: Numbers.fromHex(r[0]),
@@ -415,11 +418,8 @@ class Network extends IContract {
    * @return {Promise<TokensNetwork~MergedIssue>}
    */
   async getMergeById({ issue_id, merge_id }) {
-    const r = await this.__sendTx(
-      this.getWeb3Contract()
-        .methods.getMergeById(issue_id, merge_id),
-      true,
-    );
+    const r = await this.getWeb3Contract()
+      .methods.getMergeById(issue_id, merge_id).call();
 
     return {
       _id: Numbers.fromHex(r[0]),
@@ -433,29 +433,47 @@ class Network extends IContract {
 
   /**
    * Approve ERC20 Allowance
-   * @function
-   * @return {Promise<number>}
+   * @param {IContract~TxOptions} options
+   * @return {Promise<boolean>}
    */
-  approveSettlerERC20Token = async () => {
+  async approveSettlerERC20Token(options) {
     const totalMaxAmount = await this.getSettlerTokenContract().totalSupply();
     return await this.getSettlerTokenContract().approve({
       address: this.getAddress(),
       amount: totalMaxAmount,
-    });
-  };
+    },
+    options);
+  }
 
   /**
    * Approve ERC20 Allowance
-   * @function
-   * @return {Promise<number>}
+   * @param {IContract~TxOptions} options
+   * @return {Promise<boolean>}
    */
-  approveTransactionalERC20Token = async () => {
+  async approveTransactionalERC20Token(options) {
     const totalMaxAmount = await this.getTransactionTokenContract().totalSupply();
     return await this.getTransactionTokenContract().approve({
       address: this.getAddress(),
       amount: totalMaxAmount,
+    },
+    options);
+  }
+
+  /**
+   * Verify if Approved
+   * @function
+   * @param {Object} params
+   * @param {number} params.amount
+   * @param {Address} params.address
+   * @return {Promise<boolean>}
+   */
+  isApprovedSettlerToken({ amount, address }) {
+    return this.getSettlerTokenContract().isApproved({
+      address,
+      amount,
+      spenderAddress: this.getAddress(),
     });
-  };
+  }
 
   /**
    * Verify if Approved
@@ -465,191 +483,232 @@ class Network extends IContract {
    * @param {Address} params.address
    * @return {Promise<number>}
    */
-  isApprovedSettlerToken = async ({ amount, address }) => await this.getSettlerTokenContract().isApproved({
-    address,
-    amount,
-    spenderAddress: this.getAddress(),
-  });
+  isApprovedTransactionalToken({ amount, address }) {
+    return this.getTransactionTokenContract().isApproved({
+      address,
+      amount,
+      spenderAddress: this.getAddress(),
+    });
+  }
 
   /**
-   * Verify if Approved
-   * @function
-   * @param {Object} params
-   * @param {number} params.amount
-   * @param {Address} params.address
-   * @return {Promise<number>}
-   */
-   isApprovedTransactionalToken = async ({ amount, address }) => await this.getTransactionTokenContract().isApproved({
-     address,
-     amount,
-     spenderAddress: this.getAddress(),
-   });
-
-   /**
    * lock tokens for oracles
    * @param {Object} params
    * @params params.tokenAmount {number}
+   * @param {IContract~TxOptions} options
    * @throws {Error} Tokens Amount has to be higher than 0
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-   async lock({ tokenAmount }) {
-     if (tokenAmount <= 0) {
-       throw new Error('Token Amount has to be higher than 0');
-     }
+  lock({ tokenAmount }, options) {
+    if (tokenAmount <= 0) {
+      throw new Error('Token Amount has to be higher than 0');
+    }
 
+    return this.__sendTx(
+      this.getWeb3Contract().methods.lock(
+        Numbers.toSmartContractDecimals(
+          tokenAmount,
+          this.getSettlerTokenContract().getDecimals(),
+        ),
+      ),
+      options,
+    );
+  }
 
-     return await this.__sendTx(
-       this.getWeb3Contract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
-     );
-   }
-
-   /**
+  /**
    * Unlock Tokens for oracles
    * @param {Object} params
    * @params params.tokenAmount {number}
    * @params params.from {address}
+   * @param {IContract~TxOptions} options
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-   async unlock({ tokenAmount, from }) {
-     if (tokenAmount <= 0) {
-       throw new Error('Tokens Amount has to be higher than 0');
-     }
+  unlock({ tokenAmount, from }, options) {
+    if (tokenAmount <= 0) {
+      throw new Error('Tokens Amount has to be higher than 0');
+    }
 
-     return await this.__sendTx(
-       this.getWeb3Contract().methods.unlock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()), from),
-     );
-   }
+    return this.__sendTx(
+      this.getWeb3Contract().methods.unlock(
+        Numbers.toSmartContractDecimals(
+          tokenAmount,
+          this.getSettlerTokenContract().getDecimals(),
+        ),
+        from,
+      ),
+      options,
+    );
+  }
 
-   /**
+  /**
    * Delegated Oracles to others
    * @param {Object} params
    * @param {number} params.tokenAmount
    * @param {Address} params.delegatedTo
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-   async delegateOracles({ tokenAmount, delegatedTo }) {
-     if (tokenAmount <= 0) {
-       throw new Error('Tokens Amount has to be higher than 0');
-     }
+  delegateOracles({ tokenAmount, delegatedTo }, options) {
+    if (tokenAmount <= 0) {
+      throw new Error('Tokens Amount has to be higher than 0');
+    }
 
-     return await this.__sendTx(
-       this.getWeb3Contract()
-         .methods.delegateOracles(Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals()), delegatedTo),
-     );
-   }
+    return this.__sendTx(
+      this.getWeb3Contract()
+        .methods.delegateOracles(Numbers.toSmartContractDecimals(
+          tokenAmount,
+          this.getTransactionTokenContract().getDecimals(),
+        ),
+        delegatedTo),
+      options,
+    );
+  }
 
-   /**
+  /**
    * Recognize Issue as Resolved
    * @param {Object} params
    * @param {Number} params.issueId
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-   async recognizeAsFinished({ issueId }) {
-     return await this.__sendTx(
-       this.getWeb3Contract()
-         .methods.recognizeAsFinished(issueId),
-     );
-   }
+  recognizeAsFinished({ issueId }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract()
+        .methods.recognizeAsFinished(issueId),
+      options,
+    );
+  }
 
-   /**
+  /**
    * open Issue
    * @param {Object} params
    * @param {number} params.tokenAmount
    * @param {String} params.cid
+   * @param {IContract~TxOptions} options
    * @throws {Error} Tokens Amount has to be higher than 0
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-   async openIssue({ tokenAmount, cid }) {
-     if (tokenAmount < 0) {
-       throw new Error('Tokens Amount has to be higher than 0');
-     }
+  openIssue({ tokenAmount, cid }, options) {
+    if (tokenAmount < 0) {
+      throw new Error('Tokens Amount has to be higher than 0');
+    }
 
-     return await this.__sendTx(
-       this.getWeb3Contract().methods.openIssue(cid, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
-     );
-   }
+    return this.__sendTx(
+      this.getWeb3Contract().methods.openIssue(
+        cid,
+        Numbers.toSmartContractDecimals(
+          tokenAmount,
+          this.getTransactionTokenContract().getDecimals(),
+        ),
+      ),
+      options,
+    );
+  }
 
-   /**
+  /**
    * redeem Issue
    * @param {Object} params
    * @param {number} params.issueId
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-   async redeemIssue({ issueId }) {
-     return await this.__sendTx(
-       this.getWeb3Contract().methods.redeemIssue(issueId),
-     );
-   }
+  redeemIssue({ issueId }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.redeemIssue(issueId),
+      options,
+    );
+  }
 
 
-   /**
+  /**
    * open Issue
    * @param {Object} params
    * @param {number} params.issueID
    * @param {number} params.tokenAmount
    * @param {address} params.address
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-   async updateIssue({ issueID, tokenAmount }) {
-     if (tokenAmount < 0) {
-       throw new Error('Tokens Amount has to be higher than 0');
-     }
+  updateIssue({ issueID, tokenAmount }, options) {
+    if (tokenAmount < 0) {
+      throw new Error('Tokens Amount has to be higher than 0');
+    }
 
 
-     return await this.__sendTx(
-       this.getWeb3Contract()
-         .methods.updateIssue(issueID, Numbers.toSmartContractDecimals(tokenAmount, this.getTransactionTokenContract().getDecimals())),
-     );
-   }
+    return this.__sendTx(
+      this.getWeb3Contract().methods.updateIssue(
+        issueID,
+        Numbers.toSmartContractDecimals(
+          tokenAmount,
+          this.getTransactionTokenContract().getDecimals(),
+        ),
+      ),
+      options,
+    );
+  }
 
-   /**
- * Propose Merge of Issue
- * @param {Object} params
- * @param {number} params.issueID
- * @param {Address[]} params.prAddresses
- * @param {number[]} params.prAmounts
- * @return {Promise<TransactionObject>}
- */
-   async proposeIssueMerge({ issueID, prAddresses, prAmounts }) {
-     if (prAddresses.length !== prAmounts.length) {
-       throw new Error('prAddresses dont match prAmounts size');
-     }
-     const prAmountsWithDecimals = prAmounts.map(p => Numbers.toSmartContractDecimals(p, this.getTransactionTokenContract().getDecimals()));
+  /**
+   * Propose Merge of Issue
+   * @param {Object} params
+   * @param {number} params.issueID
+   * @param {Address[]} params.prAddresses
+   * @param {number[]} params.prAmounts
+   * @param {IContract~TxOptions} options
+   * @return {Promise<TransactionObject>}
+   */
+  proposeIssueMerge({ issueID, prAddresses, prAmounts }, options) {
+    if (prAddresses.length !== prAmounts.length) {
+      throw new Error('prAddresses dont match prAmounts size');
+    }
+    const prAmountsWithDecimals = prAmounts.map(
+      p => Numbers.toSmartContractDecimals(
+        p,
+        this.getTransactionTokenContract().getDecimals(),
+      ),
+    );
 
-     return await this.__sendTx(
-       this.getWeb3Contract()
-         .methods.proposeIssueMerge(issueID, prAddresses, prAmountsWithDecimals),
-     );
-   }
+    return this.__sendTx(
+      this.getWeb3Contract().methods.proposeIssueMerge(
+        issueID,
+        prAddresses,
+        prAmountsWithDecimals,
+      ),
+      options,
+    );
+  }
 
-   /**
+  /**
    * close Issue
    * @param {Object} params
    * @param {number} params.issueID
    * @param {number} params.mergeID
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-   async closeIssue({ issueID, mergeID }) {
-     return await this.__sendTx(
-       this.getWeb3Contract().methods.closeIssue(issueID, mergeID),
-     );
-   }
+  closeIssue({ issueID, mergeID }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.closeIssue(issueID, mergeID),
+      options,
+    );
+  }
 
-   /**
+  /**
    * Dispute Merge
    * @param {Object} params
    * @param {number} params.issueID
    * @param {number} params.mergeID
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-   async disputeMerge({ issueID, mergeID }) {
-     return await this.__sendTx(
-       this.getWeb3Contract().methods.disputeMerge(issueID, mergeID),
-     );
-   }
+  disputeMerge({ issueID, mergeID }, options) {
+    return this.__sendTx(
+      this.getWeb3Contract().methods.disputeMerge(issueID, mergeID),
+      options,
+    );
+  }
 
   /**
    * Deploys current contract and awaits for {@link TokensNetwork#__assert}
@@ -658,14 +717,15 @@ class Network extends IContract {
    * @param {string} params.settlerTokenAddress
    * @param {string} params.transactionTokenAddress
    * @param {string} params.governanceAddress
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({
-    settlerTokenAddress, transactionTokenAddress, governanceAddress, callback,
-  }) => {
+  deploy = async (
+    { settlerTokenAddress, transactionTokenAddress, governanceAddress },
+    options,
+  ) => {
     const params = [settlerTokenAddress, transactionTokenAddress, governanceAddress];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity >=0.6.0 <0.8.0;
 
 /**
@@ -7,7 +6,7 @@ pragma solidity >=0.6.0 <0.8.0;
  * only the events to be included into other smart contract where 
  * their definition is required for transactions that throw them.
  */
-interface IERC20events {
+interface IERC20Events {
     /**
      * @dev Emitted when `value` tokens are moved from one account (`from`) to
      * another (`to`).

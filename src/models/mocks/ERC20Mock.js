@@ -35,16 +35,20 @@ class ERC20Mock extends ERC20Contract {
      * @param {Object} params Parameters
      * @param {Address} params.to The address to mind tokens to.
      * @param {uint256} params.amount The amount of the underlying asset to supply.
+     * @param {IContract~TxOptions} options
      * @returns {Promise<void>}
      */
-  async mint({ to, amount }) {
+  async mint({ to, amount }, options) {
     const decimals = this.getDecimals();
     const amountWithDecimals = Numbers.fromBNToDecimals(
       amount,
       decimals,
     );
     // console.log('ERC20Mock.mint: ', amountWithDecimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.mint(to, amountWithDecimals));
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.mint(to, amountWithDecimals),
+      options,
+    );
   }
 
 
@@ -52,12 +56,13 @@ class ERC20Mock extends ERC20Contract {
    * Deploy ERC20Mock
    * @function
    * @param {Object} params Parameters
+   * @param {IContract~TxOptions} options
    * @returns {Promise<Transaction>} Transaction
    */
-  deploy = async ({ callback } = {}) => {
+  deploy = async (options) => {
     const params = [];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

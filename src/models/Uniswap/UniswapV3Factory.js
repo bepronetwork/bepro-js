@@ -17,20 +17,28 @@ export default class UniswapV3Factory extends IContract {
    * @param {address} tokenA
    * @param {address} tokenB
    * @param {uint24} fee
+   * @param {IContract~TxOptions} options
    * @returns {Promise<address>} pool
    */
-  async createPool(tokenA, tokenB, fee) {
-    return await this.__sendTx(this.getWeb3Contract().methods.createPool(tokenA, tokenB, fee));
+  async createPool(tokenA, tokenB, fee, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.createPool(tokenA, tokenB, fee),
+      options,
+    );
   }
 
 
   /**
    * @param {uint24} fee
    * @param {int24} tickSpacing
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async enableFeeAmount(fee, tickSpacing) {
-    return await this.__sendTx(this.getWeb3Contract().methods.enableFeeAmount(fee, tickSpacing));
+  async enableFeeAmount(fee, tickSpacing, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.enableFeeAmount(fee, tickSpacing),
+      options,
+    );
   }
 
 
@@ -87,9 +95,13 @@ export default class UniswapV3Factory extends IContract {
 
   /**
    * @param {address} _owner
+   * @param {IContract~TxOptions} options
    * @returns {Promise<void>}
    */
-  async setOwner(_owner) {
-    return await this.__sendTx(this.getWeb3Contract().methods.setOwner(_owner));
+  async setOwner(_owner, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.setOwner(_owner),
+      options,
+    );
   }
 }
