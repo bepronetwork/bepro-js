@@ -3,6 +3,7 @@ const {getSolidityType} = require('./solidity-types');
  * @param {Contract~AbiOption~Input[]} outputs
  * @param {string} template
  * @param {boolean} template
+ * todo parse output from canonicalName
  * @returns {string}
  */
 const parseOutput = (outputs, template = `ContractCallMethod<%content%>`, useComponentName = false) => {
