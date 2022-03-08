@@ -1,31 +1,63 @@
 const fs = require('fs');
 const path = require('path');
+const childProcess = require("child_process");
 
-if (fs.existsSync('dist')) {
-  console.log(`bepro-js sdk was already built.`)
-  return 0;
-}
+const DIST_PATH = `dist`;
 
-async function buildSolution() {
-  try {
-    console.log(`Building bepro-js sdk`);
-    const {execSync} = require("child_process");
 
-    const cwd = path.resolve();
+try {
 
-    if (!fs.existsSync(path.resolve(cwd, `node_modules`, `truffle`)))
-      await execSync(`npm install .`, {stdio: 'inherit', cwd});
+  console.log(`BEPRO post-install check`);
 
-    if (!fs.existsSync(path.resolve(cwd, `dist`)))
-      await execSync(`npm run build`, {stdio: 'inherit', cwd});
+  const isSelf = !path.resolve().includes(`node_modules`);
+  const _exists = (file = []) => fs.existsSync(path.resolve(...file))
 
-    console.log(`Built bepro-js sdk`);
+  const isBuilding = _exists([`building.tmp`]);
+  const wasBuilt = _exists([DIST_PATH]);
+  const hasDependencies = _exists([`node_modules`, `truffle`]);
+
+  console.table({isSelf, isBuilding, wasBuilt, hasDependencies, cwd: path.resolve()});
+
+  if (isSelf) {
+    console.log(`Post install not needed.`);
     return 0;
-  } catch (e) {
-    console.log(e);
-    console.log(`\nFailed to build bepro-js sdk, please issue: npm explore bepro-js -- npm run build`);
-    return 1;
   }
+
+  const execOptions = {
+    stdio: 'inherit',
+    cwd: path.resolve(),
+  }
+
+  if (wasBuilt) {
+    console.log(`bepro-js sdk was already built.`)
+    return 0;
+  }
+
+  if (isBuilding)
+    return 0;
+  else if (!isBuilding)
+    fs.writeFileSync(path.resolve(`building.tmp`), `${+new Date()}`, `utf-8`);
+
+  if (!hasDependencies) {
+    console.log(`Missing dependencies`);
+    console.time(`Installed dependencies`);
+    childProcess.execSync(`npm --production=false install  .`, execOptions);
+    console.timeEnd(`Installed dependencies`);
+  }
+
+  console.log(`Building solution`);
+  console.time(`Built`);
+
+  childProcess.execSync(`npm run build`, execOptions);
+  fs.rmSync(path.resolve(`building.tmp`), {force: true,});
+
+  console.timeEnd(`Built`);
+
+
+  return 0;
+} catch (e) {
+  console.log(e);
+  console.log(`\nFailed to build bepro-js sdk, please issue: npm explore bepro-js -- npm run build`);
+  return 1;
 }
 
-(async () => await buildSolution())();
