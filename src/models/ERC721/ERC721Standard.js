@@ -1,6 +1,7 @@
 import { erc721standard } from '../../interfaces';
-import IContract from '../IContract';
-import ERC20Contract from '../ERC20/ERC20Contract';
+// import IContract from '../IContract';
+import ERC721 from './ERC721';
+// import ERC20Contract from '../ERC20/ERC20Contract';
 
 /**
  * @typedef {Object} ERC721Standard~Options
@@ -15,7 +16,7 @@ import ERC20Contract from '../ERC20/ERC20Contract';
  * @class ERC721Standard
  * @param {ERC721Standard~Options} options
  */
-class ERC721Standard extends IContract {
+class ERC721Standard extends ERC721 {
   constructor(params = {}) {
     super({ abi: erc721standard, ...params });
   }
@@ -32,51 +33,17 @@ class ERC721Standard extends IContract {
       );
     }
     /* Use ABI */
-    this.params.contract.use(erc721collectibles, this.getAddress());
-
-    /* Set Token Address Contract for easy access */
-    this.params.ERC20Contract = new ERC20Contract({
-      web3Connection: this.web3Connection,
-      contractAddress: await this.purchaseToken(),
-    });
-
-    /* Assert Token Contract */
-    await this.params.ERC20Contract.login();
-    await this.params.ERC20Contract.__assert();
+    this.params.contract.use(erc721standard, this.getAddress());
   };
 
   /**
    * Verify if token ID exists
    * @param {Object} params
-   * @param {number} params.tokenID
+   * @param {number} params.tokenId
    * @returns {Promise<boolean>} Token Id
    */
-  async exists({ tokenID }) {
-    return await this.params.contract
-      .getContract()
-      .methods.exists(tokenID)
-      .call();
-  }
-
-  /**
-   * Verify what is the getURITokenID
-   * @param {Object} params
-   * @param {number} params.tokenID
-   * @returns {Promise<string>} URI
-   */
-  async getURITokenID({ tokenID }) {
-    return await this.params.contract
-      .getContract()
-      .methods.tokenURI(tokenID)
-      .call();
-  }
-
-  /**
-   * Verify what is the baseURI
-   * @returns {Promise<string>} URI
-   */
-  async baseURI() {
-    return await this.params.contract.getContract().methods.baseURI().call();
+  async exists({ tokenId }) {
+    return await this.getWeb3Contract().methods.exists(tokenId).call();
   }
 
   /**
@@ -84,33 +51,65 @@ class ERC721Standard extends IContract {
    * @function
    * @param {Object} params
    * @param {string} params.URI
+   * @param {IContract~TxOptions} options
    * @return {Promise<*>}
    */
-  setBaseTokenURI = async ({ URI }) => await this.__sendTx(
-    this.params.contract.getContract().methods.setBaseURI(URI),
-  );
+  async setBaseTokenURI({ URI }, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.setBaseURI(URI),
+      options,
+    );
+  }
+
+  async setBaseURI({ URI }, options) {
+    return await this.setBaseTokenURI({ URI }, options);
+  }
 
   /**
    * Set Token URI
    * @function
    * @param {Object} params
-   * @param {string} params.tokenID
+   * @param {string} params.tokenId
    * @param {string} params.URI
+   * @param {IContract~TxOptions} options
    * @return {Promise<*>}
    */
-  setTokenURI = async ({ tokenID, URI }) => await this.__sendTx(
-    this.params.contract.getContract().methods.setTokenURI(tokenID, URI),
-  );
+  async setTokenURI({ tokenId, URI }, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.setTokenURI(tokenId, URI),
+      options,
+    );
+  }
 
   /**
-   * Mint created TokenID
+   * @function
+   * @description Mint created TokenId
    * @param {Object} params
-   * @param {number} params.tokenID
+   * @param {number} params.tokenId
+   * @param {IContract~TxOptions} options
    * @return {Promise<TransactionObject>}
    */
-  async mint({ tokenID }) {
+  async mint({ tokenId }, options) {
+    const to = await this.getUserAddress();
     return await this.__sendTx(
-      this.params.contract.getContract().methods.mint(tokenID),
+      this.getWeb3Contract().methods.mint(to, tokenId),
+      options,
+    );
+  }
+
+  /**
+   * @function
+   * @description Mint created TokenId
+   * @param {Object} params
+   * @param {Address} to Address to send to
+   * @param {Integer} tokenId Token Id to use
+   * @param {IContract~TxOptions} options
+   * @return {Promise<TransactionObject>}
+   */
+  async mintTo({ to, tokenId }, options) {
+    return await this.__sendTx(
+      this.getWeb3Contract().methods.mint(to, tokenId),
+      options,
     );
   }
 
@@ -118,13 +117,13 @@ class ERC721Standard extends IContract {
    * @link ERC721Standard.__deploy
    * @param {Object} params
    * @param {string} params.name
-   * @param {*} params.symbol
-   * @param {function():void} params.callback
+   * @param {string} params.symbol
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} Please provide a name
    * @throws {Error} Please provide a symbol
    */
-  deploy = async ({ name, symbol, callback }) => {
+  deploy = async ({ name, symbol }, options) => {
     if (!name) {
       throw new Error('Please provide a name');
     }
@@ -133,18 +132,12 @@ class ERC721Standard extends IContract {
       throw new Error('Please provide a symbol');
     }
     const params = [name, symbol];
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
     return res;
   };
-
-  /**
-   * @function
-   * @return ERC20Contract|undefined
-   */
-  getERC20Contract = () => this.params.ERC20Contract;
 }
 
 export default ERC721Standard;

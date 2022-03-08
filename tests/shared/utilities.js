@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js'
 //import { MockTimeUniswapV3Pool } from '../../typechain/MockTimeUniswapV3Pool'
 //import { TestERC20 } from '../../typechain/TestERC20'
 
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 //export const MaxUint128 = BigNumber.from(2).pow(128).sub(1)
 export const MaxUint128 = BigNumber(2).pow(128).minus(1)
 export const MaxUint256 = BigNumber(2).pow(256).minus(1)

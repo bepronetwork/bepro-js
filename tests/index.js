@@ -10,4 +10,6 @@ context("Unit Tests", async () => {
   require("./stakingContract");
   require("./sablier/sablier");
   require("./custom/loophole/loophole");
+  require('./custom/realfvr/index');
+  //require('./protocolMiningReward');
 });
