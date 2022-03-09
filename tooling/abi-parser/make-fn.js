@@ -16,7 +16,9 @@ const makeFn = (option, withBody = false, devDoc = ``) => {
   const inputs = withBody && option.inputs.map(({name, type}, i) =>
     `${name || 'v'.concat(String(+i+1))}`).join(`, `) || '';
 
-  const body = withBody && `{\n    return this.${option.stateMutability === "nonpayable" ? 'callTx' : 'sendTx'}(this.contract.methods.${option.name}(${inputs})); \n  }\n` || '';
+  const isCall = option.stateMutability === "nonpayable" || option.stateMutability === "view";
+
+  const body = withBody && `{\n    return this.${isCall ? 'callTx' : 'sendTx'}(this.contract.methods.${option.name}(${inputs})); \n  }\n` || '';
 
   return `${devDoc && parseComment(devDoc) || ``}${withBody && '  async ' || '  '}${fnHeader(option.name, parsedInputs, !withBody && parsedOutputs || ``)}${withBody && body || ';'}`
 }
