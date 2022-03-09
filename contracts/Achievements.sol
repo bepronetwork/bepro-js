@@ -83,6 +83,12 @@ contract Achievements is ERC721 {
     return achievementId;
   }
 
+  function hasUserClaimedAchievement(address user, uint256 achievementId) public view returns (bool) {
+    Achievement storage achievement = achievements[achievementId];
+
+    return achievement.claims[user];
+  }
+
   function hasUserPlacedPrediction(address user, uint256 marketId) public view returns (bool) {
     uint256[2] memory outcomeShares;
     (, outcomeShares[0], outcomeShares[1]) = predictionMarket.getUserMarketShares(marketId, user);
@@ -159,6 +165,7 @@ contract Achievements is ERC721 {
     Achievement storage achievement = achievements[achievementId];
     ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
 
+    require(achievement.claims[msg.sender] == false, "Achievement already claimed");
     require(achievement.action != Action.Bond, "Method not used for bond placement achievements");
     require(marketIds.length > 0, "No actions provided");
     require(
@@ -200,6 +207,7 @@ contract Achievements is ERC721 {
     Achievement storage achievement = achievements[achievementId];
     ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
 
+    require(achievement.claims[msg.sender] == false, "Achievement already claimed");
     require(achievement.action == Action.Bond, "Method only used for bond placement achievements");
     require(marketIds.length > 0, "No actions provided");
     require(
@@ -240,6 +248,9 @@ contract Achievements is ERC721 {
     uint256 tokenId = _tokenIds.current();
     _mint(user, tokenId);
     tokens[tokenId] = achievementId;
+
+    Achievement storage achievement = achievements[achievementId];
+    achievement.claims[user] = true;
 
     return tokenId;
   }
