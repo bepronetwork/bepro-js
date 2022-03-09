@@ -37,19 +37,8 @@ contract Achievements is ERC721 {
     mapping(address => bool) claims;
   }
 
-  struct ActionClaim {
-    uint256 count;
-    mapping(uint256 => bool) markets;
-  }
-
-  struct Claim {
-    mapping(uint256 => ActionClaim) actionClaims;
-  }
-
   uint256 public achievementIndex = 0;
   mapping(uint256 => Achievement) public achievements;
-
-  mapping(address => Claim) claims;
   mapping(uint256 => uint256) public tokens; // tokenId => achievementId
 
   constructor() public ERC721("Achievements", "PMA") {}
@@ -163,21 +152,13 @@ contract Achievements is ERC721 {
 
   function claimAchievement(uint256 achievementId, uint256[] memory marketIds) public returns (uint256) {
     Achievement storage achievement = achievements[achievementId];
-    ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
 
     require(achievement.claims[msg.sender] == false, "Achievement already claimed");
     require(achievement.action != Action.Bond, "Method not used for bond placement achievements");
-    require(marketIds.length > 0, "No actions provided");
-    require(
-      marketIds.length + actionClaim.count == achievement.occurrences,
-      "Markets count and occurrences don't match"
-    );
+    require(marketIds.length == achievement.occurrences, "Markets count and occurrences don't match");
 
     for (uint256 i = 0; i < marketIds.length; i++) {
       uint256 marketId = marketIds[i];
-      require(actionClaim.markets[marketId] == false, "Achievement already checked for market");
-
-      actionClaim.markets[marketId] = true;
 
       if (achievement.action == Action.Buy) {
         hasUserPlacedPrediction(msg.sender, marketId);
@@ -205,23 +186,16 @@ contract Achievements is ERC721 {
     bytes32[] memory answers
   ) public {
     Achievement storage achievement = achievements[achievementId];
-    ActionClaim storage actionClaim = claims[msg.sender].actionClaims[uint256(achievement.action)];
 
     require(achievement.claims[msg.sender] == false, "Achievement already claimed");
     require(achievement.action == Action.Bond, "Method only used for bond placement achievements");
     require(marketIds.length > 0, "No actions provided");
-    require(
-      marketIds.length + actionClaim.count == achievement.occurrences,
-      "Markets count and occurrences don't match"
-    );
+    require(marketIds.length == achievement.occurrences, "Markets count and occurrences don't match");
 
     uint256 qi;
 
     for (uint256 i = 0; i < marketIds.length; i++) {
       uint256 marketId = marketIds[i];
-      require(actionClaim.markets[marketId] == false, "Achievement already checked for market");
-
-      actionClaim.markets[marketId] = true;
 
       uint256 ln = lengths[i];
       bytes32[] memory hh = new bytes32[](ln);
