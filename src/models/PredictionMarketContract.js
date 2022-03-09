@@ -230,37 +230,56 @@ class PredictionMarketContract extends IContract {
    * @returns {Array} Outcome Shares
    */
   async getPortfolio({ user }) {
-    const marketIds = await this.getMarkets();
     const events = await this.getActions({ user });
+    const allMarketIds = await this.getMarkets();
+    const userMarketIds = events.map(e => e.marketId).filter((x, i, a) => a.indexOf(x) == i);
 
-    // TODO: improve this (avoid looping through all markets)
-    return await marketIds.reduce(async (obj, marketId) => {
-      const marketShares = await this.getContract().methods.getUserMarketShares(marketId, user).call();
-      const claimStatus = await this.getContract().methods.getUserClaimStatus(marketId, user).call();
+    return await allMarketIds.reduce(async (obj, marketId) => {
+      let portfolio;
+      if (!userMarketIds.includes(marketId)) {
+        // user did not interact with market, no need to fetch holdings
+        portfolio = {
+          liquidity: { shares: 0, price: 0 },
+          outcomes: {
+            0: { shares: 0, price: 0 },
+            1: { shares: 0, price: 0 },
+          },
+          claimStatus: {
+            winningsToClaim: false,
+            winningsClaimed: false,
+            liquidityToClaim: false,
+            liquidityClaimed: false,
+            liquidityFees: 0
+          }
+        };
+      } else {
+        const marketShares = await this.getContract().methods.getUserMarketShares(marketId, user).call();
+        const claimStatus = await this.getContract().methods.getUserClaimStatus(marketId, user).call();
 
-      const portfolio = {
-        liquidity: {
-          shares: Numbers.fromDecimalsNumber(marketShares[0], 18),
-          price: this.getAverageAddLiquidityPrice({events, marketId}),
-        },
-        outcomes: {
-          0: {
-            shares: Numbers.fromDecimalsNumber(marketShares[1], 18),
-            price: this.getAverageOutcomeBuyPrice({events, marketId, outcomeId: 0}),
+        portfolio = {
+          liquidity: {
+            shares: Numbers.fromDecimalsNumber(marketShares[0], 18),
+            price: this.getAverageAddLiquidityPrice({events, marketId}),
           },
-          1: {
-            shares: Numbers.fromDecimalsNumber(marketShares[2], 18),
-            price: this.getAverageOutcomeBuyPrice({events, marketId, outcomeId: 1}),
+          outcomes: {
+            0: {
+              shares: Numbers.fromDecimalsNumber(marketShares[1], 18),
+              price: this.getAverageOutcomeBuyPrice({events, marketId, outcomeId: 0}),
+            },
+            1: {
+              shares: Numbers.fromDecimalsNumber(marketShares[2], 18),
+              price: this.getAverageOutcomeBuyPrice({events, marketId, outcomeId: 1}),
+            },
           },
-        },
-        claimStatus: {
-          winningsToClaim: claimStatus[0],
-          winningsClaimed: claimStatus[1],
-          liquidityToClaim: claimStatus[2],
-          liquidityClaimed: claimStatus[3],
-          liquidityFees: Numbers.fromDecimalsNumber(claimStatus[4], 18)
-        }
-      };
+          claimStatus: {
+            winningsToClaim: claimStatus[0],
+            winningsClaimed: claimStatus[1],
+            liquidityToClaim: claimStatus[2],
+            liquidityClaimed: claimStatus[3],
+            liquidityFees: Numbers.fromDecimalsNumber(claimStatus[4], 18)
+          }
+        };
+      }
 
       return await {
         ...(await obj),
