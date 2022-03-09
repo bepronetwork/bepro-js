@@ -10,13 +10,15 @@ const parseOutput = (outputs, template = `ContractCallMethod<%content%>`, useCom
   if (!outputs?.length)
     return `ContractSendMethod`;
 
-  const _templateContent = (o, index) => `'${useComponentName && o.name || Number(index)}': ${getSolidityType(o.type)}`;
-  const _templateComponent = (o, index) => `'${o.name || index}': {${o.components.map(_templateMapper).join(`;`)}}${getSolidityType(o.type)}`;
+  const _templateContent = (o, index) => `'${useComponentName && o.name || Number(index)}': ${getSolidityType(o.type)};`;
+  const _templateComponent = (o, index) => `'${o.name || index}': {${o.components.map(_templateMapper).join(``)}}${getSolidityType(o.type)};`;
   const _templateMapper = (o, index) => !o.components ? _templateContent(o, index) : _templateComponent(o, index);
 
   let content = outputs.map(_templateMapper).join(``);
 
-  if (outputs.length === 1 && (!outputs[0].components && !useComponentName))
+  // console.log(content, outputs);
+
+  if (outputs.length === 1 && (!outputs[0].name))
     content = content.replace(`'0': `, ``).replace(`;`, ``);
   else content = `{${content}}`;
 
