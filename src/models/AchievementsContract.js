@@ -54,7 +54,7 @@ class AchievementsContract extends IContract {
       1: { markets: liquidityMarkets, occurrences: liquidityMarkets.length },
       2: { markets: bondsMarkets, occurrences: bondsMarkets.length },
       3: { markets: winningsMarkets, occurrences: winningsMarkets.length },
-      4: { markets: createMarketEvents, occurrences: createMarketEvents.length },
+      4: { markets: createMarketEvents.map(e => e.returnValues.marketId), occurrences: createMarketEvents.length },
     }
   }
 
@@ -109,7 +109,7 @@ class AchievementsContract extends IContract {
       // TODO: bond action claim
     } else {
       return await this.__sendTx(
-        this.getContract().methods.claimAchievement(achievementId, userStats[achievement.actionId].markets.slice(achievement.occurrences)),
+        this.getContract().methods.claimAchievement(achievementId, userStats[achievement.actionId].markets.slice(0, achievement.occurrences)),
         false,
       );
     }
