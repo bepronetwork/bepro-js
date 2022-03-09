@@ -105,7 +105,7 @@ class AchievementsContract extends IContract {
     // user not eligible to claim
     if (userStats[achievement.actionId].occurrences < achievement.occurrences) return false;
 
-    if (achievement.action == 2) {
+    if (achievement.actionId == 2) {
       // TODO: bond action claim
     } else {
       return await this.__sendTx(
