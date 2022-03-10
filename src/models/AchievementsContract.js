@@ -46,7 +46,21 @@ class AchievementsContract extends IContract {
 
     // fetching unique bonds actions per market
     const bondsEvents = await this.realitioERC20.getEvents('LogNewAnswer', { user });
-    const bondsMarkets = bondsEvents.map(e => e.returnValues.question_id).filter((x, i, a) => a.indexOf(x) == i);
+    const bondsQuestions = bondsEvents.map(e => e.returnValues.question_id).filter((x, i, a) => a.indexOf(x) == i);
+    let bondsMarkets = [];
+
+    if (bondsQuestions.length > 0) {
+      // filtering by bonds placed in PredictionMarket contract
+      // TODO: optimize this
+      const allMarketIds = await this.predictionMarket.getMarkets();
+      const allMarketQuestions = await Promise.all(allMarketIds.map(async marketId => {
+        const questionId = await this.predictionMarket.getMarketQuestionId({ marketId });
+        return questionId;
+      }));
+
+      const marketQuestions = bondsQuestions.filter(questionId => allMarketQuestions.includes(questionId));
+      bondsMarkets = marketQuestions.map(questionId => allMarketQuestions.indexOf(questionId));
+    }
 
     // returning stats mapped by action id
     return {
@@ -106,10 +120,45 @@ class AchievementsContract extends IContract {
     if (userStats[achievement.actionId].occurrences < achievement.occurrences) return false;
 
     if (achievement.actionId == 2) {
-      // TODO: bond action claim
+      const marketIds = userStats[achievement.actionId].markets.slice(0, achievement.occurrences);
+      const lengths = [];
+      const hhashes = [];
+      const addrs = [];
+      const bonds = [];
+      const answers = [];
+
+      for (const marketId of marketIds) {
+        const questionId = await this.predictionMarket.getMarketQuestionId({ marketId });
+        const events = await this.realitioERC20.getEvents('LogNewAnswer', { question_id: questionId });
+
+        hhashes.push(...events.map((event) => event.returnValues.history_hash).slice(0, -1).reverse());
+        // adding an empty hash to the history hashes
+        hhashes.push(Numbers.nullHash());
+
+        addrs.push(...events.map((event) => event.returnValues.user).reverse());
+        bonds.push(...events.map((event) => event.returnValues.bond).reverse());
+        answers.push(...events.map((event) => event.returnValues.answer).reverse());
+        lengths.push(events.length);
+      }
+
+      return await this.__sendTx(
+        this.getContract().methods.claimAchievement(
+          achievementId,
+          marketIds,
+          lengths,
+          hhashes,
+          addrs,
+          bonds,
+          answers
+        ),
+        false
+      );
     } else {
       return await this.__sendTx(
-        this.getContract().methods.claimAchievement(achievementId, userStats[achievement.actionId].markets.slice(0, achievement.occurrences)),
+        this.getContract().methods.claimAchievement(
+          achievementId,
+          userStats[achievement.actionId].markets.slice(0, achievement.occurrences)
+        ),
         false,
       );
     }

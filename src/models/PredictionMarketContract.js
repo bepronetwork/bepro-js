@@ -160,6 +160,17 @@ class PredictionMarketContract extends IContract {
     };
   }
 
+  /**
+   * @function getMarketQuestionId
+   * @description getMarketQuestionId
+   * @param {Integer} marketId
+   * @returns {Bytes32} questionId
+   */
+  async getMarketQuestionId({marketId}) {
+    const marketAltData = await this.params.contract.getContract().methods.getMarketAltData(marketId).call();
+
+    return marketAltData[1];
+  }
 
   /**
    * @function getAverageOutcomeBuyPrice
