@@ -57,6 +57,10 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
       throw new Error(Errors.MissingSwapAddressPleaseDeployUsingOne);
 
     this._swap = new UniswapV3RouterBridge(this.web3Connection, swapRouterAddress);
+
+    await this._swap.loadContract();
+    await this._erc20.loadContract();
+    await this._ethUtils.loadContract();
   }
   /* eslint-enable complexity */
 

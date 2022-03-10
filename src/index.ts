@@ -23,6 +23,7 @@ export * from '@base/stakeable';
 export * from '@base/web3-connection';
 export * from '@base/web3-contract';
 export * from '@base/ipfs-wrapper';
+export * from '@base/governed';
 
 export * from '@interfaces/deployable';
 export * from '@interfaces/ipfs-options';
@@ -83,3 +84,5 @@ export * from '@utils/stake-subscription';
 export * from '@utils/transaction-handler';
 export * from '@utils/voter-info';
 export * from '@utils/voting-poll-winner';
+
+export * as Defaults from '@utils/constants';

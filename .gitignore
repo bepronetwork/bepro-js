@@ -12,3 +12,4 @@ keys.json
 .editorconfig
 migrations/
 example/
+.dev*
