@@ -28,16 +28,16 @@ contract Governed {
         _;
     }
 
-    function proposeGovernor(address proposedGovernor) public onlyGovernor {
+    function proposeGovernor(address proposedGovernor) public payable onlyGovernor {
         require(msg.sender != proposedGovernor);
         _proposedGovernor = proposedGovernor;
     }
-    
-    function claimGovernor() public{
+
+    function claimGovernor() public payable {
         require(msg.sender == _proposedGovernor);
         emit GovernorTransferred(_governor, _proposedGovernor);
         _governor = _proposedGovernor;
         _proposedGovernor = address(0);
     }
- 
+
 }

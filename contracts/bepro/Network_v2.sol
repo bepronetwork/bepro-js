@@ -51,6 +51,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 tokensLocked;
 
         mapping(address => uint256) oraclesDelegated;
+        mapping(uint256 => mapping(uint256 => uint256)) disputes;
     }
 
     mapping(address => Oracle) oracles;
@@ -77,7 +78,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 id;
         uint256 creationDate;
         uint256 oracles;
-        uint256 disputes;
+        uint256 disputeWeight;
         uint256 prId;
 
         ProposalDetail[] details;
@@ -179,6 +180,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     modifier isCouncilMember() {
         require(getOraclesOf(msg.sender) >= councilAmount, "OW0");
+        _;
+    }
+
+    modifier hasOracles() {
+        require(getOraclesOf(msg.sender) >= 1, "OW1");
         _;
     }
 
@@ -667,6 +673,23 @@ contract Network_v2 is Governed, ReentrancyGuard {
         bounty.proposals.push(proposal);
 
         emit BountyProposalCreated(id, prId, proposal.id);
+    }
+
+    /// @dev dispute a proposal for a bounty
+    function disputeBountyProposal(
+        uint256 bountyId,
+        uint256 proposalId
+    ) bountyExists(id) isNotInDraft(id) isOpen(id) isNotCanceled(id) hasOracles() public payable {
+        require(bounty.proposals.length <= proposalId, "DBP0");
+        require(oracles[msg.sender].disputes[bountyId][proposalId] == 0, "DBP1");
+
+        Proposal storage proposal = bounty.proposals[proposalId];
+        uint256 memory weight = getOraclesOf(msg.sender);
+
+        proposal.disputeWeight = proposal.disputes.add(weight);
+        oracles[msg.sender].disputes[bountyId][proposalId] = weight;
+
+        emit BountyProposalDisputed(bountyId, proposal.prId, proposalId);
     }
 
     /// @dev close bounty with the selected proposal id
