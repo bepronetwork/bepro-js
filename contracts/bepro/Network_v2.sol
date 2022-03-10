@@ -80,6 +80,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 oracles;
         uint256 disputeWeight;
         uint256 prId;
+        bool refusedByBountyOwner;
 
         ProposalDetail[] details;
     }
@@ -132,6 +133,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     event BountyPullRequestCanceled(uint256 indexed bountyId, uint256 pullRequestId);
     event BountyProposalCreated(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
     event BountyProposalDisputed(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
+    event BountyProposalRefused(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
 
     modifier bountyExists(uint256 id) {
         require(bounties.length <= id, "B0");
@@ -278,7 +280,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     /// @dev returns true if disputes on proposal is higher than the percentage of the total oracles staked
     function isProposalDisputed(uint256 bountyId, uint256 proposalId) public view returns (bool) {
-        return bounties[bountyId].proposals[proposalId].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(100);
+        return bounties[bountyId].proposals[proposalId].disputes >= oraclesStaked.mul(percentageNeededForDispute).div(10000);
+    }
+
+    function isProposalRefused(uint256 bountyId, uint256 proposalId) public view returns (bool) {
+        return bounties[bountyId].proposals[proposalId].refusedByBountyOwner;
     }
 
     function isAfterUnlockPeriod(uint256 date) public view returns (bool) {
@@ -680,7 +686,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 bountyId,
         uint256 proposalId
     ) bountyExists(id) isNotInDraft(id) isOpen(id) isNotCanceled(id) hasOracles() public payable {
-        require(bounty.proposals.length <= proposalId, "DBP0");
+        require(getBounty(bountyId).proposals.length <= proposalId, "DBP0");
         require(oracles[msg.sender].disputes[bountyId][proposalId] == 0, "DBP1");
 
         Proposal storage proposal = bounty.proposals[proposalId];
@@ -690,6 +696,16 @@ contract Network_v2 is Governed, ReentrancyGuard {
         oracles[msg.sender].disputes[bountyId][proposalId] = weight;
 
         emit BountyProposalDisputed(bountyId, proposal.prId, proposalId);
+    }
+
+    function refuseBountyProposal(
+        uint256 bountyId,
+        uint256 proposalId
+    ) bountyExists(id) isNotInDraft(id) isOpen(id) isNotCanceled(id) isBountyOwner() public payable {
+        require(getBounty(bountyId).proposals.length <= proposalId, "RBP0");
+        bounty.proposals[proposalId].refusedByBountyOwner = true;
+
+        emit BountyProposalRefused(bountyId, proposal.prId, proposalId);
     }
 
     /// @dev close bounty with the selected proposal id
@@ -705,6 +721,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         Proposal storage proposal = bounty.proposals[proposalId];
         require(isProposalInDraft(id, proposalId) == false, "CB2");
         require(isProposalDisputed(id, proposalId) == false, "CB3");
+        require(isProposalRefused(id, proposalId) == false, "CB7");
 
         bounty.closed = true;
         bounty.closedDate = block.timestamp;
