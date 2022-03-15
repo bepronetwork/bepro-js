@@ -286,7 +286,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         return block.timestamp < bounties[bountyId].proposals[proposalId].creationDate.add(disputableTime);
     }
 
-    /// @dev returns true if disputes on proposal is higher than the percentage of the total oracles staked
+    /// @dev returns true if disputeWeight on proposal is higher than the percentage of the total oracles staked
     function isProposalDisputed(uint256 bountyId, uint256 proposalId) public view returns (bool) {
         return bounties[bountyId].proposals[proposalId].disputeWeight >= oraclesStaked.mul(percentageNeededForDispute).div(10000);
     }
