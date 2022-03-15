@@ -125,7 +125,7 @@ describe.skip(`NetworkV2`, () => {
       describe(`Bounties`, () => {
         it(`Opens`, async () => {
           const receipt = await network.openBounty(1000, bountyTransactional.contractAddress!,
-                                                   nativeZeroAddress, 0, 0, 0,
+                                                   nativeZeroAddress, 0, 0,
                                                    'c1', 'Title', '//', 'master');
 
           const events = await network.getBountyCreatedEvents({fromBlock: receipt.blockNumber, filter: {cid: 'c1'}});
@@ -164,7 +164,7 @@ describe.skip(`NetworkV2`, () => {
         describe(`Funding`, async () => {
           it(`Opens Request Funding`, async () => {
             const receipt = await network.openBounty(0, bountyTransactional.contractAddress!,
-                                                     rewardToken.contractAddress!, 1000, 0, 1000,
+                                                     rewardToken.contractAddress!, 1000, 1000,
                                                      'c2', 'Title 2', '//', 'master');
             const events = await network.getBountyCreatedEvents({fromBlock: receipt.blockNumber, filter: {cid: 'c2'}});
             bountyId = events[0].returnValues.id;
@@ -201,7 +201,7 @@ describe.skip(`NetworkV2`, () => {
       describe(`Happy path`, () => {
         before(async () => {
           await network.openBounty(0, bountyTransactional.contractAddress!,
-                                   rewardToken.contractAddress!, 1000, 0, 10000,
+                                   rewardToken.contractAddress!, 1000, 10000,
                                    'c3', 'Title 3', '//', 'master');
           bountyId = await network.cidBountyId('c3');
 
