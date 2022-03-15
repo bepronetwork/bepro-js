@@ -5,6 +5,8 @@ const IContract = require( './IContract');
 const PredictionMarketContract = require( './PredictionMarketContract');
 const RealitioERC20Contract = require( './RealitioERC20Contract');
 
+const axios = require('axios');
+
 const actions = {
   0: 'Buy',
   1: 'Add Liquidity',
@@ -91,15 +93,18 @@ class AchievementsContract extends IContract {
   async getUserAchievements({ user }) {
     const achievementIds = await this.getAchievementIds();
     const userStats = await this.getUserStats({ user });
+    const userTokens = await this.getUserTokens({ user });
 
     return await achievementIds.reduce(async (obj, achievementId) => {
       const achievement = await this.getAchievement({ achievementId });
       const canClaim = userStats[achievement.actionId].occurrences >= achievement.occurrences;
       const claimed = canClaim && (await this.getContract().methods.hasUserClaimedAchievement(user, achievementId).call());
+      const token = userTokens.find(token => token.achievementId == achievementId);
 
       const status = {
         canClaim,
         claimed,
+        token
       }
 
       return await {
@@ -107,6 +112,27 @@ class AchievementsContract extends IContract {
         [achievementId]: status,
       };
     }, {});
+  }
+
+  async getUserTokens({ user }) {
+    const tokenCount = await this.getContract().methods.balanceOf(user).call();
+    const tokens = [];
+
+    for (let i = 0; i < tokenCount; i++) {
+      const tokenIndex = await this.getContract().methods.tokenOfOwnerByIndex(user, i).call();
+      const tokenAchievement = await this.getContract().methods.tokens(tokenIndex).call();
+      const tokenURI = await this.getContract().methods.tokenURI(tokenIndex).call();
+      const { data } = await axios.get(tokenURI);
+
+      tokens.push({
+        id: tokenIndex,
+        achievementId: tokenAchievement,
+        uri: tokenURI,
+        data
+      });
+    }
+
+    return tokens;
   }
 
   async claimAchievement({ achievementId }) {
