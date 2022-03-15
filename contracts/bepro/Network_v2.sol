@@ -36,6 +36,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     uint256 public oraclesDistributed = 0; // essentially, the converted math of TVL
 
     uint256 public closedBounties = 0;
+    uint256 public canceledBounties = 0;
 
     uint256 public mergeCreatorFeeShare = 30000; // 3%; parts per 10,000
     uint256 public percentageNeededForDispute = 30000; // 3% parts per 10,000
@@ -454,8 +455,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(bounty.benefactors[entryId].benefactor == msg.sender, "R2");
         require(erc20.transferFrom(address(this), msg.sender, bounty.benefactors[entryId].amount), "R3");
 
-        bounty.benefactors[entryId].amount = 0;
         bounty.tokenAmount = bounty.tokenAmount.sub(bounty.benefactors[entryId].amount);
+        bounty.benefactors[entryId].amount = 0;
     }
 
     /// @dev cancel a bounty
@@ -481,6 +482,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
         }
 
         require(erc20.transfer(bounty.creator, tokenAmount), "C2");
+
+        canceledBounties = canceledBounties.add(1);
 
         emit BountyCanceled(id);
     }
@@ -525,12 +528,13 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 retrieveAmount = 0;
 
         if (newTokenAmount > previousAmount) {
-            retrieveAmount = newTokenAmount.sub(previousAmount);
+            giveAmount = newTokenAmount.sub(previousAmount);
+            require(erc20.transferFrom(msg.sender, address(this), giveAmount), "U2");
         } else {
             retrieveAmount = previousAmount.sub(newTokenAmount);
+            require(erc20.transfer(bounty.creator, retrieveAmount), "U3");
         }
 
-        require(erc20.transfer(bounty.creator, retrieveAmount), "U2");
         bounty.tokenAmount = newTokenAmount;
     }
 
