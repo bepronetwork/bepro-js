@@ -3,7 +3,7 @@ import {ERC20} from '@models/erc20';
 import {expect} from 'chai';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {describe} from 'mocha';
-import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, revertChain, shouldBeRejected,} from '../utils/';
+import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, shouldBeRejected,} from '../utils/';
 import {Web3Connection, Web3Contract} from '../../src';
 
 describe(`ERC20`, () => {
@@ -15,11 +15,10 @@ describe(`ERC20`, () => {
   const name = `BEPRO`;
   const symbol = `$BEPRO`;
 
-  const web3Connection = defaultWeb3Connection();
+  let web3Connection: Web3Connection;
 
   before(async () => {
-    await web3Connection.start()
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true)
   })
 
   it(`Deploys a ERC20 Contract`, async () => {

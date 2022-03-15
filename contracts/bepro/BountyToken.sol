@@ -9,6 +9,7 @@ contract BountyToken is ERC721, Governed {
     struct BountyConnector {
         uint256 bountyId;
         uint percentage; // 0 - 100
+        // todo add if proposer, dev, or closer
     }
 
     constructor(string memory name_, string memory symbol_) ERC721(name_, symbol_) Governed() {}

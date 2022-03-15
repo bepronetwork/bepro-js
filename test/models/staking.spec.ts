@@ -1,10 +1,9 @@
-import {StakingContract, StakingProduct, StakingSubscription} from '../../src';
+import {StakingContract, StakingProduct, StakingSubscription, Web3Connection} from '../../src';
 import {
   defaultWeb3Connection,
   erc20Deployer, getChainDate,
   hasTxBlockNumber,
-  increaseTime, outputDeploy,
-  revertChain
+  increaseTime, outputDeploy
 } from '../utils/';
 import {toSmartContractDecimals} from '../../src/utils/numbers';
 import {addMinutes, differenceInSeconds} from 'date-fns'
@@ -24,7 +23,7 @@ describe(`StakingContract`, () => {
   let totalNeededAPR: number;
 
   const stakeTokenCap = toSmartContractDecimals(1000) as number;
-  const web3Connection = defaultWeb3Connection();
+  let web3Connection: Web3Connection;
 
   const APR = 5;
   const totalMaxAmount = 100;
@@ -36,8 +35,7 @@ describe(`StakingContract`, () => {
 
 
   before(async () => {
-    await web3Connection.start();
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true)
   });
 
   it(`Deploys contract`, async () => {

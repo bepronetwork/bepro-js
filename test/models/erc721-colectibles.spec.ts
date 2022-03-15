@@ -1,5 +1,5 @@
-import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber, revertChain} from '../utils/';
-import {ERC721Collectibles} from '../../src';
+import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber} from '../utils/';
+import {ERC721Collectibles, Web3Connection} from '../../src';
 import {toSmartContractDecimals} from '../../src/utils/numbers';
 import {expect} from 'chai';
 
@@ -12,11 +12,10 @@ describe(`ERC271Collectibles`, () => {
 
   const purchaseTokenCap = toSmartContractDecimals(1000000) as number;
   const collectableCap = 10
-  const web3Connection = defaultWeb3Connection();
+  let web3Connection: Web3Connection;
 
   before(async () => {
-    await web3Connection.start();
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true);
     accountAddress = web3Connection.Account.address;
   });
 

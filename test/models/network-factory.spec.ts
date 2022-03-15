@@ -1,6 +1,6 @@
 import {Network, NetworkFactory, Web3Connection} from '../../src';
 import {fromDecimals, toSmartContractDecimals} from '../../src/utils/numbers';
-import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, revertChain, outputDeploy, hasTxBlockNumber} from '../utils/';
+import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, outputDeploy, hasTxBlockNumber} from '../utils/';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src/interfaces/error-enum';
@@ -16,9 +16,7 @@ describe(`NetworkFactory`, () => {
   const cap = toSmartContractDecimals(1000000) as number;
 
   before(async () => {
-    web3Connection = defaultWeb3Connection();
-    await web3Connection.start();
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true);
     accountAddress = web3Connection.Account.address;
   })
 

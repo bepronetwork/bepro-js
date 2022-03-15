@@ -13,14 +13,20 @@ export function getPrivateKeyFromFile(index = 0) {
   return Object.values(JSON.parse(readFileSync(resolve('./keys.json'), 'utf-8')).private_keys)[index] as string;
 }
 
-export function defaultWeb3Connection() {
+export async function defaultWeb3Connection(start = false, revert = false) {
   const options: Web3ConnectionOptions = {
     web3Host: process.env.WEB3_HOST_PROVIDER || 'HTTP://127.0.0.1:8545',
     privateKey: process.env.WALLET_PRIVATE_KEY || getPrivateKeyFromFile(),
     skipWindowAssignment: true
   }
 
-  return new Web3Connection(options);
+  const web3Connection = new Web3Connection(options);
+  if (start)
+    await web3Connection.start();
+  if (revert)
+    await revertChain(web3Connection.Web3);
+
+  return web3Connection;
 }
 
 export async function erc20Deployer(name: string, symbol: string, cap = toSmartContractDecimals(1000000, 18) as number, web3Connection: Web3Connection|Web3ConnectionOptions) {

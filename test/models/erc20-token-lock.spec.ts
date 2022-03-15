@@ -3,10 +3,9 @@ import {
   erc20Deployer,
   hasTxBlockNumber,
   increaseTime,
-  revertChain,
   shouldBeRejected
 } from '../utils/';
-import {Erc20TokenLock} from '../../src';
+import {Erc20TokenLock, Web3Connection} from '../../src';
 import {toSmartContractDecimals} from '../../src/utils/numbers';
 import {expect} from 'chai';
 import {addSeconds} from 'date-fns'
@@ -17,11 +16,10 @@ describe(`ERC20TokenLock`, () => {
   let tokenLock: Erc20TokenLock;
 
   const cap = toSmartContractDecimals(1000000) as number;
-  const web3Connection = defaultWeb3Connection();
+  let web3Connection: Web3Connection;
 
   before(async () => {
-    await web3Connection.start();
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true)
   })
 
   it(`Deploys Contract`, async () => {

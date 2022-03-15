@@ -1,4 +1,4 @@
-import {Votable} from '../../src';
+import {Votable, Web3Connection} from '../../src';
 import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber, increaseTime} from '../utils/';
 import {toSmartContractDecimals} from '../../src/';
 import {expect} from 'chai';
@@ -12,10 +12,10 @@ describe(`Votable`, () => {
 
   const cap = 1000;
   const smartContractCap = toSmartContractDecimals(cap) as number;
-  const web3Connection = defaultWeb3Connection();
+  let web3Connection: Web3Connection;
 
   before(async () => {
-    await web3Connection.start();
+    web3Connection = await defaultWeb3Connection(true, true);
     accountAddress = web3Connection.Account.address;
   });
 

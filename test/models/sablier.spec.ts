@@ -3,10 +3,10 @@ import {
   erc20Deployer, getChainDate,
   getPrivateKeyFromFile,
   hasTxBlockNumber, increaseTime,
-  modelExtensionDeployer, revertChain,
+  modelExtensionDeployer,
 } from '../utils';
 import {Account} from 'web3-core';
-import {CERC20, ERC20, ETHUtils, Sablier} from '../../src';
+import {CERC20, ERC20, ETHUtils, Sablier, Web3Connection} from '../../src';
 import {
   AMOUNT_1M,
   INITIAL_EXCHANGE_RATE,
@@ -18,7 +18,7 @@ import {addSeconds} from 'date-fns'
 import {expect} from 'chai';
 
 describe(`Sablier`, () => {
-  const web3Connection = defaultWeb3Connection();
+  let web3Connection: Web3Connection;
 
   let Alice: Account;
   let Bob: Account;
@@ -34,8 +34,7 @@ describe(`Sablier`, () => {
   let erc20ContractAddress: string;
 
   before(async () => {
-    await web3Connection.start();
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true);
     Alice = await web3Connection.Web3.eth.accounts.privateKeyToAccount(getPrivateKeyFromFile(1));
     Bob = await web3Connection.Web3.eth.accounts.privateKeyToAccount(getPrivateKeyFromFile(2));
     Admin = await web3Connection.Web3.eth.accounts.privateKeyToAccount(getPrivateKeyFromFile());
