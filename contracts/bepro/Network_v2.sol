@@ -36,6 +36,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     uint256 public oraclesDistributed = 0; // essentially, the converted math of TVL
 
     uint256 public closedBounties = 0;
+    uint256 public canceledBounties = 0;
 
     uint256 public mergeCreatorFeeShare = 30000; // 3%; parts per 10,000
     uint256 public percentageNeededForDispute = 30000; // 3% parts per 10,000
@@ -481,6 +482,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
         }
 
         require(erc20.transfer(bounty.creator, tokenAmount), "C2");
+
+        canceledBounties = canceledBounties.add(1);
 
         emit BountyCanceled(id);
     }
