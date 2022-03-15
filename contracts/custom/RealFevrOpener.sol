@@ -57,7 +57,7 @@ contract RealFevrOpener is  Ownable, ERC721 {
         address[] marketplaceDistributionAddresses;
     }
 
-    constructor (string memory name, string memory symbol, ERC20 _purchaseToken) public ERC721(name, symbol) {}
+    constructor (string memory name, string memory symbol, ERC20 purchaseToken) public ERC721(name, symbol) {}
 
     function _distributePackShares(address from, uint256 packId, uint256 amount) internal {
         //transfer of fee share
