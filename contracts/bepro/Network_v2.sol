@@ -423,7 +423,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         cidBountyId[cid] = bounty.id;
         bountiesOfAddress[msg.sender].push(bounty.id);
-        totalStaked = totalStaked.add(tokenAmount);
 
         emit BountyCreated(bounty.id, msg.sender, tokenAmount);
     }
@@ -441,7 +440,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         require(erc20.transferFrom(msg.sender, address(this), tokenAmount), "S1");
         bounty.tokenAmount = bounty.tokenAmount.add(tokenAmount);
-        totalStaked = totalStaked.add(tokenAmount);
     }
 
     /// @dev user removes its beneficiary entry
@@ -457,7 +455,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(erc20.transferFrom(address(this), msg.sender, bounty.benefactors[entryId].amount), "R3");
 
         bounty.tokenAmount = bounty.tokenAmount.sub(bounty.benefactors[entryId].amount);
-        totalStaked = totalStaked.sub(bounty.benefactors[entryId].amount);
         bounty.benefactors[entryId].amount = 0;
     }
 
@@ -479,14 +476,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
                 if (benefactors[i].amount > 0) {
                     require(erc20.transfer(benefactors[i].benefactor, benefactors[i].amount), "C1");
                     tokenAmount = tokenAmount.sub(benefactors[i].amount);
-                    totalStaked = totalStaked.sub(benefactors[i].amount);
                 }
             }
         }
 
         require(erc20.transfer(bounty.creator, tokenAmount), "C2");
-
-        totalStaked = totalStaked.sub(tokenAmount);
 
         emit BountyCanceled(id);
     }
@@ -533,13 +527,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
         if (newTokenAmount > previousAmount) {
             giveAmount = newTokenAmount.sub(previousAmount);
             require(erc20.transferFrom(msg.sender, address(this), giveAmount), "U2");
-            
-            totalStaked = totalStaked.add(giveAmount);
         } else {
             retrieveAmount = previousAmount.sub(newTokenAmount);
             require(erc20.transfer(bounty.creator, retrieveAmount), "U3");
-
-            totalStaked = totalStaked.sub(retrieveAmount);
         }
 
         bounty.tokenAmount = newTokenAmount;
@@ -566,7 +556,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(erc20.transferFrom(msg.sender, address(this), fundingAmount), "F3");
         require(settlerToken.transferFrom(msg.sender, address(this), settlerAmount), "F4");
 
-        totalStaked = totalStaked.add(fundingAmount);
         totalSettlerLocked = totalSettlerLocked.add(settlerAmount);
     }
 
@@ -588,7 +577,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
             require(settlerToken.transfer(msg.sender, settlerAmount), "RF4");
             totalSettlerLocked = totalSettlerLocked.sub(settlerAmount);
             bounty.tokenAmount = bounty.tokenAmount.sub(x.amount);
-            totalStaked = totalStaked.sub(x.amount);
             x.amount = 0;
         }
 
@@ -763,7 +751,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
         }
 
         closedBounties = closedBounties.add(1);
-        totalStaked = totalStaked.sub(bounty.tokenAmount);
 
         emit BountyDistributed(id, proposalId);
     }
