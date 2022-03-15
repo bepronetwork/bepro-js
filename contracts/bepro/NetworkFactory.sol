@@ -78,7 +78,7 @@ contract NetworkFactory is ReentrancyGuard {
             Network_v2 network = Network_v2(networksByAddress[msg.sender]);
 
             require(network.totalSettlerLocked() == 0, "Network has to have 0 Settler Tokens");
-            require((network.closedBounties() + network.canceledBounties() ) == network.getBountiesQuantity(), "Network has to have 0 Transactional Tokens");
+            require((network.closedBounties() + network.canceledBounties() ) == network.getBountiesQuantity(), "Network has to have 0 Open Bounties");
             networksByAddress[msg.sender] = address(0);
         }
 
