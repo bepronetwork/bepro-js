@@ -14,7 +14,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     constructor(
         address _settlerToken,
-        address _nftTokenAddress,
         string memory _bountyTokenName,
         string memory _bountyTokenSymbol,
         string memory _bountyNftUri
@@ -534,13 +533,12 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(bounty.tokenAmount != newTokenAmount, "U1");
 
         uint256 previousAmount = bounty.tokenAmount;
-        uint256 retrieveAmount = 0;
 
         if (newTokenAmount > previousAmount) {
-            giveAmount = newTokenAmount.sub(previousAmount);
+            uint256 giveAmount = newTokenAmount.sub(previousAmount);
             require(erc20.transferFrom(msg.sender, address(this), giveAmount), "U2");
         } else {
-            retrieveAmount = previousAmount.sub(newTokenAmount);
+            uint256 retrieveAmount = previousAmount.sub(newTokenAmount);
             require(erc20.transfer(bounty.creator, retrieveAmount), "U3");
         }
 
