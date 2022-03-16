@@ -11,6 +11,7 @@ import {expect} from 'chai';
 import {AMOUNT_1M} from '../utils/constants';
 import {nativeZeroAddress} from '../../src/utils/constants';
 import {Account} from 'web3-core';
+import {BountyToken} from '../../src/models/bounty-token';
 
 describe.skip(`NetworkV2`, () => {
   let network: Network_v2;
@@ -18,6 +19,7 @@ describe.skip(`NetworkV2`, () => {
   let networkToken: ERC20;
   let bountyTransactional: ERC20;
   let rewardToken: ERC20;
+  let bountyToken: BountyToken;
   let Admin: Account;
   let Alice: Account;
   let Bob: Account;
@@ -36,13 +38,16 @@ describe.skip(`NetworkV2`, () => {
     const settlerReceipt = await erc20Deployer(`settler`, `#`, cap, web3Connection);
     const transactionalReceipt = await erc20Deployer(`transactional`, `$`, cap, web3Connection);
     const rewardReceipt = await erc20Deployer(`reward`, `&`, cap, web3Connection);
+    const nftReceipt = await erc20Deployer(`bounty`, `~`, cap, web3Connection);
 
     networkToken = new ERC20(web3Connection, settlerReceipt.contractAddress);
     bountyTransactional = new ERC20(web3Connection, transactionalReceipt.contractAddress);
     rewardToken = new ERC20(web3Connection, rewardReceipt.contractAddress);
+    bountyToken = new BountyToken(web3Connection, nftReceipt.contractAddress);
 
     await networkToken.loadContract();
     await bountyTransactional.loadContract();
+    await bountyToken.loadContract();
 
     await bountyTransactional.transferTokenAmount(Alice.address, 10000);
     await bountyTransactional.transferTokenAmount(Bob.address, 10000);
@@ -51,7 +56,7 @@ describe.skip(`NetworkV2`, () => {
   it(`Deploys Network_V2`, async () => {
     const _network = new Network_v2(web3Connection);
     _network.loadAbi();
-    const receipt = await _network.deployJsonAbi(networkToken.contractAddress!, `BountyNFT`, `%BBT`, `//`)
+    const receipt = await _network.deployJsonAbi(networkToken.contractAddress!, bountyToken.contractAddress!, `BountyNFT`, `%BBT`, `//`)
     expect(receipt.contractAddress).to.exist;
     network = new Network_v2(web3Connection, receipt.contractAddress);
     await network.loadContract();

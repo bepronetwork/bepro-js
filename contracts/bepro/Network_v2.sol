@@ -14,12 +14,13 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     constructor(
         address _settlerToken,
+        address _nftTokenAddress,
         string memory _bountyTokenName,
         string memory _bountyTokenSymbol,
         string memory _bountyNftUri
     ) Governed() ReentrancyGuard() {
         settlerToken = ERC20(_settlerToken);
-        nftToken = new BountyToken(_bountyTokenName, _bountyTokenSymbol);
+        nftToken = BountyToken(_nftTokenAddress);
         bountyNftUri = _bountyNftUri;
     }
 
@@ -154,12 +155,12 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     modifier isFundingRequest(uint256 id) {
-        require(isBountyFundingRequest(id) == true, "BF1");
+        require(bounties[id].rewardToken != address(0), "BF1");
         _;
     }
 
     modifier isNotFundingRequest(uint256 id) {
-        require(isBountyFundingRequest(id) == false, "BF0");
+        require(bounties[id].rewardToken == address(0), "BF0");
         _;
     }
 
@@ -174,17 +175,17 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     modifier isNotCanceled(uint256 id) {
-        require(getBounty(id).canceled == false, "B1");
+        require(bounties[id].canceled == false, "B1");
         _;
     }
 
     modifier isOpen(uint256 id) {
-        require(getBounty(id).closed == false, "B3");
+        require(bounties[id].closed == false, "B3");
         _;
     }
 
     modifier isClosed(uint256 id) {
-        require(getBounty(id).closed == true, "B4");
+        require(bounties[id].closed == true, "B4");
         _;
     }
 
@@ -206,32 +207,14 @@ contract Network_v2 is Governed, ReentrancyGuard {
         return bounties.length;
     }
 
-    function getBounty(uint256 id) public bountyExists(id) view returns (Bounty memory bounty) {
-        return bounties[id];
-    }
-
-    function getBounties(uint256[] calldata ids) public view returns (Bounty[] memory _bounties) {
-        require(ids.length > 0, "Len1");
-        require(ids.length < bounties.length, "Len2");
-
-        Bounty[] memory data = new Bounty[](ids.length);
-        for (uint256 i = 0; i <= ids.length - 1; i--) {
-            data[i] = getBounty(ids[i]);
-        }
-
-        return data;
-    }
-
     function getPullRequest(uint256 bountyId, uint256 pullRequestId) public view returns (PullRequest memory pullRequest) {
-        Bounty memory bounty = getBounty(bountyId);
-        require(bounty.pullRequests.length <= pullRequestId, "PR0");
-        return bounty.pullRequests[pullRequestId];
+        require(bounties[bountyId].pullRequests.length <= pullRequestId, "PR0");
+        return bounties[bountyId].pullRequests[pullRequestId];
     }
 
     function getProposal(uint256 bountyId, uint256 proposalId) public view returns (Proposal memory proposal) {
-        Bounty memory bounty = getBounty(bountyId);
-        require(bounty.proposals.length <= proposalId, "P0");
-        return bounty.proposals[proposalId];
+        require(bounties[bountyId].proposals.length <= proposalId, "P0");
+        return bounties[bountyId].proposals[proposalId];
     }
 
     function changeCouncilAmount(uint256 newAmount) public payable onlyGovernor {
@@ -272,17 +255,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     /// @dev returns true if NOW is less than bounty create time plus draft time
     function isBountyInDraft(uint256 id) public view returns (bool) {
-        return block.timestamp < getBounty(id).creationDate.add(draftTime);
-    }
-
-    function isBountyFundingRequest(uint256 id) public view returns (bool) {
-        Bounty memory bounty = getBounty(id);
-        return bounty.rewardToken != address(0);
+        return block.timestamp < bounties[id].creationDate.add(draftTime);
     }
 
     function isBountyFunded(uint256 id) public view returns (bool) {
-        require(isBountyFundingRequest(id), "B5");
-        return getBounty(id).funded == true;
+        return bounties[id].funded == true;
     }
 
     /// @dev returns true if NOW is less than proposal create time plus disputable time
@@ -305,8 +282,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     /// @dev get total amount of oracles of an address
     function getOraclesOf(address _address) public view returns (uint256) {
-        Oracle storage oracle = oracles[_address];
-        return oracle.oraclesDelegatedByOthers.add(oracle.oraclesDelegated[_address]);
+        return oracles[_address].oraclesDelegatedByOthers.add(oracles[_address].oraclesDelegated[_address]);
     }
 
     function getOracleExchangeRate() public view returns (uint256) {
@@ -336,14 +312,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].add(exchangedAmount);
         oracle.tokensLocked = oracle.tokensLocked.add(exchangedAmount);
-
-//        if (oracle.tokensLocked != 0) {
-//            oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].add(exchangedAmount);
-//            oracle.tokensLocked = oracle.tokensLocked.add(exchangedAmount);
-//        } else {
-//            oracle.oraclesDelegated[msg.sender] = exchangedAmount;
-//            oracle.tokensLocked = exchangedAmount;
-//        }
 
         totalSettlerLocked = totalSettlerLocked.add(tokenAmount);
         oraclesDistributed = oraclesDistributed.add(exchangedAmount);
@@ -481,19 +449,17 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         bounty.canceled = true;
 
-        uint256 tokenAmount = bounty.tokenAmount;
-
         if (bounty.benefactors.length > 0) {
             Benefactor[] memory benefactors = bounty.benefactors;
             for (uint256 i = 0; i <= benefactors.length - 1; i++) {
                 if (benefactors[i].amount > 0) {
                     require(erc20.transfer(benefactors[i].benefactor, benefactors[i].amount), "C1");
-                    tokenAmount = tokenAmount.sub(benefactors[i].amount);
+                    bounty.tokenAmount = bounty.tokenAmount.sub(benefactors[i].amount);
                 }
             }
         }
 
-        require(erc20.transfer(bounty.creator, tokenAmount), "C2");
+        require(erc20.transfer(bounty.creator, bounty.tokenAmount), "C2");
 
         canceledBounties = canceledBounties.add(1);
 
@@ -511,10 +477,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         for (uint256 i = 0; i >= bounty.funding.length - 1; i++) {
             Benefactor storage x = bounty.funding[i];
             if (x.amount > 0) {
-                // uint256 settlerAmount = x.amount * calculatePercentPerTenK(bounty.settlerTokenRatio);
-                // require(settlerToken.transfer(msg.sender, settlerAmount), "C3");
                 require(erc20.transfer(x.benefactor, x.amount), "C4");
-                // totalSettlerLocked = totalSettlerLocked.sub(settlerAmount);
                 x.amount = 0;
             }
         }
@@ -536,13 +499,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         require(bounty.tokenAmount != newTokenAmount, "U1");
 
-        uint256 previousAmount = bounty.tokenAmount;
-
-        if (newTokenAmount > previousAmount) {
-            uint256 giveAmount = newTokenAmount.sub(previousAmount);
+        if (newTokenAmount > bounty.tokenAmount) {
+            uint256 giveAmount = newTokenAmount.sub(bounty.tokenAmount);
             require(erc20.transferFrom(msg.sender, address(this), giveAmount), "U2");
         } else {
-            uint256 retrieveAmount = previousAmount.sub(newTokenAmount);
+            uint256 retrieveAmount = bounty.tokenAmount.sub(newTokenAmount);
             require(erc20.transfer(bounty.creator, retrieveAmount), "U3");
         }
 
@@ -587,9 +548,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
             require(x.benefactor == msg.sender, "RF1");
             require(x.amount > 0, "RF2");
             require(erc20.transfer(msg.sender, x.amount), "RF3");
-            // uint256 settlerAmount = x.amount * calculatePercentPerTenK(bounty.settlerTokenRatio);
-            // require(settlerToken.transfer(msg.sender, settlerAmount), "RF4");
-            // totalSettlerLocked = totalSettlerLocked.sub(settlerAmount);
             bounty.tokenAmount = bounty.tokenAmount.sub(x.amount);
             x.amount = 0;
         }
@@ -669,7 +627,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         address[] calldata recipients,
         uint256[] calldata percentages
     ) bountyExists(id) isNotInDraft(id) isOpen(id) isNotCanceled(id) isCouncilMember() public payable {
-        require(getBounty(id).pullRequests.length <= prId, "CBP0");
+        require(bounties[id].pullRequests.length <= prId, "CBP0");
 
         Bounty storage bounty = bounties[id];
         PullRequest storage pullRequest = bounty.pullRequests[prId];
@@ -702,7 +660,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 bountyId,
         uint256 proposalId
     ) bountyExists(bountyId) isNotInDraft(bountyId) isOpen(bountyId) isNotCanceled(bountyId) hasOracles() public payable {
-        require(getBounty(bountyId).proposals.length <= proposalId, "DBP0");
+        require(bounties[bountyId].proposals.length <= proposalId, "DBP0");
         require(oracles[msg.sender].disputes[bountyId][proposalId] == 0, "DBP1");
 
         Proposal storage proposal = bounties[bountyId].proposals[proposalId];
@@ -718,7 +676,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 bountyId,
         uint256 proposalId
     ) bountyExists(bountyId) isNotInDraft(bountyId) isOpen(bountyId) isNotCanceled(bountyId) isBountyOwner(bountyId) public payable {
-        require(getBounty(bountyId).proposals.length <= proposalId, "RBP0");
+        require(bounties[bountyId].proposals.length <= proposalId, "RBP0");
         bounties[bountyId].proposals[proposalId].refusedByBountyOwner = true;
 
         emit BountyProposalRefused(bountyId, bounties[bountyId].proposals[proposalId].prId, proposalId);
@@ -755,7 +713,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
             nftToken.awardBounty(detail.recipient, bountyNftUri, bounty.id, detail.percentage);
         }
 
-        if (isBountyFundingRequest(id) == true) {
+        if (bounties[id].rewardToken != address(0)) {
             ERC20 rewardToken = ERC20(bounty.rewardToken);
             for (uint256 i = 0; i < bounty.funding.length; i++) {
                 Benefactor storage x = bounty.funding[i];

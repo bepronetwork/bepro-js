@@ -57,10 +57,10 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
 
   }
 
-  async deployJsonAbi(_settlerToken: string, _bountyTokenName: string, _bountyTokenSymbol: string, _bountyNftUri: string) {
+  async deployJsonAbi(_settlerToken: string, _nftTokenAddress: string, _bountyTokenName: string, _bountyTokenSymbol: string, _bountyNftUri: string) {
     const deployOptions = {
         data: (Network_v2Json as any).bytecode,
-        arguments: [_settlerToken, _bountyTokenName, _bountyTokenSymbol, _bountyNftUri]
+        arguments: [_settlerToken, _nftTokenAddress, _bountyTokenName, _bountyTokenSymbol, _bountyNftUri]
     };
 
     return this.deploy(deployOptions, this.web3Connection.Account);
