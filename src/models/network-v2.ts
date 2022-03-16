@@ -11,8 +11,8 @@ import {AbiItem} from 'web3-utils';
 import {BountyToken} from '@models/bounty-token';
 import {ERC20} from '@models/erc20';
 import {Governed} from '@base/governed';
-import {toSmartContractDecimals} from '@utils/numbers';
-import {nativeZeroAddress} from '@utils/constants';
+import {fromSmartContractDecimals, toSmartContractDecimals} from '@utils/numbers';
+import {nativeZeroAddress, TenK, Thousand} from '@utils/constants';
 
 export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
@@ -79,27 +79,33 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   }
 
   async councilAmount() {
-    return this.callTx(this.contract.methods.councilAmount());
-  }
-
-  async disputableTime() {
-    return this.callTx(this.contract.methods.disputableTime());
-  }
-
-  async draftTime() {
-    return this.callTx(this.contract.methods.draftTime());
-  }
-
-  async mergeCreatorFeeShare() {
-    return this.callTx(this.contract.methods.mergeCreatorFeeShare());
-  }
-
-  async nftTokenAddress() {
-    return this.callTx(this.contract.methods.nftToken());
+    return fromSmartContractDecimals(await this.callTx(this.contract.methods.councilAmount()), this.settlerToken.decimals);
   }
 
   async oracleExchangeRate() {
-    return this.callTx(this.contract.methods.oracleExchangeRate());
+    return (await this.callTx(this.contract.methods.oracleExchangeRate())) / TenK;
+  }
+
+  /**
+   * @returns number duration in milliseconds
+   */
+  async disputableTime() {
+    return (await this.callTx(this.contract.methods.disputableTime())) * Thousand;
+  }
+
+  /**
+   * @returns number duration in milliseconds
+   */
+  async draftTime() {
+    return (await this.callTx(this.contract.methods.draftTime())) * Thousand;
+  }
+
+  async mergeCreatorFeeShare() {
+    return (await this.callTx(this.contract.methods.mergeCreatorFeeShare())) / TenK;
+  }
+
+  async proposerFeeShare() {
+    return (await this.callTx(this.contract.methods.proposerFeeShare())) / TenK;
   }
 
   async oraclesDistributed() {
@@ -111,27 +117,19 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   }
 
   async percentageNeededForDispute() {
-    return this.callTx(this.contract.methods.percentageNeededForDispute());
+    return (await this.callTx(this.contract.methods.percentageNeededForDispute())) / TenK;
   }
 
   async settlerTokenAddress() {
     return this.callTx(this.contract.methods.settlerToken());
   }
 
-  async proposerFeeShare() {
-    return this.callTx(this.contract.methods.proposerFeeShare());
+  async nftTokenAddress() {
+    return this.callTx(this.contract.methods.nftToken());
   }
 
   async totalSettlerLocked() {
     return this.callTx(this.contract.methods.totalSettlerLocked());
-  }
-
-  async totalStaked() {
-    return this.callTx(this.contract.methods.totalStaked());
-  }
-
-  async unlockPeriod() {
-    return this.callTx(this.contract.methods.unlockPeriod());
   }
 
   async getBountiesOfAddress(_address: string) {
@@ -167,22 +165,31 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   }
 
   /**
-   * @param _disputableTime duration in seconds
+   * @param disputableTime duration in seconds
    */
-  async changeDisputableTime(_disputableTime: number) {
-    return this.sendTx(this.contract.methods.changeDisputableTime(_disputableTime));
+  async changeDisputableTime(disputableTime: number) {
+    return this.sendTx(this.contract.methods.changeDisputableTime(disputableTime));
   }
 
-  async changePercentageNeededForDispute(_percentageNeededForDispute: number) {
-    return this.sendTx(this.contract.methods.changePercentageNeededForDispute(_percentageNeededForDispute));
+  /**
+   * @param percentageNeededForDispute percentage is per 10,000; 3 = 0,0003
+   */
+  async changePercentageNeededForDispute(percentageNeededForDispute: number) {
+    return this.sendTx(this.contract.methods.changePercentageNeededForDispute(percentageNeededForDispute));
   }
 
-  async changeMergeCreatorFeeShare(_mergeCreatorFeeShare: number) {
-    return this.sendTx(this.contract.methods.changeMergeCreatorFeeShare(_mergeCreatorFeeShare));
+  /**
+   * @param mergeCreatorFeeShare percentage is per 10,000; 3 = 0,0003
+   */
+  async changeMergeCreatorFeeShare(mergeCreatorFeeShare: number) {
+    return this.sendTx(this.contract.methods.changeMergeCreatorFeeShare(mergeCreatorFeeShare));
   }
 
-  async changeOracleExchangeRate(_oracleExchangeRate: number) {
-    return this.sendTx(this.contract.methods.changeOracleExchangeRate(_oracleExchangeRate));
+  /**
+   * @param oracleExchangeRate percentage is per 10,000; 3 = 0,0003
+   */
+  async changeOracleExchangeRate(oracleExchangeRate: number) {
+    return this.sendTx(this.contract.methods.changeOracleExchangeRate(oracleExchangeRate));
   }
 
   /**
@@ -226,29 +233,30 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * get total amount of oracles of an address
    */
   async getOraclesOf(_address: string) {
-    return this.callTx(this.contract.methods.getOraclesOf(_address));
+    return +fromSmartContractDecimals(await this.callTx(this.contract.methods.getOraclesOf(_address)), this.settlerToken.decimals);
   }
 
   async getOracleExchangeRate() {
-    return this.callTx(this.contract.methods.getOracleExchangeRate());
+    return Number(await this.callTx(this.contract.methods.getOracleExchangeRate()));
   }
 
   async calculatePercentPerTenK(amount: number) {
-    return this.callTx(this.contract.methods.calculatePercentPerTenK(amount));
+    return Number(await this.callTx(this.contract.methods.calculatePercentPerTenK(amount)));
   }
 
   async calculateOracleExchangeRate(settlerAmount: number) {
-    return this.callTx(this.contract.methods.calculateOracleExchangeRate(settlerAmount));
+    return Number(await this.callTx(this.contract.methods.calculateOracleExchangeRate(settlerAmount)));
   }
 
   async calculateSettlerExchangeRate(oraclesAmount: number) {
-    return this.callTx(this.contract.methods.calculateSettlerExchangeRate(oraclesAmount));
+    return Number(await this.callTx(this.contract.methods.calculateSettlerExchangeRate(oraclesAmount)));
   }
 
   /**
    * Lock given amount into the oracle mapping
    */
   async lock(tokenAmount: number) {
+    tokenAmount = toSmartContractDecimals(tokenAmount, this.settlerToken.decimals) as number;
     return this.sendTx(this.contract.methods.lock(tokenAmount));
   }
 
@@ -263,6 +271,7 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * Gives oracles from msg.sender to recipient
    */
   async delegateOracles(tokenAmount: number, recipient: string) {
+    tokenAmount = toSmartContractDecimals(tokenAmount, this.settlerToken.decimals) as number;
     return this.sendTx(this.contract.methods.delegateOracles(tokenAmount, recipient));
   }
 

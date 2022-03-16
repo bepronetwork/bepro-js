@@ -29,8 +29,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     string public bountyNftUri = "";
 
-    uint256 public totalStaked = 0;
-
     uint256 public totalSettlerLocked = 0; // TVL essentially
 
     uint256 public oracleExchangeRate = 10000; // 10,000 = 1:1 ; parts per 10K
@@ -133,7 +131,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     mapping(string => uint256) cidBountyId;
     mapping(address => uint256[]) bountiesOfAddress;
 
-    event BountyCreated(string indexed cid, address indexed creator, uint256 indexed amount);
+    event BountyCreated(string indexed cid, uint256 indexed id, uint256 indexed amount);
     event BountyCanceled(uint256 indexed id);
     event BountyDistributed(uint256 indexed id, uint256 proposalId);
     event BountyClosed(uint256 indexed id);
@@ -404,7 +402,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         cidBountyId[cid] = bounty.id;
         bountiesOfAddress[msg.sender].push(bounty.id);
 
-        emit BountyCreated(cid, msg.sender, tokenAmount);
+        emit BountyCreated(cid, bounty.id, tokenAmount);
     }
 
     /// @dev user adds value to an existing bounty

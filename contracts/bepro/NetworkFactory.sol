@@ -52,7 +52,8 @@ contract NetworkFactory is ReentrancyGuard {
     /// @param _bountyTokenSymbol Bounty Token Symbol
     /// @param _bountyNftUri Bounty NFT URI
     function createNetwork(
-        address _settlerToken, 
+        address _settlerToken,
+        address _nftTokenAddress,
         string memory _bountyTokenName,
         string memory _bountyTokenSymbol,
         string memory _bountyNftUri
@@ -60,7 +61,7 @@ contract NetworkFactory is ReentrancyGuard {
         require(networksByAddress[msg.sender] == address(0), "Only one Network per user at a time");
         require(tokensLocked[msg.sender] >= OPERATOR_AMOUNT, "Operator has to lock +1M BEPRO to fork the Network");
 
-        Network_v2 network = new Network_v2(_settlerToken, _bountyTokenName, _bountyTokenSymbol, _bountyNftUri);
+        Network_v2 network = new Network_v2(_settlerToken, _nftTokenAddress, _bountyTokenName, _bountyTokenSymbol, _bountyNftUri);
         network.proposeGovernor(msg.sender);
         networksArray.push(network);
         networks[networksAmount] = address(network);

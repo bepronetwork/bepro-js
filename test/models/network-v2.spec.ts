@@ -13,7 +13,7 @@ import {nativeZeroAddress} from '../../src/utils/constants';
 import {Account} from 'web3-core';
 import {BountyToken} from '../../src/models/bounty-token';
 
-describe.skip(`NetworkV2`, () => {
+describe.only(`NetworkV2`, () => {
   let network: Network_v2;
   let web3Connection: Web3Connection;
   let networkToken: ERC20;
@@ -70,28 +70,28 @@ describe.skip(`NetworkV2`, () => {
       });
 
       it(`changeDraftTime()`, async () => {
-        await hasTxBlockNumber(network.changeDraftTime(61000));
+        await hasTxBlockNumber(network.changeDraftTime(61));
         expect(await network.draftTime()).to.eq(61000);
       });
 
       it(`changeDisputableTime()`, async () => {
-        await hasTxBlockNumber(network.changeDisputableTime(61000));
+        await hasTxBlockNumber(network.changeDisputableTime(61));
         expect(await network.disputableTime()).to.eq(61000);
       });
 
       it(`changePercentageNeededForDispute()`, async () => {
         await hasTxBlockNumber(network.changePercentageNeededForDispute(10000));
-        expect(await network.percentageNeededForDispute()).to.eq(10000);
+        expect(await network.percentageNeededForDispute()).to.eq(1);
       });
 
       it(`changeMergeCreatorFeeShare()`, async () => {
         await hasTxBlockNumber(network.changeMergeCreatorFeeShare(10000));
-        expect(await network.mergeCreatorFeeShare()).to.eq(10000);
+        expect(await network.mergeCreatorFeeShare()).to.eq(1);
       });
 
       it(`changeOracleExchangeRate()`, async () => {
         await hasTxBlockNumber(network.changeOracleExchangeRate(20000));
-        expect(await network.oracleExchangeRate()).to.eq(20000);
+        expect(await network.oracleExchangeRate()).to.eq(2);
       });
     });
 
@@ -105,19 +105,22 @@ describe.skip(`NetworkV2`, () => {
 
       describe(`Oracle actions`, () => {
         it(`Locks NT and receives Network Stake Token`, async () => {
+          await hasTxBlockNumber(networkToken.approve(network.contractAddress!, AMOUNT_1M));
           await hasTxBlockNumber(network.lock(205000));
-          expect(await network.getOraclesOf(Admin.address)).to.be.eq(205000);
+          expect(await network.getOraclesOf(Admin.address)).to.be.eq(205000 * 2); // we made a 1:2
           expect(await networkToken.getTokenAmount(Admin.address)).to.be.eq(AMOUNT_1M - 205000);
         });
 
         it(`Delegates to Alice`, async () => {
           await hasTxBlockNumber(network.delegateOracles(103000, Alice.address));
+          expect(await network.getOraclesOf(Admin.address)).to.be.eq((205000 * 2) - 103000);
           expect(await network.getOraclesOf(Alice.address)).to.be.eq(103000);
         });
 
         it(`Takes back from Alice`, async () => {
           await hasTxBlockNumber(network.unlock(103000, Alice.address));
           expect(await network.getOraclesOf(Alice.address)).to.be.eq(0);
+          expect(await network.getOraclesOf(Admin.address)).to.be.eq(205000 * 2);
         })
 
         it(`Unlocks NST and receives Network Token`, async () => {

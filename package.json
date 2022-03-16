@@ -25,7 +25,8 @@
         "lint": "npm run eslint -- --quiet",
         "lint-fix": "npm run eslint -- --quiet --fix",
         "abi-parser": "node tooling/abi-parser.js",
-        "truffle": "truffle"
+        "truffle": "truffle",
+        "contract-size": "truffle run contract-size"
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.2",
