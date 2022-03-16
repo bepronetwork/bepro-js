@@ -13,7 +13,7 @@ describe(`NetworkFactory`, () => {
   let networkToken: string;
   let accountAddress: string;
 
-  const cap = toSmartContractDecimals(1000000) as number;
+  const cap = toSmartContractDecimals(1000000);
 
   before(async () => {
     web3Connection = await defaultWeb3Connection(true, true);

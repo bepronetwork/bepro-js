@@ -57,13 +57,13 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
   async setMaxAmountToLock(amount: number) {
     await this.ownable.onlyOwner();
     return this.sendTx(this.contract.methods
-                           .setMaxAmountToLock(toSmartContractDecimals(amount, this.erc20.decimals) as number))
+                           .setMaxAmountToLock(toSmartContractDecimals(amount, this.erc20.decimals)))
   }
 
   async setMinAmountToLock(amount: number) {
     await this.ownable.onlyOwner();
     return this.sendTx(this.contract.methods
-                           .setMinAmountToLock(toSmartContractDecimals(amount, this.erc20.decimals) as number))
+                           .setMinAmountToLock(toSmartContractDecimals(amount, this.erc20.decimals)))
   }
 
   async approveERC20Transfer() {
@@ -79,7 +79,7 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
     if (!(await this.erc20.isApproved(this.contractAddress, amount)))
       throw new Error(Errors.InteractionIsNotAvailableCallApprove);
 
-    const scAmount = toSmartContractDecimals(amount, this.erc20.decimals) as number;
+    const scAmount = toSmartContractDecimals(amount, this.erc20.decimals);
     const scEndDate = +(endDate / 1000).toFixed(0);
 
     return this.sendTx(this.contract.methods.lock(scAmount, scEndDate))

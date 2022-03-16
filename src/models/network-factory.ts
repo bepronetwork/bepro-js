@@ -61,7 +61,7 @@ export class NetworkFactory extends Model<NetworkFactoryMethods> implements Depl
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.erc20.decimals) as number))
+    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(amount, this.erc20.decimals)))
   }
 
   async unlock() {

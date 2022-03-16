@@ -15,8 +15,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
     constructor(
         address _settlerToken,
         address _nftTokenAddress,
-        string memory _bountyTokenName,
-        string memory _bountyTokenSymbol,
         string memory _bountyNftUri
     ) Governed() ReentrancyGuard() {
         settlerToken = ERC20(_settlerToken);
@@ -131,7 +129,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     mapping(string => uint256) cidBountyId;
     mapping(address => uint256[]) bountiesOfAddress;
 
-    event BountyCreated(string indexed cid, uint256 indexed id, uint256 indexed amount);
+    event BountyCreated(uint256 indexed id, string indexed cid, address indexed creator);
     event BountyCanceled(uint256 indexed id);
     event BountyDistributed(uint256 indexed id, uint256 proposalId);
     event BountyClosed(uint256 indexed id);
@@ -142,75 +140,96 @@ contract Network_v2 is Governed, ReentrancyGuard {
     event BountyProposalDisputed(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
     event BountyProposalRefused(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
 
-    modifier bountyExists(uint256 id) {
+    function _bountyExists(uint256 id) internal view {
         require(bounties.length <= id, "B0");
+    }
+
+    function _isBountyOwner(uint256 id) internal view {
+        require(bounties[id].creator == msg.sender, "OW1");
+    }
+
+    function _isFundingRequest(uint256 id) internal view {
+        require(bounties[id].rewardToken != address(0), "BF1");
+    }
+
+    function _isNotFundingRequest(uint256 id) internal view {
+        require(bounties[id].rewardToken == address(0), "BF0");
+    }
+
+    function _isNotDraft(uint256 id) internal view {
+        require(isBountyInDraft(id) == false, "BDT0");
+    }
+
+    function _isInDraft(uint256 id) internal view {
+        require(isBountyInDraft(id) == true, "BDT1");
+    }
+
+    function _isNotCanceled(uint256 id) internal view {
+        require(bounties[id].canceled == false, "B1");
+    }
+
+    function _isOpen(uint256 id) internal view {
+        require(bounties[id].closed == false, "B3");
+    }
+
+    modifier bountyExists(uint256 id) {
+        _bountyExists(id);
         _;
     }
 
     modifier isBountyOwner(uint256 id) {
-        require(bounties[id].creator == msg.sender, "OW1");
+        _isBountyOwner(id);
         _;
     }
 
     modifier isFundingRequest(uint256 id) {
-        require(bounties[id].rewardToken != address(0), "BF1");
+        _isFundingRequest(id);
         _;
     }
 
     modifier isNotFundingRequest(uint256 id) {
-        require(bounties[id].rewardToken == address(0), "BF0");
+        _isNotFundingRequest(id);
         _;
     }
 
     modifier isNotInDraft(uint256 id) {
-        require(isBountyInDraft(id) == false, "BDT0");
+        _isNotDraft(id);
         _;
     }
 
     modifier isInDraft(uint256 id) {
-        require(isBountyInDraft(id) == true, "BDT1");
+        _isInDraft(id);
         _;
     }
 
     modifier isNotCanceled(uint256 id) {
-        require(bounties[id].canceled == false, "B1");
+        _isNotCanceled(id);
         _;
     }
 
     modifier isOpen(uint256 id) {
-        require(bounties[id].closed == false, "B3");
+        _isOpen(id);
         _;
     }
 
-    modifier isClosed(uint256 id) {
-        require(bounties[id].closed == true, "B4");
-        _;
-    }
-
-    modifier isCouncilMember() {
-        require(getOraclesOf(msg.sender) >= councilAmount, "OW0");
-        _;
-    }
-
-    modifier hasOracles() {
-        require(getOraclesOf(msg.sender) >= 1, "OW1");
-        _;
+    function getBounty(uint256 id) public view returns (Bounty memory) {
+        return bounties[id];
     }
 
     function getBountiesOfAddress(address _address) public view returns (uint256[] memory) {
         return bountiesOfAddress[_address];
     }
 
-    function getBountiesQuantity() public view returns (uint256) {
+    function bountiesTotal() public view returns (uint256) {
         return bounties.length;
     }
 
-    function getPullRequest(uint256 bountyId, uint256 pullRequestId) public view returns (PullRequest memory pullRequest) {
+    function getPullRequest(uint256 bountyId, uint256 pullRequestId) public view returns (PullRequest memory) {
         require(bounties[bountyId].pullRequests.length <= pullRequestId, "PR0");
         return bounties[bountyId].pullRequests[pullRequestId];
     }
 
-    function getProposal(uint256 bountyId, uint256 proposalId) public view returns (Proposal memory proposal) {
+    function getProposal(uint256 bountyId, uint256 proposalId) public view returns (Proposal memory) {
         require(bounties[bountyId].proposals.length <= proposalId, "P0");
         return bounties[bountyId].proposals[proposalId];
     }
@@ -319,22 +338,25 @@ contract Network_v2 is Governed, ReentrancyGuard {
     function unlock(uint256 tokenAmount, address from) public payable {
         Oracle storage oracle = oracles[msg.sender];
 
-        uint256 exchangedAmount = calculateSettlerExchangeRate(tokenAmount);
-
-        require(oracle.tokensLocked >= exchangedAmount, "UL1");
-        require(oracle.oraclesDelegated[from] >= exchangedAmount, "UL2");
-
-        oracle.tokensLocked = oracle.tokensLocked.sub(exchangedAmount);
-        oracle.oraclesDelegated[from] = oracle.oraclesDelegated[from].sub(exchangedAmount);
 
         if (msg.sender != from) {
-            oracles[from].oraclesDelegatedByOthers = oracles[from].oraclesDelegatedByOthers.sub(exchangedAmount);
+            require(oracle.tokensLocked >= tokenAmount, "UL1");
+            oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].add(tokenAmount);
+            oracle.oraclesDelegated[from] = oracle.oraclesDelegated[from].sub(tokenAmount);
+            oracles[from].oraclesDelegatedByOthers = oracles[from].oraclesDelegatedByOthers.sub(tokenAmount);
+        } else {
+            uint256 exchangedAmount = calculateSettlerExchangeRate(tokenAmount);
+
+            require(oracle.tokensLocked >= tokenAmount, "UL2");
+
+            oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].sub(tokenAmount);
+            oracle.tokensLocked = oracle.tokensLocked.sub(tokenAmount);
+
+            totalSettlerLocked = totalSettlerLocked.sub(exchangedAmount);
+            oraclesDistributed = oraclesDistributed.sub(tokenAmount);
+
+            require(settlerToken.transfer(msg.sender, exchangedAmount), "UL3");
         }
-
-        oraclesDistributed = oraclesDistributed.sub(tokenAmount);
-        totalSettlerLocked = totalSettlerLocked.sub(exchangedAmount);
-
-        require(settlerToken.transfer(msg.sender, exchangedAmount), "UL3");
     }
 
     /// @dev Gives oracles from msg.sender to recipient
@@ -343,12 +365,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(recipient != msg.sender, "D2");
 
         Oracle storage oracle = oracles[msg.sender];
-        uint256 senderAmount = oracle.oraclesDelegated[msg.sender];
 
         require(oracle.tokensLocked >= tokenAmount, "D3");
-        require(senderAmount >= tokenAmount, "D4");
+        require(oracle.oraclesDelegated[msg.sender] >= tokenAmount, "D4");
 
-        oracle.oraclesDelegated[msg.sender] = senderAmount.sub(tokenAmount);
+        oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].sub(tokenAmount);
         oracle.oraclesDelegated[recipient] = oracle.oraclesDelegated[recipient].add(tokenAmount);
         oracles[recipient].oraclesDelegatedByOthers = oracles[recipient].oraclesDelegatedByOthers.add(tokenAmount);
     }
@@ -359,7 +380,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
         address transactional,
         address rewardToken,
         uint256 rewardAmount,
-        // uint256 settlerTokenRatio,
         uint256 fundingAmount,
         string memory cid,
         string memory title,
@@ -402,7 +422,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         cidBountyId[cid] = bounty.id;
         bountiesOfAddress[msg.sender].push(bounty.id);
 
-        emit BountyCreated(cid, bounty.id, tokenAmount);
+        emit BountyCreated(bounty.id, bounty.cid, bounty.creator);
     }
 
     /// @dev user adds value to an existing bounty
@@ -624,7 +644,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 prId,
         address[] calldata recipients,
         uint256[] calldata percentages
-    ) bountyExists(id) isNotInDraft(id) isOpen(id) isNotCanceled(id) isCouncilMember() public payable {
+    ) bountyExists(id) isNotInDraft(id) isOpen(id) isNotCanceled(id) public payable {
+        require(getOraclesOf(msg.sender) >= councilAmount, "OW0");
         require(bounties[id].pullRequests.length <= prId, "CBP0");
 
         Bounty storage bounty = bounties[id];
@@ -657,12 +678,15 @@ contract Network_v2 is Governed, ReentrancyGuard {
     function disputeBountyProposal(
         uint256 bountyId,
         uint256 proposalId
-    ) bountyExists(bountyId) isNotInDraft(bountyId) isOpen(bountyId) isNotCanceled(bountyId) hasOracles() public payable {
+    ) bountyExists(bountyId) isNotInDraft(bountyId) isOpen(bountyId) isNotCanceled(bountyId) public payable {
         require(bounties[bountyId].proposals.length <= proposalId, "DBP0");
         require(oracles[msg.sender].disputes[bountyId][proposalId] == 0, "DBP1");
 
-        Proposal storage proposal = bounties[bountyId].proposals[proposalId];
         uint256 weight = getOraclesOf(msg.sender);
+        require(weight > 0, "DBP2");
+
+        Proposal storage proposal = bounties[bountyId].proposals[proposalId];
+
 
         proposal.disputeWeight = proposal.disputeWeight.add(weight);
         oracles[msg.sender].disputes[bountyId][proposalId] = weight;

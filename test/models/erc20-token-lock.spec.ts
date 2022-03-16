@@ -15,7 +15,7 @@ describe(`ERC20TokenLock`, () => {
   let accountAddress!: string;
   let tokenLock: Erc20TokenLock;
 
-  const cap = toSmartContractDecimals(1000000) as number;
+  const cap = toSmartContractDecimals(1000000);
   let web3Connection: Web3Connection;
 
   before(async () => {

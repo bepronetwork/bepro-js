@@ -98,12 +98,12 @@ export class Votable extends Model<VotableMethods> implements Deployable {
   async stakeVotingTokens(_numTokens: number) {
     return this.sendTx(this.contract
                            .methods
-                           .stakeVotingTokens(toSmartContractDecimals(_numTokens, this.erc20.decimals) as number));
+                           .stakeVotingTokens(toSmartContractDecimals(_numTokens, this.erc20.decimals)));
   }
 
   async withdrawTokens(_numTokens: number) {
     return this.sendTx(this.contract
-                           .methods.withdrawTokens(toSmartContractDecimals(_numTokens, this.erc20.decimals) as number));
+                           .methods.withdrawTokens(toSmartContractDecimals(_numTokens, this.erc20.decimals)));
   }
 
   async getLockedAmount(_voter: string) {

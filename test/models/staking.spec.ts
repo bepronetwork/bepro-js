@@ -22,7 +22,7 @@ describe(`StakingContract`, () => {
 
   let totalNeededAPR: number;
 
-  const stakeTokenCap = toSmartContractDecimals(1000) as number;
+  const stakeTokenCap = toSmartContractDecimals(1000);
   let web3Connection: Web3Connection;
 
   const APR = 5;

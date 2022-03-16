@@ -71,7 +71,7 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   async takeEarnings(tokenAddress: string, amount: number) {
     const decimals = await this.callTx(this.contract.methods.getTokenDecimals(tokenAddress))
     return this.sendTx(this.contract.methods.takeEarnings(tokenAddress,
-                                                          toSmartContractDecimals(amount, decimals) as number));
+                                                          toSmartContractDecimals(amount, decimals)));
   }
 
   async getStream(streamId: number) {
@@ -107,7 +107,7 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   }
 
   async createStream(recipient: string, deposit: number, tokenAddress: string, startTime: number, stopTime: number) {
-    deposit = toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number;
+    deposit = toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress));
     return this.sendTx(this.contract.methods.createStream(recipient, deposit, tokenAddress, startTime, stopTime));
   }
 
@@ -118,7 +118,7 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
                                 stopTime: number,
                                 senderSharePercentage: number,
                                 recipientSharePercentage: number) {
-    deposit = toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress)) as number;
+    deposit = toSmartContractDecimals(deposit, await this.getTokenDecimals(tokenAddress));
     return this.sendTx(this.contract
                            .methods
                            .createCompoundingStream(recipient,
@@ -131,7 +131,7 @@ export class Sablier extends Model<SablierMethods> implements Deployable {
   }
 
   async withdrawFromStream(streamId: number, amount: number) {
-    amount = toSmartContractDecimals(amount, await this.getTokenDecimalsFromStream(streamId)) as number;
+    amount = toSmartContractDecimals(amount, await this.getTokenDecimalsFromStream(streamId));
     return this.sendTx(this.contract.methods.withdrawFromStream(streamId, amount));
   }
 

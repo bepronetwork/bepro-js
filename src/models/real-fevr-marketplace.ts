@@ -80,7 +80,7 @@ export class RealFevrMarketplace extends Model<RealFevrMarketplaceMethods> imple
 
   async putERC721OnSale(tokenId: number, price: number) {
     const valueWithDecimals = toSmartContractDecimals(price, this.decimals);
-    return this.sendTx(this.contract.methods.putERC721OnSale(tokenId, valueWithDecimals as number));
+    return this.sendTx(this.contract.methods.putERC721OnSale(tokenId, valueWithDecimals));
   }
 
   async removeERC721FromSale(tokenId: number) {

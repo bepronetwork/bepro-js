@@ -126,7 +126,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
   }
 
   async changeDisputableTime(amount: number) {
-    return this.sendTx(this.contract.methods.changeDisputableTime(amount as number));
+    return this.sendTx(this.contract.methods.changeDisputableTime(amount));
   }
 
   async isIssueInDraft(issueId: number) {
@@ -181,7 +181,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    amount = toSmartContractDecimals(amount, this.settlerToken.decimals) as number;
+    amount = toSmartContractDecimals(amount, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.lock(amount))
   }
 
@@ -189,7 +189,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    amount = toSmartContractDecimals(amount, this.settlerToken.decimals) as number;
+    amount = toSmartContractDecimals(amount, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.unlock(amount, from))
   }
 
@@ -197,7 +197,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    amount = toSmartContractDecimals(amount, this.transactionToken.decimals) as number;
+    amount = toSmartContractDecimals(amount, this.transactionToken.decimals);
     return this.sendTx(this.contract.methods.delegateOracles(amount, delegateTo))
   }
 
@@ -205,12 +205,12 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     if (amount <= 0)
       throw new Error(Errors.AmountNeedsToBeHigherThanZero);
 
-    amount = toSmartContractDecimals(amount, this.settlerToken.decimals) as number;
+    amount = toSmartContractDecimals(amount, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.openIssue(cid, amount))
   }
 
   async updateIssue(id: number, amount: number) {
-    amount = toSmartContractDecimals(amount, this.settlerToken.decimals) as number;
+    amount = toSmartContractDecimals(amount, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.updateIssue(id, amount))
   }
 
@@ -232,7 +232,7 @@ export class Network extends Model<NetworkMethods> implements Deployable {
 
   async proposeIssueMerge(id: number, prAddresses: string[], prAmounts: number[]) {
     const mapToSmartContract = (amount: number) =>
-      toSmartContractDecimals(amount, this.transactionToken.decimals) as number
+      toSmartContractDecimals(amount, this.transactionToken.decimals)
 
     const amounts = prAmounts.map(mapToSmartContract);
 

@@ -44,17 +44,17 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async transferTokenAmount(toAddress: string, amount: number) {
-    const tokenAmount = toSmartContractDecimals(amount, this.decimals) as number;
+    const tokenAmount = toSmartContractDecimals(amount, this.decimals);
     return this.sendTx(this.contract.methods.transfer(toAddress, tokenAmount));
   }
 
   async transferFrom(owner: string, receiver: string, amount: number) {
-    amount = toSmartContractDecimals(amount, this.decimals) as number;
+    amount = toSmartContractDecimals(amount, this.decimals);
     return this.sendTx(this.contract.methods.transferFrom(owner, receiver, amount));
   }
 
   async increaseAllowance(address: string, amount: number) {
-    amount = toSmartContractDecimals(amount, this.decimals) as number;
+    amount = toSmartContractDecimals(amount, this.decimals);
     return this.sendTx(this.contract.methods.increaseAllowance(address, amount));
   }
 
@@ -69,7 +69,7 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
   async approve(address: string, amount: number): Promise<TransactionReceipt> {
     return this.sendTx(this.contract
                            .methods
-                           .approve(address, toSmartContractDecimals(amount, this.decimals) as number));
+                           .approve(address, toSmartContractDecimals(amount, this.decimals) ));
   }
 
   async deployJsonAbi(name: string,

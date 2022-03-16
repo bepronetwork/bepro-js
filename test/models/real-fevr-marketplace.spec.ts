@@ -12,7 +12,7 @@ describe('Marketplace RealFevr', async () => {
   let contractAddress!: string;
   let accountAddress!: string;
 
-  const purchaseTokenCap = toSmartContractDecimals(1000000) as number;
+  const purchaseTokenCap = toSmartContractDecimals(1000000);
   let web3Connection: Web3Connection;
 
   before(async () => {

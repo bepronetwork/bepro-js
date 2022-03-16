@@ -10,7 +10,7 @@ describe(`ERC271Collectibles`, () => {
   let accountAddress!: string;
 
 
-  const purchaseTokenCap = toSmartContractDecimals(1000000) as number;
+  const purchaseTokenCap = toSmartContractDecimals(1000000);
   const collectableCap = 10
   let web3Connection: Web3Connection;
 

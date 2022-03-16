@@ -10,7 +10,7 @@ import {PastEventOptions} from 'web3-eth-contract';
 import {AbiItem} from 'web3-utils';
 
 export class BountyToken extends Model<BountyTokenMethods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, readonly contractAddress?: string) {
     super(web3Connection, BountyTokenJson.abi as AbiItem[], contractAddress);
   }
 

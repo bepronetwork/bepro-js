@@ -63,7 +63,7 @@ export class CERC20 extends Model<CERC20Methods> implements Deployable {
    */
   async approve(address: string, amount: number): Promise<TransactionReceipt> {
     return this.sendTx(this.contract.methods.approve(address,
-                                                     toSmartContractDecimals(amount, this.erc20.decimals) as number));
+                                                     toSmartContractDecimals(amount, this.erc20.decimals)));
   }
 
   /**

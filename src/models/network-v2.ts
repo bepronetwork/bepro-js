@@ -15,7 +15,7 @@ import {fromSmartContractDecimals, toSmartContractDecimals} from '@utils/numbers
 import {nativeZeroAddress, TenK, Thousand} from '@utils/constants';
 
 export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
-  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, contractAddress?: string) {
+  constructor(web3Connection: Web3Connection|Web3ConnectionOptions, readonly contractAddress?: string) {
     super(web3Connection, (Network_v2Json as any).abi as AbiItem[], contractAddress);
   }
 
@@ -57,10 +57,10 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
 
   }
 
-  async deployJsonAbi(_settlerToken: string, _nftTokenAddress: string, _bountyTokenName: string, _bountyTokenSymbol: string, _bountyNftUri: string) {
+  async deployJsonAbi(_settlerToken: string, _nftTokenAddress: string, _bountyNftUri: string) {
     const deployOptions = {
         data: (Network_v2Json as any).bytecode,
-        arguments: [_settlerToken, _nftTokenAddress, _bountyTokenName, _bountyTokenSymbol, _bountyNftUri]
+        arguments: [_settlerToken, _nftTokenAddress, _bountyNftUri]
     };
 
     return this.deploy(deployOptions, this.web3Connection.Account);
@@ -140,10 +140,6 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
     return this.callTx(this.contract.methods.getBounty(id));
   }
 
-  async getBounties(ids: number) {
-    return this.callTx(this.contract.methods.getBounties(ids));
-  }
-
   async getPullRequest(bountyId: number, pullRequestId: number) {
     return this.callTx(this.contract.methods.getPullRequest(bountyId, pullRequestId));
   }
@@ -153,7 +149,7 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   }
 
   async changeCouncilAmount(newAmount: number) {
-    newAmount = toSmartContractDecimals(newAmount, this.settlerToken.decimals) as number;
+    newAmount = toSmartContractDecimals(newAmount, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.changeCouncilAmount(newAmount));
   }
 
@@ -233,7 +229,8 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * get total amount of oracles of an address
    */
   async getOraclesOf(_address: string) {
-    return +fromSmartContractDecimals(await this.callTx(this.contract.methods.getOraclesOf(_address)), this.settlerToken.decimals);
+    const oracles = await this.callTx(this.contract.methods.getOraclesOf(_address));
+    return fromSmartContractDecimals(oracles, this.settlerToken.decimals);
   }
 
   async getOracleExchangeRate() {
@@ -256,23 +253,23 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * Lock given amount into the oracle mapping
    */
   async lock(tokenAmount: number) {
-    tokenAmount = toSmartContractDecimals(tokenAmount, this.settlerToken.decimals) as number;
-    return this.sendTx(this.contract.methods.lock(tokenAmount));
+    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(tokenAmount, this.settlerToken.decimals)));
   }
 
   /**
    * Unlock from the oracle mapping
    */
   async unlock(tokenAmount: number, from: string) {
-    return this.sendTx(this.contract.methods.unlock(tokenAmount, from));
+    return this.sendTx(this.contract.methods
+                           .unlock(toSmartContractDecimals(tokenAmount, this.settlerToken.decimals), from));
   }
 
   /**
    * Gives oracles from msg.sender to recipient
    */
   async delegateOracles(tokenAmount: number, recipient: string) {
-    tokenAmount = toSmartContractDecimals(tokenAmount, this.settlerToken.decimals) as number;
-    return this.sendTx(this.contract.methods.delegateOracles(tokenAmount, recipient));
+    return this.sendTx(this.contract.methods
+                           .delegateOracles(toSmartContractDecimals(tokenAmount, this.settlerToken.decimals), recipient));
   }
 
   /**
@@ -304,13 +301,13 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
 
     const _transactional = new ERC20(this.web3Connection, transactional);
     await _transactional.loadContract();
-    const _tokenAmount = toSmartContractDecimals(tokenAmount, _transactional.decimals) as number;
+    const _tokenAmount = toSmartContractDecimals(tokenAmount, _transactional.decimals);
 
     if (rewardAmount && rewardToken !== nativeZeroAddress) {
       const rewardERC20 = new ERC20(this.web3Connection, rewardToken);
       await rewardERC20.loadContract();
-      _rewardAmount = toSmartContractDecimals(rewardAmount, rewardERC20.decimals) as number;
-      _fundingAmount = toSmartContractDecimals(fundingAmount, _transactional.decimals) as number;
+      _rewardAmount = toSmartContractDecimals(rewardAmount, rewardERC20.decimals);
+      _fundingAmount = toSmartContractDecimals(fundingAmount, _transactional.decimals);
     }
 
     return this.sendTx(
@@ -332,7 +329,7 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * @param decimals decimals of the transactional for this bounty
    */
   async supportBounty(id: number, tokenAmount: number, decimals = 18) {
-    tokenAmount = toSmartContractDecimals(tokenAmount, decimals) as number;
+    tokenAmount = toSmartContractDecimals(tokenAmount, decimals);
     return this.sendTx(this.contract.methods.supportBounty(id, tokenAmount));
   }
 
@@ -366,7 +363,7 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * @param {number} decimals decimals of the transactional for this bounty
    */
   async updateBountyAmount(id: number, newTokenAmount: number, decimals = 18) {
-    newTokenAmount = toSmartContractDecimals(newTokenAmount, decimals) as number;
+    newTokenAmount = toSmartContractDecimals(newTokenAmount, decimals);
     return this.sendTx(this.contract.methods.updateBountyAmount(id, newTokenAmount));
   }
 
@@ -377,7 +374,7 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * @param {number} decimals decimals of the transactional for this bounty
    */
   async fundBounty(id: number, fundingAmount: number, decimals = 18) {
-    fundingAmount = toSmartContractDecimals(fundingAmount, decimals) as number;
+    fundingAmount = toSmartContractDecimals(fundingAmount, decimals);
     return this.sendTx(this.contract.methods.fundBounty(id, fundingAmount));
   }
 

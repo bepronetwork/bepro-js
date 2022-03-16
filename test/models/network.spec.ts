@@ -15,7 +15,7 @@ describe(`Network`, () => {
   let transactionToken!: string;
 
   let accountAddress = ``
-  const cap = toSmartContractDecimals(10000000) as number;
+  const cap = toSmartContractDecimals(10000000);
   const newCouncilAmount = '100002';
 
   before(async () => {

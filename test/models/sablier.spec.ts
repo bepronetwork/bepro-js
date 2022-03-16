@@ -43,7 +43,7 @@ describe(`Sablier`, () => {
     ethUtils = new ETHUtils(web3Connection, ethUtilsTx.contractAddress);
     await ethUtils.loadContract();
 
-    const erc20Tx = await erc20Deployer(`My Sablier`, `$sablier`, toSmartContractDecimals(AMOUNT_1M) as number, web3Connection);
+    const erc20Tx = await erc20Deployer(`My Sablier`, `$sablier`, toSmartContractDecimals(AMOUNT_1M), web3Connection);
     erc20 = new ERC20(web3Connection, erc20Tx.contractAddress);
     await erc20.loadContract();
 

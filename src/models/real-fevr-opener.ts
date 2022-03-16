@@ -229,7 +229,7 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
                    marketplaceDistributionAddresses: string[],
                    marketplaceDistributionAmounts: number[]) {
     return this.sendTx(this.contract.methods.createPack(nftAmount,
-                                                        toSmartContractDecimals(price, 3) as number,
+                                                        toSmartContractDecimals(price, 3),
                                                         serie,
                                                         packType,
                                                         drop,
@@ -255,7 +255,7 @@ export class RealFevrOpener extends Model<RealFevrOpenerMethods> implements Depl
                                                           serie,
                                                           packType,
                                                           drop,
-                                                          toSmartContractDecimals(price, 3) as number));
+                                                          toSmartContractDecimals(price, 3)));
   }
 
   async deletePackById(packId: number) {

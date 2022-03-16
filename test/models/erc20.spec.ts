@@ -11,7 +11,7 @@ describe(`ERC20`, () => {
   let erc20ContractAddress: string;
 
   const capAmount = '1000';
-  const cap = toSmartContractDecimals(capAmount, 18) as number;
+  const cap = toSmartContractDecimals(capAmount, 18);
   const name = `BEPRO`;
   const symbol = `$BEPRO`;
 
@@ -70,7 +70,7 @@ describe(`ERC20`, () => {
       const _erc20 = new ERC20(web3con, erc20.contractAddress);
 
       const empty = new Web3Contract(web3Connection.Web3, [], undefined, {gasAmount: 90000, auto: true});
-      await empty.sendSignedTx(web3Connection.Account, undefined as any, toSmartContractDecimals(1) as string, await empty.txOptions(undefined as any))
+      await empty.sendSignedTx(web3Connection.Account, undefined as any, toSmartContractDecimals(1) as any as string, await empty.txOptions(undefined as any))
 
       await _erc20.start();
       await erc20.approve(newAddress, 1000);

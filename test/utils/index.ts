@@ -1,7 +1,4 @@
-import {Web3ConnectionOptions} from '../../src';
-import {Web3Connection} from '../../src';
-import {ERC20} from '../../src';
-import {toSmartContractDecimals} from '../../src/utils/numbers';
+import {Web3ConnectionOptions, Web3Connection, ERC20, toSmartContractDecimals} from '../../src';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {expect} from 'chai';
@@ -29,7 +26,7 @@ export async function defaultWeb3Connection(start = false, revert = false) {
   return web3Connection;
 }
 
-export async function erc20Deployer(name: string, symbol: string, cap = toSmartContractDecimals(1000000, 18) as number, web3Connection: Web3Connection|Web3ConnectionOptions) {
+export async function erc20Deployer(name: string, symbol: string, cap = toSmartContractDecimals(1000000, 18), web3Connection: Web3Connection|Web3ConnectionOptions) {
   if (!(web3Connection instanceof Web3Connection))
     web3Connection = new Web3Connection(web3Connection)
 

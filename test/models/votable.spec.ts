@@ -11,7 +11,7 @@ describe(`Votable`, () => {
   let contract: Votable;
 
   const cap = 1000;
-  const smartContractCap = toSmartContractDecimals(cap) as number;
+  const smartContractCap = toSmartContractDecimals(cap);
   let web3Connection: Web3Connection;
 
   before(async () => {

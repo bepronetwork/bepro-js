@@ -105,7 +105,7 @@ export class ERC20Distribution extends Model<ERC20DistributionMethods> implement
   async setInitialDistribution(_address: string, _tokenAmount: number, _unlockDays: number) {
     return this.sendTx(this.contract.methods
                            .setInitialDistribution(_address,
-                                                   toSmartContractDecimals(_tokenAmount, this.erc20.decimals) as number,
+                                                   toSmartContractDecimals(_tokenAmount, this.erc20.decimals),
                                                    toSmartContractDate(_unlockDays)));
   }
 

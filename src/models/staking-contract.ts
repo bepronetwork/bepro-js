@@ -99,7 +99,7 @@ export class StakingContract extends Model<StakingContractMethods> implements De
     return this.sendTx(this.contract
                            .methods
                            .subscribeProduct(_product_id,
-                                             toSmartContractDecimals(_amount, this.erc20.decimals) as number));
+                                             toSmartContractDecimals(_amount, this.erc20.decimals)));
   }
 
   async createProduct(_startDate: number,
@@ -109,9 +109,9 @@ export class StakingContract extends Model<StakingContractMethods> implements De
                       _individualMaximumAmount: number,
                       _APR: number,
                       _lockedUntilFinalization: boolean) {
-    _totalMaxAmount = toSmartContractDecimals(_totalMaxAmount, this.erc20.decimals) as number;
-    _individualMinimumAmount = toSmartContractDecimals(_individualMinimumAmount, this.erc20.decimals) as number;
-    _individualMaximumAmount = toSmartContractDecimals(_individualMaximumAmount, this.erc20.decimals) as number;
+    _totalMaxAmount = toSmartContractDecimals(_totalMaxAmount, this.erc20.decimals);
+    _individualMinimumAmount = toSmartContractDecimals(_individualMinimumAmount, this.erc20.decimals);
+    _individualMaximumAmount = toSmartContractDecimals(_individualMaximumAmount, this.erc20.decimals);
     return this.sendTx(this.contract
                            .methods
                            .createProduct(toSmartContractDate(_startDate),
@@ -126,7 +126,7 @@ export class StakingContract extends Model<StakingContractMethods> implements De
   async getAPRAmount(_APR: number, _startDate: number, _endDate: number, _amount: number) {
     _startDate = toSmartContractDate(_startDate);
     _endDate = toSmartContractDate(_endDate);
-    _amount = toSmartContractDecimals(_amount, this.erc20.decimals) as number;
+    _amount = toSmartContractDecimals(_amount, this.erc20.decimals);
     return +fromDecimals(await this.callTx(this.contract
                                                .methods
                                                .getAPRAmount(_APR, _startDate, _endDate, _amount)), this.erc20.decimals)
