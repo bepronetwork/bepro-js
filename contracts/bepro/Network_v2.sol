@@ -129,10 +129,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
     mapping(string => uint256) cidBountyId;
     mapping(address => uint256[]) bountiesOfAddress;
 
-    event BountyCreated(uint256 indexed id, string indexed cid, address indexed creator);
+    event BountyCreated(uint256 id, string cid, address indexed creator);
     event BountyCanceled(uint256 indexed id);
     event BountyDistributed(uint256 indexed id, uint256 proposalId);
-    event BountyClosed(uint256 indexed id);
     event BountyPullRequestCreated(uint256 indexed bountyId, uint256 pullRequestId);
     event BountyPullRequestReadyForReview(uint256 indexed bountyId, uint256 pullRequestId);
     event BountyPullRequestCanceled(uint256 indexed bountyId, uint256 pullRequestId);
@@ -141,7 +140,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     event BountyProposalRefused(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
 
     function _bountyExists(uint256 id) internal view {
-        require(bounties.length <= id, "B0");
+        require((bounties.length - 1) <= id, "B0");
     }
 
     function _isBountyOwner(uint256 id) internal view {
@@ -451,7 +450,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         require(bounty.benefactors[entryId].amount > 0, "R1");
         require(bounty.benefactors[entryId].benefactor == msg.sender, "R2");
-        require(erc20.transferFrom(address(this), msg.sender, bounty.benefactors[entryId].amount), "R3");
+        require(erc20.transfer(msg.sender, bounty.benefactors[entryId].amount), "R3");
 
         bounty.tokenAmount = bounty.tokenAmount.sub(bounty.benefactors[entryId].amount);
         bounty.benefactors[entryId].amount = 0;
@@ -536,7 +535,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         Bounty storage bounty = bounties[id];
         require(bounty.funded == false, "F1");
-        require(bounty.fundingAmount <= fundingAmount, "F2");
+        require(bounty.tokenAmount < bounty.fundingAmount, "F2");
         require(bounty.tokenAmount.add(fundingAmount) <= bounty.tokenAmount, "F3");
 
         bounty.funding.push(Benefactor(msg.sender, fundingAmount, block.timestamp));

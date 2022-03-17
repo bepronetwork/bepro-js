@@ -48,6 +48,7 @@ describe.skip(`NetworkV2`, () => {
     await networkToken.loadContract();
     await bountyTransactional.loadContract();
     await bountyToken.loadContract();
+    await rewardToken.loadContract();
 
     await bountyTransactional.transferTokenAmount(Alice.address, 10000);
     await bountyTransactional.transferTokenAmount(Bob.address, 10000);
@@ -130,17 +131,14 @@ describe.skip(`NetworkV2`, () => {
         });
       });
 
-      describe(`Bounties`, () => {
+      describe.skip(`Bounties`, () => {
         it(`Opens`, async () => {
           const receipt = await network.openBounty(1000, bountyTransactional.contractAddress!,
                                                    nativeZeroAddress, 0, 0,
                                                    'c1', 'Title', '//', 'master');
 
-          const events = await network.getBountyCreatedEvents({fromBlock: receipt.blockNumber,});
+          const events = await network.getBountyCreatedEvents({fromBlock: receipt.blockNumber, filter: {creator: Admin.address}});
 
-          const bounty = await network.getBounty(0);
-
-          console.log(bounty, events);
           expect(events.length).to.be.eq(1);
           expect(events[0].returnValues.cid).to.be.eq('c1');
           expect((await network.getBountiesOfAddress(Admin.address)).length).to.be.eq(1);
@@ -150,64 +148,76 @@ describe.skip(`NetworkV2`, () => {
 
         it(`Updates bounty amount`, async () => {
           await hasTxBlockNumber(network.updateBountyAmount(bountyId, 1001));
-          expect((await network.getBounty(bountyId)).bounty.tokenAmount).to.be.eq(1001);
+          expect((await network.getBounty(bountyId)).tokenAmount)
+            .to.be.eq(toSmartContractDecimals(1001, bountyTransactional.decimals));
         });
 
         it(`Supports bounty`, async () => {
           web3Connection.switchToAccount(Alice.privateKey);
+          await hasTxBlockNumber(bountyTransactional.approve(network.contractAddress!, AMOUNT_1M));
           await hasTxBlockNumber(network.supportBounty(bountyId, 1));
-          expect((await network.getBounty(bountyId)).bounty.tokenAmount).to.be.eq(1002);
-          expect(await networkToken.getTokenAmount(Alice.address)).to.be.eq(10000 - 1);
+
+          expect((await network.getBounty(bountyId)).tokenAmount)
+            .to.be.eq(toSmartContractDecimals(1002, bountyTransactional.decimals));
+
+          expect(await bountyTransactional.getTokenAmount(Alice.address)).to.be.eq(10000 - 1);
         });
 
         it(`Retracts support from bounty`, async () => {
           await hasTxBlockNumber(network.retractSupportFromBounty(bountyId, 0));
-          expect((await network.getBounty(bountyId)).bounty.tokenAmount).to.be.eq(1001);
+
+          expect((await network.getBounty(bountyId)).tokenAmount)
+            .to.be.eq(toSmartContractDecimals(1001, bountyTransactional.decimals));
         })
 
         it(`Cancels bounty`, async () => {
           web3Connection.switchToAccount(Admin.privateKey);
           const receipt = await network.cancelBounty(bountyId);
-          const events = await network.getBountyCanceledEvents({fromBlock: receipt.blockNumber,});
+          const events = await network.getBountyCanceledEvents({fromBlock: receipt.blockNumber, filter: {id: bountyId}});
           expect(events.length).to.be.eq(1);
           expect(await bountyTransactional.getTokenAmount(Alice.address)).to.be.eq(10000)
         })
+      });
 
-        describe(`Funding`, async () => {
-          it(`Opens Request Funding`, async () => {
-            const receipt = await network.openBounty(0, bountyTransactional.contractAddress!,
-                                                     rewardToken.contractAddress!, 1000, 1000,
-                                                     'c2', 'Title 2', '//', 'master');
-            const events = await network.getBountyCreatedEvents({fromBlock: receipt.blockNumber,});
-            bountyId = events[0].returnValues.id;
+      describe(`Funding`, async () => {
+        it(`Opens Request Funding`, async () => {
+          await hasTxBlockNumber(rewardToken.approve(network.contractAddress!, AMOUNT_1M), 'Should have approved rewardToken');
 
-            expect(await network.isBountyFundingRequest(bountyId)).to.be.true;
-          });
+          const receipt = await network.openBounty(0, bountyTransactional.contractAddress!,
+                                                   rewardToken.contractAddress!, 1000, 1000,
+                                                   'c2', 'Title 2', '//', 'master');
 
-          it(`Fund 50-50`, async () => {
-            expect(await network.isBountyFunded(bountyId)).to.be.false;
+          const events = await network.getBountyCreatedEvents({fromBlock: receipt.blockNumber, filter: {creator: Admin.address}});
+          bountyId = events[0].returnValues.id;
 
-            web3Connection.switchToAccount(Alice.privateKey);
-            await hasTxBlockNumber(network.fundBounty(bountyId, 500));
-
-            web3Connection.switchToAccount(Bob.privateKey);
-            await hasTxBlockNumber(network.fundBounty(bountyId, 500));
-
-            expect(await network.isBountyFunded(bountyId)).to.be.true;
-          });
-
-          it(`Retracts Bobs funding`, async () => {
-            await hasTxBlockNumber(network.retractFunds(bountyId, 1));
-            expect(await network.isBountyFunded(bountyId)).to.be.false;
-          });
-
-          it(`Cancels funding`, async () => {
-            web3Connection.switchToAccount(Admin.privateKey);
-            await hasTxBlockNumber(network.cancelBounty(bountyId));
-            expect(await bountyTransactional.getTokenAmount(Alice.address)).to.be.eq(10000);
-            expect(await bountyTransactional.getTokenAmount(Bob.address)).to.be.eq(10000);
-          })
+          expect(await network.getBounty(bountyId)).property('rewardToken').to.be.eq(rewardToken.contractAddress!);
         });
+
+        it(`Fund 50-50`, async () => {
+          expect(await network.isBountyFunded(bountyId)).to.be.false;
+
+          web3Connection.switchToAccount(Alice.privateKey);
+          await bountyTransactional.approve(network.contractAddress!, AMOUNT_1M);
+          await hasTxBlockNumber(network.fundBounty(bountyId, 500));
+
+          web3Connection.switchToAccount(Bob.privateKey);
+          await bountyTransactional.approve(network.contractAddress!, AMOUNT_1M);
+          await hasTxBlockNumber(network.fundBounty(bountyId, 500));
+
+          expect(await network.isBountyFunded(bountyId)).to.be.true;
+        });
+
+        it(`Retracts Bobs funding`, async () => {
+          await hasTxBlockNumber(network.retractFunds(bountyId, 1));
+          expect(await network.isBountyFunded(bountyId)).to.be.false;
+        });
+
+        it(`Cancels funding`, async () => {
+          web3Connection.switchToAccount(Admin.privateKey);
+          await hasTxBlockNumber(network.cancelBounty(bountyId));
+          expect(await bountyTransactional.getTokenAmount(Alice.address)).to.be.eq(10000);
+          expect(await bountyTransactional.getTokenAmount(Bob.address)).to.be.eq(10000);
+        })
       });
 
       describe(`Happy path`, () => {
@@ -227,7 +237,8 @@ describe.skip(`NetworkV2`, () => {
         it(`Creates a PR and sets PR as ready`, async () => {
           const receipt = await network.createPullRequest(bountyId, '//', 'master',
                                                           'c3','//', 'feat-1', 1);
-          const events = await network.getBountyPullRequestCreatedEvents({fromBlock: receipt.blockNumber,})
+
+          const events = await network.getBountyPullRequestCreatedEvents({fromBlock: receipt.blockNumber, filter: {id: bountyId}})
           expect(events.length).to.be.eq(1);
 
           await hasTxBlockNumber(network.markPullRequestReadyForReview(bountyId, 0));
@@ -236,7 +247,7 @@ describe.skip(`NetworkV2`, () => {
 
         it(`Creates a Proposal`, async () => {
           await hasTxBlockNumber(network.createBountyProposal(bountyId, 0, [Alice.address, Bob.address], [51, 49]));
-          expect((await network.getBounty(bountyId)).bounty.proposals.length).to.be.eq(1);
+          expect((await network.getBounty(bountyId)).proposals.length).to.be.eq(1);
         });
 
         it(`Disputes a Proposal`, async () => {
@@ -252,7 +263,7 @@ describe.skip(`NetworkV2`, () => {
         it(`Creates Proposal and closes Bounty`, async () => {
           await hasTxBlockNumber(network.createBountyProposal(bountyId, 0, [Alice.address, Bob.address], [51, 49]));
           await increaseTime(61, web3Connection.Web3);
-          const {bounty} = await network.getBounty(bountyId);
+          const bounty = await network.getBounty(bountyId);
           expect(bounty.proposals.length).to.be.eq(2);
 
           await hasTxBlockNumber(network.closeBounty(bountyId, 1));
