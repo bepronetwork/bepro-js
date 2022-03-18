@@ -25,7 +25,7 @@ export interface Network_v2Methods {
   unlockPeriod() :ContractCallMethod<number>;
   getBountiesOfAddress(_address: string) :ContractCallMethod<number[]>;
   getBounty(id: number) :ContractCallMethod<{'id': number;'creationDate': number;'tokenAmount': number;'creator': string;'transactional': string;'rewardToken': string;'rewardAmount': number;'fundingAmount': number;'closed': boolean;'canceled': boolean;'funded': boolean;'title': string;'repoPath': string;'branch': string;'cid': string;'closedDate': number;'pullRequests': {'originRepo': string;'originCID': string;'originBranch': string;'userRepo': string;'userBranch': string;'ready': boolean;'canceled': boolean;'creator': string;'cid': number;'id': number;}[];'proposals': {'id': number;'creationDate': number;'oracles': number;'disputeWeight': number;'prId': number;'refusedByBountyOwner': boolean;'creator': string;'details': {'recipient': string;'percentage': number;}[];}[];'benefactors': {'benefactor': string;'amount': number;'creationDate': number;}[];'funding': {'benefactor': string;'amount': number;'creationDate': number;}[];}>;
-  getPullRequest(bountyId: number, pullRequestId: number) :ContractCallMethod<{'pullRequest': {'originRepo': string;'originCID': string;'originBranch': string;'userRepo': string;'userBranch': string;'ready': boolean;'canceled': boolean;'creator': string;'cid': number;'id': number;};}>;
+  getPullRequest(bountyId: number, pullRequestId: number) :ContractCallMethod<{'originRepo': string;'originCID': string;'originBranch': string;'userRepo': string;'userBranch': string;'ready': boolean;'canceled': boolean;'creator': string;'cid': number;'id': number;}>;
   getProposal(bountyId: number, proposalId: number) :ContractCallMethod<{'proposal': {'id': number;'creationDate': number;'oracles': number;'disputeWeight': number;'prId': number;'refusedByBountyOwner': boolean;'creator': string;'details': {'recipient': string;'percentage': number;}[];};}>;
   changeCouncilAmount(newAmount: number) :ContractSendMethod;
   changeDraftTime(_draftTime: number) :ContractSendMethod;
@@ -55,7 +55,7 @@ export interface Network_v2Methods {
   cancelFundRequest(id: number) :ContractSendMethod;
   updateBountyAmount(id: number, newTokenAmount: number) :ContractSendMethod;
   fundBounty(id: number, fundingAmount: number) :ContractSendMethod;
-  retractFunds(id: number, fundingIds: number) :ContractSendMethod;
+  retractFunds(id: number, fundingIds: number[]) :ContractSendMethod;
   createPullRequest(forBountyId: number, originRepo: string, originBranch: string, originCID: string, userRepo: string, userBranch: string, cid: number) :ContractSendMethod;
   cancelPullRequest(ofBounty: number, prId: number) :ContractSendMethod;
   markPullRequestReadyForReview(bountyId: number, pullRequestId: number) :ContractSendMethod;

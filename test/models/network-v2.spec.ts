@@ -13,7 +13,7 @@ import {nativeZeroAddress} from '../../src/utils/constants';
 import {Account} from 'web3-core';
 import {BountyToken} from '../../src/models/bounty-token';
 
-describe.skip(`NetworkV2`, () => {
+describe(`NetworkV2`, () => {
   let network: Network_v2;
   let web3Connection: Web3Connection;
   let networkToken: ERC20;
@@ -64,7 +64,7 @@ describe.skip(`NetworkV2`, () => {
   });
 
   describe(`Methods`, () => {
-    describe.skip(`Owner`, () => {
+    describe(`Owner`, () => {
       it(`changeCouncilAmount()`, async () => {
         await hasTxBlockNumber(network.changeCouncilAmount(newCouncilAmount));
         expect(await network.councilAmount()).to.eq(newCouncilAmount);
@@ -98,13 +98,14 @@ describe.skip(`NetworkV2`, () => {
 
     describe(`Public`, () => {
       let bountyId: number;
+      let prId: number;
 
       before(async () => {
         await hasTxBlockNumber(networkToken.approve(network.contractAddress!, AMOUNT_1M));
         await hasTxBlockNumber(bountyTransactional.approve(network.contractAddress!, AMOUNT_1M));
       });
 
-      describe.skip(`Oracle actions`, () => {
+      describe(`Oracle actions`, () => {
         it(`Locks NT and receives Network Stake Token`, async () => {
           await hasTxBlockNumber(networkToken.approve(network.contractAddress!, AMOUNT_1M));
           await hasTxBlockNumber(network.lock(205000));
@@ -131,7 +132,7 @@ describe.skip(`NetworkV2`, () => {
         });
       });
 
-      describe.skip(`Bounties`, () => {
+      describe(`Bounties`, () => {
         it(`Opens`, async () => {
           const receipt = await network.openBounty(1000, bountyTransactional.contractAddress!,
                                                    nativeZeroAddress, 0, 0,
@@ -194,7 +195,7 @@ describe.skip(`NetworkV2`, () => {
         });
 
         it(`Fund 50-50`, async () => {
-          expect(await network.isBountyFunded(bountyId)).to.be.false;
+          expect((await network.getBounty(bountyId)).funded).to.be.false;
 
           web3Connection.switchToAccount(Alice.privateKey);
           await bountyTransactional.approve(network.contractAddress!, AMOUNT_1M);
@@ -204,34 +205,39 @@ describe.skip(`NetworkV2`, () => {
           await bountyTransactional.approve(network.contractAddress!, AMOUNT_1M);
           await hasTxBlockNumber(network.fundBounty(bountyId, 500));
 
-          expect(await network.isBountyFunded(bountyId)).to.be.true;
+          expect((await network.getBounty(bountyId)).funded).to.be.true;
         });
 
         it(`Retracts Bobs funding`, async () => {
-          await hasTxBlockNumber(network.retractFunds(bountyId, 1));
-          expect(await network.isBountyFunded(bountyId)).to.be.false;
+          await hasTxBlockNumber(network.retractFunds(bountyId, [1]));
+          expect((await network.getBounty(bountyId)).funded).to.be.false;
         });
 
         it(`Cancels funding`, async () => {
           web3Connection.switchToAccount(Admin.privateKey);
-          await hasTxBlockNumber(network.cancelBounty(bountyId));
+          await hasTxBlockNumber(network.cancelFundRequest(bountyId));
           expect(await bountyTransactional.getTokenAmount(Alice.address)).to.be.eq(10000);
           expect(await bountyTransactional.getTokenAmount(Bob.address)).to.be.eq(10000);
         })
       });
 
       describe(`Happy path`, () => {
-        before(async () => {
+
+        it(`Creates a bounty`,async () => {
+          await rewardToken.approve(network.contractAddress!, AMOUNT_1M);
           await network.openBounty(0, bountyTransactional.contractAddress!,
                                    rewardToken.contractAddress!, 1000, 10000,
                                    'c3', 'Title 3', '//', 'master');
+
           bountyId = await network.cidBountyId('c3');
 
           web3Connection.switchToAccount(Alice.privateKey);
+          await bountyTransactional.approve(network.contractAddress!, AMOUNT_1M);
           await hasTxBlockNumber(network.fundBounty(bountyId, 10000));
 
           web3Connection.switchToAccount(Admin.privateKey);
-          await increaseTime(61, web3Connection.Web3);
+          await increaseTime(62, web3Connection.Web3);
+          await network.lock(await network.councilAmount());
         });
 
         it(`Creates a PR and sets PR as ready`, async () => {
@@ -240,33 +246,36 @@ describe.skip(`NetworkV2`, () => {
 
           const events = await network.getBountyPullRequestCreatedEvents({fromBlock: receipt.blockNumber, filter: {id: bountyId}})
           expect(events.length).to.be.eq(1);
+          prId = events[0].returnValues.pullRequestId;
 
-          await hasTxBlockNumber(network.markPullRequestReadyForReview(bountyId, 0));
-          expect((await network.getPullRequest(bountyId, 0)).pullRequest.ready).to.be.true;
+          await hasTxBlockNumber(network.markPullRequestReadyForReview(bountyId, prId));
+          expect((await network.getBounty(bountyId)).pullRequests[0].ready).to.be.true;
         });
 
         it(`Creates a Proposal`, async () => {
-          await hasTxBlockNumber(network.createBountyProposal(bountyId, 0, [Alice.address, Bob.address], [51, 49]));
+          await hasTxBlockNumber(network.createBountyProposal(bountyId, prId, [Alice.address, Bob.address], [51, 49]));
           expect((await network.getBounty(bountyId)).proposals.length).to.be.eq(1);
         });
 
         it(`Disputes a Proposal`, async () => {
           await hasTxBlockNumber(network.disputeBountyProposal(bountyId, 0));
-          expect(await network.isProposalDisputed(bountyId, 0)).to.be.true;
+          expect(+(await network.getBounty(bountyId)).proposals[0].disputeWeight).to.be.greaterThan(0);
         });
 
         it(`Refuses as owner`, async () => {
           await hasTxBlockNumber(network.refuseBountyProposal(bountyId, 0));
-          expect((await network.getProposal(bountyId, 0)).proposal.refusedByBountyOwner).to.be.true;
+          expect((await network.getBounty(bountyId)).proposals[0].refusedByBountyOwner).to.be.true;
         });
 
-        it(`Creates Proposal and closes Bounty`, async () => {
-          await hasTxBlockNumber(network.createBountyProposal(bountyId, 0, [Alice.address, Bob.address], [51, 49]));
-          await increaseTime(61, web3Connection.Web3);
+        it.skip(`Creates Proposal and closes Bounty`, async () => {
+          await hasTxBlockNumber(network.createBountyProposal(bountyId, prId, [Alice.address, Bob.address], [51, 49]), `Should create proposal`);
+          await increaseTime(62, web3Connection.Web3);
           const bounty = await network.getBounty(bountyId);
           expect(bounty.proposals.length).to.be.eq(2);
 
-          await hasTxBlockNumber(network.closeBounty(bountyId, 1));
+          console.log(bounty, bounty.proposals[1], bounty.benefactors, bounty.funding)
+
+          await hasTxBlockNumber(network.closeBounty(bountyId, 1), `Should have closed bounty`);
 
           const mergerAmount = bounty.tokenAmount / 100 * await network.calculatePercentPerTenK(10000);
           const bountyAmount = bounty.tokenAmount - mergerAmount;

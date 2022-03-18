@@ -381,7 +381,7 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   /**
    * enable users to retract their funding
    */
-  async retractFunds(id: number, fundingIds: number) {
+  async retractFunds(id: number, fundingIds: number[]) {
     return this.sendTx(this.contract.methods.retractFunds(id, fundingIds));
   }
 
