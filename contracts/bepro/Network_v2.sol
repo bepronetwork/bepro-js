@@ -656,8 +656,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         Bounty storage bounty = bounties[id];
         ERC20 erc20 = ERC20(bounty.transactional);
-
         Proposal storage proposal = bounty.proposals[proposalId];
+
         require(block.timestamp >= bounty.proposals[proposalId].creationDate.add(disputableTime), "CB2");
         require(proposal.disputeWeight >= oraclesStaked.mul(percentageNeededForDispute).div(10000), "CB3");
         require(proposal.refusedByBountyOwner == false, "CB7");
@@ -672,15 +672,15 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(erc20.transfer(msg.sender, mergerFee), "CB4");
         require(erc20.transfer(proposal.creator, proposerFee), "CB4");
 
-        for (uint256 i = 0; i < proposal.details.length; i++) {
+        for (uint256 i = 0; i <= proposal.details.length - 1; i++) {
             ProposalDetail memory detail = proposal.details[i];
-            require(erc20.transfer(detail.recipient, proposalAmount.mul(detail.percentage.div(100))), "CB5");
+            require(erc20.transfer(detail.recipient, proposalAmount.div(detail.percentage.mul(100))), "CB5");
             nftToken.awardBounty(detail.recipient, bountyNftUri, bounty.id, detail.percentage);
         }
 
         if (bounties[id].rewardToken != address(0)) {
             ERC20 rewardToken = ERC20(bounty.rewardToken);
-            for (uint256 i = 0; i < bounty.funding.length; i++) {
+            for (uint256 i = 0; i <= bounty.funding.length - 1; i++) {
                 Benefactor storage x = bounty.funding[i];
                 if (x.amount > 0) {
                     uint256 rewardAmount = (x.amount / bounty.fundingAmount) * bounty.rewardAmount;
