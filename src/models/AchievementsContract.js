@@ -93,13 +93,18 @@ class AchievementsContract extends IContract {
   async getUserAchievements({ user }) {
     const achievementIds = await this.getAchievementIds();
     const userStats = await this.getUserStats({ user });
-    const userTokens = await this.getUserTokens({ user });
+    let userTokens;
+    try {
+      userTokens = await this.getUserTokens({ user });
+    } catch (err) {
+      // should be non-blocking
+    }
 
     return await achievementIds.reduce(async (obj, achievementId) => {
       const achievement = await this.getAchievement({ achievementId });
       const canClaim = userStats[achievement.actionId].occurrences >= achievement.occurrences;
       const claimed = canClaim && (await this.getContract().methods.hasUserClaimedAchievement(user, achievementId).call());
-      const token = userTokens.find(token => token.achievementId == achievementId);
+      const token = userTokens && userTokens.find(token => token.achievementId == achievementId);
 
       const status = {
         canClaim,

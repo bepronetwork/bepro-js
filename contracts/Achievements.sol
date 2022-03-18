@@ -18,6 +18,12 @@ contract Achievements is ERC721 {
   RealitioERC20 public realitioERC20;
   PredictionMarket public predictionMarket;
 
+  event LogNewAchievement(
+    uint256 indexed achievementId,
+    address indexed user,
+    string content
+  );
+
   // Buy: Claim through market[x].outcome[y].shares.holders[msg.sender] > 0
   // AddLiquidity: Claim through market[x].liquidityShares[msg.sender] > 0
   // CreateMarket: RealitioERC20 question arbitrator == msg.sender
@@ -41,7 +47,7 @@ contract Achievements is ERC721 {
   mapping(uint256 => Achievement) public achievements;
   mapping(uint256 => uint256) public tokens; // tokenId => achievementId
 
-  constructor() public ERC721("Achievements", "PMA") {}
+  constructor(string memory token, string memory ticker) public ERC721(token, ticker) {}
 
   function setContracts(PredictionMarket _predictionMarket, RealitioERC20 _realitioERC20) public {
     require(address(predictionMarket) == address(0), "predictionMarket can only be initialized once");
@@ -60,14 +66,14 @@ contract Achievements is ERC721 {
     _setBaseURI(_baseURI);
   }
 
-  function createAchievement(Action action, uint256 occurrences) public returns (uint256) {
+  function createAchievement(Action action, uint256 occurrences, string memory content) public returns (uint256) {
     require(occurrences > 0, "occurrences has to be greater than 0");
     uint256 achievementId = achievementIndex;
     Achievement storage achievement = achievements[achievementId];
 
     achievement.action = action;
     achievement.occurrences = occurrences;
-    // emit LogNewAchievement(achievementId, msg.sender, content);
+    emit LogNewAchievement(achievementId, msg.sender, content);
     achievementIndex = achievementId + 1;
     return achievementId;
   }
