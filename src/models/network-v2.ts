@@ -78,6 +78,10 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
     return this.callTx(this.contract.methods.closedBounties());
   }
 
+  async bountiesTotal() {
+    return this.callTx(this.contract.methods.bountiesTotal());
+  }
+
   async councilAmount() {
     return fromSmartContractDecimals(await this.callTx(this.contract.methods.councilAmount()), this.settlerToken.decimals);
   }

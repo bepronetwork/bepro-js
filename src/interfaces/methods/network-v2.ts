@@ -8,6 +8,7 @@ export interface Network_v2Methods {
   canceledBounties() :ContractCallMethod<number>;
   claimGovernor() :ContractSendMethod;
   closedBounties() :ContractCallMethod<number>;
+  bountiesTotal() :ContractCallMethod<number>;
   councilAmount() :ContractCallMethod<number>;
   disputableTime() :ContractCallMethod<number>;
   draftTime() :ContractCallMethod<number>;
