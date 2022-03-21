@@ -156,11 +156,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     function _isNotDraft(uint256 id) internal view {
-        require(isBountyInDraft(id) == false, "BDT0");
+        require(block.timestamp > bounties[id].creationDate.add(draftTime), "BDT0");
     }
 
     function _isInDraft(uint256 id) internal view {
-        require(isBountyInDraft(id) == true, "BDT1");
+        require(block.timestamp < bounties[id].creationDate.add(draftTime), "BDT1");
     }
 
     function _isNotCanceled(uint256 id) internal view {
@@ -213,11 +213,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
     function changeOracleExchangeRate(uint256 _oracleExchangeRate) public payable onlyGovernor {
         require(_oracleExchangeRate >= 0, "EX0");
         oracleExchangeRate = _oracleExchangeRate;
-    }
-
-    /// @dev returns true if NOW is less than bounty create time plus draft time
-    function isBountyInDraft(uint256 id) public view returns (bool) {
-        return block.timestamp < bounties[id].creationDate.add(draftTime);
     }
 
     /// @dev get total amount of oracles of an address
@@ -324,8 +319,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
             require(tokenAmount == 0, "O1");
             require(rewardAmount > 0, "O2");
             require(fundingAmount > 0, "O3");
-            ERC20 erc20 = ERC20(rewardToken);
-            require(erc20.transferFrom(msg.sender, address(this), rewardAmount));
+            //ERC20 erc20 = ERC20(rewardToken);
+            require(ERC20(rewardToken).transferFrom(msg.sender, address(this), rewardAmount));
 
             bounty.rewardAmount = rewardAmount;
             bounty.rewardToken = rewardToken;
@@ -334,8 +329,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
             // bounty.settlerTokenRatio = settlerTokenRatio;
         } else {
             bounty.tokenAmount = tokenAmount;
-            ERC20 erc20 = ERC20(transactional);
-            require(erc20.transferFrom(msg.sender, address(this), tokenAmount), "O4");
+            //ERC20 erc20 = ERC20(transactional);
+            require(ERC20(transactional).transferFrom(msg.sender, address(this), tokenAmount), "O4");
         }
 
         cidBountyId[cid] = bounty.id;
@@ -354,9 +349,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         bounty.benefactors.push(Benefactor(msg.sender, tokenAmount, block.timestamp));
 
-        ERC20 erc20 = ERC20(bounty.transactional);
+        //ERC20 erc20 = ERC20(bounty.transactional);
 
-        require(erc20.transferFrom(msg.sender, address(this), tokenAmount), "S1");
+        require(ERC20(bounty.transactional).transferFrom(msg.sender, address(this), tokenAmount), "S1");
         bounty.tokenAmount = bounty.tokenAmount.add(tokenAmount);
     }
 
@@ -366,11 +361,11 @@ contract Network_v2 is Governed, ReentrancyGuard {
         _isInDraft(bountyId);
         _isNotFundingRequest(bountyId);
         Bounty storage bounty = bounties[bountyId];
-        ERC20 erc20 = ERC20(bounty.transactional);
+        //ERC20 erc20 = ERC20(bounty.transactional);
 
         require(bounty.benefactors[entryId].amount > 0, "R1");
         require(bounty.benefactors[entryId].benefactor == msg.sender, "R2");
-        require(erc20.transfer(msg.sender, bounty.benefactors[entryId].amount), "R3");
+        require(ERC20(bounty.transactional).transfer(msg.sender, bounty.benefactors[entryId].amount), "R3");
 
         bounty.tokenAmount = bounty.tokenAmount.sub(bounty.benefactors[entryId].amount);
         bounty.benefactors[entryId].amount = 0;
@@ -413,20 +408,20 @@ contract Network_v2 is Governed, ReentrancyGuard {
         _isNotCanceled(id);
         _isFundingRequest(id);
         Bounty storage bounty = bounties[id];
-        ERC20 erc20 = ERC20(bounty.transactional);
+        //ERC20 erc20 = ERC20(bounty.transactional);
 
         for (uint256 i = 0; i <= bounty.funding.length - 1; i++) {
             Benefactor storage x = bounty.funding[i];
             if (x.amount > 0) {
-                require(erc20.transfer(x.benefactor, x.amount), "C4");
+                require(ERC20(bounty.transactional).transfer(x.benefactor, x.amount), "C4");
                 x.amount = 0;
             }
         }
 
         bounty.canceled = true;
 
-        ERC20 rewardToken = ERC20(bounty.rewardToken);
-        require(rewardToken.transfer(msg.sender, bounty.rewardAmount), "C5");
+        //ERC20 rewardToken = ERC20(bounty.rewardToken);
+        require(ERC20(bounty.rewardToken).transfer(msg.sender, bounty.rewardAmount), "C5");
     }
 
     /// @dev update the value of a bounty with a new amount
@@ -437,16 +432,16 @@ contract Network_v2 is Governed, ReentrancyGuard {
         _isNotFundingRequest(id);
 
         Bounty storage bounty = bounties[id];
-        ERC20 erc20 = ERC20(bounty.transactional);
+        //ERC20 erc20 = ERC20(bounty.transactional);
 
         require(bounty.tokenAmount != newTokenAmount, "U1");
 
         if (newTokenAmount > bounty.tokenAmount) {
-            uint256 giveAmount = newTokenAmount.sub(bounty.tokenAmount);
-            require(erc20.transferFrom(msg.sender, address(this), giveAmount), "U2");
+            //uint256 giveAmount = newTokenAmount.sub(bounty.tokenAmount);
+            require(ERC20(bounty.transactional).transferFrom(msg.sender, address(this), newTokenAmount.sub(bounty.tokenAmount)), "U2");
         } else {
-            uint256 retrieveAmount = bounty.tokenAmount.sub(newTokenAmount);
-            require(erc20.transfer(bounty.creator, retrieveAmount), "U3");
+            //uint256 retrieveAmount = bounty.tokenAmount.sub(newTokenAmount);
+            require(ERC20(bounty.transactional).transfer(bounty.creator, bounty.tokenAmount.sub(newTokenAmount)), "U3");
         }
 
         bounty.tokenAmount = newTokenAmount;
@@ -469,9 +464,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
         bounty.tokenAmount = bounty.tokenAmount.add(fundingAmount);
         bounty.funded = bounty.fundingAmount == bounty.tokenAmount;
 
-        ERC20 erc20 = ERC20(bounty.transactional);
+        //ERC20 erc20 = ERC20(bounty.transactional);
         // uint256 settlerAmount = fundingAmount * calculatePercentPerTenK(bounty.settlerTokenRatio);
-        require(erc20.transferFrom(msg.sender, address(this), fundingAmount), "F3");
+        require(ERC20(bounty.transactional).transferFrom(msg.sender, address(this), fundingAmount), "F3");
         // require(settlerToken.transferFrom(msg.sender, address(this), settlerAmount), "F4");
 
         // totalSettlerLocked = totalSettlerLocked.add(settlerAmount);
@@ -548,8 +543,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
             require(bounties[ofBounty].proposals[i].prId != prId, "CPR4");
         }
 
-        PullRequest storage pullRequest = bounties[ofBounty].pullRequests[prId];
-        pullRequest.canceled = true;
+        //PullRequest storage pullRequest = bounties[ofBounty].pullRequests[prId];
+        bounties[ofBounty].pullRequests[prId].canceled = true;
 
         emit BountyPullRequestCanceled(ofBounty, prId);
     }
@@ -586,7 +581,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(prId <= bounties[id].pullRequests.length - 1, "CBP0");
 
         Bounty storage bounty = bounties[id];
-        PullRequest storage pullRequest = bounty.pullRequests[prId];
+        //PullRequest storage pullRequest = bounty.pullRequests[prId];
 
         bounty.proposals.push();
         Proposal storage proposal = bounty.proposals[bounty.proposals.length - 1];
@@ -655,7 +650,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(proposalId <= bounties[id].proposals.length - 1, "CB1");
 
         Bounty storage bounty = bounties[id];
-        ERC20 erc20 = ERC20(bounty.transactional);
+        //ERC20 erc20 = ERC20(bounty.transactional);
         Proposal storage proposal = bounty.proposals[proposalId];
 
         require(block.timestamp >= bounty.proposals[proposalId].creationDate.add(disputableTime), "CB2");
@@ -669,22 +664,22 @@ contract Network_v2 is Governed, ReentrancyGuard {
         uint256 proposerFee = bounty.tokenAmount.sub(mergerFee).div(100 * calculatePercentPerTenK(proposerFeeShare));
 
         uint256 proposalAmount = bounty.tokenAmount.sub(mergerFee).sub(proposerFee);
-        require(erc20.transfer(msg.sender, mergerFee), "CB4");
-        require(erc20.transfer(proposal.creator, proposerFee), "CB4");
+        require(ERC20(bounty.transactional).transfer(msg.sender, mergerFee), "CB4");
+        require(ERC20(bounty.transactional).transfer(proposal.creator, proposerFee), "CB4");
 
         for (uint256 i = 0; i <= proposal.details.length - 1; i++) {
             ProposalDetail memory detail = proposal.details[i];
-            require(erc20.transfer(detail.recipient, proposalAmount.div(detail.percentage.mul(100))), "CB5");
+            require(ERC20(bounty.transactional).transfer(detail.recipient, proposalAmount.div(detail.percentage.mul(100))), "CB5");
             nftToken.awardBounty(detail.recipient, bountyNftUri, bounty.id, detail.percentage);
         }
 
         if (bounties[id].rewardToken != address(0)) {
-            ERC20 rewardToken = ERC20(bounty.rewardToken);
+            //ERC20 rewardToken = ERC20(bounty.rewardToken);
             for (uint256 i = 0; i <= bounty.funding.length - 1; i++) {
                 Benefactor storage x = bounty.funding[i];
                 if (x.amount > 0) {
                     uint256 rewardAmount = (x.amount / bounty.fundingAmount) * bounty.rewardAmount;
-                    require(rewardToken.transfer(x.benefactor, rewardAmount), "CB6");
+                    require(ERC20(bounty.rewardToken).transfer(x.benefactor, rewardAmount), "CB6");
                     x.amount = 0;
                 }
             }
