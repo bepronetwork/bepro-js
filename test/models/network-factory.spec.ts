@@ -1,11 +1,10 @@
-import {Network, NetworkFactory, Web3Connection} from '../../src';
-import {fromDecimals, toSmartContractDecimals} from '../../src/utils/numbers';
-import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, outputDeploy, hasTxBlockNumber} from '../utils/';
+import {Network, NetworkFactory, Web3Connection, fromDecimals, toSmartContractDecimals} from '../../src';
+import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, hasTxBlockNumber} from '../utils/';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src/interfaces/error-enum';
 
-describe.skip(`NetworkFactory`, () => {
+describe(`NetworkFactory`, () => {
 
   let web3Connection: Web3Connection;
   let networkFactoryContractAddress!: string;
@@ -42,10 +41,6 @@ describe.skip(`NetworkFactory`, () => {
       expect(receipt.contractAddress).to.not.be.empty;
       networkFactoryContractAddress = receipt.contractAddress;
       console.log(networkFactoryContractAddress)
-    });
-
-    after(() => {
-      outputDeploy([[`NetworkFactory`, networkFactoryContractAddress!], [`ERC20`, settlerToken]])
     });
   });
 

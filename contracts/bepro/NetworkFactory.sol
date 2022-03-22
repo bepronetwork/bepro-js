@@ -2,7 +2,7 @@ pragma solidity >=0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "./Network_v2.sol";
+import "./Network.sol";
 
 
 
@@ -19,7 +19,7 @@ contract NetworkFactory is ReentrancyGuard {
     mapping(uint256 => address) public networks; /* Distribution Network Object Address */
     mapping(address => address) public networksByAddress; /* Distribution Network Object Address, user address to network address mapping */
 
-    Network_v2[] public networksArray; /* Array of Networks */
+    Network[] public networksArray; /* Array of Networks */
 
     /// @notice Network created event
     /// @param id New created Network id
@@ -48,20 +48,13 @@ contract NetworkFactory is ReentrancyGuard {
 
     /// @notice user creates Network, only one Network is allowed per user at a time
     /// @param _settlerToken Settler token address
-    /// @param _bountyTokenName Bounty Token Name
-    /// @param _bountyTokenSymbol Bounty Token Symbol
-    /// @param _bountyNftUri Bounty NFT URI
-    function createNetwork(
-        address _settlerToken,
-        address _nftTokenAddress,
-        string memory _bountyTokenName,
-        string memory _bountyTokenSymbol,
-        string memory _bountyNftUri
-    ) external payable {
+    /// @param _transactionToken Transactional token address
+    function createNetwork(address _settlerToken, address _transactionToken) external payable {
+
         require(networksByAddress[msg.sender] == address(0), "Only one Network per user at a time");
         require(tokensLocked[msg.sender] >= OPERATOR_AMOUNT, "Operator has to lock +1M BEPRO to fork the Network");
 
-        Network_v2 network = new Network_v2(_settlerToken, _nftTokenAddress, _bountyNftUri);
+        Network network = new Network(_settlerToken, _transactionToken, msg.sender);
         network.proposeGovernor(msg.sender);
         networksArray.push(network);
         networks[networksAmount] = address(network);
@@ -76,10 +69,8 @@ contract NetworkFactory is ReentrancyGuard {
         require(amount > 0, "Needs to have tokens locked");
 
         if (networksByAddress[msg.sender] != address(0)) {
-            Network_v2 network = Network_v2(networksByAddress[msg.sender]);
-
-            require(network.totalSettlerLocked() == 0, "Network has to have 0 Settler Tokens");
-            require((network.closedBounties() + network.canceledBounties() ) == network.bountiesTotal(), "Network has to have 0 Open Bounties");
+            require(Network(networksByAddress[msg.sender]).oraclesStaked() == 0, "Network has to have 0 Settler Tokens");
+            require(Network(networksByAddress[msg.sender]).totalStaked() == 0, "Network has to have 0 Transactional Tokens");
             networksByAddress[msg.sender] = address(0);
         }
 
