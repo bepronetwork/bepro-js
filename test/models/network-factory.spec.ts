@@ -5,7 +5,7 @@ import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src/interfaces/error-enum';
 
-describe(`NetworkFactory`, () => {
+describe.skip(`NetworkFactory`, () => {
 
   let web3Connection: Web3Connection;
   let networkFactoryContractAddress!: string;
