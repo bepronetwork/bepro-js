@@ -66,5 +66,4 @@ export interface Network_v2Methods {
   refuseBountyProposal(bountyId: number, proposalId: number) :ContractSendMethod;
   closeBounty(id: number, proposalId: number) :ContractSendMethod;
   cidBountyId(cid: string): ContractCallMethod<number>;
-  bountiesOfAddress(address: string): ContractCallMethod<number[]>;
 }

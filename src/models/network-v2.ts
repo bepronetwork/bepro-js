@@ -445,10 +445,6 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
     return this.callTx(this.contract.methods.cidBountyId(cid));
   }
 
-  async bountiesOfAddress(address: string) {
-    return this.callTx(this.contract.methods.bountiesOfAddress(address));
-  }
-
   async getBountyCanceledEvents(filter: PastEventOptions): Promise<XEvents<Events.BountyCanceledEvent>[]> {
     return this.contract.self.getPastEvents(`BountyCanceled`, filter)
   }

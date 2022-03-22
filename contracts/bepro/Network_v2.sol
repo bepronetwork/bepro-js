@@ -136,7 +136,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     Bounty[] bounties;
     mapping(string => uint256) public cidBountyId;
-    mapping(address => uint256[]) public bountiesOfAddress;
+    mapping(address => uint256[]) bountiesOfAddress;
 
     event BountyCreated(uint256 id, string cid, address indexed creator);
     event BountyCanceled(uint256 indexed id);
@@ -147,6 +147,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
     event BountyProposalCreated(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
     event BountyProposalDisputed(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
     event BountyProposalRefused(uint256 indexed bountyId, uint256 prId, uint256 proposalId);
+    event Log(uint256 bountyId, uint256 mergerValue, uint256 proposerValue, uint256 distributionValue);
+    event LogTransfer(uint256 bountyId, address to, uint256 distributionValue);
 
     // function _bountyExists(uint256 id) internal view {
     //     require((bounties.length - 1) <= id, "B0");
@@ -189,8 +191,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
         return bounties[id];
     }
 
-    function getBountiesOfAddress(address _address) external view returns(uint256[] memory) {
-        return bountiesOfAddress[_address];
+    function getBountiesOfAddress(address owner) public view returns (uint256[] memory) {
+        return bountiesOfAddress[owner];
     }
 
     function bountiesTotal() public view returns (uint256) {
