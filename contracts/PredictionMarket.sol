@@ -184,7 +184,7 @@ contract PredictionMarket {
     uint256 closesAt,
     address arbitrator,
     uint256 outcomes
-  ) external payable mustHoldRequiredBalance() returns (uint256) {
+  ) external payable mustHoldRequiredBalance returns (uint256) {
     uint256 marketId = marketIndex;
     marketIds.push(marketId);
 

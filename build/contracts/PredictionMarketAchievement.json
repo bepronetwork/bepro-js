@@ -1,0 +1,1612 @@
+{
+  "contractName": "PredictionMarketAchievement",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract RealitioERC20",
+          "name": "_realitioERC20",
+          "type": "address"
+        },
+        {
+          "internalType": "contract PredictionMarket",
+          "name": "_predictionMarket",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "predictionMarket",
+      "outputs": [
+        {
+          "internalType": "contract PredictionMarket",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "realitioERC20",
+      "outputs": [
+        {
+          "internalType": "contract RealitioERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract RealitioERC20\",\"name\":\"_realitioERC20\",\"type\":\"address\"},{\"internalType\":\"contract PredictionMarket\",\"name\":\"_predictionMarket\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"predictionMarket\",\"outputs\":[{\"internalType\":\"contract PredictionMarket\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"realitioERC20\",\"outputs\":[{\"internalType\":\"contract RealitioERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{},\"title\":\"Prediction Market Achievements Contract\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/PredictionMarketAchievement.sol\":\"PredictionMarketAchievement\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1},\"remappings\":[]},\"sources\":{\"/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/PredictionMarket.sol\":{\"keccak256\":\"0xbab222d729f0eeef829fa6ebd774b8a21fdaf73691e5404ccce98713bb956cbb\",\"urls\":[\"bzz-raw://1fdc6ebd949494c6da6f3d6005706ceaf9e156a0c1b3aba23f9f5ddb8c7e89e4\",\"dweb:/ipfs/QmNwysRp7nAYXUJyyPEeqngYKYnWgD9j4qRbAJkpJs1t1T\"]},\"/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/PredictionMarketAchievement.sol\":{\"keccak256\":\"0x25380680162a8cd7b7d6f17b4ae68020aab9644970b0112edd0c2574fb16b62e\",\"urls\":[\"bzz-raw://d41562397dd59c9203a2befd3a8a51c1b43214984ab770b24ebfae6ebd87cbb3\",\"dweb:/ipfs/QmQjNXPNHCy2jtkCok7teJvEKXAUt6jGNXfSe4XaRVRDNn\"]},\"/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/RealitioERC20.sol\":{\"keccak256\":\"0xd27f1c3e38d788912fbfe3301b18f62dedf82519745ca1b62db9a17e9549d0dc\",\"urls\":[\"bzz-raw://829f1e73f5e1311baedd795043badb23349e5dc37d7f2e7663156fd48caaa88d\",\"dweb:/ipfs/QmcqtcK4LpGwmMbc4gvG6U1JMUZSV58XkU82HR9zPqHCEZ\"]},\"@openzeppelin/contracts/math/SafeMath.sol\":{\"keccak256\":\"0xcc78a17dd88fa5a2edc60c8489e2f405c0913b377216a5b26b35656b2d0dab52\",\"urls\":[\"bzz-raw://526dc85e1f9b9b45830e202568d267d93dde7a4fcccf4ad7798dadcd92304d3c\",\"dweb:/ipfs/QmaoXMB972J3cSDLtBq3xBo4jLwqD2uzXTwujtSPqkYVhR\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161024438038061024483398101604081905261002f916100b8565b6001600160a01b03811661005e5760405162461bcd60e51b815260040161005590610128565b60405180910390fd5b6001600160a01b0382166100845760405162461bcd60e51b8152600401610055906100f1565b600180546001600160a01b039283166001600160a01b03199182161790915560008054939092169216919091179055610177565b600080604083850312156100ca578182fd5b82516100d58161015f565b60208401519092506100e68161015f565b809150509250929050565b6020808252601b908201527f5f7265616c6974696f4552433230206164647265737320697320300000000000604082015260600190565b6020808252601f908201527f5f5f70726564696374696f6e4d61726b65742061646472657373206973203000604082015260600190565b6001600160a01b038116811461017457600080fd5b50565b60bf806101856000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c8063c97c8976146037578063def114b6146051575b600080fd5b603d6057565b604051604891906075565b60405180910390f35b603d6066565b6000546001600160a01b031681565b6001546001600160a01b031681565b6001600160a01b039190911681526020019056fea26469706673582212202a5b2cdb392cad385758dce99d5530989899eab934901125e0d2d4344bede4b964736f6c63430006020033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c8063c97c8976146037578063def114b6146051575b600080fd5b603d6057565b604051604891906075565b60405180910390f35b603d6066565b6000546001600160a01b031681565b6001546001600160a01b031681565b6001600160a01b039190911681526020019056fea26469706673582212202a5b2cdb392cad385758dce99d5530989899eab934901125e0d2d4344bede4b964736f6c63430006020033",
+  "sourceMap": "174:945:2:-:0;;;763:354;8:9:-1;5:2;;;30:1;27;20:12;5:2;763:354:2;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;874:40:2;;866:84;;;;-1:-1:-1;;;866:84:2;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;964:37:2;;956:77;;;;-1:-1:-1;;;956:77:2;;;;;;;;;1040:16;:36;;-1:-1:-1;;;;;1040:36:2;;;-1:-1:-1;;;;;;1040:36:2;;;;;;;:16;1082:30;;;;;;;;;;;;;;174:945;;381:493:-1;;;560:2;548:9;539:7;535:23;531:32;528:2;;;-1:-1;;566:12;528:2;302:6;296:13;314:55;363:5;314:55;;;751:2;826:22;;108:13;618:96;;-1:-1;126:58;108:13;126:58;;;759:99;;;;522:352;;;;;;1557:407;1748:2;1762:47;;;1106:2;1733:18;;;2489:19;1142:29;2529:14;;;1122:50;1191:12;;;1719:245;1971:407;2162:2;2176:47;;;1442:2;2147:18;;;2489:19;1478:33;2529:14;;;1458:54;1531:12;;;2133:245;3026:167;-1:-1;;;;;2960:54;;3110:60;;3100:2;;3184:1;;3174:12;3100:2;3094:99;;;174:945:2;;;;;;",
+  "deployedSourceMap": "174:945:2:-:0;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;174:945:2;;;;;;;;;;;;;;;;;;;;;;;;269:34;;;:::i;:::-;;;;;;;;;;;;;;;;307:40;;;:::i;269:34::-;;;-1:-1:-1;;;;;269:34:2;;:::o;307:40::-;;;-1:-1:-1;;;;;307:40:2;;:::o;365:263:-1:-;-1:-1;;;;;961:54;;;;101:75;;508:2;493:18;;479:149",
+  "source": "pragma solidity ^0.6.0;\npragma experimental ABIEncoderV2;\n\nimport \"./RealitioERC20.sol\";\nimport \"./PredictionMarket.sol\";\n\n/// @title Prediction Market Achievements Contract\ncontract PredictionMarketAchievement {\n  /// @dev protocol is immutable and has no ownership\n  RealitioERC20 public realitioERC20;\n  PredictionMarket public predictionMarket;\n\n  // First Prediction\n  // Claim through market[x].outcome[y].shares.holders[msg.sender] > 0\n\n  // First Market Created\n  // ???\n\n  // First Claim Winnings\n  // Claim through market[x].outcome[y].shares.holders[msg.sender] > 0 && y == market.resolution.outcomeId\n\n  // First POLK Bond\n  // Use RealitioERC20 historyHashes logic value and ensure addrs.includes(msg.sender)\n\n  // Most Volume (Week #X of Year Y)\n\n  constructor(\n    RealitioERC20 _realitioERC20,\n    PredictionMarket _predictionMarket\n  ) public {\n    require(address(_predictionMarket) != address(0), \"__predictionMarket address is 0\");\n    require(address(_realitioERC20) != address(0), \"_realitioERC20 address is 0\");\n\n    predictionMarket = _predictionMarket;\n    realitioERC20 = _realitioERC20;\n  }\n}\n",
+  "sourcePath": "/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/PredictionMarketAchievement.sol",
+  "ast": {
+    "absolutePath": "/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/PredictionMarketAchievement.sol",
+    "exportedSymbols": {
+      "PredictionMarketAchievement": [
+        3240
+      ]
+    },
+    "id": 3241,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3190,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:2"
+      },
+      {
+        "id": 3191,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "24:33:2"
+      },
+      {
+        "absolutePath": "/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/RealitioERC20.sol",
+        "file": "./RealitioERC20.sol",
+        "id": 3192,
+        "nodeType": "ImportDirective",
+        "scope": 3241,
+        "sourceUnit": 5696,
+        "src": "59:29:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/PredictionMarket.sol",
+        "file": "./PredictionMarket.sol",
+        "id": 3193,
+        "nodeType": "ImportDirective",
+        "scope": 3241,
+        "sourceUnit": 3189,
+        "src": "89:32:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Prediction Market Achievements Contract",
+        "fullyImplemented": true,
+        "id": 3240,
+        "linearizedBaseContracts": [
+          3240
+        ],
+        "name": "PredictionMarketAchievement",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "functionSelector": "c97c8976",
+            "id": 3195,
+            "name": "realitioERC20",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3240,
+            "src": "269:34:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+              "typeString": "contract RealitioERC20"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 3194,
+              "name": "RealitioERC20",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 5695,
+              "src": "269:13:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                "typeString": "contract RealitioERC20"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "functionSelector": "def114b6",
+            "id": 3197,
+            "name": "predictionMarket",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3240,
+            "src": "307:40:2",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+              "typeString": "contract PredictionMarket"
+            },
+            "typeName": {
+              "contractScope": null,
+              "id": 3196,
+              "name": "PredictionMarket",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 3188,
+              "src": "307:16:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                "typeString": "contract PredictionMarket"
+              }
+            },
+            "value": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 3238,
+              "nodeType": "Block",
+              "src": "860:257:2",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 3213,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 3207,
+                              "name": "_predictionMarket",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3201,
+                              "src": "882:17:2",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                                "typeString": "contract PredictionMarket"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                                "typeString": "contract PredictionMarket"
+                              }
+                            ],
+                            "id": 3206,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "874:7:2",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 3205,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "874:7:2",
+                              "typeDescriptions": {
+                                "typeIdentifier": null,
+                                "typeString": null
+                              }
+                            }
+                          },
+                          "id": 3208,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "874:26:2",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 3211,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "912:1:2",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 3210,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "904:7:2",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 3209,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "904:7:2",
+                              "typeDescriptions": {
+                                "typeIdentifier": null,
+                                "typeString": null
+                              }
+                            }
+                          },
+                          "id": 3212,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "904:10:2",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "874:40:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "5f5f70726564696374696f6e4d61726b657420616464726573732069732030",
+                        "id": 3214,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "916:33:2",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_eb73870e3d01bce23c70350f5f2d9e5bedf89d1a820fae5a2b5aac140c230e27",
+                          "typeString": "literal_string \"__predictionMarket address is 0\""
+                        },
+                        "value": "__predictionMarket address is 0"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_eb73870e3d01bce23c70350f5f2d9e5bedf89d1a820fae5a2b5aac140c230e27",
+                          "typeString": "literal_string \"__predictionMarket address is 0\""
+                        }
+                      ],
+                      "id": 3204,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "866:7:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 3215,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "866:84:2",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3216,
+                  "nodeType": "ExpressionStatement",
+                  "src": "866:84:2"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 3226,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 3220,
+                              "name": "_realitioERC20",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3199,
+                              "src": "972:14:2",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                                "typeString": "contract RealitioERC20"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                                "typeString": "contract RealitioERC20"
+                              }
+                            ],
+                            "id": 3219,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "964:7:2",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 3218,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "964:7:2",
+                              "typeDescriptions": {
+                                "typeIdentifier": null,
+                                "typeString": null
+                              }
+                            }
+                          },
+                          "id": 3221,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "964:23:2",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "hexValue": "30",
+                              "id": 3224,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "kind": "number",
+                              "lValueRequested": false,
+                              "nodeType": "Literal",
+                              "src": "999:1:2",
+                              "subdenomination": null,
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              },
+                              "value": "0"
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_rational_0_by_1",
+                                "typeString": "int_const 0"
+                              }
+                            ],
+                            "id": 3223,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "991:7:2",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 3222,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "991:7:2",
+                              "typeDescriptions": {
+                                "typeIdentifier": null,
+                                "typeString": null
+                              }
+                            }
+                          },
+                          "id": 3225,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "991:10:2",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "964:37:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "5f7265616c6974696f455243323020616464726573732069732030",
+                        "id": 3227,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1003:29:2",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_a9aa4a71994b94944f38ad7aee563a8ceeffacab2bb4dbad3841e12faacf40cd",
+                          "typeString": "literal_string \"_realitioERC20 address is 0\""
+                        },
+                        "value": "_realitioERC20 address is 0"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_a9aa4a71994b94944f38ad7aee563a8ceeffacab2bb4dbad3841e12faacf40cd",
+                          "typeString": "literal_string \"_realitioERC20 address is 0\""
+                        }
+                      ],
+                      "id": 3217,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
+                      "referencedDeclaration": -18,
+                      "src": "956:7:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 3228,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "956:77:2",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 3229,
+                  "nodeType": "ExpressionStatement",
+                  "src": "956:77:2"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3232,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 3230,
+                      "name": "predictionMarket",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3197,
+                      "src": "1040:16:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                        "typeString": "contract PredictionMarket"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 3231,
+                      "name": "_predictionMarket",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3201,
+                      "src": "1059:17:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                        "typeString": "contract PredictionMarket"
+                      }
+                    },
+                    "src": "1040:36:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                      "typeString": "contract PredictionMarket"
+                    }
+                  },
+                  "id": 3233,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1040:36:2"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 3236,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 3234,
+                      "name": "realitioERC20",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3195,
+                      "src": "1082:13:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                        "typeString": "contract RealitioERC20"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 3235,
+                      "name": "_realitioERC20",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3199,
+                      "src": "1098:14:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                        "typeString": "contract RealitioERC20"
+                      }
+                    },
+                    "src": "1082:30:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                      "typeString": "contract RealitioERC20"
+                    }
+                  },
+                  "id": 3237,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1082:30:2"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 3239,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3202,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3199,
+                  "name": "_realitioERC20",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3239,
+                  "src": "780:28:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                    "typeString": "contract RealitioERC20"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3198,
+                    "name": "RealitioERC20",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 5695,
+                    "src": "780:13:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                      "typeString": "contract RealitioERC20"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3201,
+                  "name": "_predictionMarket",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3239,
+                  "src": "814:34:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                    "typeString": "contract PredictionMarket"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3200,
+                    "name": "PredictionMarket",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3188,
+                    "src": "814:16:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                      "typeString": "contract PredictionMarket"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "774:78:2"
+            },
+            "returnParameters": {
+              "id": 3203,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "860:0:2"
+            },
+            "scope": 3240,
+            "src": "763:354:2",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 3241,
+        "src": "174:945:2"
+      }
+    ],
+    "src": "0:1120:2"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/PredictionMarketAchievement.sol",
+      "exportedSymbols": {
+        "PredictionMarketAchievement": [
+          3240
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.6",
+            ".0"
+          ]
+        },
+        "id": 3190,
+        "name": "PragmaDirective",
+        "src": "0:23:2"
+      },
+      {
+        "attributes": {
+          "literals": [
+            "experimental",
+            "ABIEncoderV2"
+          ]
+        },
+        "id": 3191,
+        "name": "PragmaDirective",
+        "src": "24:33:2"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 5696,
+          "absolutePath": "/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/RealitioERC20.sol",
+          "file": "./RealitioERC20.sol",
+          "scope": 3241,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 3192,
+        "name": "ImportDirective",
+        "src": "59:29:2"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 3189,
+          "absolutePath": "/Users/ricardomarques/dev/workspace/polkamarkets/bepro-js/contracts/PredictionMarket.sol",
+          "file": "./PredictionMarket.sol",
+          "scope": 3241,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 3193,
+        "name": "ImportDirective",
+        "src": "89:32:2"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "documentation": "@title Prediction Market Achievements Contract",
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            3240
+          ],
+          "name": "PredictionMarketAchievement",
+          "scope": 3241
+        },
+        "children": [
+          {
+            "attributes": {
+              "constant": false,
+              "functionSelector": "c97c8976",
+              "name": "realitioERC20",
+              "overrides": null,
+              "scope": 3240,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "contract RealitioERC20",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "contractScope": null,
+                  "name": "RealitioERC20",
+                  "referencedDeclaration": 5695,
+                  "type": "contract RealitioERC20"
+                },
+                "id": 3194,
+                "name": "UserDefinedTypeName",
+                "src": "269:13:2"
+              }
+            ],
+            "id": 3195,
+            "name": "VariableDeclaration",
+            "src": "269:34:2"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "functionSelector": "def114b6",
+              "name": "predictionMarket",
+              "overrides": null,
+              "scope": 3240,
+              "stateVariable": true,
+              "storageLocation": "default",
+              "type": "contract PredictionMarket",
+              "value": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "contractScope": null,
+                  "name": "PredictionMarket",
+                  "referencedDeclaration": 3188,
+                  "type": "contract PredictionMarket"
+                },
+                "id": 3196,
+                "name": "UserDefinedTypeName",
+                "src": "307:16:2"
+              }
+            ],
+            "id": 3197,
+            "name": "VariableDeclaration",
+            "src": "307:40:2"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": true,
+              "kind": "constructor",
+              "modifiers": [
+                null
+              ],
+              "name": "",
+              "overrides": null,
+              "scope": 3240,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_realitioERC20",
+                      "overrides": null,
+                      "scope": 3239,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "contract RealitioERC20",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "RealitioERC20",
+                          "referencedDeclaration": 5695,
+                          "type": "contract RealitioERC20"
+                        },
+                        "id": 3198,
+                        "name": "UserDefinedTypeName",
+                        "src": "780:13:2"
+                      }
+                    ],
+                    "id": 3199,
+                    "name": "VariableDeclaration",
+                    "src": "780:28:2"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_predictionMarket",
+                      "overrides": null,
+                      "scope": 3239,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "contract PredictionMarket",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "PredictionMarket",
+                          "referencedDeclaration": 3188,
+                          "type": "contract PredictionMarket"
+                        },
+                        "id": 3200,
+                        "name": "UserDefinedTypeName",
+                        "src": "814:16:2"
+                      }
+                    ],
+                    "id": 3201,
+                    "name": "VariableDeclaration",
+                    "src": "814:34:2"
+                  }
+                ],
+                "id": 3202,
+                "name": "ParameterList",
+                "src": "774:78:2"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 3203,
+                "name": "ParameterList",
+                "src": "860:0:2"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "tryCall": false,
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_eb73870e3d01bce23c70350f5f2d9e5bedf89d1a820fae5a2b5aac140c230e27",
+                                  "typeString": "literal_string \"__predictionMarket address is 0\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                -18,
+                                -18
+                              ],
+                              "referencedDeclaration": -18,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 3204,
+                            "name": "Identifier",
+                            "src": "866:7:2"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "!=",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "isStructConstructorCall": false,
+                                  "lValueRequested": false,
+                                  "names": [
+                                    null
+                                  ],
+                                  "tryCall": false,
+                                  "type": "address",
+                                  "type_conversion": true
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": [
+                                        {
+                                          "typeIdentifier": "t_contract$_PredictionMarket_$3188",
+                                          "typeString": "contract PredictionMarket"
+                                        }
+                                      ],
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "type": "type(address)"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "name": "address",
+                                          "type": null
+                                        },
+                                        "id": 3205,
+                                        "name": "ElementaryTypeName",
+                                        "src": "874:7:2"
+                                      }
+                                    ],
+                                    "id": 3206,
+                                    "name": "ElementaryTypeNameExpression",
+                                    "src": "874:7:2"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 3201,
+                                      "type": "contract PredictionMarket",
+                                      "value": "_predictionMarket"
+                                    },
+                                    "id": 3207,
+                                    "name": "Identifier",
+                                    "src": "882:17:2"
+                                  }
+                                ],
+                                "id": 3208,
+                                "name": "FunctionCall",
+                                "src": "874:26:2"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "isStructConstructorCall": false,
+                                  "lValueRequested": false,
+                                  "names": [
+                                    null
+                                  ],
+                                  "tryCall": false,
+                                  "type": "address payable",
+                                  "type_conversion": true
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": [
+                                        {
+                                          "typeIdentifier": "t_rational_0_by_1",
+                                          "typeString": "int_const 0"
+                                        }
+                                      ],
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "type": "type(address)"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "name": "address",
+                                          "type": null
+                                        },
+                                        "id": 3209,
+                                        "name": "ElementaryTypeName",
+                                        "src": "904:7:2"
+                                      }
+                                    ],
+                                    "id": 3210,
+                                    "name": "ElementaryTypeNameExpression",
+                                    "src": "904:7:2"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "hexvalue": "30",
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "subdenomination": null,
+                                      "token": "number",
+                                      "type": "int_const 0",
+                                      "value": "0"
+                                    },
+                                    "id": 3211,
+                                    "name": "Literal",
+                                    "src": "912:1:2"
+                                  }
+                                ],
+                                "id": 3212,
+                                "name": "FunctionCall",
+                                "src": "904:10:2"
+                              }
+                            ],
+                            "id": 3213,
+                            "name": "BinaryOperation",
+                            "src": "874:40:2"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "5f5f70726564696374696f6e4d61726b657420616464726573732069732030",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"__predictionMarket address is 0\"",
+                              "value": "__predictionMarket address is 0"
+                            },
+                            "id": 3214,
+                            "name": "Literal",
+                            "src": "916:33:2"
+                          }
+                        ],
+                        "id": 3215,
+                        "name": "FunctionCall",
+                        "src": "866:84:2"
+                      }
+                    ],
+                    "id": 3216,
+                    "name": "ExpressionStatement",
+                    "src": "866:84:2"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "tryCall": false,
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_a9aa4a71994b94944f38ad7aee563a8ceeffacab2bb4dbad3841e12faacf40cd",
+                                  "typeString": "literal_string \"_realitioERC20 address is 0\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                -18,
+                                -18
+                              ],
+                              "referencedDeclaration": -18,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 3217,
+                            "name": "Identifier",
+                            "src": "956:7:2"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_address",
+                                "typeString": "address"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "!=",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "isStructConstructorCall": false,
+                                  "lValueRequested": false,
+                                  "names": [
+                                    null
+                                  ],
+                                  "tryCall": false,
+                                  "type": "address",
+                                  "type_conversion": true
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": [
+                                        {
+                                          "typeIdentifier": "t_contract$_RealitioERC20_$5695",
+                                          "typeString": "contract RealitioERC20"
+                                        }
+                                      ],
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "type": "type(address)"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "name": "address",
+                                          "type": null
+                                        },
+                                        "id": 3218,
+                                        "name": "ElementaryTypeName",
+                                        "src": "964:7:2"
+                                      }
+                                    ],
+                                    "id": 3219,
+                                    "name": "ElementaryTypeNameExpression",
+                                    "src": "964:7:2"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 3199,
+                                      "type": "contract RealitioERC20",
+                                      "value": "_realitioERC20"
+                                    },
+                                    "id": 3220,
+                                    "name": "Identifier",
+                                    "src": "972:14:2"
+                                  }
+                                ],
+                                "id": 3221,
+                                "name": "FunctionCall",
+                                "src": "964:23:2"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "isStructConstructorCall": false,
+                                  "lValueRequested": false,
+                                  "names": [
+                                    null
+                                  ],
+                                  "tryCall": false,
+                                  "type": "address payable",
+                                  "type_conversion": true
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": [
+                                        {
+                                          "typeIdentifier": "t_rational_0_by_1",
+                                          "typeString": "int_const 0"
+                                        }
+                                      ],
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "type": "type(address)"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "name": "address",
+                                          "type": null
+                                        },
+                                        "id": 3222,
+                                        "name": "ElementaryTypeName",
+                                        "src": "991:7:2"
+                                      }
+                                    ],
+                                    "id": 3223,
+                                    "name": "ElementaryTypeNameExpression",
+                                    "src": "991:7:2"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "hexvalue": "30",
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "subdenomination": null,
+                                      "token": "number",
+                                      "type": "int_const 0",
+                                      "value": "0"
+                                    },
+                                    "id": 3224,
+                                    "name": "Literal",
+                                    "src": "999:1:2"
+                                  }
+                                ],
+                                "id": 3225,
+                                "name": "FunctionCall",
+                                "src": "991:10:2"
+                              }
+                            ],
+                            "id": 3226,
+                            "name": "BinaryOperation",
+                            "src": "964:37:2"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "5f7265616c6974696f455243323020616464726573732069732030",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"_realitioERC20 address is 0\"",
+                              "value": "_realitioERC20 address is 0"
+                            },
+                            "id": 3227,
+                            "name": "Literal",
+                            "src": "1003:29:2"
+                          }
+                        ],
+                        "id": 3228,
+                        "name": "FunctionCall",
+                        "src": "956:77:2"
+                      }
+                    ],
+                    "id": 3229,
+                    "name": "ExpressionStatement",
+                    "src": "956:77:2"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "contract PredictionMarket"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 3197,
+                              "type": "contract PredictionMarket",
+                              "value": "predictionMarket"
+                            },
+                            "id": 3230,
+                            "name": "Identifier",
+                            "src": "1040:16:2"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 3201,
+                              "type": "contract PredictionMarket",
+                              "value": "_predictionMarket"
+                            },
+                            "id": 3231,
+                            "name": "Identifier",
+                            "src": "1059:17:2"
+                          }
+                        ],
+                        "id": 3232,
+                        "name": "Assignment",
+                        "src": "1040:36:2"
+                      }
+                    ],
+                    "id": 3233,
+                    "name": "ExpressionStatement",
+                    "src": "1040:36:2"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "contract RealitioERC20"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 3195,
+                              "type": "contract RealitioERC20",
+                              "value": "realitioERC20"
+                            },
+                            "id": 3234,
+                            "name": "Identifier",
+                            "src": "1082:13:2"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 3199,
+                              "type": "contract RealitioERC20",
+                              "value": "_realitioERC20"
+                            },
+                            "id": 3235,
+                            "name": "Identifier",
+                            "src": "1098:14:2"
+                          }
+                        ],
+                        "id": 3236,
+                        "name": "Assignment",
+                        "src": "1082:30:2"
+                      }
+                    ],
+                    "id": 3237,
+                    "name": "ExpressionStatement",
+                    "src": "1082:30:2"
+                  }
+                ],
+                "id": 3238,
+                "name": "Block",
+                "src": "860:257:2"
+              }
+            ],
+            "id": 3239,
+            "name": "FunctionDefinition",
+            "src": "763:354:2"
+          }
+        ],
+        "id": 3240,
+        "name": "ContractDefinition",
+        "src": "174:945:2"
+      }
+    ],
+    "id": 3241,
+    "name": "SourceUnit",
+    "src": "0:1120:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.2+commit.bacdbe57.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-11-25T02:14:38.795Z",
+  "devdoc": {
+    "methods": {},
+    "title": "Prediction Market Achievements Contract"
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

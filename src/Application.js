@@ -2,6 +2,7 @@ const Web3 = require("web3");
 
 const ERC20Contract = require("./models/index").ERC20Contract;
 const PredictionMarketContract = require("./models/index").PredictionMarketContract;
+const AchievementsContract = require("./models/index").AchievementsContract;
 const RealitioERC20Contract = require("./models/index").RealitioERC20Contract;
 
 const Account = require('./utils/Account');
@@ -98,6 +99,31 @@ class Application {
       return new PredictionMarketContract({
         web3: this.web3,
         contractAddress,
+        acc : this.account,
+        web3EventsProvider: this.web3EventsProvider,
+        gasPrice: this.gasPrice
+      });
+    } catch(err) {
+      throw err;
+    }
+  };
+
+  /**
+   * @name getPredictionMarketContract
+   * @param {Address} ContractAddress (Opt) If it is deployed
+   * @description Create a PredictionMarket Contract
+   */
+   getAchievementsContract({
+     contractAddress = null,
+     predictionMarketContractAddress = null,
+     realitioERC20ContractAddress = null
+    } = {}) {
+    try {
+      return new AchievementsContract({
+        web3: this.web3,
+        contractAddress,
+        predictionMarketContractAddress,
+        realitioERC20ContractAddress,
         acc : this.account,
         web3EventsProvider: this.web3EventsProvider,
         gasPrice: this.gasPrice
