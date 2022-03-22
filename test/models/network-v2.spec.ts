@@ -13,7 +13,7 @@ import {nativeZeroAddress} from '../../src/utils/constants';
 import {Account} from 'web3-core';
 import {BountyToken} from '../../src/models/bounty-token';
 
-describe.only(`NetworkV2`, () => {
+describe(`NetworkV2`, () => {
   let network: Network_v2;
   let web3Connection: Web3Connection;
   let networkToken: ERC20;

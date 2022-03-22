@@ -102,7 +102,7 @@ describe(`StakingContract`, () => {
 
     it(`Checks held tokens`, async () => {
       expect(await contract.heldTokens())
-        .to.be.greaterThan(individualMinAmount + totalNeededAPR) // there's some seconds we can't account for
+        .to.be.greaterThanOrEqual(individualMinAmount + totalNeededAPR) // there's some seconds we can't account for
     });
 
     it(`Checks future locked tokens`, async () => {
