@@ -188,6 +188,10 @@ contract Network_v2 is Governed, ReentrancyGuard {
         return bounties[id];
     }
 
+    function getBountiesOfAddress(address _address) external view returns(uint256[] memory) {
+        return bountiesOfAddress[_address];
+    }
+
     function bountiesTotal() public view returns (uint256) {
         return bounties.length;
     }
