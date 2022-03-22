@@ -31,6 +31,14 @@ export class BountyToken extends Model<BountyTokenMethods> implements Deployable
     return this.callTx(this.contract.methods._proposedGovernor());
   }
 
+  async dispatcher() {
+    return this.callTx(this.contract.methods.dispatcher());
+  }
+
+  async setDispatcher(dispatcher: string) {
+    return this.sendTx(this.contract.methods.setDispatcher(dispatcher));
+  }
+
   /**
    * See {IERC721-approve}.
    */

@@ -2,7 +2,7 @@ import * as Json from '@abi/Token.json';
 import {Web3Connection} from '@base/web3-connection';
 import {Model} from '@base/model';
 import {TransactionReceipt} from '@interfaces/web3-core';
-import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
+import {fromDecimals, fromSmartContractDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {Deployable} from '@interfaces/deployable';
 import {ERC20Methods} from '@methods/erc20';
 import {Web3ConnectionOptions} from '@interfaces/web3-connection-options';
@@ -40,7 +40,7 @@ export class ERC20 extends Model<ERC20Methods> implements Deployable {
   }
 
   async getTokenAmount(address: string): Promise<number> {
-    return +fromDecimals(await this.callTx(this.contract.methods.balanceOf(address)), this.decimals);
+    return +fromSmartContractDecimals(await this.callTx(this.contract.methods.balanceOf(address)), this.decimals);
   }
 
   async transferTokenAmount(toAddress: string, amount: number) {

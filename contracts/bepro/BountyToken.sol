@@ -12,11 +12,14 @@ contract BountyToken is ERC721, Governed {
         // todo add if proposer, dev, or closer
     }
 
-    constructor(string memory name_, string memory symbol_) ERC721(name_, symbol_) Governed() {}
+    address public dispatcher = address(0);
+
+    constructor(string memory name_, string memory symbol_) ERC721(name_, symbol_) {}
 
     BountyConnector[] tokenIds;
 
-    function awardBounty(address to, string memory uri, uint256 bountyId, uint percentage) public payable onlyGovernor {
+    function awardBounty(address to, string memory uri, uint256 bountyId, uint percentage) public payable {
+        require(msg.sender == dispatcher, "AB0");
         uint256 id = tokenIds.length;
         _safeMint(to, id);
         _setTokenURI(id, uri);
@@ -24,7 +27,12 @@ contract BountyToken is ERC721, Governed {
     }
 
     function getBountyToken(uint256 id) public view returns (BountyConnector memory bountyConnector) {
-        require(tokenIds.length <= id, "Bounty token does not exist");
+        require(tokenIds.length <= id, "B0");
         return tokenIds[id];
+    }
+
+    function setDispatcher(address dispatcher_) public payable onlyGovernor {
+        require(dispatcher_ != dispatcher, "SD0");
+        dispatcher = dispatcher_;
     }
 }

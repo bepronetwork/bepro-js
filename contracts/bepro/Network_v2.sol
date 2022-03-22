@@ -3,6 +3,7 @@ pragma abicoder v2;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 import "../math/SafePercentMath.sol";
 import "../utils/Governed.sol";
@@ -24,9 +25,9 @@ contract Network_v2 is Governed, ReentrancyGuard {
     ERC20 public settlerToken;
     BountyToken public nftToken;
 
-    enum Params { 
-        councilAmount, 
-        disputableTime, 
+    enum Params {
+        councilAmount,
+        disputableTime,
         draftTime,
         oracleExchangeRate,
         mergeCreatorFeeShare,
@@ -480,16 +481,16 @@ contract Network_v2 is Governed, ReentrancyGuard {
         _isFundingRequest(id, false);
 
         Bounty storage bounty = bounties[id];
-        //ERC20 erc20 = ERC20(bounty.transactional);
+        ERC20 erc20 = ERC20(bounty.transactional);
 
         require(bounty.tokenAmount != newTokenAmount, "U1");
 
         if (newTokenAmount > bounty.tokenAmount) {
-            //uint256 giveAmount = newTokenAmount.sub(bounty.tokenAmount);
-            require(ERC20(bounty.transactional).transferFrom(msg.sender, address(this), newTokenAmount.sub(bounty.tokenAmount)), "U2");
+            uint256 giveAmount = newTokenAmount.sub(bounty.tokenAmount);
+            require(erc20.transferFrom(msg.sender, address(this), giveAmount), "U2");
         } else {
-            //uint256 retrieveAmount = bounty.tokenAmount.sub(newTokenAmount);
-            require(ERC20(bounty.transactional).transfer(bounty.creator, bounty.tokenAmount.sub(newTokenAmount)), "U3");
+            uint256 retrieveAmount = bounty.tokenAmount.sub(newTokenAmount);
+            require(erc20.transfer(bounty.creator, retrieveAmount), "U3");
         }
 
         bounty.tokenAmount = newTokenAmount;
@@ -710,41 +711,47 @@ contract Network_v2 is Governed, ReentrancyGuard {
         //require(proposalId <= bounties[id].proposals.length - 1, "CB1");
 
         Bounty storage bounty = bounties[id];
-        //ERC20 erc20 = ERC20(bounty.transactional);
+        ERC20 erc20 = ERC20(bounty.transactional);
         Proposal storage proposal = bounty.proposals[proposalId];
 
         require(block.timestamp >= bounty.proposals[proposalId].creationDate.add(disputableTime), "CB2");
         require(proposal.disputeWeight >= oraclesStaked.mul(percentageNeededForDispute).div(10000), "CB3");
         require(proposal.refusedByBountyOwner == false, "CB7");
 
-        bounty.closed = true;
-        bounty.closedDate = block.timestamp;
+        uint256 onehundred = 100;
+        uint256 mergerFee = bounty.tokenAmount.div(100).mul(calculatePercentPerTenK(mergeCreatorFeeShare));
+        uint256 proposerFee = bounty.tokenAmount.sub(mergerFee).div(100).mul(calculatePercentPerTenK(proposerFeeShare));
+        uint256 proposalAmount = bounty.tokenAmount.sub(mergerFee).sub(proposerFee);
 
-        uint256 mergerFee = bounty.tokenAmount.div(100 * calculatePercentPerTenK(mergeCreatorFeeShare));
-        uint256 proposerFee = bounty.tokenAmount.sub(mergerFee).div(100 * calculatePercentPerTenK(proposerFeeShare));
+        /// event Log(uint256 bountyId, uint256 mergerValue, uint256 proposerValue, uint256 distributionValue);
+        /// event LogTransfer(uint256 bountyId, address to, uint256 distributionValue);
 
-        //uint256 proposalAmount = bounty.tokenAmount.sub(mergerFee).sub(proposerFee);
-        require(ERC20(bounty.transactional).transfer(msg.sender, mergerFee), "CB4");
-        require(ERC20(bounty.transactional).transfer(proposal.creator, proposerFee), "CB4");
+        // emit Log(id, mergerFee, proposerFee, proposalAmount);
+
+        require(erc20.transfer(msg.sender, mergerFee), "CB4");
+        require(erc20.transfer(proposal.creator, proposerFee), "CB4");
 
         for (uint256 i = 0; i <= proposal.details.length - 1; i++) {
             ProposalDetail memory detail = proposal.details[i];
-            require(ERC20(bounty.transactional).transfer(detail.recipient, bounty.tokenAmount.sub(mergerFee).sub(proposerFee).div(detail.percentage.mul(100))), "CB5");
+            require(erc20.transfer(detail.recipient, proposalAmount.div(100).mul(detail.percentage)), "CB5");
+            // emit LogTransfer(id, detail.recipient, proposalAmount.div(100).mul(detail.percentage));
             nftToken.awardBounty(detail.recipient, bountyNftUri, bounty.id, detail.percentage);
         }
 
         if (bounties[id].rewardToken != address(0)) {
-            //ERC20 rewardToken = ERC20(bounty.rewardToken);
+            ERC20 rewardToken = ERC20(bounty.rewardToken);
             for (uint256 i = 0; i <= bounty.funding.length - 1; i++) {
                 Benefactor storage x = bounty.funding[i];
                 if (x.amount > 0) {
-                    //uint256 rewardAmount = (x.amount / bounty.fundingAmount) * bounty.rewardAmount;
-                    require(ERC20(bounty.rewardToken).transfer(x.benefactor, (x.amount / bounty.fundingAmount) * bounty.rewardAmount), "CB6");
+                    uint256 rewardAmount = x.amount.div(bounty.fundingAmount).mul(bounty.rewardAmount);
+                    require(rewardToken.transfer(x.benefactor, rewardAmount), "CB6");
                     x.amount = 0;
                 }
             }
         }
 
+        bounty.closed = true;
+        bounty.closedDate = block.timestamp;
         closedBounties = closedBounties.add(1);
 
         emit BountyDistributed(id, proposalId);

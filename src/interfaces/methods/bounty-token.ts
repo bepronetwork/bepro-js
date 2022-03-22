@@ -24,4 +24,6 @@ export interface BountyTokenMethods {
   transferFrom(from: string, to: string, tokenId: number) :ContractSendMethod;
   awardBounty(to: string, uri: string, bountyId: number, percentage: number) :ContractSendMethod;
   getBountyToken(id: number) :ContractCallMethod<{'bountyConnector': {'bountyId': number;'percentage': number;};}>;
+  dispatcher(): ContractCallMethod<string>;
+  setDispatcher(dispatcher: string): ContractSendMethod;
 }

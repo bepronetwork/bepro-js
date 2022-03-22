@@ -1,18 +1,15 @@
-/* eslint-disable complexity */
-import Web3 from 'web3';
-
-const toBn = Web3.utils.toBN;
+import BigNumber from 'bignumber.js';
 
 export function toSmartContractDecimals(value: string|number, decimals = 18) {
-  return toBn(value).mul(toBn(10).pow(toBn(decimals))).toString() as any as number;
+  return new BigNumber(value).shiftedBy(+decimals).toFixed() as any as number;
 }
 
-export function fromSmartContractDecimals(value: string|number, decimals = 18) {
-  return +fromDecimals(value, decimals) as number;
+export function fromSmartContractDecimals(value: string|number|BigNumber, decimals = 18) {
+  return new BigNumber(value).shiftedBy(-(+decimals)).toNumber();
 }
 
 export function fromDecimals(value: string|number, decimals = 18) {
-  return toBn(value).div(toBn(10).pow(toBn(decimals))).toNumber();
+  return fromSmartContractDecimals(value, decimals);
 }
 
 export function toSmartContractDate(date: number|Date) {

@@ -33,6 +33,7 @@
         "@uniswap/v3-core": "^1.0.0",
         "@uniswap/v3-periphery": "^1.1.1",
         "accounting": "^0.4.1",
+        "bignumber.js": "^9.0.2",
         "dotenv": "^8.2.0",
         "ipfs-http-client": "^50.1.2",
         "truffle-contract-size": "^2.0.1",
