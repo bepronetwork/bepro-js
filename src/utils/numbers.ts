@@ -13,7 +13,7 @@ export function fromDecimals(value: string|number, decimals = 18) {
 }
 
 export function toSmartContractDate(date: number|Date) {
-  return parseInt(`${+new Date(date) / 1000}`)
+  return parseInt(`${+new Date(date) / 1000}`, 10).toFixed() as any as number;
 }
 
 export function fromSmartContractDate(date: number) {

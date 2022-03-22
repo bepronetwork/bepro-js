@@ -81,8 +81,4 @@ describe(`ERC20`, () => {
       await shouldBeRejected(erc20.transferFrom(newAddress, web3Connection.Account.address, 3));
     });
   });
-
-  after(() => {
-    console.table(`\n\tERC20 Address:\t${erc20ContractAddress}`);
-  });
 });

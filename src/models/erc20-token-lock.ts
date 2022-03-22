@@ -7,7 +7,7 @@ import ERC20TokenLock from '@abi/ERC20TokenLock.json';
 import {AbiItem} from 'web3-utils';
 import {Errors} from '@interfaces/error-enum';
 import {ERC20} from '@models/erc20';
-import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
+import {fromDecimals, toSmartContractDate, toSmartContractDecimals} from '@utils/numbers';
 import {lockedTokensInfo} from '@utils/locked-tokens-info';
 import {Pausable} from '@base/pausable';
 import {Ownable} from '@base/ownable';
@@ -80,7 +80,7 @@ export class Erc20TokenLock extends Model<ERC20TokenLockMethods> implements Depl
       throw new Error(Errors.InteractionIsNotAvailableCallApprove);
 
     const scAmount = toSmartContractDecimals(amount, this.erc20.decimals);
-    const scEndDate = +(endDate / 1000).toFixed(0);
+    const scEndDate = toSmartContractDate(endDate);
 
     return this.sendTx(this.contract.methods.lock(scAmount, scEndDate))
   }
