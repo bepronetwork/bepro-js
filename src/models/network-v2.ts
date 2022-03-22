@@ -5,7 +5,7 @@ import {Deployable} from '@interfaces/deployable';
 import Network_v2Json from '@abi/Network_v2.json';
 import {Network_v2Methods} from '@methods/network-v2';
 import * as Events from '@events/network-v2-events';
-import {XEvents} from '@events/x-events';
+import {XEvents, XPromiseEvent} from '@events/x-events';
 import {PastEventOptions} from 'web3-eth-contract';
 import {AbiItem} from 'web3-utils';
 import {BountyToken} from '@models/bounty-token';
@@ -23,9 +23,9 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   private _settlerToken!: ERC20;
   private _governed!: Governed;
 
-  public Params = { 
-    councilAmount: 0, 
-    disputableTime: 1, 
+  public Params = {
+    councilAmount: 0,
+    disputableTime: 1,
     draftTime: 2,
     oracleExchangeRate: 3,
     mergeCreatorFeeShare: 4,
@@ -92,7 +92,8 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   }
 
   async councilAmount() {
-    return fromSmartContractDecimals(await this.callTx(this.contract.methods.councilAmount()), this.settlerToken.decimals);
+    return fromSmartContractDecimals(await this.callTx(this.contract
+                                                           .methods.councilAmount()), this.settlerToken.decimals);
   }
 
   async oracleExchangeRate() {
@@ -184,21 +185,24 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * @param percentageNeededForDispute percentage is per 10,000; 3 = 0,0003
    */
   async changePercentageNeededForDispute(percentageNeededForDispute: number) {
-    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.percentageNeededForDispute, percentageNeededForDispute));
+    return this.sendTx(this.contract.methods
+                           .changeNetworkParameter(this.Params.percentageNeededForDispute, percentageNeededForDispute));
   }
 
   /**
    * @param mergeCreatorFeeShare percentage is per 10,000; 3 = 0,0003
    */
   async changeMergeCreatorFeeShare(mergeCreatorFeeShare: number) {
-    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.mergeCreatorFeeShare, mergeCreatorFeeShare));
+    return this.sendTx(this.contract.methods
+                           .changeNetworkParameter(this.Params.mergeCreatorFeeShare, mergeCreatorFeeShare));
   }
 
   /**
    * @param oracleExchangeRate percentage is per 10,000; 3 = 0,0003
    */
   async changeOracleExchangeRate(oracleExchangeRate: number) {
-    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.oracleExchangeRate, oracleExchangeRate));
+    return this.sendTx(this.contract.methods
+                           .changeNetworkParameter(this.Params.oracleExchangeRate, oracleExchangeRate));
   }
 
   /**
@@ -281,8 +285,8 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * Gives oracles from msg.sender to recipient
    */
   async delegateOracles(tokenAmount: number, recipient: string) {
-    return this.sendTx(this.contract.methods
-                           .delegateOracles(toSmartContractDecimals(tokenAmount, this.settlerToken.decimals), recipient));
+    tokenAmount = toSmartContractDecimals(tokenAmount, this.settlerToken.decimals);
+    return this.sendTx(this.contract.methods.delegateOracles(tokenAmount, recipient));
   }
 
   /**
@@ -299,11 +303,11 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * @param {string} repoPath repository path for this bounty
    * @param {string} branch branch inside the provided repo path
    */
-  async openBounty(tokenAmount: number = 0,
-                   transactional: string = nativeZeroAddress,
-                   rewardToken: string = nativeZeroAddress,
-                   rewardAmount: number = 0,
-                   fundingAmount: number = 0,
+  async openBounty(tokenAmount = 0,
+                   transactional = nativeZeroAddress,
+                   rewardToken = nativeZeroAddress,
+                   rewardAmount = 0,
+                   fundingAmount = 0,
                    cid: string,
                    title: string,
                    repoPath: string,
@@ -323,16 +327,15 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
       _fundingAmount = toSmartContractDecimals(fundingAmount, _transactional.decimals);
     }
 
-    return this.sendTx(
-      this.contract.methods.openBounty(_tokenAmount,
-                                       transactional,
-                                       rewardToken,
-                                       _rewardAmount,
-                                       _fundingAmount,
-                                       cid,
-                                       title,
-                                       repoPath,
-                                       branch));
+    return this.sendTx(this.contract.methods.openBounty(_tokenAmount,
+                                                        transactional,
+                                                        rewardToken,
+                                                        _rewardAmount,
+                                                        _fundingAmount,
+                                                        cid,
+                                                        title,
+                                                        repoPath,
+                                                        branch));
   }
 
   /**
@@ -401,8 +404,20 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   /**
    * create pull request for bounty id
    */
-  async createPullRequest(forBountyId: number, originRepo: string, originBranch: string, originCID: string, userRepo: string, userBranch: string, cid: number) {
-    return this.sendTx(this.contract.methods.createPullRequest(forBountyId, originRepo, originBranch, originCID, userRepo, userBranch, cid));
+  async createPullRequest(forBountyId: number,
+                          originRepo: string,
+                          originBranch: string,
+                          originCID: string,
+                          userRepo: string,
+                          userBranch: string,
+                          cid: number) {
+    return this.sendTx(this.contract.methods.createPullRequest(forBountyId,
+                                                               originRepo,
+                                                               originBranch,
+                                                               originCID,
+                                                               userRepo,
+                                                               userBranch,
+                                                               cid));
   }
 
   async cancelPullRequest(ofBounty: number, prId: number) {
@@ -461,29 +476,31 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
     return this.contract.self.getPastEvents(`BountyDistributed`, filter)
   }
 
-  async getBountyProposalCreatedEvents(filter: PastEventOptions): Promise<XEvents<Events.BountyProposalCreatedEvent>[]> {
+  async getBountyProposalCreatedEvents(filter: PastEventOptions): XPromiseEvent<Events.BountyProposalCreatedEvent> {
     return this.contract.self.getPastEvents(`BountyProposalCreated`, filter)
   }
 
-  async getBountyProposalDisputedEvents(filter: PastEventOptions): Promise<XEvents<Events.BountyProposalDisputedEvent>[]> {
+  async getBountyProposalDisputedEvents(filter: PastEventOptions): XPromiseEvent<Events.BountyProposalDisputedEvent> {
     return this.contract.self.getPastEvents(`BountyProposalDisputed`, filter)
   }
 
-  async getBountyProposalRefusedEvents(filter: PastEventOptions): Promise<XEvents<Events.BountyProposalRefusedEvent>[]> {
+  async getBountyProposalRefusedEvents(filter: PastEventOptions): XPromiseEvent<Events.BountyProposalRefusedEvent> {
     return this.contract.self.getPastEvents(`BountyProposalRefused`, filter)
   }
 
-  async getBountyPullRequestCanceledEvents(filter: PastEventOptions): Promise<XEvents<Events.BountyPullRequestCanceledEvent>[]> {
+  /* eslint-disable max-len */
+  async getBountyPullRequestCanceledEvents(filter: PastEventOptions): XPromiseEvent<Events.BountyPullRequestCanceledEvent> {
     return this.contract.self.getPastEvents(`BountyPullRequestCanceled`, filter)
   }
 
-  async getBountyPullRequestCreatedEvents(filter: PastEventOptions): Promise<XEvents<Events.BountyPullRequestCreatedEvent>[]> {
+  async getBountyPullRequestCreatedEvents(filter: PastEventOptions): XPromiseEvent<Events.BountyPullRequestCreatedEvent> {
     return this.contract.self.getPastEvents(`BountyPullRequestCreated`, filter)
   }
 
-  async getBountyPullRequestReadyForReviewEvents(filter: PastEventOptions): Promise<XEvents<Events.BountyPullRequestReadyForReviewEvent>[]> {
+  async getBountyPullRequestReadyForReviewEvents(filter: PastEventOptions): XPromiseEvent<Events.BountyPullRequestReadyForReviewEvent> {
     return this.contract.self.getPastEvents(`BountyPullRequestReadyForReview`, filter)
   }
+  /* eslint-enable max-len */
 
   async getGovernorTransferredEvents(filter: PastEventOptions): Promise<XEvents<Events.GovernorTransferredEvent>[]> {
     return this.contract.self.getPastEvents(`GovernorTransferred`, filter)
