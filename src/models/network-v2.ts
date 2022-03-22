@@ -23,6 +23,15 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   private _settlerToken!: ERC20;
   private _governed!: Governed;
 
+  public Params = { 
+    councilAmount: 0, 
+    disputableTime: 1, 
+    draftTime: 2,
+    oracleExchangeRate: 3,
+    mergeCreatorFeeShare: 4,
+    percentageNeededForDispute: 5
+  }
+
   get nftToken() { return this._nftToken; }
 
   /**
@@ -76,6 +85,10 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
 
   async closedBounties() {
     return this.callTx(this.contract.methods.closedBounties());
+  }
+
+  async bountiesTotal() {
+    return this.callTx(this.contract.methods.bountiesTotal());
   }
 
   async councilAmount() {
@@ -150,42 +163,42 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
 
   async changeCouncilAmount(newAmount: number) {
     newAmount = toSmartContractDecimals(newAmount, this.settlerToken.decimals);
-    return this.sendTx(this.contract.methods.changeCouncilAmount(newAmount));
+    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.councilAmount, newAmount));
   }
 
   /**
    * @param _draftTime duration in seconds
    */
   async changeDraftTime(_draftTime: number) {
-    return this.sendTx(this.contract.methods.changeDraftTime(_draftTime));
+    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.draftTime, _draftTime));
   }
 
   /**
    * @param disputableTime duration in seconds
    */
   async changeDisputableTime(disputableTime: number) {
-    return this.sendTx(this.contract.methods.changeDisputableTime(disputableTime));
+    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.disputableTime, disputableTime));
   }
 
   /**
    * @param percentageNeededForDispute percentage is per 10,000; 3 = 0,0003
    */
   async changePercentageNeededForDispute(percentageNeededForDispute: number) {
-    return this.sendTx(this.contract.methods.changePercentageNeededForDispute(percentageNeededForDispute));
+    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.percentageNeededForDispute, percentageNeededForDispute));
   }
 
   /**
    * @param mergeCreatorFeeShare percentage is per 10,000; 3 = 0,0003
    */
   async changeMergeCreatorFeeShare(mergeCreatorFeeShare: number) {
-    return this.sendTx(this.contract.methods.changeMergeCreatorFeeShare(mergeCreatorFeeShare));
+    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.mergeCreatorFeeShare, mergeCreatorFeeShare));
   }
 
   /**
    * @param oracleExchangeRate percentage is per 10,000; 3 = 0,0003
    */
   async changeOracleExchangeRate(oracleExchangeRate: number) {
-    return this.sendTx(this.contract.methods.changeOracleExchangeRate(oracleExchangeRate));
+    return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.oracleExchangeRate, oracleExchangeRate));
   }
 
   /**
