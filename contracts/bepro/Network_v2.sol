@@ -292,6 +292,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         string memory repoPath,
         string memory branch
     ) public payable {
+        bountiesIndex = bountiesIndex.add(1);
 
         bounties[bountiesIndex].id = bountiesIndex;
         bounties[bountiesIndex].cid = cid;
@@ -307,30 +308,23 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         if (address(0) != rewardToken) {
             require(tokenAmount == 0, "O1");
-            //require(rewardAmount > 0, "O2");
             amountGT0(rewardAmount);
-            //require(fundingAmount > 0, "O3");
             amountGT0(fundingAmount);
-            //ERC20 erc20 = ERC20(rewardToken);
             require(ERC20(rewardToken).transferFrom(msg.sender, address(this), rewardAmount));
 
             bounties[bountiesIndex].rewardAmount = rewardAmount;
             bounties[bountiesIndex].rewardToken = rewardToken;
             bounties[bountiesIndex].fundingAmount = fundingAmount;
             bounties[bountiesIndex].tokenAmount = 0;
-            // bounty.settlerTokenRatio = settlerTokenRatio;
         } else {
             bounties[bountiesIndex].tokenAmount = tokenAmount;
-            //ERC20 erc20 = ERC20(transactional);
             require(ERC20(transactional).transferFrom(msg.sender, address(this), tokenAmount), "O4");
         }
 
         cidBountyId[cid] = bounties[bountiesIndex].id;
         bountiesOfAddress[msg.sender].push(bounties[bountiesIndex].id);
 
-        bountiesIndex = bountiesIndex.add(1);
-
-        emit BountyCreated(bounties[bountiesIndex].id, bounties[bountiesIndex].cid, bounties[bountiesIndex].creator);
+        emit BountyCreated(bounties[bountiesIndex].id, bounties[bountiesIndex].cid, msg.sender);
     }
 
     /// @dev user adds value to an existing bounty
