@@ -9,9 +9,7 @@ pragma abicoder v2;
 contract NetworkFactory_v2 is ReentrancyGuard  {
     using SafeMath for uint256;
 
-    constructor(address erc20NetworkTokenAddress_) {
-        erc20NetworkToken = erc20NetworkTokenAddress_;
-    }
+    constructor(address erc20NetworkTokenAddress_) { erc20NetworkToken = erc20NetworkTokenAddress_; }
 
     address[] public networksArray;
     address public erc20NetworkToken;
@@ -26,33 +24,33 @@ contract NetworkFactory_v2 is ReentrancyGuard  {
     event NetworkCreated(address network, address indexed creator, uint256 id);
     event NetworkClosed(address indexed network);
 
-    function lock(uint256 amount) public payable {
-        require(amount > 0, "L0");
-        require(ERC20(erc20NetworkToken).transferFrom(msg.sender, address(this), amount), "L1");
+    function manageFunds(bool lock, uint256 amount) public {
+        if (lock) {
+            require(amount > 0, "L0");
+            require(ERC20(erc20NetworkToken).transferFrom(msg.sender, address(this), amount), "L1");
 
-        lockedTokensOfAddress[msg.sender] = lockedTokensOfAddress[msg.sender].add(amount);
-        tokensLocked = tokensLocked.add(amount);
-    }
+            lockedTokensOfAddress[msg.sender] = lockedTokensOfAddress[msg.sender].add(amount);
+            tokensLocked = tokensLocked.add(amount);
+        } else {
+            uint256 lockedAmount = lockedTokensOfAddress[msg.sender];
+            require(lockedAmount > 0, "UL0");
 
-    function unlock() public payable nonReentrant {
-        uint256 amount = lockedTokensOfAddress[msg.sender];
-        require(amount > 0, "UL0");
+            if (networkOfAddress[msg.sender] != address(0)) {
+                Network_v2 network = Network_v2(networkOfAddress[msg.sender]);
+                require(network.totalSettlerLocked() == 0, "UL1");
+                require((network.closedBounties() + network.canceledBounties()) == network.bountiesIndex() - 1, "UL2");
+                emit NetworkClosed(networkOfAddress[msg.sender]);
+                networkOfAddress[msg.sender] = address(0);
+            }
 
-        if (networkOfAddress[msg.sender] != address(0)) {
-            Network_v2 network = Network_v2(networkOfAddress[msg.sender]);
-            require(network.totalSettlerLocked() == 0, "UL1");
-            require((network.closedBounties() + network.canceledBounties()) == network.bountiesTotal(), "UL2");
-            emit NetworkClosed(networkOfAddress[msg.sender]);
-            networkOfAddress[msg.sender] = address(0);
+            tokensLocked = tokensLocked.sub(lockedAmount);
+            lockedTokensOfAddress[msg.sender] = 0;
+
+            require(ERC20(erc20NetworkToken).transfer(msg.sender, lockedAmount));
         }
-
-        tokensLocked = tokensLocked.sub(amount);
-        lockedTokensOfAddress[msg.sender] = 0;
-
-        require(ERC20(erc20NetworkToken).transfer(msg.sender, amount));
     }
 
-    function createNetwork(address networkToken, address nftToken, string memory nftUri) public payable {
+    function createNetwork(address networkToken, address nftToken, string memory nftUri) public {
         require(networkOfAddress[msg.sender] == address(0), "CN1");
         require(lockedTokensOfAddress[msg.sender] >= creatorAmount, "CN2");
 
