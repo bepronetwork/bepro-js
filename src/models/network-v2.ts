@@ -87,10 +87,6 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
     return this.callTx(this.contract.methods.closedBounties());
   }
 
-  async bountiesTotal() {
-    return this.callTx(this.contract.methods.bountiesTotal());
-  }
-
   async councilAmount() {
     return fromSmartContractDecimals(await this.callTx(this.contract
                                                            .methods.councilAmount()), this.settlerToken.decimals);
@@ -154,14 +150,6 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
     return this.callTx(this.contract.methods.getBounty(id));
   }
 
-  async getPullRequest(bountyId: number, pullRequestId: number) {
-    return this.callTx(this.contract.methods.getPullRequest(bountyId, pullRequestId));
-  }
-
-  async getProposal(bountyId: number, proposalId: number) {
-    return this.callTx(this.contract.methods.getProposal(bountyId, proposalId));
-  }
-
   async changeCouncilAmount(newAmount: number) {
     newAmount = toSmartContractDecimals(newAmount, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.changeNetworkParameter(this.Params.councilAmount, newAmount));
@@ -205,42 +193,6 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
                            .changeNetworkParameter(this.Params.oracleExchangeRate, oracleExchangeRate));
   }
 
-  /**
-   * returns true if NOW is less than bounty create time plus draft time
-   */
-  async isBountyInDraft(id: number) {
-    return this.callTx(this.contract.methods.isBountyInDraft(id));
-  }
-
-  async isBountyFundingRequest(id: number) {
-    return this.callTx(this.contract.methods.isBountyFundingRequest(id));
-  }
-
-  async isBountyFunded(id: number) {
-    return this.callTx(this.contract.methods.isBountyFunded(id));
-  }
-
-  /**
-   * returns true if NOW is less than proposal create time plus disputable time
-   */
-  async isProposalInDraft(bountyId: number, proposalId: number) {
-    return this.callTx(this.contract.methods.isProposalInDraft(bountyId, proposalId));
-  }
-
-  /**
-   * returns true if disputes on proposal is higher than the percentage of the total oracles staked
-   */
-  async isProposalDisputed(bountyId: number, proposalId: number) {
-    return this.callTx(this.contract.methods.isProposalDisputed(bountyId, proposalId));
-  }
-
-  async isProposalRefused(bountyId: number, proposalId: number) {
-    return this.callTx(this.contract.methods.isProposalRefused(bountyId, proposalId));
-  }
-
-  async isAfterUnlockPeriod(date: number) {
-    return this.callTx(this.contract.methods.isAfterUnlockPeriod(date));
-  }
 
   /**
    * get total amount of oracles of an address
@@ -248,22 +200,6 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   async getOraclesOf(_address: string) {
     const oracles = await this.callTx(this.contract.methods.getOraclesOf(_address));
     return fromSmartContractDecimals(oracles, this.settlerToken.decimals);
-  }
-
-  async getOracleExchangeRate() {
-    return Number(await this.callTx(this.contract.methods.getOracleExchangeRate()));
-  }
-
-  async calculatePercentPerTenK(amount: number) {
-    return Number(await this.callTx(this.contract.methods.calculatePercentPerTenK(amount)));
-  }
-
-  async calculateOracleExchangeRate(settlerAmount: number) {
-    return Number(await this.callTx(this.contract.methods.calculateOracleExchangeRate(settlerAmount)));
-  }
-
-  async calculateSettlerExchangeRate(oraclesAmount: number) {
-    return Number(await this.callTx(this.contract.methods.calculateSettlerExchangeRate(oraclesAmount)));
   }
 
   /**
