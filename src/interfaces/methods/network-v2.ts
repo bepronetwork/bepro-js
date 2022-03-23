@@ -24,7 +24,7 @@ export interface Network_v2Methods {
   proposerFeeShare(): ContractCallMethod<number>;
   settlerToken(): ContractCallMethod<string>;
   totalSettlerLocked(): ContractCallMethod<number>;
-  getBounty(id: number): ContractCallMethod<{'id': number;'creationDate': number;'tokenAmount': number;'creator': string;'transactional': string;'rewardToken': string;'rewardAmount': number;'fundingAmount': number;'closed': boolean;'canceled': boolean;'funded': boolean;'title': string;'repoPath': string;'branch': string;'cid': string;'closedDate': number;'pullRequests': {'originRepo': string;'originCID': string;'originBranch': string;'userRepo': string;'userBranch': string;'ready': boolean;'canceled': boolean;'creator': string;'cid': number;'id': number;}[];'proposals': {'id': number;'creationDate': number;'oracles': number;'disputeWeight': number;'prId': number;'refusedByBountyOwner': boolean;'creator': string;'details': {'recipient': string;'percentage': number;}[];}[];'funding': {'benefactor': string;'amount': number;'creationDate': number;}[];}>;
+  getBounty(id: number): ContractCallMethod<IBounty>;
   getDelegationsFor(_address: string): ContractCallMethod<{'from': string;'to': string;'amount': number;}[]>;
   getBountiesOfAddress(owner: string): ContractCallMethod<number[]>;
   changeNetworkParameter(_parameter: number, _value: number): ContractSendMethod;
