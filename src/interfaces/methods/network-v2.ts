@@ -1,5 +1,6 @@
 import {ContractSendMethod} from 'web3-eth-contract';
 import {ContractCallMethod} from '@methods/contract-call-method';
+import {IBounty} from '@interfaces/bounty';
 
 export interface Network_v2Methods {
   _governor(): ContractCallMethod<string>;
