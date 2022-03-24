@@ -66,10 +66,15 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
 
   }
 
-  async deployJsonAbi(_settlerToken: string, _nftTokenAddress: string, _bountyNftUri: string) {
+  async deployJsonAbi(_settlerToken: string,
+                      _nftTokenAddress: string,
+                      _bountyNftUri: string,
+                      treasury = nativeZeroAddress,
+                      cancelFee = 0,
+                      closeFee = 0) {
     const deployOptions = {
-        data: (Network_v2Json as any).bytecode,
-        arguments: [_settlerToken, _nftTokenAddress, _bountyNftUri]
+      data: (Network_v2Json as any).bytecode,
+      arguments: [_settlerToken, _nftTokenAddress, _bountyNftUri, treasury, cancelFee, closeFee]
     };
 
     return this.deploy(deployOptions, this.web3Connection.Account);
@@ -120,10 +125,6 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
 
   async oraclesDistributed() {
     return this.callTx(this.contract.methods.oraclesDistributed());
-  }
-
-  async oraclesStaked() {
-    return this.callTx(this.contract.methods.oraclesStaked());
   }
 
   async percentageNeededForDispute() {
@@ -198,23 +199,24 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
    * get total amount of oracles of an address
    */
   async getOraclesOf(_address: string) {
-    const oracles = await this.callTx(this.contract.methods.getOraclesOf(_address));
-    return fromSmartContractDecimals(oracles, this.settlerToken.decimals);
+    const oracles = await this.callTx(this.contract.methods.oracles(_address));
+    return fromSmartContractDecimals(+oracles.locked + +oracles.byOthers, this.settlerToken.decimals);
   }
 
   /**
    * Lock given amount into the oracle mapping
    */
   async lock(tokenAmount: number) {
-    return this.sendTx(this.contract.methods.lock(toSmartContractDecimals(tokenAmount, this.settlerToken.decimals)));
+    tokenAmount = toSmartContractDecimals(tokenAmount, this.settlerToken.decimals);
+    return this.sendTx(this.contract.methods.manageOracles(true, tokenAmount));
   }
 
   /**
    * Unlock from the oracle mapping
    */
-  async unlock(tokenAmount: number, from: string) {
-    return this.sendTx(this.contract.methods
-                           .unlock(toSmartContractDecimals(tokenAmount, this.settlerToken.decimals), from));
+  async unlock(tokenAmount: number) {
+    tokenAmount = toSmartContractDecimals(tokenAmount, this.settlerToken.decimals);
+    return this.sendTx(this.contract.methods.manageOracles(false, tokenAmount));
   }
 
   /**
@@ -223,6 +225,13 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   async delegateOracles(tokenAmount: number, recipient: string) {
     tokenAmount = toSmartContractDecimals(tokenAmount, this.settlerToken.decimals);
     return this.sendTx(this.contract.methods.delegateOracles(tokenAmount, recipient));
+  }
+
+  /**
+   * Takes back oracles from the entryId related to msg.sender
+   */
+  async takeBackOracles(entryId: number) {
+    return this.sendTx(this.contract.methods.takeBackOracles(entryId));
   }
 
   /**
@@ -274,25 +283,25 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
                                                         branch));
   }
 
-  /**
-   * user adds value to an existing bounty
-   * @param id bounty id
-   * @param tokenAmount amount to add as support
-   * @param decimals decimals of the transactional for this bounty
-   */
-  async supportBounty(id: number, tokenAmount: number, decimals = 18) {
-    tokenAmount = toSmartContractDecimals(tokenAmount, decimals);
-    return this.sendTx(this.contract.methods.supportBounty(id, tokenAmount));
-  }
+  // /**
+  //  * user adds value to an existing bounty
+  //  * @param id bounty id
+  //  * @param tokenAmount amount to add as support
+  //  * @param decimals decimals of the transactional for this bounty
+  //  */
+  // async supportBounty(id: number, tokenAmount: number, decimals = 18) {
+  //   tokenAmount = toSmartContractDecimals(tokenAmount, decimals);
+  //   return this.sendTx(this.contract.methods.supportBounty(id, tokenAmount));
+  // }
 
-  /**
-   * user removes its beneficiary entry
-   * @param bountyId
-   * @param entryId
-   */
-  async retractSupportFromBounty(bountyId: number, entryId: number) {
-    return this.sendTx(this.contract.methods.retractSupportFromBounty(bountyId, entryId));
-  }
+  // /**
+  //  * user removes its beneficiary entry
+  //  * @param bountyId
+  //  * @param entryId
+  //  */
+  // async retractSupportFromBounty(bountyId: number, entryId: number) {
+  //   return this.sendTx(this.contract.methods.retractSupportFromBounty(bountyId, entryId));
+  // }
 
   /**
    * cancel a bounty
@@ -394,6 +403,10 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
 
   async cidBountyId(cid: string) {
     return this.callTx(this.contract.methods.cidBountyId(cid));
+  }
+
+  async getDelegationOf(address: string) {
+    return this.callTx(this.contract.methods.getDelegationsFor(address));
   }
 
   async getBountyCanceledEvents(filter: PastEventOptions): Promise<XEvents<Events.BountyCanceledEvent>[]> {

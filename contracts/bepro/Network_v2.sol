@@ -27,11 +27,15 @@ struct ProposalDetail {
 }
 
 struct Oracle {
-    uint256 oraclesDelegatedByOthers;
-    uint256 tokensLocked;
+    uint256 locked;
+    uint256 toOthers;
+    uint256 byOthers;
+}
 
-    mapping(address => uint256) oraclesDelegated;
-    mapping(uint256 => mapping(uint256 => uint256)) disputes;
+struct Delegation {
+    address from;
+    address to;
+    uint256 amount;
 }
 
 struct Proposal {
@@ -61,7 +65,6 @@ struct Bounty {
     address rewardToken; // DOGE
     uint256 rewardAmount; // 2000
     uint256 fundingAmount; // 1,000
-    // uint256 settlerTokenRatio; // 0.2
 
     bool closed;
     bool canceled;
@@ -76,7 +79,7 @@ struct Bounty {
 
     PullRequest[] pullRequests;
     Proposal[] proposals;
-    Benefactor[] benefactors;
+//    Benefactor[] benefactors;
     Benefactor[] funding;
 }
 
@@ -95,11 +98,17 @@ contract Network_v2 is Governed, ReentrancyGuard {
     constructor(
         address _settlerToken,
         address _nftTokenAddress,
-        string memory _bountyNftUri
+        string memory _bountyNftUri,
+        address _treasuryAddress,
+        uint256 _cancelFee,
+        uint256 _closeFee
     ) Governed() ReentrancyGuard() {
         settlerToken = ERC20(_settlerToken);
         nftToken = BountyToken(_nftTokenAddress);
         bountyNftUri = _bountyNftUri;
+        closeFee = _closeFee;
+        cancelFee = _cancelFee;
+        treasury = _treasuryAddress;
     }
 
     ERC20 public settlerToken;
@@ -110,7 +119,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
     uint256 public totalSettlerLocked = 0; // TVL essentially
 
     uint256 public oracleExchangeRate = 10000; // 10,000 = 1:1 ; parts per 10K
-    uint256 public oraclesStaked = 0;
     uint256 public oraclesDistributed = 0; // essentially, the converted math of TVL
 
     uint256 public closedBounties = 0;
@@ -122,21 +130,20 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     uint256 public disputableTime = 3 days;
     uint256 public draftTime = 1 days;
-    uint256 public unlockPeriod = 183 days; // 6 months after closedDate
 
     uint256 public councilAmount = 25000000*10**18; // 25M * 10 to the power of 18 (decimals)
 
-    address feeReceiver = address(0); // address of people who will receive fees in case of doing network by other ppl
-    uint256 closeFee = 50000; // in bounty transactional
-    uint256 cancelFee = 10000; // in bounty transactional
-    // todo account with these values
-
-    mapping(address => Oracle) public oracles;
+    address treasury = address(0);
+    uint256 closeFee = 50000;
+    uint256 cancelFee = 10000;
 
     uint256 public bountiesIndex = 0;
     mapping(uint256 => Bounty) bounties;
-    mapping(string => uint256) public cidBountyId;
     mapping(address => uint256[]) bountiesOfAddress;
+    mapping(string => uint256) public cidBountyId;
+    mapping(address => Oracle) public oracles;
+    mapping(address => Delegation[]) delegations;
+    mapping(address => mapping(bytes32 => uint256)) disputes;
 
     event BountyCreated(uint256 id, string cid, address indexed creator);
     event BountyCanceled(uint256 indexed id);
@@ -179,13 +186,13 @@ contract Network_v2 is Governed, ReentrancyGuard {
         return bounties[id];
     }
 
+    function getDelegationsFor(address _address) external view returns (Delegation[] memory) {
+        return delegations[_address];
+    }
+
     function getBountiesOfAddress(address owner) external view returns (uint256[] memory) {
         return bountiesOfAddress[owner];
     }
-
-//    function bountiesTotal() public view returns (uint256) {
-//        return bounties.length;
-//    }
 
     function lessThan20MoreThan1(uint256 value) internal {
         require(value <= 20 days, "T1");
@@ -215,69 +222,44 @@ contract Network_v2 is Governed, ReentrancyGuard {
         }
     }
 
-    /// @dev get total amount of oracles of an address
-    function getOraclesOf(address _address) public view returns (uint256) {
-        return oracles[_address].oraclesDelegatedByOthers.add(oracles[_address].oraclesDelegated[_address]);
-    }
-
     function amountGT0(uint256 _amount) internal view {
         require(_amount > 0, "L0");
     }
 
-    /// @dev Lock given amount into the oracle mapping
-    function lock(uint256 tokenAmount) public payable {
-        amountGT0(tokenAmount);
-        require(settlerToken.transferFrom(msg.sender, address(this), tokenAmount));
-
-        Oracle storage oracle = oracles[msg.sender];
-
-        uint256 exchangedAmount = tokenAmount.mul(oracleExchangeRate.div(10000));
-
-        oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].add(exchangedAmount);
-        oracle.tokensLocked = oracle.tokensLocked.add(exchangedAmount);
-
-        totalSettlerLocked = totalSettlerLocked.add(tokenAmount);
-        oraclesDistributed = oraclesDistributed.add(exchangedAmount);
-    }
-
-    /// @dev Unlock from the oracle mapping
-    function unlock(uint256 tokenAmount, address from) public payable {
-        Oracle storage oracle = oracles[msg.sender];
-
-
-        if (msg.sender != from) {
-            require(oracle.tokensLocked >= tokenAmount, "UL1");
-            oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].add(tokenAmount);
-            oracle.oraclesDelegated[from] = oracle.oraclesDelegated[from].sub(tokenAmount);
-            oracles[from].oraclesDelegatedByOthers = oracles[from].oraclesDelegatedByOthers.sub(tokenAmount);
+    function manageOracles(bool lock, uint256 amount) external payable {
+        uint256 exchanged = 0;
+        if (lock) {
+            exchanged = amount.mul(oracleExchangeRate.div(10000));
+            oracles[msg.sender].locked = oracles[msg.sender].locked.add(exchanged);
+            require(settlerToken.transferFrom(msg.sender, address(this), amount), "MO0");
+            totalSettlerLocked = totalSettlerLocked.add(amount);
+            oraclesDistributed = oraclesDistributed.add(exchanged);
         } else {
-            uint256 exchangedAmount = tokenAmount.div(oracleExchangeRate.div(10000));
-
-            require(oracle.tokensLocked >= tokenAmount, "UL2");
-
-            oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].sub(tokenAmount);
-            oracle.tokensLocked = oracle.tokensLocked.sub(tokenAmount);
-
-            totalSettlerLocked = totalSettlerLocked.sub(exchangedAmount);
-            oraclesDistributed = oraclesDistributed.sub(tokenAmount);
-
-            require(settlerToken.transfer(msg.sender, exchangedAmount), "UL3");
+            exchanged = amount.div(oracleExchangeRate.div(10000));
+            require(amount <= oracles[msg.sender].locked, "MO1");
+            require(settlerToken.transfer(msg.sender, exchanged), "MO2");
+            oracles[msg.sender].locked = oracles[msg.sender].locked.sub(amount);
+            totalSettlerLocked = totalSettlerLocked.sub(exchanged);
+            oraclesDistributed = oraclesDistributed.sub(amount);
         }
     }
 
-    /// @dev Gives oracles from msg.sender to recipient
-    function delegateOracles(uint256 tokenAmount, address recipient) external payable {
-        require(recipient != address(0), "D1");
-        require(recipient != msg.sender, "D2");
+    function delegateOracles(uint256 amount, address toAddress) external payable {
+        require(amount <= oracles[msg.sender].locked, "MD0");
+        oracles[msg.sender].locked = oracles[msg.sender].locked.sub(amount);
+        oracles[msg.sender].toOthers = oracles[msg.sender].toOthers.add(amount);
+        oracles[toAddress].byOthers = oracles[toAddress].byOthers.add(amount);
+        delegations[msg.sender].push(Delegation(msg.sender, toAddress, amount));
+    }
 
-        Oracle storage oracle = oracles[msg.sender];
-
-        require(oracle.tokensLocked >= tokenAmount, "D3");
-        require(oracle.oraclesDelegated[msg.sender] >= tokenAmount, "D4");
-
-        oracle.oraclesDelegated[msg.sender] = oracle.oraclesDelegated[msg.sender].sub(tokenAmount);
-        oracle.oraclesDelegated[recipient] = oracle.oraclesDelegated[recipient].add(tokenAmount);
-        oracles[recipient].oraclesDelegatedByOthers = oracles[recipient].oraclesDelegatedByOthers.add(tokenAmount);
+    function takeBackOracles(uint256 entryId) external payable {
+        require(delegations[msg.sender][entryId].amount > 0, "MD1");
+        uint256 amount = delegations[msg.sender][entryId].amount;
+        address delegated = delegations[msg.sender][entryId].to;
+        oracles[msg.sender].locked = oracles[msg.sender].locked.add(amount);
+        oracles[msg.sender].toOthers = oracles[msg.sender].toOthers.sub(amount);
+        oracles[delegated].byOthers = oracles[delegated].byOthers.sub(amount);
+        delegations[msg.sender][entryId].amount = 0;
     }
 
     /// @dev create a bounty
@@ -327,38 +309,38 @@ contract Network_v2 is Governed, ReentrancyGuard {
         emit BountyCreated(bounties[bountiesIndex].id, bounties[bountiesIndex].cid, msg.sender);
     }
 
-    /// @dev user adds value to an existing bounty
-    function supportBounty(uint256 id, uint256 tokenAmount) external payable {
-        // _bountyExists(id);
-        _isInDraft(id, true);
-        _isFundingRequest(id, false);
-        Bounty storage bounty = bounties[id];
-        require(bounty.creator != msg.sender, "S0");
-
-        bounty.benefactors.push(Benefactor(msg.sender, tokenAmount, block.timestamp));
-
-        //ERC20 erc20 = ERC20(bounty.transactional);
-
-        require(ERC20(bounty.transactional).transferFrom(msg.sender, address(this), tokenAmount), "S1");
-        bounty.tokenAmount = bounty.tokenAmount.add(tokenAmount);
-    }
-
-    /// @dev user removes its beneficiary entry
-    function retractSupportFromBounty(uint256 bountyId, uint256 entryId) external payable {
-        // _bountyExists(bountyId);
-        _isInDraft(bountyId, true);
-        _isFundingRequest(bountyId, false);
-        Bounty storage bounty = bounties[bountyId];
-        //ERC20 erc20 = ERC20(bounty.transactional);
-
-        //require(bounty.benefactors[entryId].amount > 0, "R1");
-        amountGT0(bounty.benefactors[entryId].amount);
-        require(bounty.benefactors[entryId].benefactor == msg.sender, "R2");
-        require(ERC20(bounty.transactional).transfer(msg.sender, bounty.benefactors[entryId].amount), "R3");
-
-        bounty.tokenAmount = bounty.tokenAmount.sub(bounty.benefactors[entryId].amount);
-        bounty.benefactors[entryId].amount = 0;
-    }
+//    /// @dev user adds value to an existing bounty
+//    function supportBounty(uint256 id, uint256 tokenAmount) external payable {
+//        // _bountyExists(id);
+//        _isInDraft(id, true);
+//        _isFundingRequest(id, false);
+//        Bounty storage bounty = bounties[id];
+//        require(bounty.creator != msg.sender, "S0");
+//
+//        bounty.benefactors.push(Benefactor(msg.sender, tokenAmount, block.timestamp));
+//
+//        //ERC20 erc20 = ERC20(bounty.transactional);
+//
+//        require(ERC20(bounty.transactional).transferFrom(msg.sender, address(this), tokenAmount), "S1");
+//        bounty.tokenAmount = bounty.tokenAmount.add(tokenAmount);
+//    }
+//
+//    /// @dev user removes its beneficiary entry
+//    function retractSupportFromBounty(uint256 bountyId, uint256 entryId) external payable {
+//        // _bountyExists(bountyId);
+//        _isInDraft(bountyId, true);
+//        _isFundingRequest(bountyId, false);
+//        Bounty storage bounty = bounties[bountyId];
+//        //ERC20 erc20 = ERC20(bounty.transactional);
+//
+//        //require(bounty.benefactors[entryId].amount > 0, "R1");
+//        amountGT0(bounty.benefactors[entryId].amount);
+//        require(bounty.benefactors[entryId].benefactor == msg.sender, "R2");
+//        require(ERC20(bounty.transactional).transfer(msg.sender, bounty.benefactors[entryId].amount), "R3");
+//
+//        bounty.tokenAmount = bounty.tokenAmount.sub(bounty.benefactors[entryId].amount);
+//        bounty.benefactors[entryId].amount = 0;
+//    }
 
     /// @dev cancel a bounty
     function cancelBounty(uint256 id) external payable {
@@ -372,17 +354,23 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
         bounty.canceled = true;
 
-        if (bounty.benefactors.length > 0) {
-            Benefactor[] memory benefactors = bounty.benefactors;
-            for (uint256 i = 0; i <= benefactors.length - 1; i++) {
-                if (benefactors[i].amount > 0) {
-                    require(erc20.transfer(benefactors[i].benefactor, benefactors[i].amount), "C1");
-                    bounty.tokenAmount = bounty.tokenAmount.sub(benefactors[i].amount);
-                }
-            }
+//        if (bounty.benefactors.length > 0) {
+//            Benefactor[] memory benefactors = bounty.benefactors;
+//            for (uint256 i = 0; i <= benefactors.length - 1; i++) {
+//                if (benefactors[i].amount > 0) {
+//                    require(erc20.transfer(benefactors[i].benefactor, benefactors[i].amount), "C1");
+//                    bounty.tokenAmount = bounty.tokenAmount.sub(benefactors[i].amount);
+//                }
+//            }
+//        }
+
+        uint256 returnAmount = bounty.tokenAmount;
+        if (treasury != address(0)) {
+            returnAmount = returnAmount.sub(bounty.tokenAmount.div(100).mul(cancelFee.div(10000)));
+            require(erc20.transfer(treasury, bounty.tokenAmount.div(100).mul(cancelFee.div(10000))), "C3");
         }
 
-        require(erc20.transfer(bounty.creator, bounty.tokenAmount), "C2");
+        require(erc20.transfer(bounty.creator, returnAmount), "C2");
 
         canceledBounties = canceledBounties.add(1);
 
@@ -473,7 +461,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
         for (uint256 i = 0; i <= fundingIds.length - 1; i++) {
             Benefactor storage x = bounty.funding[fundingIds[i]];
             require(x.benefactor == msg.sender, "RF1");
-            //require(x.amount > 0, "RF2");
             amountGT0(x.amount);
             require(ERC20(bounty.transactional).transfer(msg.sender, x.amount), "RF3");
             bounty.tokenAmount = bounty.tokenAmount.sub(x.amount);
@@ -493,11 +480,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
         string memory userBranch,
         uint256 cid
     ) external payable {
-
-        // _bountyExists(forBountyId);
         _isOpen(forBountyId);
         _isNotCanceled(forBountyId);
-        //_isNotDraft(forBountyId);
         _isInDraft(forBountyId, false);
 
         Bounty storage bounty = bounties[forBountyId];
@@ -520,10 +504,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     }
 
     function cancelPullRequest(uint256 ofBounty, uint256 prId) public payable {
-
-        // _bountyExists(ofBounty);
         _isOpen(ofBounty);
-        //_isNotDraft(ofBounty);
         _isInDraft(ofBounty, false);
         _isNotCanceled(ofBounty);
 
@@ -531,11 +512,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
         require(bounties[ofBounty].pullRequests[prId].canceled != false, "CPR2");
         require(bounties[ofBounty].pullRequests[prId].creator == msg.sender, "CPR3");
 
-        for (uint256 i = 0; i <= bounties[ofBounty].proposals.length; i++) {
-            require(bounties[ofBounty].proposals[i].prId != prId, "CPR4");
-        }
-
-        //PullRequest storage pullRequest = bounties[ofBounty].pullRequests[prId];
         bounties[ofBounty].pullRequests[prId].canceled = true;
 
         emit BountyPullRequestCanceled(ofBounty, prId);
@@ -543,8 +519,6 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     /// @dev mark a PR ready for review
     function markPullRequestReadyForReview(uint256 bountyId, uint256 pullRequestId) public payable {
-        // _bountyExists(bountyId);
-        //_isNotDraft(bountyId);
         _isInDraft(bountyId, false);
         _isNotCanceled(bountyId);
         _isOpen(bountyId);
@@ -565,17 +539,14 @@ contract Network_v2 is Governed, ReentrancyGuard {
         address[] calldata recipients,
         uint256[] calldata percentages
     ) public payable {
-        // _bountyExists(id);
-        //_isNotDraft(id);
         _isInDraft(id, false);
         _isOpen(id);
         _isNotCanceled(id);
 
-        require(getOraclesOf(msg.sender) >= councilAmount, "OW0");
+        require(oracles[msg.sender].locked.add(oracles[msg.sender].byOthers) >= councilAmount, "OW0");
         require(prId <= bounties[id].pullRequests.length - 1, "CBP0");
 
         Bounty storage bounty = bounties[id];
-        //PullRequest storage pullRequest = bounty.pullRequests[prId];
 
         bounty.proposals.push();
         Proposal storage proposal = bounty.proposals[bounty.proposals.length - 1];
@@ -601,40 +572,34 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     /// @dev dispute a proposal for a bounty
     function disputeBountyProposal(uint256 bountyId, uint256 proposalId) external payable {
-        // _bountyExists(bountyId);
-        //_isNotDraft(bountyId);
         _isInDraft(bountyId, false);
         _isOpen(bountyId);
         _isNotCanceled(bountyId);
         _proposalExists(bountyId, proposalId);
 
-        //require(proposalId <= bounties[bountyId].proposals.length - 1, "DBP0");
-        require(oracles[msg.sender].disputes[bountyId][proposalId] == 0, "DBP1");
+        bytes32 b32 = keccak256(abi.encodePacked(bountyId, proposalId));
 
-        uint256 weight = getOraclesOf(msg.sender);
-        //require(weight > 0, "DBP2");
+        require(disputes[msg.sender][b32] == 0, "DBP1");
+
+        uint256 weight = oracles[msg.sender].locked.add(oracles[msg.sender].byOthers);
+
         amountGT0(weight);
 
         Proposal storage proposal = bounties[bountyId].proposals[proposalId];
 
-
         proposal.disputeWeight = proposal.disputeWeight.add(weight);
-        oracles[msg.sender].disputes[bountyId][proposalId] = weight;
+        disputes[msg.sender][b32] = weight;
 
         emit BountyProposalDisputed(bountyId, proposal.prId, proposalId);
     }
 
     function refuseBountyProposal(uint256 bountyId, uint256 proposalId) external payable {
-
-        // _bountyExists(bountyId);
-        //_isNotDraft(bountyId);
         _isInDraft(bountyId, false);
         _isNotCanceled(bountyId);
         _isOpen(bountyId);
         _isBountyOwner(bountyId);
         _proposalExists(bountyId, proposalId);
 
-        //require(proposalId <= bounties[bountyId].proposals.length - 1, "RBP0");
         bounties[bountyId].proposals[proposalId].refusedByBountyOwner = true;
 
         emit BountyProposalRefused(bountyId, bounties[bountyId].proposals[proposalId].prId, proposalId);
@@ -642,26 +607,29 @@ contract Network_v2 is Governed, ReentrancyGuard {
 
     /// @dev close bounty with the selected proposal id
     function closeBounty(uint256 id, uint256 proposalId) external payable {
-        // _bountyExists(id);
         _isOpen(id);
         _isNotCanceled(id);
-        //_isNotDraft(id);
         _isInDraft(id, false);
         _proposalExists(id, proposalId);
-        //require(proposalId <= bounties[id].proposals.length - 1, "CB1");
 
         Bounty storage bounty = bounties[id];
         ERC20 erc20 = ERC20(bounty.transactional);
         Proposal storage proposal = bounty.proposals[proposalId];
 
         require(block.timestamp >= bounty.proposals[proposalId].creationDate.add(disputableTime), "CB2");
-        require(proposal.disputeWeight >= oraclesStaked.mul(percentageNeededForDispute).div(10000), "CB3");
+        require(proposal.disputeWeight < oraclesDistributed.mul(percentageNeededForDispute).div(10000), "CB3");
         require(proposal.refusedByBountyOwner == false, "CB7");
 
-        uint256 onehundred = 100;
-        uint256 mergerFee = bounty.tokenAmount.div(100).mul(mergeCreatorFeeShare.div(10000));
-        uint256 proposerFee = bounty.tokenAmount.sub(mergerFee).div(100).mul(proposerFeeShare.div(10000));
-        uint256 proposalAmount = bounty.tokenAmount.sub(mergerFee).sub(proposerFee);
+        uint256 returnAmount = bounty.tokenAmount;
+
+        if (treasury != address(0)) {
+            returnAmount = returnAmount.sub(bounty.tokenAmount.div(100).mul(cancelFee.div(10000)));
+            require(erc20.transfer(treasury, bounty.tokenAmount.div(100).mul(cancelFee.div(10000))), "C3");
+        }
+
+        uint256 mergerFee = returnAmount.div(100).mul(mergeCreatorFeeShare.div(10000));
+        uint256 proposerFee = returnAmount.sub(mergerFee).div(100).mul(proposerFeeShare.div(10000));
+        uint256 proposalAmount = returnAmount.sub(mergerFee).sub(proposerFee);
 
         /// event Log(uint256 bountyId, uint256 mergerValue, uint256 proposerValue, uint256 distributionValue);
         /// event LogTransfer(uint256 bountyId, address to, uint256 distributionValue);
