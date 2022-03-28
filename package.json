@@ -24,15 +24,19 @@
         "eslint": "eslint --ignore-path .eslintignore --ext .ts ./src",
         "lint": "npm run eslint -- --quiet",
         "lint-fix": "npm run eslint -- --quiet --fix",
-        "abi-parser": "node tooling/abi-parser.js"
+        "abi-parser": "node tooling/abi-parser.js",
+        "truffle": "truffle",
+        "contract-size": "truffle run contract-size"
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.4.2",
         "@uniswap/v3-core": "^1.0.0",
         "@uniswap/v3-periphery": "^1.1.1",
         "accounting": "^0.4.1",
+        "bignumber.js": "^9.0.2",
         "dotenv": "^8.2.0",
         "ipfs-http-client": "^50.1.2",
+        "truffle-contract-size": "^2.0.1",
         "web3": "^1.6.1",
         "web3-eth": "^1.6.1",
         "web3-utils": "^1.6.1"

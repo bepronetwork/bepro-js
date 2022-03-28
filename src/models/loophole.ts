@@ -78,7 +78,7 @@ export class Loophole extends Model<LoopholeMethods> implements Deployable, IsOw
 
     const erc20 = new ERC20(this.web3Connection, _lpToken);
     await erc20.loadContract();
-    const lpTokensPerBlock = toSmartContractDecimals(_lpTokensPerBlock, erc20.decimals) as number;
+    const lpTokensPerBlock = toSmartContractDecimals(_lpTokensPerBlock, erc20.decimals);
 
     const deployOptions = {
       data: LoopholeJson.bytecode,

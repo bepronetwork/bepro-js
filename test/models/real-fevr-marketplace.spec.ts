@@ -1,8 +1,9 @@
-import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber, revertChain} from '../utils/';
+import {defaultWeb3Connection, erc20Deployer, hasTxBlockNumber} from '../utils/';
 import {expect} from 'chai';
 import {RealFevrOpener} from '@models/real-fevr-opener';
 import {RealFevrMarketplace} from '@models/real-fevr-marketplace';
 import {toSmartContractDecimals} from '@utils/numbers';
+import {Web3Connection} from '../../src';
 
 describe('Marketplace RealFevr', async () => {
   let marketplaceContract: RealFevrMarketplace;
@@ -11,12 +12,11 @@ describe('Marketplace RealFevr', async () => {
   let contractAddress!: string;
   let accountAddress!: string;
 
-  const purchaseTokenCap = toSmartContractDecimals(1000000) as number;
-  const web3Connection = defaultWeb3Connection();
+  const purchaseTokenCap = toSmartContractDecimals(1000000);
+  let web3Connection: Web3Connection;
 
   before(async () => {
-    await web3Connection.start();
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true);
     accountAddress = web3Connection.Account.address;
   });
 

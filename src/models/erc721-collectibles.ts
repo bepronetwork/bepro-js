@@ -176,7 +176,7 @@ export class ERC721Collectibles extends Model<ERC721CollectiblesMethods> impleme
   }
 
   async setPricePerPack(newPrice: number) {
-    newPrice = toSmartContractDecimals(newPrice, this.erc20.decimals, true) as number;
+    newPrice = toSmartContractDecimals(newPrice, this.erc20.decimals);
     return this.sendTx(this.contract.methods.setPricePerPack(newPrice));
     // return this.sendTx(this.contract.methods.setPricePerPack(newPrice));
   }

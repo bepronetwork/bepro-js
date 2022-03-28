@@ -1,5 +1,6 @@
 
 module.exports = {
+  plugins: ['truffle-contract-size'],
   networks: {
     development: {
       host: '127.0.0.1',
