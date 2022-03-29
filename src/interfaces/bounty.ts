@@ -26,6 +26,6 @@ export interface IBounty {
 
     pullRequests: IPullRequest[];
     proposals: IProposal[];
-    benefactors: IBenefactor[];
+    //benefactors: IBenefactor[];
     funding: IBenefactor[];
 }
