@@ -1,8 +1,8 @@
-import { IProposal } from "@interfaces/proposal";
-import { IBenefactor } from "@interfaces/benefactor";
-import { IPullRequest } from "@interfaces/pull-request";
+import { Proposal } from "@interfaces/proposal";
+import { Benefactor } from "@interfaces/benefactor";
+import { PullRequest } from "@interfaces/pull-request";
 
-export interface IBounty {
+export interface Bounty {
     id: number;
     creationDate: number;
     tokenAmount: number;
@@ -24,8 +24,8 @@ export interface IBounty {
 
     closedDate: number;
 
-    pullRequests: IPullRequest[];
-    proposals: IProposal[];
-    //benefactors: IBenefactor[];
-    funding: IBenefactor[];
+    pullRequests: PullRequest[];
+    proposals: Proposal[];
+    //benefactors: Benefactor[];
+    funding: Benefactor[];
 }

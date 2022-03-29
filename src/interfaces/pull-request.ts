@@ -1,4 +1,4 @@
-export interface IPullRequest {
+export interface PullRequest {
     originRepo: string;
     originCID: string;
     originBranch: string;

@@ -1,6 +1,6 @@
-import { IProposalDetail } from "@interfaces/proposal-detail";
+import { ProposalDetail } from "@interfaces/proposal-detail";
 
-export interface IProposal {
+export interface Proposal {
     id: number;
     creationDate: number;
     oracles: number;
@@ -9,5 +9,5 @@ export interface IProposal {
     refusedByBountyOwner: boolean;
     creator: string;
 
-    details: IProposalDetail[]
+    details: ProposalDetail[]
 }

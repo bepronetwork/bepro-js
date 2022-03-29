@@ -1,4 +1,4 @@
-export interface IBenefactor {
+export interface Benefactor {
     benefactor: string;
     amount: number;
     creationDate: number;

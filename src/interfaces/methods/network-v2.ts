@@ -1,6 +1,8 @@
 import {ContractSendMethod} from 'web3-eth-contract';
 import {ContractCallMethod} from '@methods/contract-call-method';
-import {IBounty} from '@interfaces/bounty';
+import {Bounty} from '@interfaces/bounty';
+import { Oracle } from '@interfaces/oracle';
+import { Delegation } from '@interfaces/delegation';
 
 export interface Network_v2Methods {
   _governor(): ContractCallMethod<string>;
@@ -17,15 +19,15 @@ export interface Network_v2Methods {
   mergeCreatorFeeShare(): ContractCallMethod<number>;
   nftToken(): ContractCallMethod<string>;
   oracleExchangeRate(): ContractCallMethod<number>;
-  oracles(v1: string): ContractCallMethod<{'locked': number;'toOthers': number;'byOthers': number;}>;
+  oracles(v1: string): ContractCallMethod<Oracle>;
   oraclesDistributed(): ContractCallMethod<number>;
   percentageNeededForDispute(): ContractCallMethod<number>;
   proposeGovernor(proposedGovernor: string): ContractSendMethod;
   proposerFeeShare(): ContractCallMethod<number>;
   settlerToken(): ContractCallMethod<string>;
   totalSettlerLocked(): ContractCallMethod<number>;
-  getBounty(id: number): ContractCallMethod<IBounty>;
-  getDelegationsFor(_address: string): ContractCallMethod<{'from': string;'to': string;'amount': number;}[]>;
+  getBounty(id: number): ContractCallMethod<Bounty>;
+  getDelegationsFor(_address: string): ContractCallMethod<Delegation[]>;
   getBountiesOfAddress(owner: string): ContractCallMethod<number[]>;
   changeNetworkParameter(_parameter: number, _value: number): ContractSendMethod;
   manageOracles(lock: boolean, amount: number): ContractSendMethod;
