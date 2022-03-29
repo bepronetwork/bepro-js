@@ -143,6 +143,7 @@ describe(`NetworkV2`, () => {
         expect(events.length).to.be.eq(1);
         expect(events[0].returnValues.cid).to.be.eq('c1');
         expect((await network.getBountiesOfAddress(Admin.address)).length).to.be.eq(1);
+        expect(await network.bountiesIndex()).to.be.eq(1);
 
         bountyId = events[0].returnValues.id;
       });
@@ -260,6 +261,7 @@ describe(`NetworkV2`, () => {
       it(`Disputes a Proposal`, async () => {
         await hasTxBlockNumber(network.disputeBountyProposal(bountyId, 0));
         expect(+(await network.getBounty(bountyId)).proposals[0].disputeWeight).to.be.greaterThan(0);
+        expect(+(await network.disputes(Admin.address, bountyId, 0))).to.be.greaterThan(0);
       });
 
       it(`Refuses as owner`, async () => {
