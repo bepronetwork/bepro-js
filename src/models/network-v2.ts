@@ -115,6 +115,10 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
     return (await this.callTx(this.contract.methods.draftTime())) * Thousand;
   }
 
+  async bountiesIndex() {
+    return +(await this.callTx(this.contract.methods.bountiesIndex()));
+  }
+
   async mergeCreatorFeeShare() {
     return (await this.callTx(this.contract.methods.mergeCreatorFeeShare())) / TenK;
   }

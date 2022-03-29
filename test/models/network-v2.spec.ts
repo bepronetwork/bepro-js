@@ -143,6 +143,7 @@ describe(`NetworkV2`, () => {
         expect(events.length).to.be.eq(1);
         expect(events[0].returnValues.cid).to.be.eq('c1');
         expect((await network.getBountiesOfAddress(Admin.address)).length).to.be.eq(1);
+        expect(await network.bountiesIndex()).to.be.eq(1);
 
         bountyId = events[0].returnValues.id;
       });
