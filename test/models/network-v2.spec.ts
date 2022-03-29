@@ -261,6 +261,7 @@ describe(`NetworkV2`, () => {
       it(`Disputes a Proposal`, async () => {
         await hasTxBlockNumber(network.disputeBountyProposal(bountyId, 0));
         expect(+(await network.getBounty(bountyId)).proposals[0].disputeWeight).to.be.greaterThan(0);
+        expect(+(await network.disputes(Admin.address, bountyId, 0))).to.be.greaterThan(0);
       });
 
       it(`Refuses as owner`, async () => {

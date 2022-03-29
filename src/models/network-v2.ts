@@ -119,6 +119,12 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
     return +(await this.callTx(this.contract.methods.bountiesIndex()));
   }
 
+  async disputes(address: string, bountyId: string | number, proposalId: string | number) {
+    const hash = this.web3.utils.keccak256(`${this.web3.utils.encodePacked(bountyId, proposalId)}`);
+    
+    return +(await this.callTx(this.contract.methods.disputes(address, hash)));
+  }
+
   async mergeCreatorFeeShare() {
     return (await this.callTx(this.contract.methods.mergeCreatorFeeShare())) / TenK;
   }

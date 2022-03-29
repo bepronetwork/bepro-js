@@ -27,6 +27,8 @@ export interface Network_v2Methods {
   settlerToken(): ContractCallMethod<string>;
   totalSettlerLocked(): ContractCallMethod<number>;
   getBounty(id: number): ContractCallMethod<Bounty>;
+  disputes(address: string, bountyAndProposalIds: string): ContractCallMethod<number>;
+  disputes(address: string, bountyId: string | number, proposalId: string | number): ContractCallMethod<number>;
   getDelegationsFor(_address: string): ContractCallMethod<Delegation[]>;
   getBountiesOfAddress(owner: string): ContractCallMethod<number[]>;
   changeNetworkParameter(_parameter: number, _value: number): ContractSendMethod;
