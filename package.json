@@ -1,6 +1,6 @@
 {
-    "name": "bepro-js",
-    "version": "2.0.0-alpha.1",
+    "name": "@bepronetwork/bepro-js",
+    "version": "2.0.0-alpha.2",
     "description": "",
     "main": "dist/src/index.js",
     "module": "dist/src/index.js",
@@ -73,5 +73,8 @@
         "yargs": "^17.3.0"
     },
     "author": "",
-    "license": "ISC"
+    "license": "ISC",
+    "publishConfig": {
+        "registry":"https://npm.pkg.github.com"
+    }
 }
