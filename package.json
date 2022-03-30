@@ -1,7 +1,7 @@
 {
     "name": "@bepronetwork/bepro-js",
     "version": "2.0.0-alpha.2",
-    "description": "",
+    "description": "BEPRO/TAIKAI Decentralized Application Kit",
     "main": "dist/src/index.js",
     "module": "dist/src/index.js",
     "engines": {
