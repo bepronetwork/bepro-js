@@ -92,6 +92,10 @@ export class Network extends Model<NetworkMethods> implements Deployable {
     return +(await this.callTx(this.contract.methods.mergeCreatorFeeShare()));
   }
 
+  async disputesForMergeByAddress(issueId: number, proposalId: number, address: string) {
+    return +(await this.callTx(this.contract.methods.disputesForMergeByAddress(issueId, proposalId, address)));
+  }
+
   async disputableTime() {
     return +(await this.callTx(this.contract.methods.disputableTime()));
   }
