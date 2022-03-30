@@ -240,6 +240,7 @@ describe(`Network`, () => {
             await network.lock(1);
             const dispute = await network.disputeMerge(issue._id, 0);
             expect(dispute.blockHash, `dispute blockhash`).to.not.be.empty;
+            expect(await network.disputesForMergeByAddress(issue._id, 0, accountAddress)).to.be.greaterThan(0);
           });
 
           it(`Asserts merge dispute`, async () => {
