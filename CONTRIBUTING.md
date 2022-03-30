@@ -56,6 +56,13 @@ $ git checkout your-branch
 $ git pull --rebase master
 ```
 
+### Build and test the solution:
+```
+$ npm run build
+$ npm run ganache:start
+$ npm run test
+```
+
 ### Add commits and push
 ```
 $ git add .

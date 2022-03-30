@@ -46,6 +46,11 @@ export * from '@interfaces/voter-info';
 export * from '@interfaces/modifiers';
 export * from '@interfaces/block-number-timestamp';
 export * from '@interfaces/web3-connection-options';
+export * from '@interfaces/bounty';
+export * from '@interfaces/pull-request';
+export * from '@interfaces/proposal';
+export * from '@interfaces/proposal-detail';
+export * from '@interfaces/benefactor';
 
 export * from '@events/x-events';
 export * from '@events/network-events';

@@ -143,7 +143,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
     mapping(string => uint256) public cidBountyId;
     mapping(address => Oracle) public oracles;
     mapping(address => Delegation[]) delegations;
-    mapping(address => mapping(bytes32 => uint256)) disputes;
+    mapping(address => mapping(bytes32 => uint256)) public disputes;
 
     event BountyCreated(uint256 id, string cid, address indexed creator);
     event BountyCanceled(uint256 indexed id);

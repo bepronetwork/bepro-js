@@ -1,14 +1,19 @@
 {
     "name": "bepro-js",
-    "version": "2.0.0-alpha.0",
+    "version": "2.0.0-alpha.1",
     "description": "",
-    "main": "dist/index.js",
+    "main": "dist/src/index.js",
+    "module": "dist/src/index.js",
     "engines": {
         "node": "^14 || ^16"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/bepronetwork/bepro-js.git"
+    },
+    "files": ["dist", "tooling"],
+    "bin": {
+        "abi-parser": "./tooling/abi-parser.js"
     },
     "scripts": {
         "compile": "truffle compile",
@@ -17,7 +22,7 @@
         "postinstall": "node tooling/post-install.js",
         "test": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test/**/*.spec.{ts,tsx}' --pretty",
         "build": "tsc -p ./tsconfig.json",
-        "postbuild": "tscpaths -p ./tsconfig.json -s ./src -o ./dist",
+        "postbuild": "tscpaths -p ./tsconfig.json -s ./ -o ./dist",
         "docs": "typedoc",
         "ganache:start": "ganache -p 8545 -q --account_keys_path keys.json ",
         "test-ci": "npm run ganache:start >/dev/null & npm run test",
