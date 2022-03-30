@@ -16,7 +16,7 @@
         "abi-parser": "./tooling/abi-parser.js"
     },
     "scripts": {
-        "compile": "truffle compile",
+        "compile": "npx truffle compile",
         "prebuild": "npm run compile",
         "prepublishOnly": "npm run build",
         "postinstall": "node tooling/post-install.js",
