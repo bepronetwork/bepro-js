@@ -1,5 +1,5 @@
 {
-    "name": "@taikai/dappkit",
+    "name": "bepro-js",
     "version": "2.0.0-alpha.2",
     "description": "BEPRO/TAIKAI Decentralized Application Kit",
     "main": "dist/src/index.js",
