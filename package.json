@@ -34,19 +34,19 @@
         "contract-size": "truffle run contract-size"
     },
     "dependencies": {
-        "@openzeppelin/contracts": "^3.4.2",
-        "@uniswap/v3-core": "^1.0.0",
-        "@uniswap/v3-periphery": "^1.1.1",
-        "accounting": "^0.4.1",
+        "date-fns": "^2.27.0",
         "bignumber.js": "^9.0.2",
-        "dotenv": "^8.2.0",
         "ipfs-http-client": "^50.1.2",
-        "truffle-contract-size": "^2.0.1",
         "web3": "^1.6.1",
         "web3-eth": "^1.6.1",
         "web3-utils": "^1.6.1"
     },
     "devDependencies": {
+        "@openzeppelin/contracts": "^3.4.2",
+        "@uniswap/v3-core": "^1.0.0",
+        "@uniswap/v3-periphery": "^1.1.1",
+        "dotenv": "^8.2.0",
+        "truffle-contract-size": "^2.0.1",
         "@truffle/hdwallet-provider": "^2.0.0",
         "@types/chai": "^4.3.0",
         "@types/mocha": "^9.0.0",
@@ -55,7 +55,6 @@
         "@typescript-eslint/parser": "^5.11.0",
         "chai": "^4.3.4",
         "change-case": "^4.1.2",
-        "date-fns": "^2.27.0",
         "eslint": "^8.8.0",
         "ganache": "^7.0.0-beta.2",
         "ganache-time-traveler": "^1.0.5",
