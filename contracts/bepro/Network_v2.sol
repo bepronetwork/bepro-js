@@ -74,6 +74,7 @@ struct Bounty {
     string repoPath;
     string branch;
     string cid;
+    string githubUser;
 
     uint256 closedDate;
 
@@ -272,7 +273,8 @@ contract Network_v2 is Governed, ReentrancyGuard {
         string memory cid,
         string memory title,
         string memory repoPath,
-        string memory branch
+        string memory branch,
+        string memory githubUser
     ) external payable {
         bountiesIndex = bountiesIndex.add(1);
 
@@ -281,6 +283,7 @@ contract Network_v2 is Governed, ReentrancyGuard {
         bounties[bountiesIndex].title = title;
         bounties[bountiesIndex].repoPath = repoPath;
         bounties[bountiesIndex].branch = branch;
+        bounties[bountiesIndex].githubUser = githubUser;
         bounties[bountiesIndex].creator = msg.sender;
         bounties[bountiesIndex].creationDate = block.timestamp;
         bounties[bountiesIndex].transactional = transactional;
