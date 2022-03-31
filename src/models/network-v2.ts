@@ -13,6 +13,7 @@ import {ERC20} from '@models/erc20';
 import {Governed} from '@base/governed';
 import {fromSmartContractDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {nativeZeroAddress, TenK, Thousand} from '@utils/constants';
+import { GovernorTransferredEvent } from '@interfaces/events/network-events';
 
 export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   constructor(web3Connection: Web3Connection|Web3ConnectionOptions, readonly contractAddress?: string) {
@@ -463,7 +464,7 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
   }
   /* eslint-enable max-len */
 
-  async getGovernorTransferredEvents(filter: PastEventOptions): Promise<XEvents<Events.GovernorTransferredEvent>[]> {
+  async getGovernorTransferredEvents(filter: PastEventOptions): Promise<XEvents<GovernorTransferredEvent>[]> {
     return this.contract.self.getPastEvents(`GovernorTransferred`, filter)
   }
 
