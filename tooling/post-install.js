@@ -49,7 +49,7 @@ try {
   console.time(`Built`);
 
   childProcess.execSync(`npm run tsc -- -p ./tsconfig.json`, execOptions);
-  childProcess.execSync(`npm run tscpaths -p ./tsconfig.json -s ./src -o ./dist`, execOptions);
+  childProcess.execSync(`npm run tscpaths -- -p ./tsconfig.json -s ./src -o ./dist`, execOptions);
   fs.rmSync(path.resolve(`building.tmp`), {force: true,});
 
   console.timeEnd(`Built`);
