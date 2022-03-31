@@ -11,7 +11,7 @@
         "type": "git",
         "url": "https://github.com/bepronetwork/bepro-js.git"
     },
-    "files": ["dist", "tooling", "src", "truffle-config.js", "tsconfig.json"],
+    "files": ["dist", "tooling", "src", "truffle-config.js", "tsconfig.json", "contracts"],
     "bin": {
         "abi-parser": "./tooling/abi-parser.js"
     },
