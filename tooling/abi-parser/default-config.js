@@ -1,6 +1,6 @@
 module.exports = {
   "paths": {
-    "base": "@base",
+    "base": "@base", // used only if asPackage: false
     "interfaces": "@interfaces",
     "abi": "@abi",
     "methods": "@methods",
@@ -15,5 +15,6 @@ module.exports = {
     "interface": false,
     "class": false,
     "events": false
-  }
+  },
+  "asPackage": false,
 }

@@ -3,7 +3,7 @@ import {ERC20} from '@models/erc20';
 import {expect} from 'chai';
 import {toSmartContractDecimals} from '@utils/numbers';
 import {describe} from 'mocha';
-import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, revertChain, shouldBeRejected,} from '../utils/';
+import {defaultWeb3Connection, erc20Deployer, getPrivateKeyFromFile, shouldBeRejected,} from '../utils/';
 import {Web3Connection, Web3Contract} from '../../src';
 
 describe(`ERC20`, () => {
@@ -11,15 +11,14 @@ describe(`ERC20`, () => {
   let erc20ContractAddress: string;
 
   const capAmount = '1000';
-  const cap = toSmartContractDecimals(capAmount, 18) as number;
+  const cap = toSmartContractDecimals(capAmount, 18);
   const name = `BEPRO`;
   const symbol = `$BEPRO`;
 
-  const web3Connection = defaultWeb3Connection();
+  let web3Connection: Web3Connection;
 
   before(async () => {
-    await web3Connection.start()
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true)
   })
 
   it(`Deploys a ERC20 Contract`, async () => {
@@ -71,7 +70,7 @@ describe(`ERC20`, () => {
       const _erc20 = new ERC20(web3con, erc20.contractAddress);
 
       const empty = new Web3Contract(web3Connection.Web3, [], undefined, {gasAmount: 90000, auto: true});
-      await empty.sendSignedTx(web3Connection.Account, undefined as any, toSmartContractDecimals(1) as string, await empty.txOptions(undefined as any))
+      await empty.sendSignedTx(web3Connection.Account, undefined as any, toSmartContractDecimals(1) as any as string, await empty.txOptions(undefined as any))
 
       await _erc20.start();
       await erc20.approve(newAddress, 1000);
@@ -81,9 +80,5 @@ describe(`ERC20`, () => {
       expect(await erc20.allowance(newAddress, web3Connection.Account.address)).to.be.eq(0)
       await shouldBeRejected(erc20.transferFrom(newAddress, web3Connection.Account.address, 3));
     });
-  });
-
-  after(() => {
-    console.table(`\n\tERC20 Address:\t${erc20ContractAddress}`);
   });
 });

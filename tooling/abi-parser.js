@@ -54,6 +54,8 @@ const args = yargs(hideBin(process.argv))
   .describe(`E`, `allow event interface file overwrite (events will be spawned on same folder as interface)`)
   .alias(`j`, `json`)
   .describe(`j`, `json configuration file`)
+  .alias(`p`, `asPackage`)
+  .describe(`p`, `outputs imports from bepro-js istead of source`)
   .demandOption([`f`,])
   .help(`h`)
   .alias(`h`, `help`)
@@ -88,8 +90,8 @@ if (args.overwriteInterface === undefined)
 if (args.overwriteClass === undefined)
   args.overwriteClass = options?.overwrite?.class;
 
-if (args.overwriteInterface === undefined)
-  args.overwriteEvents = options?.overwrite?.events;
+if (args.overwriteEvent === undefined)
+  args.overwriteEvent = options?.overwrite?.events;
 
 const parsed = AbiParser(args.file, options);
 
@@ -115,7 +117,7 @@ if (args.classDir) {
 
 if (parsed._events && args.eventsDir) {
   const outputFile = path.resolve(args.eventsDir, paramCase(camelCase(path.basename(args.file)).concat(`Events`)).replace(`-json`, ``)).concat(`.ts`);
-  if (fs.existsSync(outputFile) && !args.overwriteEvents)
+  if (fs.existsSync(outputFile) && !args.overwriteEvent)
     console.log(`\nEvents file already exists.\n${'-'.repeat(10)}\n\n`, parsed._events);
   else {
     fs.writeFileSync(outputFile, parsed._events, 'utf8')

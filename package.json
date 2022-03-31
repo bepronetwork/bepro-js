@@ -1,14 +1,19 @@
 {
     "name": "bepro-js",
-    "version": "2.0.0-alpha.0",
-    "description": "",
-    "main": "dist/index.js",
+    "version": "2.0.0-alpha.2",
+    "description": "BEPRO/TAIKAI Decentralized Application Kit",
+    "main": "dist/src/index.js",
+    "module": "dist/src/index.js",
     "engines": {
         "node": "^14 || ^16"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/bepronetwork/bepro-js.git"
+    },
+    "files": ["dist", "tooling"],
+    "bin": {
+        "abi-parser": "./tooling/abi-parser.js"
     },
     "scripts": {
         "compile": "truffle compile",
@@ -17,27 +22,31 @@
         "postinstall": "node tooling/post-install.js",
         "test": "mocha --bail --timeout 60000 --exit --require ts-node/register --require tsconfig-paths/register 'test/**/*.spec.{ts,tsx}' --pretty",
         "build": "tsc -p ./tsconfig.json",
-        "postbuild": "tscpaths -p ./tsconfig.json -s ./src -o ./dist",
+        "postbuild": "tscpaths -p ./tsconfig.json -s ./ -o ./dist",
         "docs": "typedoc",
         "ganache:start": "ganache -p 8545 -q --account_keys_path keys.json ",
         "test-ci": "npm run ganache:start >/dev/null & npm run test",
         "eslint": "eslint --ignore-path .eslintignore --ext .ts ./src",
         "lint": "npm run eslint -- --quiet",
         "lint-fix": "npm run eslint -- --quiet --fix",
-        "abi-parser": "node tooling/abi-parser.js"
+        "abi-parser": "node tooling/abi-parser.js",
+        "truffle": "truffle",
+        "contract-size": "truffle run contract-size"
     },
     "dependencies": {
-        "@openzeppelin/contracts": "^3.4.2",
-        "@uniswap/v3-core": "^1.0.0",
-        "@uniswap/v3-periphery": "^1.1.1",
-        "accounting": "^0.4.1",
-        "dotenv": "^8.2.0",
+        "date-fns": "^2.27.0",
+        "bignumber.js": "^9.0.2",
         "ipfs-http-client": "^50.1.2",
         "web3": "^1.6.1",
         "web3-eth": "^1.6.1",
         "web3-utils": "^1.6.1"
     },
     "devDependencies": {
+        "@openzeppelin/contracts": "^3.4.2",
+        "@uniswap/v3-core": "^1.0.0",
+        "@uniswap/v3-periphery": "^1.1.1",
+        "dotenv": "^8.2.0",
+        "truffle-contract-size": "^2.0.1",
         "@truffle/hdwallet-provider": "^2.0.0",
         "@types/chai": "^4.3.0",
         "@types/mocha": "^9.0.0",
@@ -46,7 +55,6 @@
         "@typescript-eslint/parser": "^5.11.0",
         "chai": "^4.3.4",
         "change-case": "^4.1.2",
-        "date-fns": "^2.27.0",
         "eslint": "^8.8.0",
         "ganache": "^7.0.0-beta.2",
         "ganache-time-traveler": "^1.0.5",

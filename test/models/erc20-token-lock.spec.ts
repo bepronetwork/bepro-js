@@ -1,13 +1,11 @@
 import {
   defaultWeb3Connection,
-  erc20Deployer,
+  erc20Deployer, getChainDate,
   hasTxBlockNumber,
   increaseTime,
-  revertChain,
   shouldBeRejected
 } from '../utils/';
-import {Erc20TokenLock} from '../../src';
-import {toSmartContractDecimals} from '../../src/utils/numbers';
+import {Erc20TokenLock, Web3Connection, toSmartContractDecimals} from '../../src';
 import {expect} from 'chai';
 import {addSeconds} from 'date-fns'
 
@@ -16,12 +14,11 @@ describe(`ERC20TokenLock`, () => {
   let accountAddress!: string;
   let tokenLock: Erc20TokenLock;
 
-  const cap = toSmartContractDecimals(1000000) as number;
-  const web3Connection = defaultWeb3Connection();
+  const cap = toSmartContractDecimals(1000000);
+  let web3Connection: Web3Connection;
 
   before(async () => {
-    await web3Connection.start();
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true);
   })
 
   it(`Deploys Contract`, async () => {
@@ -52,8 +49,9 @@ describe(`ERC20TokenLock`, () => {
     });
 
     it(`locks tokens and fails unlock because endDate was not reached`, async () => {
-      const endDate = +addSeconds(new Date(), 20);
+      const endDate = +addSeconds(await getChainDate(web3Connection), 62);
       await tokenLock.approveERC20Transfer();
+
       await hasTxBlockNumber(tokenLock.lock(1, endDate));
       expect(await tokenLock.getLockedTokens(accountAddress), `get locked tokens`).to.eq(1);
       expect(await tokenLock.totalAmountStaked(), `get total locked`).to.eq(1);
@@ -61,7 +59,7 @@ describe(`ERC20TokenLock`, () => {
     });
 
     it(`Should unlock because time-travel`, async () => {
-      await increaseTime(21, web3Connection.Web3);
+      await increaseTime(62, web3Connection.Web3);
       await hasTxBlockNumber(tokenLock.release());
       expect(await tokenLock.getLockedTokens(accountAddress), `get locked tokens`).to.eq(0);
     });

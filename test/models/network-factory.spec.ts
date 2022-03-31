@@ -1,6 +1,5 @@
-import {Network, NetworkFactory, Web3Connection} from '../../src';
-import {fromDecimals, toSmartContractDecimals} from '../../src/utils/numbers';
-import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, revertChain, outputDeploy, hasTxBlockNumber} from '../utils/';
+import {Network, NetworkFactory, Web3Connection, fromDecimals, toSmartContractDecimals} from '../../src';
+import {shouldBeRejected, defaultWeb3Connection, erc20Deployer, hasTxBlockNumber} from '../utils/';
 import {describe, it} from 'mocha';
 import {expect} from 'chai';
 import {Errors} from '../../src/interfaces/error-enum';
@@ -13,12 +12,10 @@ describe(`NetworkFactory`, () => {
   let networkToken: string;
   let accountAddress: string;
 
-  const cap = toSmartContractDecimals(1000000) as number;
+  const cap = toSmartContractDecimals(1000000);
 
   before(async () => {
-    web3Connection = defaultWeb3Connection();
-    await web3Connection.start();
-    await revertChain(web3Connection.Web3);
+    web3Connection = await defaultWeb3Connection(true, true);
     accountAddress = web3Connection.Account.address;
   })
 
@@ -44,10 +41,6 @@ describe(`NetworkFactory`, () => {
       expect(receipt.contractAddress).to.not.be.empty;
       networkFactoryContractAddress = receipt.contractAddress;
       console.log(networkFactoryContractAddress)
-    });
-
-    after(() => {
-      outputDeploy([[`NetworkFactory`, networkFactoryContractAddress!], [`ERC20`, settlerToken]])
     });
   });
 

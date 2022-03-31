@@ -8,6 +8,7 @@ export interface NetworkMethods {
   claimGovernor(): ContractSendMethod;
   closedIdsCount(): ContractCallMethod<number>;
   disputableTime(): ContractCallMethod<number>;
+  disputesForMergeByAddress(issueId: number, proposalId: number, address: string): ContractCallMethod<number>;
   incrementIssueID(): ContractCallMethod<number>;
   issues(v1: number): ContractCallMethod<{'0': number; '1': string; '2': number; '3': number; '4': string; '5': number; '6': boolean; '7': boolean; '8': boolean}>;
   issuesCIDtoID(v1: string): ContractCallMethod<number>;

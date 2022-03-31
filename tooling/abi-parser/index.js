@@ -9,7 +9,7 @@ const parseInputsName = require('./parse-input-name')
 
 /**
  * @param {string} filePath
- * @param {{paths: {base: string; interfaces: string; abi: string; methods: string; events: string}}} options
+ * @param {{paths: {base: string; interfaces: string; abi: string; methods: string; events: string}, asPackage: boolean}} options
  * @returns {{_interface: string, _class: string, _events: string}}
  */
 const AbiParser = (filePath = ``, options) => {
@@ -39,22 +39,31 @@ const AbiParser = (filePath = ``, options) => {
   const deployOptions = `const deployOptions = {\n        data: ${contract.contractName}Json.bytecode,\n        arguments: [${parseInputsName(abiItemConstructor[0]?.inputs || [], undefined, true)}]\n    };`
   constructorWithDeployer = _constructor+`  async deployJsonAbi(${abiInputs}) {\n    ${deployOptions}\n\n    return this.deploy(deployOptions, this.web3Connection.Account);\n  }\n\n`;
 
+  const contractCallMethodImport = options.asPackage ? `bepro-js` : `${options.paths.methods}/contract-call-method`;
 
   const _interface = makeClass(classHeader(contract.contractName), content, [
     "import {ContractSendMethod} from 'web3-eth-contract';",
-    `import {ContractCallMethod} from '${options.paths.methods}/contract-call-method';`
+    `import {ContractCallMethod} from '${contractCallMethodImport}';`
   ]);
 
+  const libs = [
+    ... options.asPackage
+      ? [`import {Model, Web3Connection, Web3ConnectionOptions, Deployable, XEvents} from 'bepro-js'`]
+      : [
+        `import {Model} from '${options.paths.base}/model';`,
+        `import {Web3Connection} from '${options.paths.base}/web3-connection';`,
+        `import {Web3ConnectionOptions} from '${options.paths.interfaces}/web3-connection-options';`,
+        `import {Deployable} from '${options.paths.interfaces}/deployable';`,
+        `import {XEvents} from '${options.paths.events}/x-events';`,
+      ]
+  ]
+
   const classImports = [
-    `import {Model} from '${options.paths.base}/model';`,
-    `import {Web3Connection} from '${options.paths.base}/web3-connection';`,
-    `import {Web3ConnectionOptions} from '${options.paths.interfaces}/web3-connection-options';`,
-    `import {Deployable} from '${options.paths.interfaces}/deployable';`,
+    ... libs,
     `import ${contract.contractName}Json from '${options.paths.abi}/${contract.contractName}.json';`,
     `import {${contract.contractName}Methods} from '${options.paths.methods}/${paramCase(contract.contractName)}';`,
     ... !events.length ? [] : [
       `import * as Events from '${options.paths.events}/${paramCase(contract.contractName.concat(`Events`))}';`,
-      `import {XEvents} from '${options.paths.events}/x-events';`,
       `import {PastEventOptions} from 'web3-eth-contract';`,
     ],
     "import {AbiItem} from 'web3-utils';",
