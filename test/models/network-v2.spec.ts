@@ -136,7 +136,7 @@ describe(`NetworkV2`, () => {
       it(`Opens`, async () => {
         const receipt = await network.openBounty(1000, bountyTransactional.contractAddress!,
                                                  nativeZeroAddress, 0, 0,
-                                                 'c1', 'Title', '//', 'master');
+                                                 'c1', 'Title', '//', 'master', 'ghuser');
 
         const events = await network.getBountyCreatedEvents({fromBlock: receipt.blockNumber, filter: {creator: Admin.address}});
 
@@ -187,7 +187,7 @@ describe(`NetworkV2`, () => {
 
         const receipt = await network.openBounty(0, bountyTransactional.contractAddress!,
                                                  rewardToken.contractAddress!, 1000, 1000,
-                                                 'c2', 'Title 2', '//', 'master');
+                                                 'c2', 'Title 2', '//', 'master', 'ghuser');
 
         const events = await network.getBountyCreatedEvents({fromBlock: receipt.blockNumber, filter: {creator: Admin.address}});
         bountyId = events[0].returnValues.id;
@@ -228,7 +228,7 @@ describe(`NetworkV2`, () => {
         await rewardToken.approve(network.contractAddress!, AMOUNT_1M);
         await network.openBounty(0, bountyTransactional.contractAddress!,
                                  rewardToken.contractAddress!, 1000, 10000,
-                                 'c3', 'Title 3', '//', 'master');
+                                 'c3', 'Title 3', '//', 'master', 'ghuser');
 
         bountyId = await network.cidBountyId('c3');
 

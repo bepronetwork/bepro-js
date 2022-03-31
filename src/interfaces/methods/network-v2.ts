@@ -35,7 +35,7 @@ export interface Network_v2Methods {
   manageOracles(lock: boolean, amount: number): ContractSendMethod;
   delegateOracles(amount: number, toAddress: string): ContractSendMethod;
   takeBackOracles(entryId: number): ContractSendMethod;
-  openBounty(tokenAmount: number, transactional: string, rewardToken: string, rewardAmount: number, fundingAmount: number, cid: string, title: string, repoPath: string, branch: string): ContractSendMethod;
+  openBounty(tokenAmount: number, transactional: string, rewardToken: string, rewardAmount: number, fundingAmount: number, cid: string, title: string, repoPath: string, branch: string, githubUser: string): ContractSendMethod;
   cancelBounty(id: number): ContractSendMethod;
   cancelFundRequest(id: number): ContractSendMethod;
   updateBountyAmount(id: number, newTokenAmount: number): ContractSendMethod;

@@ -21,6 +21,7 @@ export interface Bounty {
     repoPath: string;
     branch: string;
     cid: string;
+    githubUser: string;
 
     closedDate: number;
 
