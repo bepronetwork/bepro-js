@@ -16,7 +16,7 @@
         "abi-parser": "./tooling/abi-parser.js"
     },
     "scripts": {
-        "compile": "npm truffle compile",
+        "compile": "npm run truffle compile",
         "prebuild": "npm run compile",
         "prepublishOnly": "npm run build",
         "postinstall": "node tooling/post-install.js",
@@ -31,7 +31,7 @@
         "lint-fix": "npm run eslint -- --quiet --fix",
         "abi-parser": "node tooling/abi-parser.js",
         "truffle": "truffle",
-        "contract-size": "npm truffle run contract-size",
+        "contract-size": "npm run truffle run contract-size",
         "tsc": "tsc",
         "tscpaths": "tscpaths"
     },
