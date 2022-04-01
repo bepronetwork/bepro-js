@@ -1,4 +1,6 @@
-# ![alt tag](https://uploads-ssl.webflow.com/5fc917a7914bf7aa30cae033/5ff4e84c73f45881c8b9cd85_Logo-purple-dark-background-p-500.png)
+# Bepro-js - SDK for Web3.0
+
+Bepro-js is a curated framework so that you can automate creation and unit testing, javascript wrappers, and extended integration just by writing solidity - a tool built with @Truffle (integrates compiling in solc together in your Smart Contracts) & @OpenZeppelin (provides trustable, audited & tested Smart Contracts) already integrated, solving a very simple problem: velocity in solidity development.
 
 ![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
@@ -6,14 +8,15 @@
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
+
 ## Installation
 
-`npm install --save github:bepronetwork/bepro-js#2.0.0-alpha.0`
+```npm install @bepronetwork/bepro-js@2.0.0-alpha.2```
 
 ## Usage
 
 ```ts
-import {Web3Connection, Web3ConnectionOptions, ERC20} from 'bepro-js';
+import {Web3Connection, Web3ConnectionOptions, ERC20} from '@bepronetwork/bepro-js';
 
 const options: Web3ConnectionOptions = { web3Host: process.env.WEB3_HOST_PROVIDER };
 const web3Connection = new Web3Connection(options);
