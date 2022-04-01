@@ -60,7 +60,7 @@ try {
   return 0;
 } catch (e) {
   console.log(e);
-  console.log(`\nFailed to build bepro-js sdk, please issue: npm explore bepro-js -- npm run build`);
+  console.log(`\nFailed to build bepro-js sdk, please issue: npm explore @bepronetwork/bepro-js -- npm run build`);
   return 1;
 }
 
