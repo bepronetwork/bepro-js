@@ -266,7 +266,8 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
                    cid: string,
                    title: string,
                    repoPath: string,
-                   branch: string) {
+                   branch: string,
+                   githubUser: string) {
 
     let _rewardAmount = 0;
     let _fundingAmount = 0;
@@ -290,7 +291,8 @@ export class Network_v2 extends Model<Network_v2Methods> implements Deployable {
                                                         cid,
                                                         title,
                                                         repoPath,
-                                                        branch));
+                                                        branch,
+                                                        githubUser));
   }
 
   // /**

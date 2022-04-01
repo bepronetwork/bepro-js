@@ -48,7 +48,10 @@ try {
   console.log(`Building solution`);
   console.time(`Built`);
 
-  childProcess.execSync(`npm run build`, execOptions);
+  childProcess.execSync(`npm run compile`, execOptions);
+  childProcess.execSync(`npm run tsc -- -p ./tsconfig.json`, execOptions);
+  fs.cpSync(`./build`, `./dist/build`, {recursive: true});
+  childProcess.execSync(`npm run tscpaths -- -p ./tsconfig.json -s ./ -o ./dist`, execOptions);
   fs.rmSync(path.resolve(`building.tmp`), {force: true,});
 
   console.timeEnd(`Built`);
