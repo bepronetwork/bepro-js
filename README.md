@@ -1,6 +1,6 @@
 # Bepro-js - SDK for Web3.0
 
-Bepro-js is a curated framework so that you can automate creation and unit testing, javascript wrappers, and extended integration just by writing solidity - a tool built with @Truffle (integrates compiling in solc together in your Smart Contracts) & @OpenZeppelin (provides trustable, audited & tested Smart Contracts) already integrated, solving a very simple problem: velocity in solidity development.
+Bepro-js is a curated framework so that you can automate creation and unit testing, javascript wrappers, and extended integration just by writing solidity - a tool built with [Truffle](https://trufflesuite.com/docs/truffle/) (integrates compiling in solc together in your Smart Contracts) & [Open Zeppelin](https://openzeppelin.com/) (provides trustable, audited & tested Smart Contracts) already integrated, solving a very simple problem: velocity in solidity development.
 
 ![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
@@ -48,11 +48,11 @@ Please refer to the [`test/`](./test/models) folder to read further usage exampl
 
 ## Documentation 
 
-[Guides](https://docs.bepro.network/sdk-documentation/start-building/how-to-guides)
-[SDK Documentation](https://bepronetwork.github.io/bepro-js/)
-[Use Cases](https://docs.bepro.network/sdk-documentation/use-cases)
+* [Guides](https://docs.bepro.network/sdk-documentation/start-building/how-to-guides)
+* [SDK Documentation](https://bepronetwork.github.io/bepro-js/)
+* [Use Cases](https://docs.bepro.network/sdk-documentation/use-cases)
 
-### Generate Documentation 
+### How to Generate Documentation 
 
 You can generate the documentation locally by issuing 
 ```
