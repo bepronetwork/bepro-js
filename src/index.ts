@@ -54,6 +54,7 @@ export * from '@interfaces/benefactor';
 
 export * from '@events/x-events';
 export * from '@events/network-events';
+export * from '@events/network-v2-events';
 
 export * from '@methods/contract-call-method';
 export * from '@methods/erc20';
