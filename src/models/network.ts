@@ -2,7 +2,7 @@ import {Model} from '@base/model';
 import {Web3Connection} from '@base/web3-connection';
 import * as NetworkAbi from '@abi/Network.json';
 import {ERC20} from '@models/erc20';
-import {fromDecimals, toSmartContractDecimals} from '@utils/numbers';
+import {fromDecimals, fromSmartContractDecimals, toSmartContractDecimals} from '@utils/numbers';
 import {TransactionReceipt} from '@interfaces/web3-core';
 import networkIssue from '@utils/network-issue';
 import {NetworkIssue} from '@interfaces/network-issue';
@@ -93,7 +93,8 @@ export class Network extends Model<NetworkMethods> implements Deployable {
   }
 
   async disputesForMergeByAddress(issueId: number, proposalId: number, address: string) {
-    return +(await this.callTx(this.contract.methods.disputesForMergeByAddress(issueId, proposalId, address)));
+    return +fromSmartContractDecimals(await this
+      .callTx(this.contract.methods.disputesForMergeByAddress(issueId, proposalId, address)));
   }
 
   async disputableTime() {
