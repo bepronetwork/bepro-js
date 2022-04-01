@@ -44,17 +44,21 @@ await myToken.start() // load contract and connection into the class representin
 await myToken.transferTokenAmount('0xYourOtherAddress', 1); // transfer 1 token from your address to other address
 
 ```
-
 Please refer to the [`test/`](./test/models) folder to read further usage examples of the various contracts available.
 
-## Generating documentation
+## Documentation 
+
+[Guides](https://docs.bepro.network/sdk-documentation/start-building/how-to-guides)
+[SDK Documentation](https://bepronetwork.github.io/bepro-js/)
+[Use Cases](https://docs.bepro.network/sdk-documentation/use-cases)
+
+### Generate Documentation 
+
 You can generate the documentation locally by issuing 
 ```
 $ npm run docs
 ```
 and then serving the `docs/` folder as a root http-server.
-
-Alternatively you can read the generated  [documentation here](https://moshmage.github.io/bepro-js/)
 
 ## Contribution
 
