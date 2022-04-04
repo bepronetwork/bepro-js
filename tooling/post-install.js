@@ -60,7 +60,7 @@ try {
   return 0;
 } catch (e) {
   console.log(e);
-  console.log(`\nFailed to build dappkit sdk, please issue: npm explore @taikai/dappkit-- npm run build`);
+  console.log(`\nFailed to build dappkit sdk, please issue: npm explore @taikai/dappkit -- npm run build`);
   return 1;
 }
 
