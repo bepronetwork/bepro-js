@@ -1,22 +1,22 @@
-# Bepro-js - SDK for Web3.0
+# dappkit - SDK for Web3.0
 
-Bepro-js is a curated framework so that you can automate creation and unit testing, javascript wrappers, and extended integration just by writing solidity - a tool built with [Truffle](https://trufflesuite.com/docs/truffle/) (integrates compiling in solc together in your Smart Contracts) & [Open Zeppelin](https://openzeppelin.com/) (provides trustable, audited & tested Smart Contracts) already integrated, solving a very simple problem: velocity in solidity development.
+dappkit is a curated framework so that you can automate creation and unit testing, javascript wrappers, and extended integration just by writing solidity - a tool built with [Truffle](https://trufflesuite.com/docs/truffle/) (integrates compiling in solc together in your Smart Contracts) & [Open Zeppelin](https://openzeppelin.com/) (provides trustable, audited & tested Smart Contracts) already integrated, solving a very simple problem: velocity in solidity development.
 
-![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg)
+![Build Status](https://github.com/taikai/dappkit/actions/workflows/build.yml/badge.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
-[![GitHub issues](https://img.shields.io/github/issues/bepronetwork/bepro-js.svg)](https://GitHub.com/bepronetwork/bepro-js/issues/)
+[![GitHub issues](https://img.shields.io/github/issues/taikai/dappkit.svg)](https://GitHub.com/taikai/dappkit/issues/)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
 [![License](https://img.shields.io/badge/license-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
 
 ## Installation
 
-```npm install @bepronetwork/bepro-js@2.0.0-alpha.2```
+```npm install @taikai/dappkit@2.0.0-alpha.2```
 
 ## Usage
 
 ```ts
-import {Web3Connection, Web3ConnectionOptions, ERC20} from '@bepronetwork/bepro-js';
+import {Web3Connection, Web3ConnectionOptions, ERC20} from '@taikai/dappkit';
 
 const options: Web3ConnectionOptions = { web3Host: process.env.WEB3_HOST_PROVIDER };
 const web3Connection = new Web3Connection(options);
@@ -49,7 +49,7 @@ Please refer to the [`test/`](./test/models) folder to read further usage exampl
 ## Documentation 
 
 * [Guides](https://docs.bepro.network/sdk-documentation/start-building/how-to-guides)
-* [SDK Documentation](https://bepronetwork.github.io/bepro-js/)
+* [SDK Documentation](https://taikai.github.io/dappkit/)
 * [Use Cases](https://docs.bepro.network/sdk-documentation/use-cases)
 
 ### How to Generate Documentation 
@@ -63,7 +63,7 @@ and then serving the `docs/` folder as a root http-server.
 ## Contribution
 
 Contributions are welcomed, but we ask that you read existing code guidelines, specially the code format. 
-Please review [Contributor guidelines](https://github.com/bepronetwork/bepro-js/blob/master/CONTRIBUTING.md)
+Please review [Contributor guidelines](https://github.com/taikai/dappkit/blob/master/CONTRIBUTING.md)
 
 ## License
 

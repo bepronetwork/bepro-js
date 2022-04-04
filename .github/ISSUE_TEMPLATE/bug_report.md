@@ -28,7 +28,7 @@ For example:
 
 
 **versions, packages, etc**
-<!-- Attach your node version, bepro-js version, package.json, etc.. -->
+<!-- Attach your node version, dappkit version, package.json, etc.. -->
 
 
 **Additional context**

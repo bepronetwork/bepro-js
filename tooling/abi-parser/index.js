@@ -39,7 +39,7 @@ const AbiParser = (filePath = ``, options) => {
   const deployOptions = `const deployOptions = {\n        data: ${contract.contractName}Json.bytecode,\n        arguments: [${parseInputsName(abiItemConstructor[0]?.inputs || [], undefined, true)}]\n    };`
   constructorWithDeployer = _constructor+`  async deployJsonAbi(${abiInputs}) {\n    ${deployOptions}\n\n    return this.deploy(deployOptions, this.web3Connection.Account);\n  }\n\n`;
 
-  const contractCallMethodImport = options.asPackage ? `@bepronetwork/bepro-js` : `${options.paths.methods}/contract-call-method`;
+  const contractCallMethodImport = options.asPackage ? `@taikai/dappkit` : `${options.paths.methods}/contract-call-method`;
 
   const _interface = makeClass(classHeader(contract.contractName), content, [
     "import {ContractSendMethod} from 'web3-eth-contract';",
@@ -48,7 +48,7 @@ const AbiParser = (filePath = ``, options) => {
 
   const libs = [
     ... options.asPackage
-      ? [`import {Model, Web3Connection, Web3ConnectionOptions, Deployable, XEvents} from '@bepronetwork/bepro-js'`]
+      ? [`import {Model, Web3Connection, Web3ConnectionOptions, Deployable, XEvents} from '@taikai/dappkit'`]
       : [
         `import {Model} from '${options.paths.base}/model';`,
         `import {Web3Connection} from '${options.paths.base}/web3-connection';`,

@@ -29,7 +29,7 @@ try {
   }
 
   if (wasBuilt) {
-    console.log(`bepro-js sdk was already built.`)
+    console.log(`dappkit sdk was already built.`)
     return 0;
   }
 
@@ -60,7 +60,7 @@ try {
   return 0;
 } catch (e) {
   console.log(e);
-  console.log(`\nFailed to build bepro-js sdk, please issue: npm explore @bepronetwork/bepro-js -- npm run build`);
+  console.log(`\nFailed to build dappkit sdk, please issue: npm explore @taikai/dappkit-- npm run build`);
   return 1;
 }
 

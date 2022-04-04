@@ -1,7 +1,7 @@
 {
-    "name": "@bepronetwork/bepro-js",
+    "name": "@taikai/dappkit",
     "version": "2.0.0-alpha.2",
-    "description": "BEPRO/TAIKAI Decentralized Application Kit",
+    "description": "Web3 Decentralized Application Kit",
     "main": "dist/src/index.js",
     "module": "dist/src/index.js",
     "engines": {
@@ -9,7 +9,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/bepronetwork/bepro-js.git"
+        "url": "https://github.com/taikai/dappkit"
     },
     "files": ["dist", "tooling", "src", "truffle-config.js", "tsconfig.json", "contracts"],
     "bin": {
