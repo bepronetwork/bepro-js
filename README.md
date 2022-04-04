@@ -2,7 +2,7 @@
 
 dappkit is a curated framework so that you can automate creation and unit testing, javascript wrappers, and extended integration just by writing solidity - a tool built with [Truffle](https://trufflesuite.com/docs/truffle/) (integrates compiling in solc together in your Smart Contracts) & [Open Zeppelin](https://openzeppelin.com/) (provides trustable, audited & tested Smart Contracts) already integrated, solving a very simple problem: velocity in solidity development.
 
-![Build Status](https://github.com/taikai/dappkit/actions/workflows/build.yml/badge.svg)
+![Build Status](https://github.com/bepronetwork/bepro-js/actions/workflows/build.yml/badge.svg)
 ![Dependencies](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)
 [![GitHub issues](https://img.shields.io/github/issues/taikai/dappkit.svg)](https://GitHub.com/taikai/dappkit/issues/)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-orange.svg)
