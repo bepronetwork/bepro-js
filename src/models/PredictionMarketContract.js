@@ -265,7 +265,29 @@ class PredictionMarketContract extends IContract {
         };
       } else {
         const marketShares = await this.getContract().methods.getUserMarketShares(marketId, user).call();
-        const claimStatus = await this.getContract().methods.getUserClaimStatus(marketId, user).call();
+        let claimStatus;
+        try {
+          claimStatus = await this.getContract().methods.getUserClaimStatus(marketId, user).call();
+        } catch (err) {
+          // SafeMath subtraction overflow error from Moonriver deployment
+          if (err.message.includes('SafeMath: subtraction overflow')) {
+            claimStatus = [false, false, false, false, 0];
+
+            const marketData = await this.params.contract.getContract().methods.getMarketData(marketId).call();
+            if (parseInt(marketData[0]) === 2) {
+              // market resolved, computing if user has winnings to claim
+              claimStatus[0] = marketShares[parseInt(marketData[5]) + 1] > 0;
+              if (claimStatus[0]) {
+                const events = await this.getEvents('MarketActionTx', { marketId, user, action: 4 });
+                claimStatus[1] = events.length > 0;
+              }
+              claimStatus[2] = marketShares[0] > 0;
+              claimStatus[3] = claimStatus[2];
+            }
+          } else {
+            throw err;
+          }
+        }
 
         portfolio = {
           liquidity: {
