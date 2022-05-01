@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs ERC20Distribution</title>
+  <title>BEPRO Network Dev Docs MarketplaceRealFvr</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -98,7 +98,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Class</p>
-                    <h1>ERC20Distribution</h1>
+                    <h1>MarketplaceRealFvr</h1>
                 </header>
                 
 
@@ -109,7 +109,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ERC20Distribution<span class="signature">(options)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>MarketplaceRealFvr<span class="signature">(params)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -128,12 +128,12 @@
 
 
     
-    <h4 class="name" id="ERC20Distribution">
-        <a class="href-link" href="#ERC20Distribution">#</a>
+    <h4 class="name" id="MarketplaceRealFvr">
+        <a class="href-link" href="#MarketplaceRealFvr">#</a>
         
         <span class="code-name">
             
-                new ERC20Distribution<span class="signature">(options)</span><span class="type-signature"></span>
+                new MarketplaceRealFvr<span class="signature">(params)</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -142,7 +142,7 @@
     
     
     <div class="description">
-        <p>ERC20 Token Distribution Contract Object</p>
+        <p>MarketplaceRealFvr Object</p>
     </div>
     
 
@@ -180,13 +180,13 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>options</code></td>
+      <td class="name"><code>params</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type"><a href="ERC20Distribution.html#~Options">ERC20Distribution~Options</a></code>
+<code class="param-type">Object</code>
 
 
   
@@ -196,8 +196,34 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>contractAddress</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Address</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Contract Address (If Deployed)</p></td>
+</tr>
+
+  
 
 
         
@@ -242,9 +268,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line14">line 14</a>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line7">line 7</a>
             </span>
         </p>
     
@@ -291,23 +317,141 @@
     
 
     
+
+    
         <div class='vertical-section'>
-            <h1>Members</h1>
+            <h1>Methods</h1>
             <div class="members">
             
                 <div class="member">
 
-<h4 class="name" id="__assert">
-    <a class="href-link" href="#__assert">#</a>
+
     
-    <span class="code-name">
-        __assert
-    </span>
+    <h4 class="name" id="approveERC721use">
+        <a class="href-link" href="#approveERC721use">#</a>
+        
+        <span class="code-name">
+            
+                approveERC721use<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span>
+            
+        </span>
+    </h4>
     
-</h4>
+
+    
+    
+    <div class="description">
+        <p>Approve ERC721 to be put on Sale</p>
+    </div>
+    
 
 
 
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>to</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Address</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Address To</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>approve</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Bool</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>If to Approve</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -346,9 +490,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line113">line 113</a>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line193">line 193</a>
             </span>
         </p>
     
@@ -358,27 +502,59 @@
 
 
 
-</div>
-            
-            </div>
-        </div>
-    
 
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
     
-        <div class='vertical-section'>
-            <h1>Methods</h1>
-            <div class="members">
+    <div class='param-desc column is-7'><p>Success the Tx Object if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">TransactionObject</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
             
                 <div class="member">
 
 
     
-    <h4 class="name" id="deploy">
-        <a class="href-link" href="#deploy">#</a>
+    <h4 class="name" id="buyERC721">
+        <a class="href-link" href="#buyERC721">#</a>
         
         <span class="code-name">
             
-                deploy<span class="signature">(options)</span><span class="type-signature"> &rarr; {Promise.&lt;(*|undefined)>}</span>
+                buyERC721<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span>
             
         </span>
     </h4>
@@ -387,7 +563,7 @@
     
     
     <div class="description">
-        <p>Deploy the Contract</p>
+        <p>Buy ERC721 from Sale</p>
     </div>
     
 
@@ -420,6 +596,700 @@
         </thead>
 
         <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>tokenId</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Token Id</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>value</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Integer</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>If Native ETH, value = 0.1 ETH; if ERC20 value is 0 or optional</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line104">line 104</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success the Tx Object if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">TransactionObject</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="changeERC20">
+        <a class="href-link" href="#changeERC20">#</a>
+        
+        <span class="code-name">
+            
+                changeERC20<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Change ERC20 Address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>erc20TokenAddress</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>ERC20TokenAddress</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line126">line 126</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success the Tx Object if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">TransactionObject</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="changeERC721">
+        <a class="href-link" href="#changeERC721">#</a>
+        
+        <span class="code-name">
+            
+                changeERC721<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Change ERC20 Address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>erc721TokenAddress</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>ERC721TokenAddress</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line138">line 138</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success the Tx Object if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">TransactionObject</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="deploy">
+        <a class="href-link" href="#deploy">#</a>
+        
+        <span class="code-name">
+            
+                deploy<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Boolean}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>User deploys the contract</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>erc20TokenAddress</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Address</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Address of the Contract - Optional (Dont insert if you want to use ETH or BNB or the native currency)</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>erc721TokenAddress</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Address</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Address of the Contract</p></td>
+</tr>
+
+  
+
+
         
 
             
@@ -487,9 +1357,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line141">line 141</a>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line204">line 204</a>
             </span>
         </p>
     
@@ -510,27 +1380,6 @@
 
 
 
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
-        <div class="column is-10">
-            
-                    
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>No Token Address Provided</p></div>
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-<code class="param-type">Error</code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
 
 
     <div class='columns method-parameter'>
@@ -541,11 +1390,13 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>Success the Tx Object if operation was successful</p></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;(*|undefined)></code>
+<code class="param-type">Boolean</code>
 
 
     </div>
@@ -565,12 +1416,12 @@
 
 
     
-    <h4 class="name" id="erc20">
-        <a class="href-link" href="#erc20">#</a>
+    <h4 class="name" id="getAmountofNFTsEverInSale">
+        <a class="href-link" href="#getAmountofNFTsEverInSale">#</a>
         
         <span class="code-name">
             
-                erc20<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Address>}</span>
+                getAmountofNFTsEverInSale<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span>
             
         </span>
     </h4>
@@ -579,7 +1430,7 @@
     
     
     <div class="description">
-        <p>Get ERC20 Address of the Token Contract managed</p>
+        <p>Get Amount of ERC721s ever in sale</p>
     </div>
     
 
@@ -628,9 +1479,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line28">line 28</a>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line183">line 183</a>
             </span>
         </p>
     
@@ -660,687 +1511,58 @@
                     
 
 <div class="columns">
+    
+    <div class='param-desc column is-7'><p>Amount of NFTs in Sale</p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;Address></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getERC20Contract">
-        <a class="href-link" href="#getERC20Contract">#</a>
-        
-        <span class="code-name">
-            
-                getERC20Contract<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line154">line 154</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>ERC20Contract|undefined</p></div>
-    
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getTokenAmount">
-        <a class="href-link" href="#getTokenAmount">#</a>
-        
-        <span class="code-name">
-            
-                getTokenAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Get Token Amount of ERC20 Address</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Object</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>address</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Address</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line39">line 39</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Token Amount</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;number></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="safeGuardAllTokens">
-        <a class="href-link" href="#safeGuardAllTokens">#</a>
-        
-        <span class="code-name">
-            
-                safeGuardAllTokens<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>(Admin only) Get All tokens from the Distribution Contract</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Object</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>address</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Address</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Address to transfer the ERC20 tokens to</p></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line60">line 60</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;boolean></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="setInitialDistribution">
-        <a class="href-link" href="#setInitialDistribution">#</a>
-        
-        <span class="code-name">
-            
-                setInitialDistribution<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>(Admin only) Set Initial Distribution (Call the amount of times necessary)</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Object</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>address</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Address</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Address of the recipient</p></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>tokenAmount</code></td>
-  
-
-  <td class="type">
-  
-      
 <code class="param-type">Integer</code>
 
 
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Token amount for this tranche</p></td>
-</tr>
-
-  
+    </div>
     
-<tr class="deep-level-1">
-  
-      <td class="name"><code>unlockTime</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Integer</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Time to when this tokens unlock</p></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
 </div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getERC20TokenAddress">
+        <a class="href-link" href="#getERC20TokenAddress">#</a>
+        
+        <span class="code-name">
+            
+                getERC20TokenAddress<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get ERC20 Token Address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
 
 
 
@@ -1379,9 +1601,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line86">line 86</a>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line161">line 161</a>
             </span>
         </p>
     
@@ -1412,333 +1634,57 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
+    <div class='param-desc column is-7'><p>Token Address</p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;boolean></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="setTGEDate">
-        <a class="href-link" href="#setTGEDate">#</a>
-        
-        <span class="code-name">
-            
-                setTGEDate<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>(Admin only) Set the Token Generation Event</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Object</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>time</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Integer</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>Time to set the TGE to (Token Generation Event)</p></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line72">line 72</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;boolean></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="setTokenAddress">
-        <a class="href-link" href="#setTokenAddress">#</a>
-        
-        <span class="code-name">
-            
-                setTokenAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>(Admin only) Set Token address</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Object</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>address</code></td>
-  
-
-  <td class="type">
-  
-      
 <code class="param-type">Address</code>
 
 
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"><p>ERC20 Address</p></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
+    </div>
+    
 </div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getERC721TokenAddress">
+        <a class="href-link" href="#getERC721TokenAddress">#</a>
+        
+        <span class="code-name">
+            
+                getERC721TokenAddress<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get ERC721 Token Address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
 
 
 
@@ -1777,9 +1723,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line48">line 48</a>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line168">line 168</a>
             </span>
         </p>
     
@@ -1810,13 +1756,13 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
+    <div class='param-desc column is-7'><p>Token Address</p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;boolean></code>
+<code class="param-type">Address</code>
 
 
     </div>
@@ -1836,12 +1782,12 @@
 
 
     
-    <h4 class="name" id="triggerTokenSend">
-        <a class="href-link" href="#triggerTokenSend">#</a>
+    <h4 class="name" id="getFeeAddress">
+        <a class="href-link" href="#getFeeAddress">#</a>
         
         <span class="code-name">
             
-                triggerTokenSend<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
+                getFeeAddress<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span>
             
         </span>
     </h4>
@@ -1850,7 +1796,129 @@
     
     
     <div class="description">
-        <p>Trigger Token - should be called every month</p>
+        <p>Get FeeAddress</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line175">line 175</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Fee Address</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Address</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="putERC721OnSale">
+        <a class="href-link" href="#putERC721OnSale">#</a>
+        
+        <span class="code-name">
+            
+                putERC721OnSale<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Put ERC721 on Sale</p>
     </div>
     
 
@@ -1904,8 +1972,57 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>tokenId</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Token Id</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>price</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Price (Token Amount)</p></td>
+</tr>
+
+  
 
 
         
@@ -1950,9 +2067,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line103">line 103</a>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line72">line 72</a>
             </span>
         </p>
     
@@ -1983,13 +2100,434 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Success True if operation was successful</p></div>
+    <div class='param-desc column is-7'><p>Success the Tx Object if operation was successful</p></div>
     
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;boolean></code>
+<code class="param-type">TransactionObject</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="removeERC721FromSale">
+        <a class="href-link" href="#removeERC721FromSale">#</a>
+        
+        <span class="code-name">
+            
+                removeERC721FromSale<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Remove ERC721 from Sale</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>tokenId</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Token Id</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line91">line 91</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success the Tx Object if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">TransactionObject</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="setFixedFees">
+        <a class="href-link" href="#setFixedFees">#</a>
+        
+        <span class="code-name">
+            
+                setFixedFees<span class="signature">(params)</span><span class="type-signature"> &rarr; {TransactionObject}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Change ERC20 Address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>feeAddress</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Fee Address</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>feePercentage</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">String</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Fee Percentage (1 = 1%)</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html">models/custom/RealFvr/MarketplaceRealFvr.js</a>, <a href="models_custom_RealFvr_MarketplaceRealFvr.js.html#line151">line 151</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Success the Tx Object if operation was successful</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">TransactionObject</code>
 
 
     </div>
@@ -2009,257 +2547,6 @@
         </div>
     
 
-    
-        <div class='vertical-section'>
-            <h1>Type Definitions</h1>
-            <div class="members">
-            
-                <div class="member">
-
-    <span class="method-parameter is-pulled-right">
-        <label>Type:</label>
-        
-<code class="param-type">Object</code>
-
-
-    </span>
-
-<h4 class="name" id="~Options">
-    <a class="href-link" href="#~Options">#</a>
-    
-    <span class="code-name">
-        Options
-    </span>
-    
-</h4>
-
-
-
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-            <th>Attributes</th>
-            
-
-            
-            <th>Default</th>
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>test</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">Boolean</code>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-        </td>
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>localtest</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">Boolean</code>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-        </td>
-    
-
-    <td class="description last"><p>ganache local blockchain</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>web3Connection</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type"><a href="Web3Connection.html">Web3Connection</a></code>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-            Web3Connection
-        
-        </td>
-    
-
-    <td class="description last"><p>created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>contractAddress</code></td>
-    
-
-    <td class="type">
-    
-        
-<code class="param-type">string</code>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-        </td>
-    
-
-    <td class="description last"></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC20_ERC20Distribution.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC20_ERC20Distribution.js.html">models/ERC20/ERC20Distribution.js</a>, <a href="models_ERC20_ERC20Distribution.js.html#line6">line 6</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-</div>
-            
-            </div>
-        </div>
     
 
     
