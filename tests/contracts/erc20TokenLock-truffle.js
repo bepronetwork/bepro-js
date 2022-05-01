@@ -1,12 +1,9 @@
+import { assert, expect } from 'chai';
+import moment from 'moment';
+// import traveler from 'ganache-time-traveler';
+
 const ERC20Test = artifacts.require('./ERC20Test.sol');
 const ERC20TokenLock = artifacts.require('./ERC20TokenLock.sol');
-
-const { assert } = require('chai');
-// const truffleAssert = require('truffle-assertions');
-const { expect } = require('chai');
-const moment = require('moment');
-const traveler = require("ganache-time-traveler");
-// const Numbers = require('../src/utils/Numbers');
 
 const TEST_CONTRACT_NAME = 'ERC20TokenLock'; // require("./common.js");
 const TEST_TAG = `${TEST_CONTRACT_NAME}-truffle-tests - `;
@@ -26,30 +23,28 @@ function timeToSmartContractTime(time) {
   return moment(time).unix();
 }
 
-contract(TEST_CONTRACT_NAME, async (accounts) => {
+contract(TEST_CONTRACT_NAME, async accounts => {
   const owner = accounts[0];
   const user1 = accounts[1];
-  const user2 = accounts[2];
-  let app;
   let erc20Test; // erc20 token contract we use for testing
   let erc20Lock; // erc20 token lock contract
 
   // 'beforeEach' function will run before each test creating a new instance of the contract each time
-  let snapshotId;
+  // let snapshotId;
 
-  /*before(async () => {
-	console.log('--- erc20tokenlock.setup_before ---' + process.cwd());
-	const snapshot = await traveler.takeSnapshot();
-	snapshotId = snapshot.result;
-  });*/
+  /* before(async () => {
+  console.log('--- erc20tokenlock.setup_before ---' + process.cwd());
+  const snapshot = await traveler.takeSnapshot();
+  snapshotId = snapshot.result;
+  }); */
 
-  /*after(async () => {
+  /* after(async () => {
     console.log('--- erc20tokenlock.setup_after ---' + process.cwd());
     await traveler.revertToSnapshot(snapshotId);
-  });*/
-  
+  }); */
+
   before('setup contract for each test', async () => {
-	console.log('--- erc20tokenlock setup_before ---' + process.cwd());
+    // console.log(`--- erc20tokenlock setup_before ---${process.cwd()}`);
     // let ffc = await FiatToken.deployed();
 
     erc20Test = await ERC20Test.new(name, symbol, cap, { from: owner });
@@ -58,14 +53,14 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
       from: owner,
     });
     /* time dev tests
-		let now = moment();
-		let now_unix = now.unix();
-		let smartContractTime = timeToSmartContractTime(now);
-		let dt = Date.now(); // equals to moment()
-		console.log("now				: " + now);
-		console.log("now_unix			: " + now_unix);
-		console.log("smartContractTime	: " + smartContractTime);
-		console.log("Date.now()			: " + dt); */
+    let now = moment();
+    let now_unix = now.unix();
+    let smartContractTime = timeToSmartContractTime(now);
+    let dt = Date.now(); // equals to moment()
+    console.log("now: " + now);
+    console.log("now_unix: " + now_unix);
+    console.log("smartContractTime: " + smartContractTime);
+    console.log("Date.now(): " + dt); */
   });
 
   it(
@@ -73,7 +68,6 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
     }ERC20TokenLock Contract should have initial variables expected values`,
     async () => {
       let res = await erc20Lock.erc20();
-      const ret_tokenAddress = res;
       expect(res).to.equal(erc20TokenContract);
       res = await erc20Lock.maxAmountToLock();
       expect(Number(res).toString()).to.equal(Number(0).toString());
@@ -159,7 +153,8 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
           from: user1,
         });
         assert.fail();
-      } catch (error) {
+      }
+      catch (error) {
         // console.log('error >> ', error);
         assert(
           error.message.indexOf('revert') >= 0,
@@ -168,7 +163,7 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
       }
 
       // Check if max token amount is still the same
-      res = await erc20Lock.maxAmountToLock();
+      const res = await erc20Lock.maxAmountToLock();
       expect(Number(res).toString()).to.equal(Number(7000).toString());
     },
   );
@@ -184,7 +179,8 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
           from: user1,
         });
         assert.fail();
-      } catch (error) {
+      }
+      catch (error) {
         // console.log('error >> ', error);
         assert(
           error.message.indexOf('revert') >= 0,
@@ -193,7 +189,7 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
       }
 
       // Check if min token amount is still the same
-      res = await erc20Lock.minAmountToLock();
+      const res = await erc20Lock.minAmountToLock();
       expect(Number(res).toString()).to.equal(Number(1000).toString());
     },
   );
@@ -214,7 +210,7 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
     const userAddress = owner;
 
     // lock tokens
-    endDate = timeToSmartContractTime(moment().add(lockSeconds, 'seconds'));
+    const endDate = timeToSmartContractTime(moment().add(lockSeconds, 'seconds'));
     res = await erc20Lock.lock(lockTokens, endDate, { from: userAddress });
     expect(res).to.not.equal(false);
     // console.log('res.logs[0] >>> ', res.logs[0]);
@@ -241,7 +237,7 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
     res = await erc20Lock.getLockedTokensInfo(userAddress);
 
     expect(res[0]).to.not.equal(false); // startDate
-    expect(res[1] == endDate).to.equal(true); // endDate
+    expect(res[1] === endDate).to.equal(true); // endDate
     expect(Number(res[2]).toString()).to.equal(Number(lockTokens).toString()); // amount
   });
 
@@ -260,7 +256,8 @@ contract(TEST_CONTRACT_NAME, async (accounts) => {
       try {
         await erc20Lock.release({ from: userAddress });
         assert.fail();
-      } catch (error) {
+      }
+      catch (error) {
         // console.log('error >> ', error);
         assert(
           error.message.indexOf('revert') >= 0,

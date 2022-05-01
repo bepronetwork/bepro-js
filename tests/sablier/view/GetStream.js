@@ -1,22 +1,23 @@
-const BigNumber = require("bignumber.js");
-const truffleAssert = require("truffle-assertions");
+import BigNumber from 'bignumber.js';
+import sablierUtils from '../sablier.utils';
+import beproAssert from '../../../build/utils/beproAssert';
 
-const sablierUtils = require("../sablier.utils");
+context('sablier.GetStream.context', async () => {
+  // let sender;// = alice;
+  // const opts = { from: sender };
 
-context("sablier.GetStream.context", async () => {
-  
-  let sender;// = alice;
-  //const opts = { from: sender };
-
-  before("sablier.GetStream.before", async () => {
+  before('sablier.GetStream.before', async () => {
     await sablierUtils.initConfig();
-    sender = _this.alice;
+    // sender = _this.alice;
   });
-  
-  describe("when the stream does not exist", () => {
-    it("reverts", async () => {
+
+  describe('when the stream does not exist', () => {
+    it('reverts', async () => {
       const streamId = new BigNumber(419863);
-      await truffleAssert.reverts(_this.sablier.getStream({ streamId }), "stream does not exist");
+      await beproAssert.reverts(
+        () => _this.sablier.getStream({ streamId }),
+        'stream does not exist',
+      );
     });
   });
 });

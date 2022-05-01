@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-// eslint-disable-next-line no-unused-vars
+
+import BigNumber from 'bignumber.js';
+
 import { networkFactory } from '../../interfaces';
 import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 import ERC20Contract from '../ERC20/ERC20Contract';
-
-const BigNumber = require('bignumber.js');
 
 /**
  * @typedef {Object} NetworkFactory~Options
@@ -24,7 +24,6 @@ class NetworkFactory extends IContract {
   constructor(params) {
     super({ abi: networkFactory, ...params });
   }
-
 
   /**
    * Asserts the 2 {@link ERC20Contract} on the current address
@@ -50,7 +49,7 @@ class NetworkFactory extends IContract {
       contractAddress: beproAddress,
     });
     // Assert Token Contract
-    await this.params.settlerToken.login();
+    await this.params.settlerToken.start();
     await this.params.settlerToken.__assert();
   };
 
@@ -59,8 +58,8 @@ class NetworkFactory extends IContract {
    * @param {Address} address
    * @returns {Adddress}
    */
-  async getNetworkByAddress(address) {
-    return await this.getWeb3Contract()
+  getNetworkByAddress(address) {
+    return this.getContract()
       .methods.getNetworkByAddress(address)
       .call();
   }
@@ -70,8 +69,8 @@ class NetworkFactory extends IContract {
    * @param {number} id
    * @returns {Adddress}
    */
-  async getNetworkById(id) {
-    return await this.getWeb3Contract()
+  getNetworkById(id) {
+    return this.getContract()
       .methods.getNetworkById(id)
       .call();
   }
@@ -81,13 +80,12 @@ class NetworkFactory extends IContract {
    * @returns {Promise<number>}
    */
   async getAmountofNetworksForked() {
-    return Number(await this.getWeb3Contract().methods.networksAmount().call());
+    return Number(await this.getContract().methods.networksAmount().call());
   }
 
   async networksAmount() {
-    return BigNumber(await this.getWeb3Contract().methods.networksAmount().call());
+    return BigNumber(await this.getContract().methods.networksAmount().call());
   }
-
 
   /**
    * Get Total Amount of Tokens Locked by Operator in the Network
@@ -96,14 +94,14 @@ class NetworkFactory extends IContract {
    */
   async getLockedStakedByAddress(address) {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.tokensLocked(address).call(),
+      await this.getContract().methods.tokensLocked(address).call(),
       18,
     );
   }
 
   async getTokensLocked(address) {
     return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.tokensLocked(address).call(),
+      await this.getContract().methods.tokensLocked(address).call(),
       18,
     );
   }
@@ -113,11 +111,10 @@ class NetworkFactory extends IContract {
    * @param {Address} address
    * @returns {Address[]}
    */
-  async getNetworks() {
-    const res = await this.getWeb3Contract()
+  getNetworks() {
+    return this.getContract()
       .methods.networksArray()
       .call();
-    return res;
   }
 
   /**
@@ -126,14 +123,14 @@ class NetworkFactory extends IContract {
    */
   async getBEPROLocked() {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
+      await this.getContract().methods.tokensLockedTotal().call(),
       18,
     );
   }
 
   async tokensLockedTotal() {
     return Numbers.fromDecimalsToBN(
-      await this.getWeb3Contract().methods.tokensLockedTotal().call(),
+      await this.getContract().methods.tokensLockedTotal().call(),
       18,
     );
   }
@@ -152,14 +149,14 @@ class NetworkFactory extends IContract {
    * Get Settler Token Address
    * @returns {Promise<address>}
    */
-  async getSettlerTokenAddress() {
-    return await this.getWeb3Contract()
+  getSettlerTokenAddress() {
+    return this.getContract()
       .methods.beproAddress()
       .call();
   }
 
-  async beproAddress() {
-    return await this.getWeb3Contract()
+  beproAddress() {
+    return this.getContract()
       .methods.beproAddress()
       .call();
   }
@@ -170,7 +167,7 @@ class NetworkFactory extends IContract {
    */
   async OPERATOR_AMOUNT() {
     return Numbers.fromDecimals(
-      await this.getWeb3Contract()
+      await this.getContract()
         .methods.OPERATOR_AMOUNT()
         .call(),
       18,
@@ -184,12 +181,11 @@ class NetworkFactory extends IContract {
    */
   approveSettlerERC20Token = async () => {
     const totalMaxAmount = await this.getSettlerTokenContract().totalSupply();
-    return await this.getSettlerTokenContract().approve({
+    return this.getSettlerTokenContract().approve({
       address: this.getAddress(),
       amount: totalMaxAmount,
     });
   };
-
 
   /**
    * Verify if Approved
@@ -199,7 +195,7 @@ class NetworkFactory extends IContract {
    * @param {Address} params.address
    * @return {Promise<number>}
    */
-  isApprovedSettlerToken = async ({ amount, address }) => await this.getSettlerTokenContract().isApproved({
+  isApprovedSettlerToken = ({ amount, address }) => this.getSettlerTokenContract().isApproved({
     address,
     amount,
     spenderAddress: this.getAddress(),
@@ -213,13 +209,16 @@ class NetworkFactory extends IContract {
    * @throws {Error} Tokens not approve for tx, first use 'approveERC20'
    * @return {Promise<TransactionObject>}
    */
-  async lock({ tokenAmount }) {
+  lock({ tokenAmount }, options) {
     if (tokenAmount <= 0) {
       throw new Error('Token Amount has to be higher than 0');
     }
 
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.lock(Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals())),
+    return this.__sendTx(
+      this.getContract().methods.lock(
+        Numbers.toSmartContractDecimals(tokenAmount, this.getSettlerTokenContract().getDecimals()),
+      ),
+      options,
     );
   }
 
@@ -228,9 +227,10 @@ class NetworkFactory extends IContract {
    * @throws {Error} Tokens Amount has to be higher than 0
    * @return {Promise<TransactionObject>}
    */
-  async unlock() {
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.unlock(),
+  unlock(options) {
+    return this.__sendTx(
+      this.getContract().methods.unlock(),
+      options,
     );
   }
 
@@ -241,10 +241,11 @@ class NetworkFactory extends IContract {
    * @param {Address} params.transactionalToken
    * @return {Promise<TransactionObject>}
    */
-  async createNetwork({ settlerToken, transactionalToken }) {
-    return await this.__sendTx(
-      this.getWeb3Contract()
+  createNetwork({ settlerToken, transactionalToken }, options) {
+    return this.__sendTx(
+      this.getContract()
         .methods.createNetwork(settlerToken, transactionalToken),
+      options,
     );
   }
 
@@ -253,14 +254,12 @@ class NetworkFactory extends IContract {
    * @function
    * @param {Object} params
    * @param {string} params.beproAddress
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({
-    beproAddress, callback,
-  }) => {
-    const params = [beproAddress];
-    const res = await this.__deploy(params, callback);
+  deploy = async ({ beproAddress }, options) => {
+    const params = [ beproAddress ];
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

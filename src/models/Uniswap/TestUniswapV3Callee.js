@@ -1,5 +1,4 @@
 import { uniswapCallee } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
 
 /**
@@ -12,133 +11,178 @@ export default class TestUniswapV3Callee extends IContract {
     super({ abi: uniswapCallee, ...params });
   }
 
-
   /**
-   * @param {address} pool
-   * @param {uint256} amount0In
-   * @param {address} recipient
-   * @param {uint160} sqrtPriceLimitX96
+   * @param {Object} params
+   * @param {address} params.pool
+   * @param {uint256} params.amount0In
+   * @param {address} params.recipient
+   * @param {uint160} params.sqrtPriceLimitX96
    * @returns {Promise<void>}
    */
-  async swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96));
+  swapExact0For1({
+    pool, amount0In, recipient, sqrtPriceLimitX96,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.swapExact0For1(pool, amount0In, recipient, sqrtPriceLimitX96),
+      options,
+    );
   }
 
-
   /**
-   * @param {address} pool
-   * @param {uint256} amount1Out
-   * @param {address} recipient
-   * @param {uint160} sqrtPriceLimitX96
+   * @param {Object} params
+   * @param {address} params.pool
+   * @param {uint256} params.amount1Out
+   * @param {address} params.recipient
+   * @param {uint160} params.sqrtPriceLimitX96
    * @returns {Promise<void>}
    */
-  async swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96));
+  swap0ForExact1({
+    pool, amount1Out, recipient, sqrtPriceLimitX96,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.swap0ForExact1(pool, amount1Out, recipient, sqrtPriceLimitX96),
+      options,
+    );
   }
 
-
   /**
-   * @param {address} pool
-   * @param {uint256} amount1In
-   * @param {address} recipient
-   * @param {uint160} sqrtPriceLimitX96
+   * @param {Object} params
+   * @param {address} params.pool
+   * @param {uint256} params.amount1In
+   * @param {address} params.recipient
+   * @param {uint160} params.sqrtPriceLimitX96
    * @returns {Promise<void>}
    */
-  async swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96));
+  swapExact1For0({
+    pool, amount1In, recipient, sqrtPriceLimitX96,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.swapExact1For0(pool, amount1In, recipient, sqrtPriceLimitX96),
+      options,
+    );
   }
 
-
   /**
-   * @param {address} pool
-   * @param {uint256} amount0Out
-   * @param {address} recipient
-   * @param {uint160} sqrtPriceLimitX96
+   * @param {Object} params
+   * @param {address} params.pool
+   * @param {uint256} params.amount0Out
+   * @param {address} params.recipient
+   * @param {uint160} params.sqrtPriceLimitX96
    * @returns {Promise<void>}
    */
-  async swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96));
+  swap1ForExact0({
+    pool, amount0Out, recipient, sqrtPriceLimitX96,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.swap1ForExact0(pool, amount0Out, recipient, sqrtPriceLimitX96),
+      options,
+    );
   }
 
-
   /**
-   * @param {address} pool
-   * @param {uint160} sqrtPriceX96
-   * @param {address} recipient
+   * @param {Object} params
+   * @param {address} params.pool
+   * @param {uint160} params.sqrtPriceX96
+   * @param {address} params.recipient
    * @returns {Promise<void>}
    */
-  async swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient));
+  swapToLowerSqrtPrice({ pool, sqrtPriceX96, recipient }, options) {
+    return this.__sendTx(
+      this.getContract().methods.swapToLowerSqrtPrice(pool, sqrtPriceX96, recipient),
+      options,
+    );
   }
 
-
   /**
-   * @param {address} pool
-   * @param {uint160} sqrtPriceX96
-   * @param {address} recipient
+   * @param {Object} params
+   * @param {address} params.pool
+   * @param {uint160} params.sqrtPriceX96
+   * @param {address} params.recipient
    * @returns {Promise<void>}
    */
-  async swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient) {
-    return await this.__sendTx(this.getWeb3Contract().methods.swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient));
+  swapToHigherSqrtPrice({ pool, sqrtPriceX96, recipient }, options) {
+    return this.__sendTx(
+      this.getContract().methods.swapToHigherSqrtPrice(pool, sqrtPriceX96, recipient),
+      options,
+    );
   }
 
-
   /**
-   * @param {int256} amount0Delta
-   * @param {int256} amount1Delta
-   * @param {bytes} data
+   * @param {Object} params
+   * @param {int256} params.amount0Delta
+   * @param {int256} params.amount1Delta
+   * @param {bytes} params.data
    * @returns {Promise<void>}
    */
-  /* async uniswapV3SwapCallback(amount0Delta, amount1Delta, data) {
-      return await this.__sendTx(this.getWeb3Contract().methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, data));
-    }; */
-
+  // uniswapV3SwapCallback({ amount0Delta, amount1Delta, data }, options) {
+  //   return this.__sendTx(
+  //     this.getContract().methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, data),
+  //     options,
+  //   );
+  // }
 
   /**
-   * @param {address} pool
-   * @param {address} recipient
-   * @param {int24} tickLower
-   * @param {int24} tickUpper
-   * @param {uint128} amount
+   * @param {Object} params
+   * @param {address} params.pool
+   * @param {address} params.recipient
+   * @param {int24} params.tickLower
+   * @param {int24} params.tickUpper
+   * @param {uint128} params.amount
    * @returns {Promise<void>}
    */
-  async mint(pool, recipient, tickLower, tickUpper, amount) {
-    return await this.__sendTx(this.getWeb3Contract().methods.mint(pool, recipient, tickLower, tickUpper, amount));
+  mint({
+    pool, recipient, tickLower, tickUpper, amount,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.mint(pool, recipient, tickLower, tickUpper, amount),
+      options,
+    );
   }
 
-
   /**
-   * @param {uint256} amount0Owed
-   * @param {uint256} amount1Owed
-   * @param {bytes} data
+   * @param {Object} params
+   * @param {uint256} params.amount0Owed
+   * @param {uint256} params.amount1Owed
+   * @param {bytes} params.data
    * @returns {Promise<void>}
    */
-  /* async uniswapV3MintCallback(amount0Owed, amount1Owed, data) {
-      return await this.__sendTx(this.getWeb3Contract().methods.uniswapV3MintCallback(amount0Owed, amount1Owed, data))
-    }; */
-
+  // uniswapV3MintCallback({ amount0Owed, amount1Owed, data }, options) {
+  //   return this.__sendTx(
+  //     this.getContract().methods.uniswapV3MintCallback(amount0Owed, amount1Owed, data),
+  //     options,
+  //   )
+  // };
 
   /**
-   * @param {address} pool
-   * @param {address} recipient
-   * @param {uint256} amount0
-   * @param {uint256} amount1
-   * @param {uint256} pay0
-   * @param {uint256} pay1
+   * @param {Object} params
+   * @param {address} params.pool
+   * @param {address} params.recipient
+   * @param {uint256} params.amount0
+   * @param {uint256} params.amount1
+   * @param {uint256} params.pay0
+   * @param {uint256} params.pay1
    * @returns {Promise<void>}
    */
-  async flash(pool, recipient, amount0, amount1, pay0, pay1) {
-    return await this.__sendTx(this.getWeb3Contract().methods.flash(pool, recipient, amount0, amount1, pay0, pay1));
+  flash({
+    pool, recipient, amount0, amount1, pay0, pay1,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.flash(pool, recipient, amount0, amount1, pay0, pay1),
+      options,
+    );
   }
 
-
   /**
-   * @param {uint256} fee0
-   * @param {uint256} fee1
-   * @param {bytes} data
+   * @param {Object} params
+   * @param {uint256} params.fee0
+   * @param {uint256} params.fee1
+   * @param {bytes} params.data
    * @returns {Promise<void>}
    */
-  /* async uniswapV3FlashCallback(fee0, fee1, data) {
-      return await this.__sendTx(this.getWeb3Contract().methods.uniswapV3FlashCallback(fee0, fee1, data))
-    }; */
+  // uniswapV3FlashCallback({ fee0, fee1, data }, options) {
+  //   return this.__sendTx(
+  //     this.getContract().methods.uniswapV3FlashCallback(fee0, fee1, data),
+  //     options,
+  //   )
+  // };
 }

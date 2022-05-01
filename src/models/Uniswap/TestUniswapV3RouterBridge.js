@@ -1,7 +1,5 @@
 import { uniswapRouterBridge } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
-
 
 /** @typedef {Object} TestUniswapV3RouterBridge~Options
 * @property {address} _swapRouter
@@ -27,75 +25,60 @@ export default class TestUniswapV3RouterBridge extends IContract {
     this.params.swapRouterAddress = params.swapRouterAddress; // swapRouter exchange contract address
   }
 
-
   /**
    * @returns {Promise<address>}
    */
-  async swapRouter() {
-    return await this.getWeb3Contract().methods.swapRouter().call();
+  swapRouter() {
+    return this.getContract().methods.swapRouter().call();
   }
 
-
   /**
-   * @param {address} tokenIn
-   * @param {address} tokenOut
-   * @param {uint24} poolFee
-   * @param {uint256} amountIn
-   * @param {uint256} amountOutMinimum
+   * @param {Object} params
+   * @param {address} params.tokenIn
+   * @param {address} params.tokenOut
+   * @param {uint24} params.poolFee
+   * @param {uint256} params.amountIn
+   * @param {uint256} params.amountOutMinimum
    * @returns {Promise<uint256>} amountOut
    */
-  async swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.swapExactInputSingleEx(
-        tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum,
-      ),
+  swapExactInputSingleEx({
+    tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.swapExactInputSingleEx(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum),
+      options,
     );
   }
-
-  async swapExactInputSingleExCall(tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum) {
-    return await this.getWeb3Contract().methods.swapExactInputSingleEx(
-      tokenIn, tokenOut, poolFee, amountIn, amountOutMinimum,
-    ).call();
-  }
-
 
   /**
-   * @param {address} tokenIn
-   * @param {address} tokenOut
-   * @param {uint24} poolFee
-   * @param {uint256} amountOut
-   * @param {uint256} amountInMaximum
+   * @param {Object} params
+   * @param {address} params.tokenIn
+   * @param {address} params.tokenOut
+   * @param {uint24} params.poolFee
+   * @param {uint256} params.amountOut
+   * @param {uint256} params.amountInMaximum
    * @returns {Promise<uint256>} amountIn
    */
-  async swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
-    return await this.__sendTx(
-      this.getWeb3Contract().methods.swapExactOutputSingleEx(
-        tokenIn, tokenOut, poolFee, amountOut, amountInMaximum,
-      ),
+  swapExactOutputSingleEx({
+    tokenIn, tokenOut, poolFee, amountOut, amountInMaximum,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.swapExactOutputSingleEx(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum),
+      options,
     );
   }
-
-  async swapExactOutputSingleExCall(tokenIn, tokenOut, poolFee, amountOut, amountInMaximum) {
-    return await this.getWeb3Contract().methods.swapExactOutputSingleEx(
-      tokenIn, tokenOut, poolFee, amountOut, amountInMaximum,
-    ).call();
-  }
-
 
   /**
    * Deploy the TestUniswapV3RouterBridge Contract
    * @function
-   * @param {Object} params Parameters
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} No Token Address Provided
    */
-  deploy = async ({
-    callback,
-  } = {}) => {
-    const params = [this.params.swapRouterAddress];
+  deploy = async options => {
+    const params = [ this.params.swapRouterAddress ];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

@@ -1,8 +1,7 @@
-import { tickMathTest } from '../../interfaces';
-import Numbers from '../../utils/Numbers';
-import IContract from '../IContract';
+import BigNumber from 'bignumber.js';
 
-const BigNumber = require('bignumber.js');
+import { tickMathTest } from '../../interfaces';
+import IContract from '../IContract';
 
 /** @typedef {Object} TickMathTest~Options
 * @property {Boolean} test
@@ -21,70 +20,66 @@ export default class TickMathTest extends IContract {
     super({ abi: tickMathTest, ...params });
   }
 
-
   /**
-   * @param {int24} tick
+   * @param {Object} params
+   * @param {int24} params.tick
    * @returns {Promise<uint160>}
    */
-  async getSqrtRatioAtTick(tick) {
-    return BigNumber(await this.getWeb3Contract().methods.getSqrtRatioAtTick(tick).call());
+  async getSqrtRatioAtTick({ tick }) {
+    return BigNumber(await this.getContract().methods.getSqrtRatioAtTick(tick).call());
   }
 
-
   /**
-   * @param {int24} tick
+   * @param {Object} params
+   * @param {int24} params.tick
    * @returns {Promise<uint256>}
    */
-  async getGasCostOfGetSqrtRatioAtTick(tick) {
-    return BigNumber(await this.getWeb3Contract().methods.getGasCostOfGetSqrtRatioAtTick(tick).call());
+  async getGasCostOfGetSqrtRatioAtTick({ tick }) {
+    return BigNumber(await this.getContract().methods.getGasCostOfGetSqrtRatioAtTick(tick).call());
   }
 
-
   /**
-   * @param {uint160} sqrtPriceX96
+   * @param {Object} params
+   * @param {uint160} params.sqrtPriceX96
    * @returns {Promise<int24>}
    */
-  async getTickAtSqrtRatio(sqrtPriceX96) {
-    return BigNumber(await this.getWeb3Contract().methods.getTickAtSqrtRatio(sqrtPriceX96).call());
+  async getTickAtSqrtRatio({ sqrtPriceX96 }) {
+    return BigNumber(await this.getContract().methods.getTickAtSqrtRatio(sqrtPriceX96).call());
   }
-
 
   /**
-   * @param {uint160} sqrtPriceX96
+   * @param {Object} params
+   * @param {uint160} params.sqrtPriceX96
    * @returns {Promise<uint256>}
    */
-  async getGasCostOfGetTickAtSqrtRatio(sqrtPriceX96) {
-    return BigNumber(await this.getWeb3Contract().methods.getGasCostOfGetTickAtSqrtRatio(sqrtPriceX96).call());
+  async getGasCostOfGetTickAtSqrtRatio({ sqrtPriceX96 }) {
+    return BigNumber(await this.getContract().methods.getGasCostOfGetTickAtSqrtRatio(sqrtPriceX96).call());
   }
-
 
   /**
    * @returns {Promise<uint160>}
    */
   async MIN_SQRT_RATIO() {
-    return BigNumber(await this.getWeb3Contract().methods.MIN_SQRT_RATIO().call());
+    return BigNumber(await this.getContract().methods.MIN_SQRT_RATIO().call());
   }
-
 
   /**
    * @returns {Promise<uint160>}
    */
   async MAX_SQRT_RATIO() {
-    return BigNumber(await this.getWeb3Contract().methods.MAX_SQRT_RATIO().call());
+    return BigNumber(await this.getContract().methods.MAX_SQRT_RATIO().call());
   }
-
 
   /**
    * Deploy the TickMathTest Contract
    * @function
-   * @param {Object} params Parameters
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({ callback } = {}) => {
+  deploy = async options => {
     const params = [];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

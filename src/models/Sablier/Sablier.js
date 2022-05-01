@@ -2,8 +2,6 @@ import { sablier } from '../../interfaces';
 import IContract from '../IContract';
 import Numbers from '../../utils/Numbers';
 
-const assert = require('assert');
-
 /**
  * Sablier Object for decentralized escrow payments
  * @class Sablier
@@ -14,35 +12,40 @@ export default class Sablier extends IContract {
     super({ abi: sablier, ...params });
   }
 
-
   /**
    * Add pauser role to given address.
    * @param {Object} params
    * @param {address} params.account Address to assign pauser role to.
    * @returns {Promise<void>}
    */
-  async addPauser({ account }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.addPauser(account));
+  addPauser({ account }, options) {
+    return this.__sendTx(
+      this.getContract().methods.addPauser(account),
+      options,
+    );
   }
-
 
   /**
    * Pause contract.
    * @returns {Promise<void>}
    */
-  async pause() {
-    return await this.__sendTx(this.getWeb3Contract().methods.pause());
+  pause(options) {
+    return this.__sendTx(
+      this.getContract().methods.pause(),
+      options,
+    );
   }
-
 
   /**
    * Unpause/resume contract.
    * @returns {Promise<void>}
    */
-  async unpause() {
-    return await this.__sendTx(this.getWeb3Contract().methods.unpause());
+  unpause(options) {
+    return this.__sendTx(
+      this.getContract().methods.unpause(),
+      options,
+    );
   }
-
 
   /**
    * Check if the given address has pauser role.
@@ -50,30 +53,27 @@ export default class Sablier extends IContract {
    * @param {address} params.account Address to check.
    * @returns {Promise<bool>}
    */
-  async isPauser({ account }) {
-    return await this.getWeb3Contract().methods.isPauser(account).call();
+  isPauser({ account }) {
+    return this.getContract().methods.isPauser(account).call();
   }
-
 
   /**
    * Counter for new stream ids.
    * @returns {Promise<uint256>}
    */
-  async nextStreamId() {
-    return await this.getWeb3Contract().methods.nextStreamId().call();
+  nextStreamId() {
+    return this.getContract().methods.nextStreamId().call();
   }
-
 
   /**
    * The percentage fee charged by the contract on the accrued interest. For example 75
    * @returns {Promise<uint256>} mantissa
    */
   async fee() {
-    const res = await this.getWeb3Contract().methods.fee().call();
+    const res = await this.getContract().methods.fee().call();
     // 1e16 is 1% of 1e18, fee is stored with 16 decimals as one hundred percent.
     return Numbers.fromDecimalsToBN(res, 16);
   }
-
 
   /**
    * Updates the Sablier fee.
@@ -82,10 +82,12 @@ export default class Sablier extends IContract {
    * @param {uint256} params.feePercentage The new fee as a percentage, for example 75 means 75%.
    * @returns {Promise<void>}
    */
-  async updateFee({ feePercentage }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.updateFee(feePercentage));
+  updateFee({ feePercentage }, options) {
+    return this.__sendTx(
+      this.getContract().methods.updateFee(feePercentage),
+      options,
+    );
   }
-
 
   /**
    * Withdraws the earnings for the given token address.
@@ -95,15 +97,17 @@ export default class Sablier extends IContract {
    * @param {uint256} params.amount The amount of tokens to withdraw.
    * @returns {Promise<void>}
    */
-  async takeEarnings({ tokenAddress, amount }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+  async takeEarnings({ tokenAddress, amount }, options) {
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(
       amount,
       decimals,
     );
-    return await this.__sendTx(this.getWeb3Contract().methods.takeEarnings(tokenAddress, amountWithDecimals));
+    return this.__sendTx(
+      this.getContract().methods.takeEarnings(tokenAddress, amountWithDecimals),
+      options,
+    );
   }
-
 
   /**
    * @typedef {Object} Sablier~getStreamType
@@ -125,10 +129,10 @@ export default class Sablier extends IContract {
    * @returns {Promise<Sablier~getStream>} The stream object.
    */
   async getStream({ streamId }) {
-    const res = await this.getWeb3Contract().methods.getStream(streamId).call();
+    const res = await this.getContract().methods.getStream(streamId).call();
 
     const tokenAddress = res[3];
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     return {
       sender: res[0],
       recipient: res[1],
@@ -141,7 +145,6 @@ export default class Sablier extends IContract {
     };
   }
 
-
   /**
    * Returns either the delta in seconds between `block.timestamp` and `startTime` or
    *  between `stopTime` and `startTime, whichever is smaller. If `block.timestamp` is before
@@ -151,10 +154,9 @@ export default class Sablier extends IContract {
    * @param {uint256} params.streamId The id of the stream for which to query the delta.
    * @returns {Promise<uint256>} delta The time delta in seconds.
    */
-  async deltaOf({ streamId }) {
-    return await this.getWeb3Contract().methods.deltaOf(streamId).call();
+  deltaOf({ streamId }) {
+    return this.getContract().methods.deltaOf(streamId).call();
   }
-
 
   /**
    * Returns the available funds for the given stream id and address.
@@ -165,13 +167,10 @@ export default class Sablier extends IContract {
    * @returns {Promise<uint256>} balance The total funds allocated to `who` as uint256.
    */
   async balanceOf({ streamId, who }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
-    const balance = await this.getWeb3Contract().methods.balanceOf(streamId, who).call();
-    const ret = Numbers.fromDecimalsToBN(balance, decimals);
-    console.log('---Sablier.balanceOf.RAW: decimals ', decimals, ' | balance: ', balance);
-    return ret;
+    const decimals = await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
+    const balance = await this.getContract().methods.balanceOf(streamId, who).call();
+    return Numbers.fromDecimalsToBN(balance, decimals);
   }
-
 
   /**
    * Checks if the provided id points to a valid compounding stream.
@@ -179,10 +178,9 @@ export default class Sablier extends IContract {
    * @param {uint256} params.streamId The id of the compounding stream to check.
    * @returns {Promise<bool>} True if it is a compounding stream, otherwise false.
    */
-  async isCompoundingStream({ streamId }) {
-    return await this.getWeb3Contract().methods.isCompoundingStream(streamId).call();
+  isCompoundingStream({ streamId }) {
+    return this.getContract().methods.isCompoundingStream(streamId).call();
   }
-
 
   /**
    * @typedef {Object} Sablier~getCompoundingStreamType
@@ -207,10 +205,10 @@ export default class Sablier extends IContract {
    * @returns {Promise<Sablier~getCompoundingStream>} The compounding stream object.
    */
   async getCompoundingStream({ streamId }) {
-    const res = await this.getWeb3Contract().methods.getCompoundingStream(streamId).call();
+    const res = await this.getContract().methods.getCompoundingStream(streamId).call();
 
     const tokenAddress = res[3];
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     return {
       sender: res[0],
       recipient: res[1],
@@ -225,7 +223,6 @@ export default class Sablier extends IContract {
       recipientSharePercentage: Numbers.fromDecimalsToBN(res[10], 16),
     };
   }
-
 
   /** @typedef {Object} Sablier~interestOfType
    * @property {uint256} senderInterest
@@ -244,16 +241,15 @@ export default class Sablier extends IContract {
    * @returns {Promise<Sablier~interestOf>} The interest accrued by the sender, the recipient and sablier, respectively, as uint256s.
    */
   async interestOf({ streamId, amount }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
+    const decimals = await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(amount, decimals);
-    const res = await this.getWeb3Contract().methods.interestOf(streamId, amountWithDecimals).call();
+    const res = await this.getContract().methods.interestOf(streamId, amountWithDecimals).call();
     return {
       senderInterest: Numbers.fromDecimalsToBN(res[0], decimals),
       recipientInterest: Numbers.fromDecimalsToBN(res[1], decimals),
       sablierInterest: Numbers.fromDecimalsToBN(res[2], decimals),
     };
   }
-
 
   /**
    * Returns the amount of interest that has been accrued for the given token address.
@@ -262,12 +258,10 @@ export default class Sablier extends IContract {
    * @returns {Promise<uint256>} The amount of interest as uint256.
    */
   async getEarnings({ tokenAddress }) {
-    const earnings = await this.getWeb3Contract().methods.getEarnings(tokenAddress).call();
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
-    const ret1 = Numbers.fromDecimalsToBN(earnings, decimals);
-    return ret1;
+    const earnings = await this.getContract().methods.getEarnings(tokenAddress).call();
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
+    return Numbers.fromDecimalsToBN(earnings, decimals);
   }
-
 
   /**
    * Creates a new stream funded by `msg.sender` and paid towards `recipient`.
@@ -293,12 +287,14 @@ export default class Sablier extends IContract {
    */
   async createStream({
     recipient, deposit, tokenAddress, startTime, stopTime,
-  }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+  }, options) {
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const depositWithDecimals = Numbers.fromBNToDecimals(deposit, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.createStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime));
+    return this.__sendTx(
+      this.getContract().methods.createStream(recipient, depositWithDecimals, tokenAddress, startTime, stopTime),
+      options,
+    );
   }
-
 
   /**
    * Creates a new compounding stream funded by `msg.sender` and paid towards `recipient`.
@@ -319,14 +315,22 @@ export default class Sablier extends IContract {
    */
   async createCompoundingStream({
     recipient, deposit, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage,
-  }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimals(tokenAddress).call();
+  }, options) {
+    const decimals = await this.getContract().methods.getTokenDecimals(tokenAddress).call();
     const depositWithDecimals = Numbers.fromBNToDecimals(deposit, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.createCompoundingStream(
-      recipient, depositWithDecimals, tokenAddress, startTime, stopTime, senderSharePercentage, recipientSharePercentage,
-    ));
+    return this.__sendTx(
+      this.getContract().methods.createCompoundingStream(
+        recipient,
+        depositWithDecimals,
+        tokenAddress,
+        startTime,
+        stopTime,
+        senderSharePercentage,
+        recipientSharePercentage,
+      ),
+      options,
+    );
   }
-
 
   /**
    * Withdraws from the contract to the recipient's account.
@@ -339,12 +343,14 @@ export default class Sablier extends IContract {
    * @param {uint256} params.amount The amount of tokens to withdraw.
    * @returns {Promise<bool>} True if success, otherwise false.
    */
-  async withdrawFromStream({ streamId, amount }) {
-    const decimals = await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
+  async withdrawFromStream({ streamId, amount }, options) {
+    const decimals = await this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
     const amountWithDecimals = Numbers.fromBNToDecimals(amount, decimals);
-    return await this.__sendTx(this.getWeb3Contract().methods.withdrawFromStream(streamId, amountWithDecimals));
+    return this.__sendTx(
+      this.getContract().methods.withdrawFromStream(streamId, amountWithDecimals),
+      options,
+    );
   }
-
 
   /**
    * Cancels the stream and transfers the tokens back on a pro rata basis.
@@ -355,8 +361,11 @@ export default class Sablier extends IContract {
    * @param {uint256} params.streamId The id of the stream to cancel.
    * @returns {Promise<bool>} True if success, otherwise false.
    */
-  async cancelStream({ streamId }) {
-    return await this.__sendTx(this.getWeb3Contract().methods.cancelStream(streamId));
+  cancelStream({ streamId }, options) {
+    return this.__sendTx(
+      this.getContract().methods.cancelStream(streamId),
+      options,
+    );
   }
 
   /**
@@ -364,8 +373,8 @@ export default class Sablier extends IContract {
    * This is an utility function for DApp layer when converting to float numbers.
    * @param streamId The id of the stream.
    */
-  async getTokenDecimalsFromStream({ streamId }) {
-    return await this.getWeb3Contract().methods.getTokenDecimalsFromStream(streamId).call();
+  getTokenDecimalsFromStream({ streamId }) {
+    return this.getContract().methods.getTokenDecimalsFromStream(streamId).call();
   }
 
   /**
@@ -373,7 +382,7 @@ export default class Sablier extends IContract {
    * @return {Promise<void>}
    * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
    */
-  __assert = async () => {
+  __assert = () => {
     if (!this.getAddress()) {
       throw new Error(
         'Contract is not deployed, first deploy it and provide a contract address',
@@ -387,14 +396,13 @@ export default class Sablier extends IContract {
   /**
    * Deploy the Sablier Contract
    * @function
-   * @param {Object} params
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    */
-  deploy = async ({ callback } = {}) => {
+  deploy = async options => {
     const params = [];
 
-    const res = await this.__deploy(params, callback);
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

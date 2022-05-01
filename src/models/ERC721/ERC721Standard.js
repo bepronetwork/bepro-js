@@ -32,7 +32,7 @@ class ERC721Standard extends IContract {
       );
     }
     /* Use ABI */
-    this.params.contract.use(erc721collectibles, this.getAddress());
+    this.params.contract.use(erc721standard, this.getAddress());
 
     /* Set Token Address Contract for easy access */
     this.params.ERC20Contract = new ERC20Contract({
@@ -41,7 +41,7 @@ class ERC721Standard extends IContract {
     });
 
     /* Assert Token Contract */
-    await this.params.ERC20Contract.login();
+    await this.params.ERC20Contract.start();
     await this.params.ERC20Contract.__assert();
   };
 
@@ -51,9 +51,8 @@ class ERC721Standard extends IContract {
    * @param {number} params.tokenID
    * @returns {Promise<boolean>} Token Id
    */
-  async exists({ tokenID }) {
-    return await this.params.contract
-      .getContract()
+  exists({ tokenID }) {
+    return this.getContract()
       .methods.exists(tokenID)
       .call();
   }
@@ -64,9 +63,8 @@ class ERC721Standard extends IContract {
    * @param {number} params.tokenID
    * @returns {Promise<string>} URI
    */
-  async getURITokenID({ tokenID }) {
-    return await this.params.contract
-      .getContract()
+  getURITokenID({ tokenID }) {
+    return this.getContract()
       .methods.tokenURI(tokenID)
       .call();
   }
@@ -75,8 +73,8 @@ class ERC721Standard extends IContract {
    * Verify what is the baseURI
    * @returns {Promise<string>} URI
    */
-  async baseURI() {
-    return await this.params.contract.getContract().methods.baseURI().call();
+  baseURI() {
+    return this.getContract().methods.baseURI().call();
   }
 
   /**
@@ -86,8 +84,9 @@ class ERC721Standard extends IContract {
    * @param {string} params.URI
    * @return {Promise<*>}
    */
-  setBaseTokenURI = async ({ URI }) => await this.__sendTx(
-    this.params.contract.getContract().methods.setBaseURI(URI),
+  setBaseTokenURI = ({ URI }, options) => this.__sendTx(
+    this.getContract().methods.setBaseURI(URI),
+    options,
   );
 
   /**
@@ -98,8 +97,9 @@ class ERC721Standard extends IContract {
    * @param {string} params.URI
    * @return {Promise<*>}
    */
-  setTokenURI = async ({ tokenID, URI }) => await this.__sendTx(
-    this.params.contract.getContract().methods.setTokenURI(tokenID, URI),
+  setTokenURI = ({ tokenID, URI }, options) => this.__sendTx(
+    this.getContract().methods.setTokenURI(tokenID, URI),
+    options,
   );
 
   /**
@@ -108,9 +108,10 @@ class ERC721Standard extends IContract {
    * @param {number} params.tokenID
    * @return {Promise<TransactionObject>}
    */
-  async mint({ tokenID }) {
-    return await this.__sendTx(
-      this.params.contract.getContract().methods.mint(tokenID),
+  mint({ tokenID }, options) {
+    return this.__sendTx(
+      this.getContract().methods.mint(tokenID),
+      options,
     );
   }
 
@@ -119,12 +120,12 @@ class ERC721Standard extends IContract {
    * @param {Object} params
    * @param {string} params.name
    * @param {*} params.symbol
-   * @param {function():void} params.callback
+   * @param {IContract~TxOptions} options
    * @return {Promise<*|undefined>}
    * @throws {Error} Please provide a name
    * @throws {Error} Please provide a symbol
    */
-  deploy = async ({ name, symbol, callback }) => {
+  deploy = async ({ name, symbol }, options) => {
     if (!name) {
       throw new Error('Please provide a name');
     }
@@ -132,8 +133,8 @@ class ERC721Standard extends IContract {
     if (!symbol) {
       throw new Error('Please provide a symbol');
     }
-    const params = [name, symbol];
-    const res = await this.__deploy(params, callback);
+    const params = [ name, symbol ];
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

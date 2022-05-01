@@ -1,8 +1,10 @@
+/* eslint-disable no-undef */
+
 //* ganache local test assertions utils
 //* based on "truffle-assertions": "^0.8.2"
 //*
 
-const AssertionError = require('assertion-error');
+import AssertionError from 'assertion-error';
 
 const createAssertionMessage = (passedMessage, defaultMessage) => {
   let assertionMessage = defaultMessage;
@@ -29,7 +31,7 @@ const assertEventListEmpty = (list, passedMessage, defaultMessage) => {
 /* Returns event string in the form of EventType(arg1, arg2, ...) */
 const getPrettyEventString = (eventType, args) => {
   let argString = '';
-  Object.entries(args).forEach(([key, value]) => {
+  Object.entries(args).forEach(([ key, value ]) => {
     argString += `, ${key}: ${value}`;
   });
   argString = argString.replace(', ', '');
@@ -46,7 +48,7 @@ const getPrettyEmittedEventsString = (result, indentationSize) => {
   }
   let string = `${indentation}Events emitted in tx ${result.tx}:\n`;
   string += `${indentation}----------------------------------------------------------------------------------------\n`;
-  Object.values(result.events).flat().forEach((emittedEvent) => {
+  Object.values(result.events).flat().forEach(emittedEvent => {
     string += `${indentation}${getPrettyEventString(emittedEvent.event, emittedEvent.returnValues)}\n`;
   });
   string += `${indentation}----------------------------------------------------------------------------------------\n`;
@@ -106,7 +108,9 @@ const createTransactionResult = async (contract, transactionHash) => {
     const transactionReceipt = web3.eth.getTransactionReceipt(transactionHash);
     const { blockNumber } = transactionReceipt;
     contract.allEvents({ fromBlock: blockNumber, toBlock: blockNumber }).get((error, events) => {
-      if (error) reject(error);
+      if (error) {
+        reject(error);
+      }
       resolve({
         tx: transactionHash,
         receipt: transactionReceipt,
@@ -116,23 +120,26 @@ const createTransactionResult = async (contract, transactionHash) => {
   });
 };
 
-const passes = async (asyncFn, message) => {
+const passes = async (fn, message) => {
   try {
-    await asyncFn;
-  } catch (error) {
+    await fn();
+  }
+  catch (error) {
     const assertionMessage = createAssertionMessage(message, `Failed with ${error}`);
     throw new AssertionError(assertionMessage);
   }
 };
 
-const fails = async (asyncFn, errorType, reason, message) => {
+const fails = async (fn, errorType, reason, message) => {
   try {
-    await asyncFn;
-  } catch (error) {
+    await fn();
+  }
+  catch (error) {
     if (errorType && !error.message.includes(errorType)) {
       const assertionMessage = createAssertionMessage(message, `Expected to fail with ${errorType}, but failed with: ${error}`);
       throw new AssertionError(assertionMessage);
-    } else if (reason && !error.message.includes(reason)) {
+    }
+    else if (reason && !error.message.includes(reason)) {
       const assertionMessage = createAssertionMessage(message, `Expected to fail with ${reason}, but failed with: ${error}`);
       throw new AssertionError(assertionMessage);
     }
@@ -143,7 +150,6 @@ const fails = async (asyncFn, errorType, reason, message) => {
   throw new AssertionError(assertionMessage);
 };
 
-
 const ErrorType = {
   REVERT: 'revert',
   INVALID_OPCODE: 'invalid opcode',
@@ -151,7 +157,7 @@ const ErrorType = {
   INVALID_JUMP: 'invalid JUMP',
 };
 
-module.exports = {
+export default {
   eventEmitted: (result, eventType, filter, message) => {
     assertEventEmittedFromTxResult(result, eventType, filter, message);
   },
@@ -159,19 +165,12 @@ module.exports = {
     assertEventNotEmittedFromTxResult(result, eventType, filter, message);
   },
   prettyPrintEmittedEvents: (result, indentationSize) => {
+    // eslint-disable-next-line no-console
     console.log(getPrettyEmittedEventsString(result, indentationSize));
   },
-  createTransactionResult: (contract, transactionHash) => (
-    createTransactionResult(contract, transactionHash)
-  ),
-  passes: async (asyncFn, message) => (
-    passes(asyncFn, message)
-  ),
-  fails: async (asyncFn, errorType, reason, message) => (
-    fails(asyncFn, errorType, reason, message)
-  ),
-  reverts: async (asyncFn, reason, message) => (
-    fails(asyncFn, ErrorType.REVERT, reason, message)
-  ),
+  createTransactionResult,
+  passes,
+  fails,
+  reverts: (fn, reason, message) => fails(fn, ErrorType.REVERT, reason, message),
   ErrorType,
 };

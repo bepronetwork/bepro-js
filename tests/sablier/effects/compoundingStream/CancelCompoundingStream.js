@@ -1,8 +1,8 @@
-const { dappConstants, mochaContexts } = require("../../../../src/sablier/dev-utils");
-const BigNumber = require("bignumber.js");
-const dayjs = require("dayjs");
-const truffleAssert = require("truffle-assertions");
-const beproAssert = require("../../../../build/utils/beproAssert");
+import BigNumber from 'bignumber.js';
+import dayjs from 'dayjs';
+import { dappConstants, mochaContexts } from '../../../../src/sablier/dev-utils';
+import beproAssert from '../../../../build/utils/beproAssert';
+import sablierUtils from '../../sablier.utils';
 
 const { contextForStreamDidEnd, contextForStreamDidStartButNotEnd } = mochaContexts;
 
@@ -19,36 +19,46 @@ const {
   STANDARD_TIME_DELTA,
 } = dappConstants;
 
-const sablierUtils = require("../../sablier.utils");
-
 let sender;
 let recipient;
 let deposit;
 let streamId;
 
 function runTests() {
-  describe("when there were no withdrawals", () => {
-    describe("when the stream did not start", () => {
-      it("cancels the stream", async () => {
+  describe('when there were no withdrawals', () => {
+    describe('when the stream did not start', () => {
+      it('cancels the stream', async () => {
         await _this.sablier.cancelStream({ streamId });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), "stream does not exist");
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), "stream does not exist");
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
     });
 
     contextForStreamDidStartButNotEnd(() => {
       const recipientBalance = FIVE_UNITS_CTOKEN.toString(10);
 
-      it("cancels the stream", async () => {
+      it('cancels the stream', async () => {
         await _this.sablier.cancelStream({ streamId });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), "stream does not exist");
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), "stream does not exist");
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
 
-      it("transfers the tokens and pays the interest to the sender of the stream", async () => {
+      it('transfers the tokens and pays the interest to the sender of the stream', async () => {
         const balance = await _this.cToken.balanceOf(sender);
         const { senderInterest } = await _this.sablier.interestOf({ streamId, amount: recipientBalance });
-	      await _this.sablier.cancelStream({ streamId });
+        await _this.sablier.cancelStream({ streamId });
         const newBalance = await _this.cToken.balanceOf(sender);
         const tolerateByAddition = false;
         newBalance.should.tolerateTheBlockTimeVariation(
@@ -61,16 +71,19 @@ function runTests() {
         );
       });
 
-      it("transfers the tokens and pays the interest to the recipient of the stream", async () => {
+      it('transfers the tokens and pays the interest to the recipient of the stream', async () => {
         const balance = await _this.cToken.balanceOf(recipient);
-        const { senderInterest, sablierInterest } = await _this.sablier.interestOf({ streamId, amount: recipientBalance });
+        const { senderInterest, sablierInterest } = await _this.sablier.interestOf({
+          streamId,
+          amount: recipientBalance,
+        });
         await _this.sablier.cancelStream({ streamId });
         const netWithdrawalAmount = new BigNumber(recipientBalance).minus(senderInterest).minus(sablierInterest);
-        const newBalance = await _this.cToken.balanceOf(recipient,);
+        const newBalance = await _this.cToken.balanceOf(recipient);
         newBalance.should.tolerateTheBlockTimeVariation(balance.plus(netWithdrawalAmount), STANDARD_SCALE_CTOKEN);
       });
 
-      it("pays the interest to the sablier contract", async () => {
+      it('pays the interest to the sablier contract', async () => {
         const earnings = await _this.sablier.getEarnings({ tokenAddress: _this.cToken.getAddress() });
         const balance = await _this.cToken.balanceOf(_this.sablier.getAddress());
         const { remainingBalance } = await _this.sablier.getStream({ streamId });
@@ -87,27 +100,33 @@ function runTests() {
         );
       });
 
-      it("emits a cancelstream event", async () => {
+      it('emits a cancelstream event', async () => {
         const result = await _this.sablier.cancelStream({ streamId });
-        beproAssert.eventEmitted(result, "CancelStream");
+        beproAssert.eventEmitted(result, 'CancelStream');
       });
 
-      it("emits a payinterest event", async () => {
+      it('emits a payinterest event', async () => {
         const result = await _this.sablier.cancelStream({ streamId });
-        beproAssert.eventEmitted(result, "PayInterest");
+        beproAssert.eventEmitted(result, 'PayInterest');
       });
     });
 
     contextForStreamDidEnd(() => {
       const recipientBalance = STANDARD_SALARY_CTOKEN.toString(10);
 
-      it("cancels the stream", async () => {
+      it('cancels the stream', async () => {
         await _this.sablier.cancelStream({ streamId });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), "stream does not exist");
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), "stream does not exist");
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
 
-      it("transfers the tokens and pays the interest to the sender of the stream", async () => {
+      it('transfers the tokens and pays the interest to the sender of the stream', async () => {
         const balance = await _this.cToken.balanceOf(sender);
         const { senderInterest } = await _this.sablier.interestOf({ streamId, amount: recipientBalance });
         await _this.sablier.cancelStream({ streamId });
@@ -115,16 +134,19 @@ function runTests() {
         newBalance.should.be.bignumber.equal(balance.plus(senderInterest));
       });
 
-      it("transfers the tokens and pays the interest to the recipient of the stream", async () => {
+      it('transfers the tokens and pays the interest to the recipient of the stream', async () => {
         const balance = await _this.cToken.balanceOf(recipient);
-        const { senderInterest, sablierInterest } = await _this.sablier.interestOf({ streamId, amount: recipientBalance });
+        const { senderInterest, sablierInterest } = await _this.sablier.interestOf({
+          streamId,
+          amount: recipientBalance,
+        });
         await _this.sablier.cancelStream({ streamId });
         const netWithdrawalAmount = new BigNumber(recipientBalance).minus(senderInterest).minus(sablierInterest);
-	      const newBalance = await _this.cToken.balanceOf(recipient);
+        const newBalance = await _this.cToken.balanceOf(recipient);
         newBalance.should.be.bignumber.equal(balance.plus(netWithdrawalAmount));
       });
 
-      it("pays the interest to the sablier contract", async () => {
+      it('pays the interest to the sablier contract', async () => {
         const earnings = await _this.sablier.getEarnings({ tokenAddress: _this.cToken.getAddress() });
         const balance = await _this.cToken.balanceOf(_this.sablier.getAddress());
         const stream = await _this.sablier.getStream({ streamId });
@@ -141,45 +163,51 @@ function runTests() {
         );
       });
 
-      it("emits a cancelstream event", async () => {
+      it('emits a cancelstream event', async () => {
         const result = await _this.sablier.cancelStream({ streamId });
-        beproAssert.eventEmitted(result, "CancelStream");
+        beproAssert.eventEmitted(result, 'CancelStream');
       });
 
-      it("emits a payinterest event", async () => {
+      it('emits a payinterest event', async () => {
         const result = await _this.sablier.cancelStream({ streamId });
-        beproAssert.eventEmitted(result, "PayInterest");
+        beproAssert.eventEmitted(result, 'PayInterest');
       });
     });
   });
 
-  describe("when there were withdrawals", () => {
+  describe('when there were withdrawals', () => {
     contextForStreamDidStartButNotEnd(() => {
       beforeEach(async () => {
         const streamedAmount = FIVE_UNITS_CTOKEN.toString(10);
         await _this.sablier.withdrawFromStream({ streamId, amount: streamedAmount });
       });
 
-      it("cancels the stream", async () => {
+      it('cancels the stream', async () => {
         await _this.sablier.cancelStream({ streamId });
-        await truffleAssert.reverts(_this.sablier.getStream({ streamId }), "stream does not exist");
-        await truffleAssert.reverts(_this.sablier.getCompoundingStream({ streamId }), "stream does not exist");
+        await beproAssert.reverts(
+          () => _this.sablier.getStream({ streamId }),
+          'stream does not exist',
+        );
+        await beproAssert.reverts(
+          () => _this.sablier.getCompoundingStream({ streamId }),
+          'stream does not exist',
+        );
       });
     });
   });
 }
 
-context("sablier.CancelCompoundingStream.context", async () => {
-  let alice;// = _this.alice;
-  let bob;// = _this.bob;
+context('sablier.CancelCompoundingStream.context', async () => {
+  // let alice;// = _this.alice;
+  // let bob;// = _this.bob;
   let now;// = new BigNumber(dayjs().unix());
   let startTime;// = now.plus(STANDARD_TIME_OFFSET);
   let stopTime;// = startTime.plus(STANDARD_TIME_DELTA);
 
-  before("sablier.CancelCompoundingStream.before", async () => {
+  before('sablier.CancelCompoundingStream.before', async () => {
     await sablierUtils.initConfig();
-    alice = _this.alice;
-    bob = _this.bob;
+    // alice = _this.alice;
+    // bob = _this.bob;
     recipient = _this.bob;
     now = new BigNumber(dayjs().unix());
     startTime = now.plus(STANDARD_TIME_OFFSET);
@@ -191,9 +219,9 @@ context("sablier.CancelCompoundingStream.context", async () => {
     sender = _this.alice;
     recipient = _this.bob;
     deposit = STANDARD_SALARY_CTOKEN.toString(10);
-    //this.opts = { from: this.sender };
-    //await this.cTokenManager.whitelistCToken(this.cToken.address, { from: alice });
-    await _this.cToken.approve({ address: _this.sablier.getAddress(), amount: deposit }); //{ from: alice });
+    // this.opts = { from: this.sender };
+    // await this.cTokenManager.whitelistCToken(this.cToken.address, { from: alice });
+    await _this.cToken.approve({ address: _this.sablier.getAddress(), amount: deposit }); // { from: alice });
   });
 
   describe("when the sender's interest share is not zero and the recipient's interest share is not zero", () => {
@@ -209,14 +237,14 @@ context("sablier.CancelCompoundingStream.context", async () => {
         stopTime,
         senderSharePercentage,
         recipientSharePercentage,
-	    });
+      });
       streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    //console.log('---CancelCompoundingStream.streamId.bp0: ', streamId);
-      await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); //, this.opts);
-      await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
+      // console.log('---CancelCompoundingStream.streamId.bp0: ', streamId);
+      await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); // , this.opts);
+      await _this.cToken.supplyUnderlying({ supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
     });
 
-    describe("when the sablier fee is not zero and is not 100", () => {
+    describe('when the sablier fee is not zero and is not 100', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: STANDARD_SABLIER_FEE });
       });
@@ -224,7 +252,7 @@ context("sablier.CancelCompoundingStream.context", async () => {
       runTests();
     });
 
-    describe("when the sablier fee is 0", () => {
+    describe('when the sablier fee is 0', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: BigNumber(0) });
       });
@@ -232,7 +260,7 @@ context("sablier.CancelCompoundingStream.context", async () => {
       runTests();
     });
 
-    describe("when the sablier fee is 100", () => {
+    describe('when the sablier fee is 100', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: BigNumber(100) });
       });
@@ -256,12 +284,12 @@ context("sablier.CancelCompoundingStream.context", async () => {
         recipientSharePercentage,
       });
       streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    //console.log('---CancelCompoundingStream.streamId.bp1: ', streamId);
-      await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); //, this.opts);
-      await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
+      // console.log('---CancelCompoundingStream.streamId.bp1: ', streamId);
+      await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); // , this.opts);
+      await _this.cToken.supplyUnderlying({ supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
     });
 
-    describe("when the sablier fee is not zero and is not 100", () => {
+    describe('when the sablier fee is not zero and is not 100', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: STANDARD_SABLIER_FEE });
       });
@@ -269,7 +297,7 @@ context("sablier.CancelCompoundingStream.context", async () => {
       runTests();
     });
 
-    describe("when the sablier fee is 0", () => {
+    describe('when the sablier fee is 0', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: BigNumber(0) });
       });
@@ -277,7 +305,7 @@ context("sablier.CancelCompoundingStream.context", async () => {
       runTests();
     });
 
-    describe("when the sablier fee is 100", () => {
+    describe('when the sablier fee is 100', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: BigNumber(100) });
       });
@@ -301,12 +329,12 @@ context("sablier.CancelCompoundingStream.context", async () => {
         recipientSharePercentage,
       });
       streamId = Number(result.events.CreateStream.returnValues.streamId);
-	    //console.log('---CancelCompoundingStream.streamId.bp2: ', streamId);
-      await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); //, this.opts);
-      await _this.cToken.supplyUnderlying(STANDARD_SUPPLY_AMOUNT.toString(10));
+      // console.log('---CancelCompoundingStream.streamId.bp2: ', streamId);
+      await _this.token.approve({ address: _this.cToken.getAddress(), amount: STANDARD_SUPPLY_AMOUNT.toString(10) }); // , this.opts);
+      await _this.cToken.supplyUnderlying({ supplyAmount: STANDARD_SUPPLY_AMOUNT.toString(10) });
     });
 
-    describe("when the sablier fee is not zero and is not 100", () => {
+    describe('when the sablier fee is not zero and is not 100', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: STANDARD_SABLIER_FEE });
       });
@@ -314,7 +342,7 @@ context("sablier.CancelCompoundingStream.context", async () => {
       runTests();
     });
 
-    describe("when the sablier fee is 0", () => {
+    describe('when the sablier fee is 0', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: BigNumber(0) });
       });
@@ -322,7 +350,7 @@ context("sablier.CancelCompoundingStream.context", async () => {
       runTests();
     });
 
-    describe("when the sablier fee is 100", () => {
+    describe('when the sablier fee is 100', () => {
       beforeEach(async () => {
         await _this.sablier.updateFee({ feePercentage: BigNumber(100) });
       });

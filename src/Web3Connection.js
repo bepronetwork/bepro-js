@@ -27,7 +27,8 @@ const networksEnum = Object.freeze({
  * @typedef {Object} Web3Connection~Options
  * @property {boolean} [test=false] Automated Tests
  * @property {boolean} [localtest=false] Ganache Local Blockchain
- * @property {Web3Connection~Optional} [opt] Optional Chain Connection Object (Default ETH)
+ * @property {web3Connection~Optional} [opt] Optional Chain Connection Object (Default ETH)
+ * @property {provider~Optional} [opt] Directly supply any web3 provider, automatically calls start()
  */
 
 /**
@@ -39,11 +40,21 @@ class Web3Connection {
   constructor({
     test = false, // Automated tests
     localtest = false, // ganache local blockchain
-    opt = { web3Connection: ETH_URL_TESTNET, privateKey: TEST_PRIVATE_KEY },
+    opt = {
+      privateKey: TEST_PRIVATE_KEY,
+      provider: null,
+      web3Connection: ETH_URL_TESTNET,
+    },
   }) {
     this.test = test;
     this.localtest = localtest;
     this.opt = opt;
+
+    // If a provider is supplied, we assume all connection logic is on its side.
+    if (opt.provider) {
+      this.start(opt.provider);
+    }
+
     if (this.test) {
       this.start();
       this.login();
@@ -63,20 +74,26 @@ class Web3Connection {
   /**
    * Connect to Web3 injected in the constructor
    * @function
+   * @typedef {provider~Optional} [opt] Directly supply any web3 provider, to skip both start() and login()
    * @throws {Error} Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet
    * @void
    */
-  start() {
-    if (this.localtest) {
+  start(provider) {
+    if (provider) {
+      this.web3 = new Web3(provider);
+    }
+    else if (this.localtest) {
       this.web3 = new Web3(
         new Web3.providers.HttpProvider(ETH_URL_LOCAL_TEST),
         // NOTE: depending on your web3 version, you may need to set a number of confirmation blocks
         null,
         { transactionConfirmationBlocks: 1 },
       );
-    } else if (this.opt.web3Connection.toLowerCase().includes('http')) {
+    }
+    else if (this.opt.web3Connection.toLowerCase().includes('http')) {
       this.web3 = new Web3(new Web3.providers.HttpProvider(this.opt.web3Connection));
-    } else {
+    }
+    else {
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(this.opt.web3Connection));
     }
 
@@ -89,7 +106,8 @@ class Web3Connection {
 
     if (typeof window !== 'undefined') {
       window.web3 = this.web3;
-    } else if (!this.test) {
+    }
+    else if (!this.test) {
       throw new Error(
         'Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet',
       );
@@ -102,20 +120,16 @@ class Web3Connection {
    * @return {Promise<boolean>}
    */
   async login() {
-    try {
-      if (typeof window === 'undefined') {
-        return false;
-      }
-      if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
-        this.web3 = window.web3;
-        await window.ethereum.enable();
-        return true;
-      }
+    if (typeof window === 'undefined') {
       return false;
-    } catch (err) {
-      throw err;
     }
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      this.web3 = window.web3;
+      await window.ethereum.enable();
+      return true;
+    }
+    return false;
   }
 
   /** ***** */
@@ -142,60 +156,47 @@ class Web3Connection {
    * @function
    * @return {Promise<string>} Account/Wallet in use
    */
-  async getCurrentAccount() {
-    if (this.account) return this.account;
+  getCurrentAccount() {
+    if (this.account) {
+      return this.account;
+    }
     // return selected wallet in use otherwise
-    return await this.getAddress();
+    return this.getAddress();
   }
 
   /**
-   * Get Address connected via login()
+   * Get Address connected
    * @function
    * @return {Promise<string>} Address in Use
    */
   async getAddress() {
-    if (this.account) return this.account.getAddress();
-
-    // const accounts = await this.web3.eth.getAccounts();
-    // return accounts[0];
-    if (this.selectedWallet === undefined || this.selectedWallet == null) { // we check for undefined and null
-      const accounts = await this.web3.eth.getAccounts();
-      // this.selectedWallet = accounts[0];
-      [this.selectedWallet] = accounts;
+    if (this.account) {
+      return this.account.getAddress();
     }
-    return this.selectedWallet;
+
+    const accounts = await this.web3.eth.getAccounts();
+    return accounts[0];
   }
 
   /**
-   * Get signers connected via login()
+   * Get accounts connected via login()
    * @function
    * @return {Promise<Array<string>>} Addresses array available
    */
-  async getSigners() {
-    if (this.account) return [this.account.getAddress()];
-
-    const accounts = await this.web3.eth.getAccounts();
-    return accounts;
+  async getAccounts() {
+    return this.account
+      ? [ this.account.getAddress() ]
+      : this.web3.eth.getAccounts();
   }
 
   /**
-   * @function
-   * @description Switch current user account/signer to a new one
-   * @param {Address|Account} newAccount New user wallet/signer address in use or new account
-   * @return {Promise<void>}
-   */
-  switchWallet(newAccount) {
-    if (this.account) this.account = newAccount;
-    else this.selectedWallet = newAccount;
-  }
-
-  /**
-   * Get ETH Balance of Address connected via login()
+   * Get ETH Balance of Address connected
    * @function
    * @return {Promise<string>} ETH Balance
    */
   async getETHBalance() {
-    const wei = await this.web3.eth.getBalance(await this.getAddress());
+    const address = await this.getAddress();
+    const wei = await this.web3.eth.getBalance(address);
     return this.web3.utils.fromWei(wei, 'ether');
   }
 
