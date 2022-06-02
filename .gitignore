@@ -4,6 +4,8 @@ package-lock.json
 .idea
 xunit.xml
 build/
-docs/
+/docs
+.DS_Store
+.eslintcache
 
-xunit.xml
+/built

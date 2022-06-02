@@ -12,6 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup environment
+        if: ${{ !env.ACT }}
+        uses: actions/setup-node@v2
+        with:
+          cache: 'yarn'
+          node-version: '16'
+
       - name: Fool GH Pages?
         run: mkdir docs
 

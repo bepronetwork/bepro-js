@@ -1,9 +1,9 @@
-const BigNumber = require('bignumber.js');
+import BigNumber from 'bignumber.js';
 
 const STANDARD_SALARY = new BigNumber(3600); // .multipliedBy(1e18);
 const STANDARD_SCALE_CTOKEN = new BigNumber(1); // 1e8);
 
-module.exports = {
+export default {
   FIVE_UNITS: new BigNumber(5), // .multipliedBy(1e18),
   FIVE_UNITS_CTOKEN: new BigNumber(5), // .multipliedBy(1e8),
   GAS_LIMIT: 6721975,

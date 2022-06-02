@@ -1,18 +1,19 @@
-/* eslint-disable func-names, no-else-return, no-param-reassign */
-const BigNumber = require('bignumber.js');
+import BigNumber from 'bignumber.js';
 
-const devConstants = require('./constants');
+import devConstants from './constants';
 
-module.exports = (chai, _utils) => {
+export default chai => {
   // See https://twitter.com/nicksdjohnson/status/1132394932361023488
-  const convert = (value) => {
+  const convert = value => {
     let number;
 
     if (typeof value === 'string' || typeof value === 'number') {
       number = new BigNumber(value);
-    } else if (BigNumber.isBigNumber(value)) {
+    }
+    else if (BigNumber.isBigNumber(value)) {
       number = value;
-    } else {
+    }
+    else {
       new chai.Assertion(value).assert(false, `expected ${value} to be an instance of string, number or BigNumber`);
     }
 
@@ -28,14 +29,14 @@ module.exports = (chai, _utils) => {
    * 1. The payment rate is 1 token/ second, which is true for all tests in this repo.
    * 2. By default, the token has 18 decimals
    */
-  chai.Assertion.addMethod('tolerateTheBlockTimeVariation', function (
-    expected,
-    scale = devConstants.STANDARD_SCALE,
+  chai.Assertion.addMethod('tolerateTheBlockTimeVariation', function tolerateTheBlockTimeVariation(
+    inExpected,
+    inScale = devConstants.STANDARD_SCALE,
     tolerateByAddition = true,
   ) {
     const actual = convert(this._obj);
-    expected = convert(expected);
-    scale = convert(scale);
+    const expected = convert(inExpected);
+    const scale = convert(inScale);
 
     const blockTimeAverage = new BigNumber(14).multipliedBy(scale);
     if (tolerateByAddition) {
@@ -45,13 +46,12 @@ module.exports = (chai, _utils) => {
         actual.isGreaterThanOrEqualTo(expected) && actual.isLessThanOrEqualTo(expectedCeiling),
         `expected ${actual.toString()} to be >= than ${expected.toString()} and <= ${expectedCeiling.toString()}`,
       );
-    } else {
-      const expectedFloor = expected.minus(blockTimeAverage);
-
-      return this.assert(
-        actual.isLessThanOrEqualTo(expected) && actual.isGreaterThanOrEqualTo(expectedFloor),
-        `expected ${actual.toString()} to be <= than ${expected.toString()} and >= ${expectedFloor.toString()}`,
-      );
     }
+    const expectedFloor = expected.minus(blockTimeAverage);
+
+    return this.assert(
+      actual.isLessThanOrEqualTo(expected) && actual.isGreaterThanOrEqualTo(expectedFloor),
+      `expected ${actual.toString()} to be <= than ${expected.toString()} and >= ${expectedFloor.toString()}`,
+    );
   });
 };

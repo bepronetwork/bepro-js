@@ -39,6 +39,7 @@ help: Makefile
 ## up	- Create and start containers.
 up:
 	@docker-compose -p ${PROJECT_NAME} up -d
+
 ## down	- Teardown and stop containers.
 down:
 	@docker-compose -p ${PROJECT_NAME} down

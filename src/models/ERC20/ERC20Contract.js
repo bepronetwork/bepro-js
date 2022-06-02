@@ -29,14 +29,6 @@ class ERC20Contract extends IContract {
   };
 
   /**
-   *
-   * @return {*}
-   */
-  getContract() {
-    return this.params.contract.getContract();
-  }
-
-  /**
    * Get Token Address
    * @returns {Address} address
    */
@@ -52,15 +44,15 @@ class ERC20Contract extends IContract {
    * @param {Integer} params.tokenAmount Amount of Tokens
    * @returns {Promise<Transaction>} Transaction
    */
-  transferTokenAmount = async ({ toAddress, tokenAmount }) => {
+  transferTokenAmount = ({ toAddress, tokenAmount }, options) => {
     const amountWithDecimals = Numbers.toSmartContractDecimals(
       tokenAmount,
       this.getDecimals(),
     );
-    return await this.__sendTx(
-      this.params.contract
-        .getContract()
+    return this.__sendTx(
+      this.getContract()
         .methods.transfer(toAddress, amountWithDecimals),
+      options,
     );
   };
 
@@ -75,7 +67,7 @@ class ERC20Contract extends IContract {
     this.getDecimals(),
   );
 
-  balanceOf = async (address) => {
+  balanceOf = async address => {
     const b1 = await this.getContract().methods.balanceOf(address).call();
     const ret1 = Numbers.fromDecimalsToBN(
       b1,
@@ -90,14 +82,10 @@ class ERC20Contract extends IContract {
    * @param {number} amount Tokens amount to convert
    * @returns {Promise<number>} tokensAmount
    */
-  toTokens = (amount) => {
-    const tokensAmount = Numbers.fromBNToDecimals(
-      amount,
-      this.getDecimals(),
-    );
-    console.log('ERC20Contract.toTokens:', tokensAmount);
-    return tokensAmount;
-  };
+  toTokens = amount => Numbers.fromBNToDecimals(
+    amount,
+    this.getDecimals(),
+  );
 
   /**
    * Convert given tokens amount integer to float number with decimals for UI.
@@ -105,14 +93,10 @@ class ERC20Contract extends IContract {
    * @param {number} amount Tokens amount to convert
    * @returns {Promise<number>} tokensAmount
    */
-  fromDecimalsToBN = (amount) => {
-    const tokensAmount = Numbers.fromDecimalsToBN(
-      amount,
-      this.getDecimals(),
-    );
-    // console.log('ERC20Contract.fromDecimals:', tokensAmount);
-    return tokensAmount;
-  };
+  fromDecimalsToBN = amount => Numbers.fromDecimalsToBN(
+    amount,
+    this.getDecimals(),
+  );
 
   /**
    * Get Total Supply of Token
@@ -145,7 +129,7 @@ class ERC20Contract extends IContract {
    *
    * @return {Promise<number>}
    */
-  getDecimalsAsync = async () => await this.getContract().methods.decimals().call();
+  getDecimalsAsync = () => this.getContract().methods.decimals().call();
 
   /**
    * Verify if Spender is Approved to use tokens
@@ -157,17 +141,18 @@ class ERC20Contract extends IContract {
    * @returns {Promise<boolean>} isApproved
    */
   isApproved = async ({ address, amount, spenderAddress }) => {
-    try {
-      const approvedAmount = Numbers.fromDecimals(
-        await this.getContract()
-          .methods.allowance(address, spenderAddress)
-          .call(),
-        this.getDecimals(),
-      );
-      return approvedAmount >= amount;
-    } catch (err) {
-      throw err;
-    }
+    const approvedAmount = Numbers.fromDecimals(
+      await this.getContract()
+        .methods.allowance(address, spenderAddress)
+        .call(),
+      this.getDecimals(),
+    );
+
+    const amountWithDecimal = Numbers.fromDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    return approvedAmount >= amountWithDecimal;
   };
 
   /**
@@ -179,17 +164,13 @@ class ERC20Contract extends IContract {
    * @returns {Promise<number>} allowance amount
    */
   allowance = async ({ address, spenderAddress }) => {
-    try {
-      const approvedAmount = Numbers.fromDecimalsToBN(
-        await this.getContract()
-          .methods.allowance(address, spenderAddress)
-          .call(),
-        this.getDecimals(),
-      );
-      return approvedAmount;
-    } catch (err) {
-      throw err;
-    }
+    const approvedAmount = Numbers.fromDecimalsToBN(
+      await this.getContract()
+        .methods.allowance(address, spenderAddress)
+        .call(),
+      this.getDecimals(),
+    );
+    return approvedAmount;
   };
 
   /**
@@ -201,24 +182,19 @@ class ERC20Contract extends IContract {
    * @param {function():void} params.callback callback for the Tx
    * @returns {Promise<Transaction>} Transaction
    */
-  approve = async ({ address, amount, callback }) => {
-    try {
-      const amountWithDecimals = Numbers.fromBNToDecimals(
-        amount,
-        this.getDecimals(),
-      );
-      const res = await this.__sendTx(
-        this.params.contract
-          .getContract()
-          .methods.approve(address, amountWithDecimals),
-        null,
-        null,
+  approve = ({ address, amount, callback }, options) => {
+    const amountWithDecimals = Numbers.fromBNToDecimals(
+      amount,
+      this.getDecimals(),
+    );
+    return this.__sendTx(
+      this.getContract()
+        .methods.approve(address, amountWithDecimals),
+      {
         callback,
-      );
-      return res;
-    } catch (err) {
-      throw err;
-    }
+        ...options,
+      },
+    );
   };
 
   /**
@@ -229,11 +205,15 @@ class ERC20Contract extends IContract {
    * @param {string} params.symbol Symbol of token
    * @param {number} params.cap Max supply of Token (ex : 100M)
    * @param {Address} params.distributionAddress Where tokens should be sent to initially
+   * @param {IContract~TxOptions} options
    * @returns {Promise<Transaction>} Transaction
    */
-  deploy = async ({
-    name, symbol, cap, distributionAddress, callback,
-  }) => {
+  deploy = async (
+    {
+      name, symbol, cap, distributionAddress,
+    },
+    options,
+  ) => {
     if (!distributionAddress) {
       throw new Error('Please provide an Distribution address for distro');
     }
@@ -249,8 +229,8 @@ class ERC20Contract extends IContract {
     if (!cap) {
       throw new Error('Please provide a cap');
     }
-    const params = [name, symbol, cap, distributionAddress];
-    const res = await this.__deploy(params, callback);
+    const params = [ name, symbol, cap, distributionAddress ];
+    const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();

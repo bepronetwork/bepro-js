@@ -1,11 +1,12 @@
-export const mochaAsync = fn => (done) => {
-  fn.call().then(done, (err) => {
+export const mochaAsync = fn => done => {
+  fn.call().then(done, err => {
     done(err);
   });
 };
 
-export const detectValidationErrors = (res) => {
-  if (res.message == 'Validation errors') {
+export const detectValidationErrors = res => {
+  if (res.message === 'Validation errors') {
+    // eslint-disable-next-line no-console
     console.log(res.errors[0]);
     return true;
   }
@@ -13,12 +14,13 @@ export const detectValidationErrors = (res) => {
 };
 
 // run given function after a delay of x milliseconds
-export const runAfter = async (func, delayMs) => new Promise(async (resolve, reject) => {
+export const runAfter = (func, delayMs) => new Promise((resolve, reject) => {
   setTimeout(async () => {
     try {
       const res = await func();
       resolve(res);
-    } catch (err) {
+    }
+    catch (err) {
       reject(err);
     }
   }, delayMs);
