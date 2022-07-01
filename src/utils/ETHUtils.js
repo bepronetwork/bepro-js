@@ -67,4 +67,13 @@ export default class ETHUtils extends IContract {
       BigNumber(blockTimestamp),
     ];
   }
+
+  /**
+   * Get function selector from function signature
+   * NOTE: function selector is first 4 bytes of keccak256 for bytes of string of a function signature
+   * @returns {Promise<bytes4>}
+   */
+  getFunctionSelector(funcSig) {
+    return this.getContract().methods.getFunctionSelector(funcSig).call();
+  }
 }

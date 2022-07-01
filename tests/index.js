@@ -2,25 +2,27 @@ import { assert } from 'chai';
 
 context('Unit Tests', async () => {
   [
-    'application',
-    'generics',
-    'dexStorage',
+    // 'application',
+    // 'generics',
+    // 'dexStorage',
 
-    'erc20Contract',
-    'erc20TokenLock',
+    // 'erc20Contract',
+    // 'erc20TokenLock',
 
-    'erc721Collectibles',
+    // 'erc721Collectibles',
 
-    'stakingContract',
-    'votingContract',
+    // 'stakingContract',
+    // 'votingContract',
 
-    'bepro/network',
-    'bepro/networkFactory',
+    // 'bepro/network',
+    // 'bepro/networkFactory',
 
-    'custom/realfvr/index',
+    // 'custom/realfvr/index',
 
-    'sablier/sablier',
-    'custom/loophole/loophole',
+    // 'sablier/sablier',
+    // 'custom/loophole/loophole',
+
+    'protocolMiningReward',
   ].map(test => {
     try {
       // eslint-disable-next-line global-require, import/no-dynamic-require

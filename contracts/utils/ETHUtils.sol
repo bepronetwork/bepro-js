@@ -1,13 +1,15 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0 <0.8.0;
 //pragma solidity =0.7.6;
 
 //import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../IERC20View.sol";
+import "./FunctionSelector.sol";
 
 /// @title Blockchain contract used for utilities such as:
 /// -read ERC20 functions on the fly
 /// -read block attributes from the blockchain
-contract ETHUtils {
+contract ETHUtils is FunctionSelector {
     
     /// @notice constructor
     constructor() { }
