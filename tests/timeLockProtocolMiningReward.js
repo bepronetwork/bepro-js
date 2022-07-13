@@ -94,11 +94,6 @@ const forwardTime = async delay => {
   // const block = await web3.eth.getBlock('latest');
   // const forwardTime = block['timestamp'] + delay;
   await traveler.advanceTimeAndBlock(delay);
-  //  await traveler.advanceTime(delay); //NOT working
-  // const currentTime = block['timestamp'];
-  // console.log('---currentTime: ', currentTime);
-  // console.log('---forwardTime: ', forwardTime);
-  // await traveler.advanceBlockAndSetTime(forwardTime);
 };
 
 // deploy TimeLockProtocolMiningReward contract
@@ -421,11 +416,11 @@ context('TimeLockProtocolMiningReward', async () => {
       const tx = await protocolMiningReward.schedule({
         target, value, data, predecessor, salt, delay, rewardTokenAmount,
       });
+      const id = tx.events.CallScheduled.returnValues.id;
 
-      // scheduled call should have expected timestamp and properties
-      const id = await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
-      });
+      //const id = await protocolMiningReward.hashOperation({
+      //  target, value, data, predecessor, salt,
+      //});
       const callTimestamp = await protocolMiningReward.getTimestamp({ id });
       const expectedTimestamp = (await ethUtils.blockTimestamp()).plus(minDelay);
       callTimestamp.should.be.bignumber.equal(expectedTimestamp);
@@ -469,11 +464,12 @@ context('TimeLockProtocolMiningReward', async () => {
       const tx = await protocolMiningReward.schedule({
         target, value, data, predecessor, salt: nextSalt, delay, rewardTokenAmount,
       });
+      const id = tx.events.CallScheduled.returnValues.id;
 
       // scheduled call should have expected timestamp and properties
-      const id = await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt: nextSalt,
-      });
+      //const id = await protocolMiningReward.hashOperation({
+      //  target, value, data, predecessor, salt: nextSalt,
+      //});
       const callTimestamp = await protocolMiningReward.getTimestamp({ id });
       const expectedTimestamp = (await ethUtils.blockTimestamp()).plus(minDelay);
       callTimestamp.should.be.bignumber.equal(expectedTimestamp);
@@ -551,11 +547,8 @@ context('TimeLockProtocolMiningReward', async () => {
       const tx = await protocolMiningReward.scheduleBatch({
         targets, values, datas, predecessor, salt, delay, rewardTokenAmount,
       });
+      const id = tx.events.CallScheduled[0].returnValues.id;
 
-      // scheduled calls should have expected timestamp and properties
-      const id = await protocolMiningReward.hashOperationBatch({
-        targets, values, datas, predecessor, salt,
-      });
       const callTimestamp = await protocolMiningReward.getTimestamp({ id });
       const expectedTimestamp = (await ethUtils.blockTimestamp()).plus(minDelay);
       callTimestamp.should.be.bignumber.equal(expectedTimestamp);
@@ -607,11 +600,8 @@ context('TimeLockProtocolMiningReward', async () => {
       const tx = await protocolMiningReward.scheduleBatch({
         targets, values, datas, predecessor, salt: nextSalt, delay, rewardTokenAmount,
       });
+      const id = tx.events.CallScheduled[0].returnValues.id;
 
-      // scheduled calls should have expected timestamp and properties
-      const id = await protocolMiningReward.hashOperationBatch({
-        targets, values, datas, predecessor, salt: nextSalt,
-      });
       const callTimestamp = await protocolMiningReward.getTimestamp({ id });
       const expectedTimestamp = (await ethUtils.blockTimestamp()).plus(minDelay);
       callTimestamp.should.be.bignumber.equal(expectedTimestamp);
@@ -657,10 +647,6 @@ context('TimeLockProtocolMiningReward', async () => {
         target, value, data, predecessor, salt, delay, rewardTokenAmount,
       });
 
-      await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
-      });
-
       await beproAssert.revertsFn(
         () => protocolMiningReward.execute({
           target, value, data, predecessor, salt,
@@ -677,10 +663,6 @@ context('TimeLockProtocolMiningReward', async () => {
 
       await protocolMiningReward.schedule({
         target, value, data, predecessor, salt, delay, rewardTokenAmount,
-      });
-
-      await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
       });
 
       await beproAssert.revertsFn(
@@ -705,13 +687,10 @@ context('TimeLockProtocolMiningReward', async () => {
       const newBalance = await erc20Token.balanceOf(protocolMiningReward.getAddress());
       newBalance.should.be.bignumber.equal(transferTokenAmount);
 
-      await protocolMiningReward.schedule({
+      const tx1 = await protocolMiningReward.schedule({
         target, value, data, predecessor, salt, delay, rewardTokenAmount: rewardTokenAmountRaw,
       });
-
-      const id = await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
-      });
+      const id = tx1.events.CallScheduled.returnValues.id;
 
       // do blockchain travel forward in time to execute scheduled call
       await forwardTime(delay);
@@ -770,14 +749,11 @@ context('TimeLockProtocolMiningReward', async () => {
       const data = data2; // calling 'transferFrom' function without allowance will fail
       const ethvalueWei = web3utils.toWei('1', 'ether');
 
-      await protocolMiningReward.schedule({
+      const tx = await protocolMiningReward.schedule({
         target, value, data, predecessor, salt, delay, rewardTokenAmount,
       });
-
-      const id = await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
-      });
-
+      const id = tx.events.CallScheduled.returnValues.id;
+      
       // do blockchain travel forward in time to execute scheduled call
       await forwardTime(delay);
       //
@@ -834,21 +810,23 @@ context('TimeLockProtocolMiningReward', async () => {
         target, value, data: data2, predecessor, salt,
       };
       // schedule 'transferFrom' call
-      await protocolMiningReward.schedule({
+      const tx1 = await protocolMiningReward.schedule({
         ...call1, delay, rewardTokenAmount: rewardTokenAmountRaw,
       });
 
-      const id1 = await protocolMiningReward.hashOperation(call1);
+      //const id1 = await protocolMiningReward.hashOperation(call1);
+      const id1 = tx1.events.CallScheduled.returnValues.id;
 
       const call2 = {
         target, value, data, predecessor: id1, salt,
       };
       // schedule 'transfer' call
-      await protocolMiningReward.schedule({
+      const tx2 = await protocolMiningReward.schedule({
         ...call2, delay, rewardTokenAmount: rewardTokenAmountRaw,
       });
 
-      const id2 = await protocolMiningReward.hashOperation(call2);
+      //const id2 = await protocolMiningReward.hashOperation(call2);
+      const id2 = tx2.events.CallScheduled.returnValues.id;
 
       // do blockchain travel forward in time to execute scheduled call
       await forwardTime(delay);
@@ -950,10 +928,6 @@ context('TimeLockProtocolMiningReward', async () => {
         targets, values, datas, predecessor, salt, delay, rewardTokenAmount,
       });
 
-      await protocolMiningReward.hashOperationBatch({
-        targets, values, datas, predecessor, salt,
-      });
-
       await beproAssert.revertsFn(
         () => protocolMiningReward.executeBatch({
           targets, values, datas, predecessor, salt,
@@ -970,10 +944,6 @@ context('TimeLockProtocolMiningReward', async () => {
 
       await protocolMiningReward.scheduleBatch({
         targets, values, datas, predecessor, salt, delay, rewardTokenAmount,
-      });
-
-      await protocolMiningReward.hashOperationBatch({
-        targets, values, datas, predecessor, salt,
       });
 
       await beproAssert.revertsFn(
@@ -1009,11 +979,11 @@ context('TimeLockProtocolMiningReward', async () => {
       const call1 = {
         targets, values, datas, predecessor, salt,
       };
-      await protocolMiningReward.scheduleBatch({
+      const tx1 = await protocolMiningReward.scheduleBatch({
         ...call1, delay, rewardTokenAmount: rewardTokenAmountRaw,
       });
 
-      const id = await protocolMiningReward.hashOperationBatch(call1);
+      const id = tx1.events.CallScheduled[0].returnValues.id;
 
       // do blockchain travel forward in time to execute scheduled call
       await forwardTime(delay);
@@ -1078,11 +1048,11 @@ context('TimeLockProtocolMiningReward', async () => {
       const call1 = {
         targets, values, datas, predecessor, salt,
       };
-      await protocolMiningReward.scheduleBatch({
+      const tx1 = await protocolMiningReward.scheduleBatch({
         ...call1, delay, rewardTokenAmount,
       });
 
-      const id = await protocolMiningReward.hashOperationBatch(call1);
+      const id = tx1.events.CallScheduled[0].returnValues.id;
 
       // do blockchain travel forward in time to execute scheduled call
       await forwardTime(delay);
@@ -1148,21 +1118,21 @@ context('TimeLockProtocolMiningReward', async () => {
         targets, values, datas: datas1, predecessor, salt,
       };
       // schedule 'transferFrom' call
-      await protocolMiningReward.scheduleBatch({
+      const tx1 = await protocolMiningReward.scheduleBatch({
         ...call1, delay, rewardTokenAmount: rewardTokenAmountRaw,
       });
 
-      const id1 = await protocolMiningReward.hashOperationBatch(call1);
+      const id1 = tx1.events.CallScheduled[0].returnValues.id;
 
       const call2 = {
         targets, values, datas: datas2, predecessor: id1, salt,
       };
       // schedule 'transferFrom' batch calls
-      await protocolMiningReward.scheduleBatch({
+      const tx12 = await protocolMiningReward.scheduleBatch({
         ...call2, delay, rewardTokenAmount: rewardTokenAmountRaw,
       });
 
-      const id2 = await protocolMiningReward.hashOperationBatch(call2);
+      const id2 = tx12.events.CallScheduled[0].returnValues.id;
 
       // do blockchain travel forward in time to execute scheduled call
       await forwardTime(delay);
@@ -1252,14 +1222,11 @@ context('TimeLockProtocolMiningReward', async () => {
     mochaAsync(async () => {
       getNextSalt();
 
-      await protocolMiningReward.schedule({
+      const tx = await protocolMiningReward.schedule({
         target, value, data, predecessor, salt, delay, rewardTokenAmount,
       });
-
-      const id = await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
-      });
-
+      const id = tx.events.CallScheduled.returnValues.id;
+      
       await beproAssert.revertsFn(
         () => protocolMiningReward.cancel({ id }, { from: executor }),
         'TimelockController: sender requires permission',
@@ -1272,14 +1239,11 @@ context('TimeLockProtocolMiningReward', async () => {
     mochaAsync(async () => {
       getNextSalt();
 
-      await protocolMiningReward.schedule({
+      const tx1 = await protocolMiningReward.schedule({
         target, value, data, predecessor, salt, delay, rewardTokenAmount,
       });
-
-      const id = await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
-      });
-
+      const id = tx1.events.CallScheduled.returnValues.id;
+      
       // cancel scheduled call
       const tx = await protocolMiningReward.cancel({ id });
 
@@ -1323,14 +1287,11 @@ context('TimeLockProtocolMiningReward', async () => {
       const ethvalueWei = web3utils.toWei(ethvalue, 'ether');
       const value = ethvalueWei;
 
-      await protocolMiningReward.schedule({
+      const tx1 = await protocolMiningReward.schedule({
         target, value, data, predecessor, salt, delay, rewardTokenAmount,
       });
-
-      const id = await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
-      });
-
+      const id = tx1.events.CallScheduled.returnValues.id;
+      
       // do blockchain travel forward in time to execute scheduled call
       await forwardTime(delay);
       //
@@ -1384,10 +1345,6 @@ context('TimeLockProtocolMiningReward', async () => {
         [ 'uint256' ],
         [ newDelay ],
       );
-
-      await protocolMiningReward.hashOperation({
-        target, value, data, predecessor, salt,
-      });
 
       // schedule call
       await protocolMiningReward.schedule({
