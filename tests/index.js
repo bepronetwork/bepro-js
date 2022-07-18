@@ -21,6 +21,8 @@ context('Unit Tests', async () => {
 
     'sablier/sablier',
     'custom/loophole/loophole',
+
+    'protocolMiningReward',
   ].map(test => {
     try {
       // eslint-disable-next-line global-require, import/no-dynamic-require

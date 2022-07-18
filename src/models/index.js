@@ -25,3 +25,5 @@ export { default as TestUniswapV3Callee } from './Uniswap/TestUniswapV3Callee';
 export { default as TestUniswapV3RouterBridge } from './Uniswap/TestUniswapV3RouterBridge';
 export { default as TickMathTest } from './Uniswap/TickMathTest';
 export { default as SwapRouter } from './Uniswap/SwapRouter';
+
+export { default as ProtocolMiningReward } from './ProtocolMining/ProtocolMiningReward';
