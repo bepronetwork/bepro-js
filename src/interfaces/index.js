@@ -29,6 +29,7 @@ const index = {
   uniswapRouterBridge: require('../contracts/TestUniswapV3RouterBridge.json'),
   tickMathTest: require('../contracts/TickMathTest.json'),
   timeLockProtocolMiningReward: require('../contracts/TimeLockProtocolMiningReward.json'),
+  protocolMiningReward: require('../contracts/ProtocolMiningReward.json'),
   // uniswapPoolSwapTest: require('../contracts/UniswapV3PoolSwapTest.json'),
 };
 

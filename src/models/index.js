@@ -27,3 +27,4 @@ export { default as TickMathTest } from './Uniswap/TickMathTest';
 export { default as SwapRouter } from './Uniswap/SwapRouter';
 
 export { default as TimeLockProtocolMiningReward } from './ProtocolMining/TimeLockProtocolMiningReward';
+export { default as ProtocolMiningReward } from './ProtocolMining/ProtocolMiningReward';

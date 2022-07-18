@@ -23,6 +23,8 @@ context('Unit Tests', async () => {
     'custom/loophole/loophole',
 
     'timeLockProtocolMiningReward',
+    'protocolMiningReward',
+
   ].map(test => {
     try {
       // eslint-disable-next-line global-require, import/no-dynamic-require
