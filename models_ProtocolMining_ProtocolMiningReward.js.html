@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs models/Voting/VotingContract.js</title>
+  <title>BEPRO Network Dev Docs models/ProtocolMining/ProtocolMiningReward.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -100,7 +100,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>models/Voting/VotingContract.js</h1>
+                    <h1>models/ProtocolMining/ProtocolMiningReward.js</h1>
                 </header>
                 
 
@@ -109,343 +109,447 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { voting } from '../../interfaces';
-import ERC20Contract from '../ERC20/ERC20Contract';
+            <pre class="prettyprint source linenums"><code>import { protocolMiningReward } from '../../interfaces';
+// import Numbers from '../../utils/Numbers';
 import IContract from '../IContract';
-import Numbers from '../../utils/Numbers';
 
 /**
- * @typedef {Object} VotingContract~Options
+ * @typedef {Object} ProtocolMiningReward~Options
  * @property {Boolean} test
  * @property {Boolean} localtest ganache local blockchain
- * @property {Web3Connection} [web3Connection=Web3Connection] created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
+ * @property {Web3Connection} [web3Connection=Web3Connection]
+ * created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
  * @property {string} [contractAddress]
  */
 
 /**
- * Voting Contract Object
- * @class VotingContract
- * @param {VotingContract~Options} options
+ * @class ProtocolMiningReward
+ * @param {ProtocolMiningReward~Options} options
+ * NOTE: to encode function signature we use 'web3.eth.abi.encodeFunctionSignature'
+ * For example, for encoding transfer function of ERC20 token we do:
+ * web3.eth.abi.encodeFunctionSignature('transfer(address,uint256)')
+ * NOTE: to encode parameters for encoded call data we use
+ * web3.eth.abi.encodeParameters(typesArray, valuesArray)
+ * For example, for encoding transfer function parameters of ERC20 token we do:
+ * web3.eth.abi.encodeParameters(['address','uint256'], [userAddress, transferTokenAmount])
+ * userAddress, transferTokenAmount are variables holding user address and tokens amount.
+ * NOTE: to encode function signature together with parameters as a single encoded call data
+ * we use a combination of the two above.
+ * Specific details on how to encode call data can be found in the unit test file.
  */
-class VotingContract extends IContract {
+class ProtocolMiningReward extends IContract {
   constructor(params = {}) {
-    super({ ...params, abi: voting });
+    super({ abi: protocolMiningReward, ...params });
   }
 
   /**
-   * Get ERC20 Address of the Contract
-   * @returns {Promise&lt;Address>}
-   */
-  erc20() {
-    return this.__sendTx(
-      this.getContract().methods.erc20(),
-      { call: true },
-    );
-  }
-
-  /**
-   * Creates a Pool
-   * @param {String} params.description
-   * @param {Integer} params.expirationTime
-   * @param {Array | Integer} params.poolOptions
-   * @return {Promise&lt;TransactionObject>}
-   */
-  createPool({
-    description,
-    expirationTime,
-    poolOptions,
-  }, options) {
-    return this.__sendTx(
-      this.getContract()
-        .methods.createPoll(
-          description,
-          Numbers.timeToSmartContractTime(expirationTime),
-          poolOptions,
-        ),
-      options,
-    );
-  }
-
-  /**
-   * Creates a Pool
-   * @param {Integer} params.poolId
-   * @return {Promise&lt;TransactionObject>}
-   */
-  endPool({
-    poolId,
-  }, options) {
-    return this.__sendTx(
-      this.getContract()
-        .methods.endPool(
-          poolId,
-        ),
-      options,
-    );
-  }
-
-  /**
-     * Cast Vote
-     * @param {Integer} params.poolId Pool Id
-     * @param {Integer} params.voteId Vote Position on Length
-     * @return {Promise&lt;TransactionObject>}
-     */
-  castVote({
-    poolId,
-    voteId,
-  }, options) {
-    return this.__sendTx(
-      this.getContract()
-        .methods.castVote(
-          poolId,
-          voteId,
-        ),
-      options,
-    );
-  }
-
-  /**
-     * Stake Voting Tokens
-     * @param {Integer} params.tokens Tokens
-     * @return {Promise&lt;TransactionObject>}
-     */
-  stakeVotingTokens({
-    tokens,
-  }, options) {
-    return this.__sendTx(
-      this.getContract()
-        .methods.stakeVotingTokens(
-          Numbers.toSmartContractDecimals(
-            tokens,
-            this.getERC20Contract().getDecimals(),
-          ),
-        ),
-      options,
-    );
-  }
-
-  /**
-   * @typedef {Object} VotingContract~Pool
-   * @property {Address} creator
-   * @property {Bool} status
-   * @property {Integer} optionsSize
-   * @property {String} description
-   * @property {Array | Address} voters
-   * @property {Date} expirationTime
-   */
-
-  /**
-     * Get Pool Information
-     * @function
-     * @param {Object} params
-     * @param {Integer} params.poolId
-     * @return {Promise&lt;VotingContract~Pool>}
-     */
-  getPoolInformation = async ({ poolId }) => {
-    const res = await this.__sendTx(
-      this.getContract().methods.getPoolInformation(poolId),
-      { call: true },
-    );
-
-    return {
-      _id: poolId,
-      creator: res[0],
-      status: res[1],
-      optionsSize: parseInt(res[2], 10),
-      descripton: res[3],
-      voters: res[4],
-      expirationTime: Numbers.fromSmartContractTimeToMinutes(res[5]),
-    };
-  };
-
-  /**
-     * Get Pool Winner
-     * @function
-     * @param {Object} params
-     * @param {Integer} params.poolId
-     * @return {Integer} Winner Id
-     * @return {Integer} Winner Id Index
-     */
-  getPoolWinner = async ({ poolId }) => {
-    const res = await this.__sendTx(
-      this.getContract().methods.getPoolWinner(poolId),
-      { call: true },
-    );
-
-    return {
-      winnerId: parseInt(res[0], 10),
-      optionId: parseInt(res[1], 10),
-    };
-  };
-
-  /**
-     * Get Pool Winner
-     * @function
-     * @param {Object} params
-     * @param {Integer} params.poolId Pool Id
-     * @param {Integer} params.optionIndex Option Id for Pool
-     * @return {Integer} Option Id
-     */
-  getPollOptionById = async ({ poolId, optionIndex }) => {
-    const res = await this.__sendTx(
-      this.getContract().methods.getPollOptionById(poolId, optionIndex),
-      { call: true },
-    );
-
-    return parseInt(res[0], 10);
-  };
-
-  /**
-     * Get Pool History for Address
-     * @function
-     * @param {Object} params
-     * @param {Address} params.address
-     * @return {Array | Integer} Pool Ids
-     */
-  getPollHistory = async ({ address }) => {
-    const res = await this.__sendTx(
-      this.getContract().methods.getPollHistory(address),
-      { call: true },
-    );
-
-    return {
-      pools: res[0].map(r => parseInt(r, 10)),
-    };
-  };
-
-  /**
-     * Get Pool Info for Voter
-     * @function
-     * @param {Object} params
-     * @param {Integer} params.poolId
-     * @param {Address} params.voter
-     * @return {Integer} Vote
-     * @return {Integer} Weigth (Token Value)
-     */
-  getPollInfoForVoter = async ({ poolId, voter }) => {
-    const res = await this.__sendTx(
-      this.getContract().methods.getPollInfoForVoter(poolId, voter),
-      { call: true },
-    );
-
-    return {
-      vote: parseInt(res[0], 10),
-      weigth: Numbers.toSmartContractDecimals(
-        res[1],
-        this.getERC20Contract().getDecimals(),
-      ),
-    };
-  };
-
-  /**
-     * Check if a User has voted
-     * @function
-     * @param {Object} params
-     * @param {Integer} params.poolId
-     * @param {Address} params.voter
-     * @return {Bool} HasVoted
-     */
-  userHasVoted = async ({ poolId, voter }) => {
-    const res = await this.__sendTx(
-      this.getContract().methods.userHasVoted(poolId, voter),
-      { call: true },
-    );
-
-    return res[0];
-  };
-
-  /**
-     * Get Locked Amount
-     * @function
-     * @param {Object} params
-     * @param {Address} params.voter
-     * @return {Integer} Locked Amount
-     */
-  getLockedAmount = async ({ voter }) => {
-    const res = await this.__sendTx(
-      this.getContract().methods.getLockedAmount(voter),
-      { call: true },
-    );
-
-    return Numbers.toSmartContractDecimals(
-      res[0],
-      this.getERC20Contract().getDecimals(),
-    );
-  };
-
-  /**
-     * Withdraw Tokens from Voting
-     * @param {Integer} params.tokens Tokens
-     * @return {Promise&lt;TransactionObject>}
-     */
-  withdrawTokens({
-    tokens,
-  }, options) {
-    return this.__sendTx(
-      this.getContract()
-        .methods.withdrawTokens(
-          Numbers.toSmartContractDecimals(
-            tokens,
-            this.getERC20Contract().getDecimals(),
-          ),
-        ),
-      options,
-    );
-  }
-
-  /**
-   * @async
-   * @function
-   * @throws {Error} Contract is not deployed, first deploy it and provide a contract address
-   * @void
+   * Use a {@link protocolMiningReward} contract with the current address
+   * @return {Promise&lt;void>}
    */
   __assert = async () => {
-    if (!this.getAddress()) {
-      throw new Error(
-        'Contract is not deployed, first deploy it and provide a contract address',
-      );
-    }
-
-    /* Use ABI */
-    this.params.contract.use(voting, this.getAddress());
-
-    /* Set Token Address Contract for easy access */
-    if (!this.params.ERC20Contract) {
-      this.params.ERC20Contract = new ERC20Contract({
-        web3Connection: this.web3Connection,
-        contractAddress: await this.erc20(),
-      });
-    }
-
-    /* Assert Token Contract */
-    await this.params.ERC20Contract.start();
-    await this.params.ERC20Contract.__assert();
+    this.params.contract.use(protocolMiningReward, this.getAddress());
+    // this.params.decimals = await this.getDecimalsAsync();
   };
 
   /**
-   * Deploy the Staking Contract
-   * @function
-   * @param [Object] params
-   * @param {Address} params.erc20Contract
-   * @param {IContract~TxOptions} options
-   * @return {Promise&lt;*>}
+   * Get Token Address
+   * @returns {Address} address
    */
-  deploy = async ({ erc20Contract }, options) => {
-    const params = [ erc20Contract ];
+  getAddress() {
+    return this.params.contractAddress;
+  }
+
+  /**
+   * Get reward token address
+   * @function
+   * @returns {Promise&lt;Address>}
+   */
+  rewardToken() {
+    return this.getContract().methods.rewardToken().call();
+  }
+
+  /**
+   * Get reward token default reward amount
+   * @function
+   * @returns {Promise&lt;Integer>}
+   */
+  rewardAmount() {
+    return this.getContract().methods.rewardAmount().call();
+  }
+
+  /**
+   * Get encoded call reward token amount
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.callHash Encoded call hash as bytes32 string
+   * @returns {Promise&lt;Integer>} Reward token amount
+   */
+  callsRewardTokenAmount({ callHash }) {
+    return this.getContract().methods.callsRewardTokenAmount(callHash).call();
+  }
+
+  /**
+   * Get encoded function call hash
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Smart contract address target
+   * @param {string} params.funcSelector Function selector as byte4 string
+   * @returns {Promise&lt;string>} Call hash as bytes32 string
+   */
+  hashOperation({ target, funcSelector }) {
+    return this.getContract().methods.hashOperation(target, funcSelector).call();
+  }
+
+  /**
+   * Get encoded function call hash given encoded data with function selector
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Smart contract address target
+   * @param {string} params.callData Encoded call data with function selector and params
+   * @returns {Promise&lt;string>} Call hash as bytes32 string
+   */
+  hashOperationData({ target, callData }) {
+    return this.getContract().methods.hashOperationData(target, callData).call();
+  }
+
+  /**
+   * Get encoded function calls hashes as batch
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Smart contract addresses targets
+   * @param {Array&lt;string>} params.funcSelectors Function selectors as byte4 string
+   * @returns {Promise&lt;string>} Call hash as bytes32 string
+   */
+  hashOperationBatch({ targets, funcSelectors }) {
+    return this.getContract().methods.hashOperationBatch(targets, funcSelectors).call();
+  }
+
+  /**
+   * Get encoded function calls hashes as batch given encoded data with function selectors
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Smart contract addresses targets
+   * @param {Array&lt;string>} params.callDatas Encoded calls data with function selectors and params
+   * @returns {Promise&lt;string>} Call hash as bytes32 string
+   */
+  hashOperationBatchData({ targets, callDatas }) {
+    return this.getContract().methods.hashOperationBatchData(targets, callDatas).call();
+  }
+
+  /**
+   * Approve function call
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Contract address to call
+   * @param {string} params.funcSelector Target contract function selector
+   * @param {Integer} params.rewardTokenAmount Token reward amount to sender
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  approveCall({
+    target,
+    funcSelector,
+    rewardTokenAmount,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.approveCall(target, funcSelector, rewardTokenAmount),
+      options,
+    );
+  }
+
+  /**
+   * Approve function call
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Contract address to call
+   * @param {string} params.callData Target contract encoded call data with function selector and params
+   * @param {Integer} params.rewardTokenAmount Token reward amount to sender
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  approveCallData({
+    target,
+    callData,
+    rewardTokenAmount,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.approveCallData(target, callData, rewardTokenAmount),
+      options,
+    );
+  }
+
+  /**
+   * Approve function calls as batch
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Contract addresses to call
+   * @param {Array&lt;string>} params.funcSelectors Target contract function selectors
+   * @param {Integer} params.rewardTokenAmount Token reward amount to sender
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  approveBatch({
+    targets,
+    funcSelectors,
+    rewardTokenAmount,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.approveBatch(targets, funcSelectors, rewardTokenAmount),
+      options,
+    );
+  }
+
+  /**
+   * Approve function calls as batch
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Contract addresses to call
+   * @param {Array&lt;string>} params.callDatas Target contract function selectors
+   * @param {Integer} params.rewardTokenAmount Token reward amount to sender
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  approveBatchData({
+    targets,
+    callDatas,
+    rewardTokenAmount,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.approveBatchData(targets, callDatas, rewardTokenAmount),
+      options,
+    );
+  }
+
+  /**
+   * Disapprove function call
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Contract address to call
+   * @param {string} params.funcSelector Target contract function selector
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  disapproveCall({
+    target,
+    funcSelector,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.disapproveCall(target, funcSelector),
+      options,
+    );
+  }
+
+  /**
+   * Disapprove function call with encoded call data
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Contract address to call
+   * @param {string} params.callData Target contract encoded call data with function selector and params
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  disapproveCallData({
+    target,
+    callData,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.disapproveCallData(target, callData),
+      options,
+    );
+  }
+
+  /**
+   * Disapprove function calls as batch
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Contract addresses to call
+   * @param {Array&lt;string>} params.funcSelectors Target contract function selectors
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  disapproveBatch({
+    targets,
+    funcSelectors,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.disapproveBatch(targets, funcSelectors),
+      options,
+    );
+  }
+
+  /**
+   * Disapprove function calls as batch with encoded call datas
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Contract addresses to call
+   * @param {Array&lt;string>} params.callDatas Target contract encoded call datas with function selectors and params
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  disapproveBatchData({
+    targets,
+    callDatas,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.disapproveBatchData(targets, callDatas),
+      options,
+    );
+  }
+
+  /**
+   * Disapprove all function calls
+   * @function
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  disapproveAll(options) {
+    return this.__sendTx(
+      this.getContract().methods.disapproveAll(),
+      options,
+    );
+  }
+
+  /**
+   * Execute call from approve function calls
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Contract address to call
+   * @param {string} params.funcSelector Target contract function selector
+   * @param {string} params.callParam Target contract function params as encoded data
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  execute({
+    target,
+    funcSelector,
+    callParam,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.execute(target, funcSelector, callParam),
+      options,
+    );
+  }
+
+  /**
+   * Execute call from approve function calls with encoded call data
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Contract address to call
+   * @param {string} params.callData Target contract encoded call data with function selector and params
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  executeData({
+    target,
+    callData,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.executeData(target, callData),
+      options,
+    );
+  }
+
+  /**
+   * Execute call from approve batch function calls
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Target contracts addresses
+   * @param {Array&lt;Integer>} params.values Eth values for each call
+   * @param {Array&lt;string>} params.funcSelectors Target contracts function selectors
+   * @param {Array&lt;string>} params.callParams Target contracts function params as encoded call datas
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  executeBatch({
+    targets,
+    values,
+    funcSelectors,
+    callParams,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.executeBatch(targets, values, funcSelectors, callParams),
+      options,
+    );
+  }
+
+  /**
+   * Execute call from approve batch function calls with encoded call datas
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Contract address to call
+   * @param {Array&lt;Integer>} params.values eth values for each call
+   * @param {Array&lt;string>} params.callDatas Target contract encoded call datas with function selectors and params
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  executeBatchData({
+    targets,
+    values,
+    callDatas,
+  }, options) {
+    return this.__sendTx(
+      this.getContract().methods.executeBatchData(targets, values, callDatas),
+      options,
+    );
+  }
+
+  /**
+   * Get call hash as bytes32 given an index
+   * @function
+   * @param {Integer} i Index of approved call
+   * @returns {Promise&lt;string>} Call hash as bytes32 string
+   */
+  getCallHashByIndex(i) {
+    return this.getContract().methods.getCallHashByIndex(i).call();
+  }
+
+  /**
+   * Get calls array length
+   * @function
+   * @returns {Promise&lt;Integer>} Calls count
+   */
+  callsCount() {
+    return this.getContract().methods.callsCount().call();
+  }
+
+  /**
+   * True if call hash is approved (exists), false otherwise
+   * @param {Object} params Parameters
+   * @param {string} params.callHash Call hash as bytes32 string
+   * @returns {Promise&lt;Boolean>} true if call hash exists, false otherwise
+   */
+  callApproved({ callHash }) {
+    return this.getContract().methods.callApproved(callHash).call();
+  }
+
+  /**
+   * Remove call by hash, call hash must be approved (exists)
+   * @param {Object} params Parameters
+   * @param {string} params.callHash Call hash as bytes32 string
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  removeCallHash({ callHash }, options) {
+    return this.__sendTx(
+      this.getContract().methods.removeCallHash(callHash),
+      options,
+    );
+  }
+
+  /**
+   * Deploy ERC20 Token
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.rewardTokenAddress Reward token address
+   * @param {Number} params.rewardTokenAmount Reward token amount
+   * @param {IContract~TxOptions} options
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  deploy = async ({ rewardTokenAddress, rewardTokenAmount }, options) => {
+    if (!rewardTokenAddress) {
+      throw new Error('Please provide a Reward erc20 token address');
+    }
+
+    if (!rewardTokenAmount) {
+      throw new Error('Please provide a Reward erc20 token amount');
+    }
+
+    const params = [ rewardTokenAddress, rewardTokenAmount ];
     const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
     await this.__assert();
     return res;
   };
-
-  /**
-   * @function
-   * @return ERC20Contract|undefined
-   */
-  getERC20Contract = () => this.params.ERC20Contract;
 }
 
-export default VotingContract;
+export default ProtocolMiningReward;
 </code></pre>
         </article>
     </section>
