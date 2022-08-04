@@ -26,4 +26,5 @@ export { default as TestUniswapV3RouterBridge } from './Uniswap/TestUniswapV3Rou
 export { default as TickMathTest } from './Uniswap/TickMathTest';
 export { default as SwapRouter } from './Uniswap/SwapRouter';
 
+export { default as TimeLockProtocolMiningReward } from './ProtocolMining/TimeLockProtocolMiningReward';
 export { default as ProtocolMiningReward } from './ProtocolMining/ProtocolMiningReward';

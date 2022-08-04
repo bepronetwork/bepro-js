@@ -61,7 +61,10 @@ export default class ETHUtils extends IContract {
    * @returns {Promise<uint256,uint256>}
    */
   async blockNumberAndTimestamp() {
-    const [ blockNumber, blockTimestamp ] = await this.getContract().methods.blockNumberAndTimestamp().call();
+    // const [ blockNumber, blockTimestamp ] = await this.getContract().methods.blockNumberAndTimestamp().call();
+    const ret = await this.getContract().methods.blockNumberAndTimestamp().call();
+    const blockNumber = ret[0];
+    const blockTimestamp = ret[1];
     return [
       BigNumber(blockNumber),
       BigNumber(blockTimestamp),
