@@ -7,7 +7,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs models/Uniswap/SwapRouter.js</title>
+  <title>BEPRO Network Dev Docs models/ProtocolMining/TimeLockProtocolMiningReward.js</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -100,7 +100,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Source</p>
-                    <h1>models/Uniswap/SwapRouter.js</h1>
+                    <h1>models/ProtocolMining/TimeLockProtocolMiningReward.js</h1>
                 </header>
                 
 
@@ -109,282 +109,348 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { swapRouter } from '../../interfaces';
+            <pre class="prettyprint source linenums"><code>import { timeLockProtocolMiningReward } from '../../interfaces';
 import IContract from '../IContract';
 
-/** @typedef {Object} SwapRouter~Options
-* @property {address} _factory
-* @property {address} _WETH9
-* @property {Boolean} test
-* @property {Boolean} localtest
-* @property {Web3Connection} [web3Connection=Web3Connection]
-* @property {address} [contractAddress]
-*/
+/**
+ * @typedef {Object} TimeLockProtocolMiningReward~Options
+ * @property {Boolean} test
+ * @property {Boolean} localtest ganache local blockchain
+ * @property {Web3Connection} [web3Connection=Web3Connection]
+ * created from params: 'test', 'localtest' and optional 'web3Connection' string and 'privateKey'
+ * @property {string} [contractAddress]
+ */
 
 /**
- * SwapRouter Object
- * @class SwapRouter
- * @param {SwapRouter~Options} options
+ * @class TimeLockProtocolMiningReward
+ * @param {TimeLockProtocolMiningReward~Options} options
+ * NOTE: to encode function signature we use 'web3.eth.abi.encodeFunctionSignature'
+ * For example, for encoding transfer function of ERC20 token we do:
+ * web3.eth.abi.encodeFunctionSignature('transfer(address,uint256)')
+ * NOTE: to encode parameters for encoded call data we use
+ * web3.eth.abi.encodeParameters(typesArray, valuesArray)
+ * For example, for encoding transfer function parameters of ERC20 token we do:
+ * web3.eth.abi.encodeParameters(['address','uint256'], [userAddress, transferTokenAmount])
+ * userAddress, transferTokenAmount are variables holding user address and tokens amount.
+ * NOTE: to encode function signature together with parameters as a single encoded call data
+ * we use a combination of the two above.
+ * Specific details on how to encode call data can be found in the unit test file.
  */
-export default class SwapRouter extends IContract {
+class TimeLockProtocolMiningReward extends IContract {
   constructor(params = {}) {
-    super({ abi: swapRouter, ...params });
-    if (!params.factory) {
-      throw new Error('Please provide a UniswapV3Factory contract address');
-    }
-    if (!params.weth9) {
-      throw new Error('Please provide a WETH9 contract address');
-    }
-    this.params.factory = params.factory;
-    this.params.weth9 = params.weth9;
+    super({ abi: timeLockProtocolMiningReward, ...params });
   }
 
   /**
-   * @returns {Promise&lt;address>}
+   * Use a {@link timeLockProtocolMiningReward} contract with the current address
+   * @return {Promise&lt;void>}
    */
-  WETH9() {
-    // return await this.getContract().methods.WETH9().call();
-    return this.params.weth9;
+  __assert = async () => {
+    this.params.contract.use(timeLockProtocolMiningReward, this.getAddress());
+    // this.params.decimals = await this.getDecimalsAsync();
+  };
+
+  /**
+   * Get contract address
+   * @returns {Address} address
+   */
+  getAddress() {
+    return this.params.contractAddress;
   }
 
   /**
-   * @param {Object} params
-   * @param {tuple} params.tuple
-   * @returns {Promise&lt;uint256>} amountOut
-   */
-  exactInput({ tuple }, options) {
-    return this.__sendTx(
-      this.getContract().methods.exactInput(tuple),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {tuple} params.tuple
-   * @returns {Promise&lt;uint256>} amountOut
-   */
-  exactInputSingle({ tuple }, options) {
-    return this.__sendTx(
-      this.getContract().methods.exactInputSingle(tuple),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {tuple} params.tuple
-   * @returns {Promise&lt;uint256>} amountIn
-   */
-  exactOutput({ tuple }, options) {
-    return this.__sendTx(
-      this.getContract().methods.exactOutput(tuple),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {tuple} params.tuple
-   * @returns {Promise&lt;uint256>} amountIn
-   */
-  exactOutputSingle({ tuple }, options) {
-    return this.__sendTx(
-      this.getContract().methods.exactOutputSingle(tuple),
-      options,
-    );
-  }
-
-  /**
-   * @returns {Promise&lt;address>}
-   */
-  factory() {
-    // return await this.getContract().methods.factory().call();
-    return this.params.factory;
-  }
-
-  /**
-   * @param {bytes[]} data
-   * @returns {Promise&lt;bytes[]>} results
-   */
-  multicall({ data }, options) {
-    return this.__sendTx(
-      this.getContract().methods.multicall(data),
-      options,
-    );
-  }
-
-  /**
-   * @returns {Promise&lt;void>}
-   */
-  refundETH(options) {
-    return this.__sendTx(
-      this.getContract().methods.refundETH(),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {address} params.token
-   * @param {uint256} params.value
-   * @param {uint256} params.deadline
-   * @param {uint8} params.v
-   * @param {bytes32} params.r
-   * @param {bytes32} params.s
-   * @returns {Promise&lt;void>}
-   */
-  selfPermit({
-    token, value, deadline, v, r, s,
-  }, options) {
-    return this.__sendTx(
-      this.getContract().methods.selfPermit(token, value, deadline, v, r, s),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {address} params.token
-   * @param {uint256} params.nonce
-   * @param {uint256} params.expiry
-   * @param {uint8} params.v
-   * @param {bytes32} params.r
-   * @param {bytes32} params.s
-   * @returns {Promise&lt;void>}
-   */
-  selfPermitAllowed({
-    token, nonce, expiry, v, r, s,
-  }, options) {
-    return this.__sendTx(
-      this.getContract().methods.selfPermitAllowed(token, nonce, expiry, v, r, s),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {address} params.token
-   * @param {uint256} params.nonce
-   * @param {uint256} params.expiry
-   * @param {uint8} params.v
-   * @param {bytes32} params.r
-   * @param {bytes32} params.s
-   * @returns {Promise&lt;void>}
-   */
-  selfPermitAllowedIfNecessary({
-    token, nonce, expiry, v, r, s,
-  }, options) {
-    return this.__sendTx(
-      this.getContract().methods.selfPermitAllowedIfNecessary(token, nonce, expiry, v, r, s),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {address} params.token
-   * @param {uint256} params.value
-   * @param {uint256} params.deadline
-   * @param {uint8} params.v
-   * @param {bytes32} params.r
-   * @param {bytes32} params.s
-   * @returns {Promise&lt;void>}
-   */
-  selfPermitIfNecessary({
-    token, value, deadline, v, r, s,
-  }, options) {
-    return this.__sendTx(
-      this.getContract().methods.selfPermitIfNecessary(token, value, deadline, v, r, s),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {address} params.token
-   * @param {uint256} params.amountMinimum
-   * @param {address} params.recipient
-   * @returns {Promise&lt;void>}
-   */
-  sweepToken({ token, amountMinimum, recipient }, options) {
-    return this.__sendTx(
-      this.getContract().methods.sweepToken(token, amountMinimum, recipient),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {address} params.token
-   * @param {uint256} params.amountMinimum
-   * @param {address} params.recipient
-   * @param {uint256} params.feeBips
-   * @param {address} params.feeRecipient
-   * @returns {Promise&lt;void>}
-   */
-  sweepTokenWithFee({
-    token, amountMinimum, recipient, feeBips, feeRecipient,
-  }, options) {
-    return this.__sendTx(
-      this.getContract().methods.sweepTokenWithFee(token, amountMinimum, recipient, feeBips, feeRecipient),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {int256} params.amount0Delta
-   * @param {int256} params.amount1Delta
-   * @param {bytes} params._data
-   * @returns {Promise&lt;void>}
-   */
-  // uniswapV3SwapCallback({ amount0Delta, amount1Delta, _data }, options) {
-  //  return this.__sendTx(
-  //    this.getContract().methods.uniswapV3SwapCallback(amount0Delta, amount1Delta, _data),
-  //    options,
-  //  );
-  // };
-
-  /**
-   * @param {Object} params
-   * @param {uint256} params.amountMinimum
-   * @param {address} params.recipient
-   * @returns {Promise&lt;void>}
-   */
-  unwrapWETH9({ amountMinimum, recipient }, options) {
-    return this.__sendTx(
-      this.getContract().methods.unwrapWETH9(amountMinimum, recipient),
-      options,
-    );
-  }
-
-  /**
-   * @param {Object} params
-   * @param {uint256} params.amountMinimum
-   * @param {address} params.recipient
-   * @param {uint256} params.feeBips
-   * @param {address} params.feeRecipient
-   * @returns {Promise&lt;void>}
-   */
-  unwrapWETH9WithFee({
-    amountMinimum, recipient, feeBips, feeRecipient,
-  }, options) {
-    return this.__sendTx(
-      this.getContract().methods.unwrapWETH9WithFee(amountMinimum, recipient, feeBips, feeRecipient),
-      options,
-    );
-  }
-
-  /**
-   * Deploy the SwapRouter Contract
+   * Get reward token address
    * @function
-   * @param {IContract~TxOptions} options
-   * @return {Promise&lt;*|undefined>}
+   * @returns {Promise&lt;Address>} Reward token address
    */
-  deploy = async options => {
-    const params = [ this.params.factory, this.params.weth9 ];
+  async rewardToken() {
+    return await this.getContract().methods.rewardToken().call();
+  }
 
+  /**
+   * Get reward token default reward amount
+   * @function
+   * @returns {Promise&lt;Integer>} Default reward token amount
+   */
+  async rewardAmount() {
+    return await this.getContract().methods.rewardAmount().call();
+  }
+
+  /**
+   * Get encoded call reward token amount
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.id Encoded call hash id as bytes32 string
+   * @returns {Promise&lt;Integer>} Reward token amount
+   */
+  async callsRewardTokenAmount({ id }) {
+    return await this.getContract().methods.callsRewardTokenAmount(id).call();
+  }
+
+  /**
+   * Schedule function call
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Target contract address
+   * @param {Integer} params.value Eth value sent with the call
+   * @param {string} params.data Encoded call data
+   * @param {string} params.predecessor Predecessor call hash required to have finished first
+   * @param {string} params.salt Salt id to identify each call
+   * @param {Integer} params.delay Delay in seconds before call execution
+   * @param {Integer} params.rewardTokenAmount Reward token amount for sender for executing the call
+   * @param {IContract~TxOptions} options
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  async schedule({
+    target, value, data, predecessor, salt, delay, rewardTokenAmount,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.schedule(
+        target, value, data, predecessor, salt, delay, rewardTokenAmount,
+      ),
+      options,
+    );
+  }
+
+  /**
+   * Schedule an operation containing a batch of transactions.
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Target contracts addresses
+   * @param {Array&lt;Integer>} params.values Eth values sent with the batch
+   * @param {Array&lt;string>} params.datas Encoded call datas
+   * @param {string} params.predecessor Required call id to be finished before executing current call
+   * @param {string} params.salt Salt id
+   * @param {Integer} params.delay Delay in seconds before call execution
+   * @param {Integer} params.rewardTokenAmount Reward token amount
+   * @param {IContract~TxOptions} options
+   * @returns {Promise&lt;Transaction>} Transaction
+   * Requirements:
+   * - the caller must have the 'proposer' role.
+   */
+  async scheduleBatch({
+    targets, values, datas, predecessor, salt, delay, rewardTokenAmount,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.scheduleBatch(
+        targets, values, datas, predecessor, salt, delay, rewardTokenAmount,
+      ),
+      options,
+    );
+  }
+
+  /**
+   * Cancel an operation
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.id Call hash
+   * @param {IContract~TxOptions} options
+   * @returns {Promise&lt;Transaction>} Transaction
+   * Requirements:
+   * - the caller must have the 'proposer' role.
+   */
+  async cancel({ id }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.cancel(id),
+      options,
+    );
+  }
+
+  /**
+   * Execute an (ready) operation containing a single transaction.
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Target contract address
+   * @param {Integer} params.value Eth value sent with the call
+   * @param {string} params.data Encoded call data
+   * @param {string} params.predecessor Required call id to be finished before executing current call
+   * @param {string} params.salt Salt id
+   * @param {IContract~TxOptions} options
+   * @returns {Promise&lt;Transaction>} Transaction
+   * Requirements:
+   * - the caller must have the 'executor' role.
+   */
+  async execute({
+    target, value, data, predecessor, salt,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.execute(target, value, data, predecessor, salt),
+      options,
+    );
+  }
+
+  /**
+   * Execute an (ready) operation containing a batch of transactions.
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Target contracts addresses
+   * @param {Array&lt;Integer>} params.values Eth values sent with the batch
+   * @param {Array&lt;string>} params.datas Encoded call datas
+   * @param {string} params.predecessor Required call id to be finished before executing current call
+   * @param {string} params.salt Salt id
+   * @param {IContract~TxOptions} options
+   * @returns {Promise&lt;Transaction>} Transaction
+   * Requirements:
+   * - the caller must have the 'executor' role.
+   */
+  async executeBatch({
+    targets, values, datas, predecessor, salt,
+  }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.executeBatch(
+        targets, values, datas, predecessor, salt,
+      ),
+      options,
+    );
+  }
+
+  /**
+   * Changes the minimum timelock duration for future operations.
+   * @function
+   * @param {Object} params Parameters
+   * @param {Integer} params.newDelay New delay in seconds
+   * @param {IContract~TxOptions} options
+   * @returns {Promise&lt;Transaction>} Transaction
+   * Requirements:
+   * - the caller must be the timelock itself. This can only be achieved by scheduling and later executing
+   * an operation where the timelock is the target and the data is the ABI-encoded call to this function.
+   */
+  async updateDelay({ newDelay }, options) {
+    return await this.__sendTx(
+      this.getContract().methods.updateDelay(newDelay),
+      options,
+    );
+  }
+
+  /**
+   * Returns whether an id correspond to a registered operation. This
+   * includes both Pending, Ready and Done operations.
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.id Call hash as id
+   * @returns {Promise&lt;Boolean>}
+   */
+  async isOperation({ id }) {
+    return await this.getContract().methods.isOperation(id).call();
+  }
+
+  /**
+   * Returns whether an operation is pending or not.
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.id Call hash as id
+   * @returns {Promise&lt;Boolean>}
+   */
+  async isOperationPending({ id }) {
+    return await this.getContract().methods.isOperationPending(id).call();
+  }
+
+  /**
+   * Returns whether an operation is ready or not.
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.id Call hash as id
+   * @returns {Promise&lt;Boolean>}
+   */
+  async isOperationReady({ id }) {
+    return await this.getContract().methods.isOperationReady(id).call();
+  }
+
+  /**
+   * Returns whether an operation is done or not.
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.id Call hash as id
+   * @returns {Promise&lt;Boolean>}
+   */
+  async isOperationDone({ id }) {
+    return await this.getContract().methods.isOperationDone(id).call();
+  }
+
+  /**
+   * Returns the timestamp at with an operation becomes ready (0 for
+   * unset operations, 1 for done operations).
+   * @function
+   * @param {Object} params Parameters
+   * @param {string} params.id Call hash as id
+   * @returns {Promise&lt;Integer>}
+   */
+  async getTimestamp({ id }) {
+    return await this.getContract().methods.getTimestamp(id).call();
+  }
+
+  /**
+   * Returns the minimum delay for an operation to become valid.
+   * This value can be changed by executing an operation that calls `updateDelay`.
+   * @functon
+   * @returns {Promise&lt;Integer>}
+   */
+  async getMinDelay() {
+    return await this.getContract().methods.getMinDelay().call();
+  }
+
+  /**
+   * Returns the identifier of an operation containing a single transaction.
+   * @function
+   * @param {Object} params Parameters
+   * @param {Address} params.target Target contract address
+   * @param {Integer} params.value Eth value sent with the call
+   * @param {string} params.data Encoded call data
+   * @param {string} params.predecessor Required call id to be finished before executing current call
+   * @param {string} params.salt Salt id
+   * @returns {Promise&lt;string>} bytes32 hash
+   */
+  async hashOperation({
+    target, value, data, predecessor, salt,
+  }) {
+    return await this.getContract().methods.hashOperation(
+      target, value, data, predecessor, salt,
+    ).call();
+  }
+
+  /**
+   * Returns the identifier of an operation containing a batch of transactions.
+   * @function
+   * @param {Object} params Parameters
+   * @param {Array&lt;Address>} params.targets Target contracts addresses
+   * @param {Array&lt;Integer>} params.values Eth values sent with the batch
+   * @param {Array&lt;string>} params.datas Encoded call datas
+   * @param {string} params.predecessor Required call id to be finished before executing current call
+   * @param {string} params.salt Salt id
+   * @returns {Promise&lt;string>} bytes32 hash
+   */
+  async hashOperationBatch({
+    targets, values, datas, predecessor, salt,
+  }) {
+    return await this.getContract().methods.hashOperationBatch(
+      targets, values, datas, predecessor, salt,
+    ).call();
+  }
+
+  /**
+   * Deploy contract
+   * @function
+   * @param {Object} params Parameters
+   * @param {Integer} params.minDelay Minimum delay in seconds to schedule call
+   * @param {Array&lt;Address>} params.proposers Array of proposers addresses
+   * @param {Array&lt;Address>} params.executors Array of executors addresses
+   * @param {Address} params.rewardTokenAddress Reward token address
+   * @param {Number} params.rewardTokenAmount Reward token amount
+   * @param {IContract~TxOptions} options
+   * @returns {Promise&lt;Transaction>} Transaction
+   */
+  deploy = async ({
+    minDelay, proposers, executors, rewardTokenAddress, rewardTokenAmount,
+  }, options) => {
+    if (!rewardTokenAddress) {
+      throw new Error('Please provide a Reward erc20 token address');
+    }
+
+    if (!rewardTokenAmount) {
+      throw new Error('Please provide a Reward erc20 token amount');
+    }
+
+    const params = [ minDelay, proposers, executors, rewardTokenAddress, rewardTokenAmount ];
     const res = await this.__deploy(params, options);
     this.params.contractAddress = res.contractAddress;
     /* Call to Backend API */
@@ -392,6 +458,8 @@ export default class SwapRouter extends IContract {
     return res;
   };
 }
+
+export default TimeLockProtocolMiningReward;
 </code></pre>
         </article>
     </section>

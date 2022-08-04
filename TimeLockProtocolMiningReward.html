@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEPRO Network Dev Docs ERC721Collectibles</title>
+  <title>BEPRO Network Dev Docs TimeLockProtocolMiningReward</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -98,7 +98,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Class</p>
-                    <h1>ERC721Collectibles</h1>
+                    <h1>TimeLockProtocolMiningReward</h1>
                 </header>
                 
 
@@ -109,7 +109,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ERC721Collectibles<span class="signature">(options)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>TimeLockProtocolMiningReward<span class="signature">(options)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -128,22 +128,18 @@
 
 
     
-    <h4 class="name" id="ERC721Collectibles">
-        <a class="href-link" href="#ERC721Collectibles">#</a>
+    <h4 class="name" id="TimeLockProtocolMiningReward">
+        <a class="href-link" href="#TimeLockProtocolMiningReward">#</a>
         
         <span class="code-name">
             
-                new ERC721Collectibles<span class="signature">(options)</span><span class="type-signature"></span>
+                new TimeLockProtocolMiningReward<span class="signature">(options)</span><span class="type-signature"></span>
             
         </span>
     </h4>
     
 
     
-    
-    <div class="description">
-        <p>ERC721Collectibles Object</p>
-    </div>
     
 
 
@@ -186,7 +182,7 @@
   <td class="type">
   
       
-<code class="param-type"><a href="ERC721Collectibles.html#~Options">ERC721Collectibles~Options</a></code>
+<code class="param-type"><a href="TimeLockProtocolMiningReward.html#~Options">TimeLockProtocolMiningReward~Options</a></code>
 
 
   
@@ -196,7 +192,17 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>NOTE: to encode function signature we use 'web3.eth.abi.encodeFunctionSignature'
+For example, for encoding transfer function of ERC20 token we do:
+web3.eth.abi.encodeFunctionSignature('transfer(address,uint256)')
+NOTE: to encode parameters for encoded call data we use
+web3.eth.abi.encodeParameters(typesArray, valuesArray)
+For example, for encoding transfer function parameters of ERC20 token we do:
+web3.eth.abi.encodeParameters(['address','uint256'], [userAddress, transferTokenAmount])
+userAddress, transferTokenAmount are variables holding user address and tokens amount.
+NOTE: to encode function signature together with parameters as a single encoded call data
+we use a combination of the two above.
+Specific details on how to encode call data can be found in the unit test file.</p></td>
 </tr>
 
 
@@ -242,9 +248,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line16">line 16</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line13">line 13</a>
             </span>
         </p>
     
@@ -291,6 +297,82 @@
     
 
     
+        <div class='vertical-section'>
+            <h1>Members</h1>
+            <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id="__assert">
+    <a class="href-link" href="#__assert">#</a>
+    
+    <span class="code-name">
+        __assert
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Use a timeLockProtocolMiningReward contract with the current address</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line37">line 37</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
 
     
         <div class='vertical-section'>
@@ -301,12 +383,16 @@
 
 
     
-    <h4 class="name" id="__assert">
-        <a class="href-link" href="#__assert">#</a>
+    <h4 class="name" id="callsRewardTokenAmount">
+        <a class="href-link" href="#callsRewardTokenAmount">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                __assert<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span>
+                callsRewardTokenAmount<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Integer>}</span>
             
         </span>
     </h4>
@@ -315,269 +401,7 @@
     
     
     <div class="description">
-        <p>Uses erc721collectibles on the current address and assigns a new <a href="ERC20Contract.html">ERC20Contract</a> with
-<a href="ERC721Collectibles.html#purchaseToken">ERC721Collectibles#purchaseToken</a> as its contract address</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line33">line 33</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
-        <div class="column is-10">
-            
-                    
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Contract is not deployed, first deploy it and provide a contract address</p></div>
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-<code class="param-type">Error</code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;void></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="approveERC20">
-        <a class="href-link" href="#approveERC20">#</a>
-        
-        <span class="code-name">
-            
-                approveERC20<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Approve ERC20 Allowance</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line187">line 187</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;Transaction></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="balanceOf">
-        <a class="href-link" href="#balanceOf">#</a>
-        
-        <span class="code-name">
-            
-                balanceOf<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>show balance of address</p>
+        <p>Get encoded call reward token amount</p>
     </div>
     
 
@@ -631,7 +455,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
   
@@ -639,13 +463,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>address</code></td>
+      <td class="name"><code>id</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type">Address</code>
+<code class="param-type">string</code>
 
 
   
@@ -655,7 +479,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Encoded call hash id as bytes32 string</p></td>
 </tr>
 
   
@@ -703,9 +527,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line92">line 92</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line75">line 75</a>
             </span>
         </p>
     
@@ -736,11 +560,13 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>Reward token amount</p></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;TransactionObject></code>
+<code class="param-type">Promise.&lt;Integer></code>
 
 
     </div>
@@ -760,130 +586,8 @@
 
 
     
-    <h4 class="name" id="baseURI">
-        <a class="href-link" href="#baseURI">#</a>
-        
-        <span class="code-name">
-            
-                baseURI<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Verify what is the baseURI</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line132">line 132</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>URI</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;string></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="currentTokenId">
-        <a class="href-link" href="#currentTokenId">#</a>
+    <h4 class="name" id="cancel">
+        <a class="href-link" href="#cancel">#</a>
         
             
                 <span class='tag'>async</span>
@@ -891,7 +595,7 @@
         
         <span class="code-name">
             
-                currentTokenId<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
+                cancel<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
             
         </span>
     </h4>
@@ -900,126 +604,8 @@
     
     
     <div class="description">
-        <p>Verify what is the currentTokenId</p>
+        <p>Cancel an operation</p>
     </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line111">line 111</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Current Token Id</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;number></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="deploy">
-        <a class="href-link" href="#deploy">#</a>
-        
-        <span class="code-name">
-            
-                deploy<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Promise.&lt;(*|undefined)>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
     
 
 
@@ -1072,7 +658,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
   
@@ -1080,99 +666,7 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>name</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">*</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>symbol</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">*</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>limitedAmount</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">number</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>erc20Purchase</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">*</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>feeAddress</code></td>
+      <td class="name"><code>id</code></td>
   
 
   <td class="type">
@@ -1188,30 +682,7 @@
 
   
 
-  <td class="description last"></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>otherAddress</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">string</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
+  <td class="description last"><p>Call hash</p></td>
 </tr>
 
   
@@ -1284,9 +755,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line331">line 331</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line141">line 141</a>
             </span>
         </p>
     
@@ -1307,55 +778,6 @@
 
 
 
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
-        <div class="column is-10">
-            
-                    
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Please provide an erc20 address for purchases</p></div>
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-<code class="param-type">Error</code>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Please provide a name</p></div>
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-<code class="param-type">Error</code>
-
-
-    </div>
-    
-</div>
-
-                
-                    
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Please provide a symbol</p></div>
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-<code class="param-type">Error</code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
 
 
     <div class='columns method-parameter'>
@@ -1366,11 +788,17 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>Transaction
+Requirements:</p>
+<ul>
+<li>the caller must have the 'proposer' role.</li>
+</ul></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;(*|undefined)></code>
+<code class="param-type">Promise.&lt;Transaction></code>
 
 
     </div>
@@ -1390,12 +818,12 @@
 
 
     
-    <h4 class="name" id="exists">
-        <a class="href-link" href="#exists">#</a>
+    <h4 class="name" id="deploy">
+        <a class="href-link" href="#deploy">#</a>
         
         <span class="code-name">
             
-                exists<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
+                deploy<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
             
         </span>
     </h4>
@@ -1404,7 +832,7 @@
     
     
     <div class="description">
-        <p>Verify if token ID exists</p>
+        <p>Deploy contract</p>
     </div>
     
 
@@ -1458,7 +886,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
   
@@ -1466,13 +894,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>tokenID</code></td>
+      <td class="name"><code>minDelay</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type">string</code>
+<code class="param-type">Integer</code>
 
 
   
@@ -1482,410 +910,20 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Minimum delay in seconds to schedule call</p></td>
 </tr>
 
   
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line80">line 80</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>Token Id</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;number></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getERC20Contract">
-        <a class="href-link" href="#getERC20Contract">#</a>
-        
-        <span class="code-name">
-            
-                getERC20Contract<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line373">line 373</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>ERC20Contract|undefined</p></div>
-    
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getPricePerPack">
-        <a class="href-link" href="#getPricePerPack">#</a>
-        
-            
-                <span class='tag'>async</span>
-            
-        
-        <span class="code-name">
-            
-                getPricePerPack<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Get Price Per Pack</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line67">line 67</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;number></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="getRegisteredIDs">
-        <a class="href-link" href="#getRegisteredIDs">#</a>
-        
-            
-                <span class='tag'>async</span>
-            
-        
-        <span class="code-name">
-            
-                getRegisteredIDs<span class="signature">(params)</span><span class="type-signature"> &rarr; {Array.&lt;number>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Get Ids</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
+<tr class="deep-level-1">
   
-      <td class="name"><code>params</code></td>
+      <td class="name"><code>proposers</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type">Object</code>
+<code class="param-type">Array.&lt;Address></code>
 
 
   
@@ -1895,15 +933,37 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Array of proposers addresses</p></td>
 </tr>
 
-  
   
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>address</code></td>
+      <td class="name"><code>executors</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array.&lt;Address></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Array of executors addresses</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>rewardTokenAddress</code></td>
   
 
   <td class="type">
@@ -1919,7 +979,1154 @@
 
   
 
+  <td class="description last"><p>Reward token address</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>rewardTokenAmount</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Number</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Reward token amount</p></td>
+</tr>
+
+  
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type"><a href="IContract.html#~TxOptions">IContract~TxOptions</a></code>
+
+
+  
+  </td>
+
+  
+
+  
+
   <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line331">line 331</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Transaction</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;Transaction></code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="execute">
+        <a class="href-link" href="#execute">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                execute<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Execute an (ready) operation containing a single transaction.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>target</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Address</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Target contract address</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>value</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Integer</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Eth value sent with the call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Encoded call data</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>predecessor</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Required call id to be finished before executing current call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>salt</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Salt id</p></td>
+</tr>
+
+  
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type"><a href="IContract.html#~TxOptions">IContract~TxOptions</a></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line162">line 162</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Transaction
+Requirements:</p>
+<ul>
+<li>the caller must have the 'executor' role.</li>
+</ul></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;Transaction></code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="executeBatch">
+        <a class="href-link" href="#executeBatch">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                executeBatch<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Execute an (ready) operation containing a batch of transactions.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>targets</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array.&lt;Address></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Target contracts addresses</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>values</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array.&lt;Integer></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Eth values sent with the batch</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>datas</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array.&lt;string></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Encoded call datas</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>predecessor</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Required call id to be finished before executing current call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>salt</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Salt id</p></td>
+</tr>
+
+  
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type"><a href="IContract.html#~TxOptions">IContract~TxOptions</a></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line185">line 185</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Transaction
+Requirements:</p>
+<ul>
+<li>the caller must have the 'executor' role.</li>
+</ul></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;Transaction></code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getAddress">
+        <a class="href-link" href="#getAddress">#</a>
+        
+        <span class="code-name">
+            
+                getAddress<span class="signature">()</span><span class="type-signature"> &rarr; {Address}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get contract address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line46">line 46</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>address</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Address</code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getMinDelay">
+        <a class="href-link" href="#getMinDelay">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getMinDelay<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Integer>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Returns the minimum delay for an operation to become valid.
+This value can be changed by executing an operation that calls <code>updateDelay</code>.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line277">line 277</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;Integer></code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="getTimestamp">
+        <a class="href-link" href="#getTimestamp">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                getTimestamp<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Integer>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Returns the timestamp at with an operation becomes ready (0 for
+unset operations, 1 for done operations).</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Call hash as id</p></td>
 </tr>
 
   
@@ -1967,9 +2174,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line142">line 142</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line267">line 267</a>
             </span>
         </p>
     
@@ -2000,13 +2207,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>ids</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Array.&lt;number></code>
+<code class="param-type">Promise.&lt;Integer></code>
 
 
     </div>
@@ -2026,12 +2231,16 @@
 
 
     
-    <h4 class="name" id="getURITokenID">
-        <a class="href-link" href="#getURITokenID">#</a>
+    <h4 class="name" id="hashOperation">
+        <a class="href-link" href="#hashOperation">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                getURITokenID<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
+                hashOperation<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
             
         </span>
     </h4>
@@ -2040,7 +2249,7 @@
     
     
     <div class="description">
-        <p>Verify what is the getURITokenID</p>
+        <p>Returns the identifier of an operation containing a single transaction.</p>
     </div>
     
 
@@ -2051,6 +2260,175 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>target</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Address</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Target contract address</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>value</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Integer</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Eth value sent with the call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Encoded call data</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>predecessor</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Required call id to be finished before executing current call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>salt</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Salt id</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -2089,9 +2467,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line122">line 122</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line292">line 292</a>
             </span>
         </p>
     
@@ -2122,7 +2500,7 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>URI</p></div>
+    <div class='param-desc column is-7'><p>bytes32 hash</p></div>
     
     
     <div class='column is-5 has-text-left'>
@@ -2148,642 +2526,8 @@
 
 
     
-    <h4 class="name" id="isApproved">
-        <a class="href-link" href="#isApproved">#</a>
-        
-        <span class="code-name">
-            
-                isApproved<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Approve ERC20 Allowance</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Object</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>address</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Address</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>amount</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">number</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line215">line 215</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;boolean></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="isIDRegistered">
-        <a class="href-link" href="#isIDRegistered">#</a>
-        
-        <span class="code-name">
-            
-                isIDRegistered<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Verify if ID is registered</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line154">line 154</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;boolean></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="isLimited">
-        <a class="href-link" href="#isLimited">#</a>
-        
-        <span class="code-name">
-            
-                isLimited<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Verify if it is limited</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line103">line 103</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;boolean></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="mint">
-        <a class="href-link" href="#mint">#</a>
-        
-        <span class="code-name">
-            
-                mint<span class="signature">(params)</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Mint created TokenID</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Object</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>tokenID</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">number</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line239">line 239</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="openedPacks">
-        <a class="href-link" href="#openedPacks">#</a>
+    <h4 class="name" id="hashOperationBatch">
+        <a class="href-link" href="#hashOperationBatch">#</a>
         
             
                 <span class='tag'>async</span>
@@ -2791,7 +2535,7 @@
         
         <span class="code-name">
             
-                openedPacks<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
+                hashOperationBatch<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span>
             
         </span>
     </h4>
@@ -2800,129 +2544,7 @@
     
     
     <div class="description">
-        <p>Verify how much opened packs exist</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line175">line 175</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>packs</p></div>
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;number></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="openPack">
-        <a class="href-link" href="#openPack">#</a>
-        
-        <span class="code-name">
-            
-                openPack<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>open Pack of tokens</p>
+        <p>Returns the identifier of an operation containing a batch of transactions.</p>
     </div>
     
 
@@ -2976,7 +2598,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
   
@@ -2984,13 +2606,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>amount</code></td>
+      <td class="name"><code>targets</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type">number</code>
+<code class="param-type">Array.&lt;Address></code>
 
 
   
@@ -3000,7 +2622,99 @@
 
   
 
-  <td class="description last"><p>Amount of packs to open</p></td>
+  <td class="description last"><p>Target contracts addresses</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>values</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array.&lt;Integer></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Eth values sent with the batch</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>datas</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array.&lt;string></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Encoded call datas</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>predecessor</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Required call id to be finished before executing current call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>salt</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Salt id</p></td>
 </tr>
 
   
@@ -3048,9 +2762,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line227">line 227</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line311">line 311</a>
             </span>
         </p>
     
@@ -3081,11 +2795,13 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>bytes32 hash</p></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;TransactionObject></code>
+<code class="param-type">Promise.&lt;string></code>
 
 
     </div>
@@ -3105,8 +2821,8 @@
 
 
     
-    <h4 class="name" id="pricePerPack">
-        <a class="href-link" href="#pricePerPack">#</a>
+    <h4 class="name" id="isOperation">
+        <a class="href-link" href="#isOperation">#</a>
         
             
                 <span class='tag'>async</span>
@@ -3114,7 +2830,7 @@
         
         <span class="code-name">
             
-                pricePerPack<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;number>}</span>
+                isOperation<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Boolean>}</span>
             
         </span>
     </h4>
@@ -3123,7 +2839,8 @@
     
     
     <div class="description">
-        <p>Verify what is the current price per Pack</p>
+        <p>Returns whether an id correspond to a registered operation. This
+includes both Pending, Ready and Done operations.</p>
     </div>
     
 
@@ -3134,6 +2851,83 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Call hash as id</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -3172,9 +2966,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line164">line 164</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line222">line 222</a>
             </span>
         </p>
     
@@ -3205,13 +2999,11 @@
 
 <div class="columns">
     
-    <div class='param-desc column is-7'><p>Price per pack in tokens</p></div>
-    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;number></code>
+<code class="param-type">Promise.&lt;Boolean></code>
 
 
     </div>
@@ -3231,12 +3023,16 @@
 
 
     
-    <h4 class="name" id="purchaseToken">
-        <a class="href-link" href="#purchaseToken">#</a>
+    <h4 class="name" id="isOperationDone">
+        <a class="href-link" href="#isOperationDone">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                purchaseToken<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Address>}</span>
+                isOperationDone<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Boolean>}</span>
             
         </span>
     </h4>
@@ -3245,7 +3041,610 @@
     
     
     <div class="description">
-        <p>Get ERC20 Address of the Contract</p>
+        <p>Returns whether an operation is done or not.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Call hash as id</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line255">line 255</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;Boolean></code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isOperationPending">
+        <a class="href-link" href="#isOperationPending">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                isOperationPending<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Boolean>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Returns whether an operation is pending or not.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Call hash as id</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line233">line 233</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;Boolean></code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="isOperationReady">
+        <a class="href-link" href="#isOperationReady">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                isOperationReady<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;Boolean>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Returns whether an operation is ready or not.</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>params</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Object</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Parameters</p></td>
+</tr>
+
+  
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>id</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Call hash as id</p></td>
+</tr>
+
+  
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line244">line 244</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;Boolean></code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="rewardAmount">
+        <a class="href-link" href="#rewardAmount">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                rewardAmount<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Integer>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get reward token default reward amount</p>
     </div>
     
 
@@ -3294,9 +3693,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line57">line 57</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line64">line 64</a>
             </span>
         </p>
     
@@ -3326,6 +3725,134 @@
                     
 
 <div class="columns">
+    
+    <div class='param-desc column is-7'><p>Default reward token amount</p></div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<code class="param-type">Promise.&lt;Integer></code>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="rewardToken">
+        <a class="href-link" href="#rewardToken">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+        
+        <span class="code-name">
+            
+                rewardToken<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;Address>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Get reward token address</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
+            <span>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line55">line 55</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'><p>Reward token address</p></div>
     
     
     <div class='column is-5 has-text-left'>
@@ -3351,12 +3878,16 @@
 
 
     
-    <h4 class="name" id="setBaseTokenURI">
-        <a class="href-link" href="#setBaseTokenURI">#</a>
+    <h4 class="name" id="schedule">
+        <a class="href-link" href="#schedule">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                setBaseTokenURI<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
+                schedule<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
             
         </span>
     </h4>
@@ -3365,7 +3896,7 @@
     
     
     <div class="description">
-        <p>Set Base Token URI</p>
+        <p>Schedule function call</p>
     </div>
     
 
@@ -3419,7 +3950,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
   
@@ -3427,7 +3958,53 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>URI</code></td>
+      <td class="name"><code>target</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Address</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Target contract address</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>value</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Integer</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Eth value sent with the call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>data</code></td>
   
 
   <td class="type">
@@ -3443,10 +4020,127 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Encoded call data</p></td>
 </tr>
 
   
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>predecessor</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Predecessor call hash required to have finished first</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>salt</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Salt id to identify each call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>delay</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Integer</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Delay in seconds before call execution</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>rewardTokenAmount</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Integer</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Reward token amount for sender for executing the call</p></td>
+</tr>
+
+  
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type"><a href="IContract.html#~TxOptions">IContract~TxOptions</a></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
 
 
         
@@ -3491,9 +4185,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line202">line 202</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line93">line 93</a>
             </span>
         </p>
     
@@ -3524,11 +4218,13 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>Transaction</p></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;TransactionObject></code>
+<code class="param-type">Promise.&lt;Transaction></code>
 
 
     </div>
@@ -3548,12 +4244,16 @@
 
 
     
-    <h4 class="name" id="setFeeAddress">
-        <a class="href-link" href="#setFeeAddress">#</a>
+    <h4 class="name" id="scheduleBatch">
+        <a class="href-link" href="#scheduleBatch">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                setFeeAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
+                scheduleBatch<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
             
         </span>
     </h4>
@@ -3562,7 +4262,7 @@
     
     
     <div class="description">
-        <p>Set Fee Address</p>
+        <p>Schedule an operation containing a batch of transactions.</p>
     </div>
     
 
@@ -3616,7 +4316,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
   
@@ -3624,13 +4324,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>purchaseToken</code></td>
+      <td class="name"><code>targets</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type">Address</code>
+<code class="param-type">Array.&lt;Address></code>
 
 
   
@@ -3640,170 +4340,162 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Target contracts addresses</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>values</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array.&lt;Integer></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Eth values sent with the batch</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>datas</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Array.&lt;string></code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Encoded call datas</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>predecessor</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Required call id to be finished before executing current call</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>salt</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">string</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Salt id</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>delay</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Integer</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Delay in seconds before call execution</p></td>
+</tr>
+
+  
+    
+<tr class="deep-level-1">
+  
+      <td class="name"><code>rewardTokenAmount</code></td>
+  
+
+  <td class="type">
+  
+      
+<code class="param-type">Integer</code>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Reward token amount</p></td>
 </tr>
 
   
 
 
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line293">line 293</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;TransactionObject></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="setPricePerPack">
-        <a class="href-link" href="#setPricePerPack">#</a>
-        
-        <span class="code-name">
-            
-                setPricePerPack<span class="signature">(amount)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Set Price per Pack</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
         
 
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>amount</code></td>
+      <td class="name"><code>options</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type">Object</code>
+<code class="param-type"><a href="IContract.html#~TxOptions">IContract~TxOptions</a></code>
 
 
   
@@ -3815,32 +4507,6 @@
 
   <td class="description last"></td>
 </tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>newPrice</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">number</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
 
 
         
@@ -3885,9 +4551,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line306">line 306</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line120">line 120</a>
             </span>
         </p>
     
@@ -3918,11 +4584,17 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>Transaction
+Requirements:</p>
+<ul>
+<li>the caller must have the 'proposer' role.</li>
+</ul></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;TransactionObject></code>
+<code class="param-type">Promise.&lt;Transaction></code>
 
 
     </div>
@@ -3942,12 +4614,16 @@
 
 
     
-    <h4 class="name" id="setPurchaseTokenAddress">
-        <a class="href-link" href="#setPurchaseTokenAddress">#</a>
+    <h4 class="name" id="updateDelay">
+        <a class="href-link" href="#updateDelay">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
         
         <span class="code-name">
             
-                setPurchaseTokenAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
+                updateDelay<span class="signature">(params, options)</span><span class="type-signature"> &rarr; {Promise.&lt;Transaction>}</span>
             
         </span>
     </h4>
@@ -3956,204 +4632,7 @@
     
     
     <div class="description">
-        <p>set Purchase Token Address</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>params</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Object</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>purchaseToken</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Address</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line252">line 252</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;TransactionObject></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="setStakeAddress">
-        <a class="href-link" href="#setStakeAddress">#</a>
-        
-        <span class="code-name">
-            
-                setStakeAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Set Stake Address</p>
+        <p>Changes the minimum timelock duration for future operations.</p>
     </div>
     
 
@@ -4207,7 +4686,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>Parameters</p></td>
 </tr>
 
   
@@ -4215,13 +4694,13 @@
     
 <tr class="deep-level-1">
   
-      <td class="name"><code>purchaseToken</code></td>
+      <td class="name"><code>newDelay</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type">Address</code>
+<code class="param-type">Integer</code>
 
 
   
@@ -4231,170 +4710,24 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last"><p>New delay in seconds</p></td>
 </tr>
 
   
 
 
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
-            <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line266">line 266</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    
-    <div class='column is-5 has-text-left'>
-        <label>Type: </label>
-        
-<code class="param-type">Promise.&lt;TransactionObject></code>
-
-
-    </div>
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="setSwapBackAddress">
-        <a class="href-link" href="#setSwapBackAddress">#</a>
-        
-        <span class="code-name">
-            
-                setSwapBackAddress<span class="signature">(params)</span><span class="type-signature"> &rarr; {Promise.&lt;TransactionObject>}</span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Set Fee Address</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
         
 
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>params</code></td>
+      <td class="name"><code>options</code></td>
   
 
   <td class="type">
   
       
-<code class="param-type">Object</code>
+<code class="param-type"><a href="IContract.html#~TxOptions">IContract~TxOptions</a></code>
 
 
   
@@ -4406,32 +4739,6 @@
 
   <td class="description last"></td>
 </tr>
-
-  
-  
-    
-<tr class="deep-level-1">
-  
-      <td class="name"><code>purchaseToken</code></td>
-  
-
-  <td class="type">
-  
-      
-<code class="param-type">Address</code>
-
-
-  
-  </td>
-
-  
-
-  
-
-  <td class="description last"></td>
-</tr>
-
-  
 
 
         
@@ -4476,9 +4783,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line279">line 279</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line207">line 207</a>
             </span>
         </p>
     
@@ -4509,11 +4816,18 @@
 
 <div class="columns">
     
+    <div class='param-desc column is-7'><p>Transaction
+Requirements:</p>
+<ul>
+<li>the caller must be the timelock itself. This can only be achieved by scheduling and later executing
+an operation where the timelock is the target and the data is the ABI-encoded call to this function.</li>
+</ul></div>
+    
     
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
         
-<code class="param-type">Promise.&lt;TransactionObject></code>
+<code class="param-type">Promise.&lt;Transaction></code>
 
 
     </div>
@@ -4768,9 +5082,9 @@
 
     
         <p class="tag-source">
-            <a href="models_ERC721_ERC721Collectibles.js.html" class="button">View Source</a>
+            <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html" class="button">View Source</a>
             <span>
-                <a href="models_ERC721_ERC721Collectibles.js.html">models/ERC721/ERC721Collectibles.js</a>, <a href="models_ERC721_ERC721Collectibles.js.html#line8">line 8</a>
+                <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html">models/ProtocolMining/TimeLockProtocolMiningReward.js</a>, <a href="models_ProtocolMining_TimeLockProtocolMiningReward.js.html#line4">line 4</a>
             </span>
         </p>
     
