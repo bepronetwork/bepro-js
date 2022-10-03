@@ -24,8 +24,7 @@ contract NetworkFactory is ReentrancyGuard {
     /// @notice Network created event
     /// @param id New created Network id
     /// @param opener User address that created the Network
-    /// @param amount BEPRO token amount locked for creating the Network
-    event CreatedNetwork(uint256 indexed id, address indexed opener, uint256 indexed amount);
+    event CreatedNetwork(uint256 indexed id, address indexed opener);
 
 
 
@@ -58,7 +57,7 @@ contract NetworkFactory is ReentrancyGuard {
         networksArray.push(network);
         networks[networksAmount] = address(network);
         networksByAddress[msg.sender] = address(network);
-        emit CreatedNetwork(networksAmount, msg.sender, tokensLocked[msg.sender]);
+        emit CreatedNetwork(networksAmount, msg.sender);
         networksAmount = networksAmount.add(1);
     }
 
